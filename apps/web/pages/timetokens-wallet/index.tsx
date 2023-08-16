@@ -1,4 +1,5 @@
 import type { GetServerSidePropsContext } from "next";
+import React from "react";
 
 import { getLayout } from "@calcom/features/MainLayout";
 import { ShellMain } from "@calcom/features/shell/Shell";
@@ -8,6 +9,8 @@ import { trpc } from "@calcom/trpc/react";
 import PageWrapper from "@components/PageWrapper";
 
 import { ssrInit } from "@server/lib/ssr";
+
+import CustomExpertTable from "../../components/timetokens-wallet/CustomExpertTable";
 
 function TimeTokens() {
   const { t } = useLocale();
@@ -33,9 +36,7 @@ function TimeTokens() {
 
   return (
     <ShellMain heading={t("timetokens_wallet")} hideHeadingOnMobile subtitle={t("buy_sell_timetokens")}>
-      {mockupData.map((item) => (
-        <div key={item.fullname}>{item.fullname}</div>
-      ))}
+      <CustomExpertTable />
     </ShellMain>
   );
 }
