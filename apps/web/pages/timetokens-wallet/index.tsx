@@ -1,4 +1,6 @@
+import { instantMeiliSearch } from "@meilisearch/instant-meilisearch";
 import type { GetServerSidePropsContext } from "next";
+import { InstantSearch, SearchBox, Hits, Highlight } from "react-instantsearch-dom";
 
 import { getLayout } from "@calcom/features/MainLayout";
 import { ShellMain } from "@calcom/features/shell/Shell";
@@ -12,6 +14,14 @@ import { ssrInit } from "@server/lib/ssr";
 function TimeTokens() {
   const { t } = useLocale();
   const [user] = trpc.viewer.me.useSuspenseQuery();
+
+  // not working because of https schema
+  const searchClient = instantMeiliSearch(
+    "http://50.116.10.156:7700", // meilisearch is running on http://50.116.10.156:7700
+    "2306d45c66453e622b9178211e215f15c72568cd6d89c2eec74ea51270a3df89" // search apiKey
+  );
+
+  const Hit = ({ hit }) => <Highlight attribute="title" hit={hit} />;
 
   const mockupData = [
     {
@@ -36,6 +46,14 @@ function TimeTokens() {
       {mockupData.map((item) => (
         <div key={item.fullname}>{item.fullname}</div>
       ))}
+      <div>
+        {/* searching movie titles indexed to meilisearch */}
+        <InstantSearch indexName="movies" searchClient={searchClient}>
+          Search New Expert:
+          <SearchBox />
+          <Hits hitComponent={Hit} />
+        </InstantSearch>
+      </div>
     </ShellMain>
   );
 }
