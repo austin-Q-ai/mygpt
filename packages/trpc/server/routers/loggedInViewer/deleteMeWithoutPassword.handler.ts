@@ -1,3 +1,4 @@
+import { MeiliSearch } from "meilisearch";
 import { deleteStripeCustomer } from "@calcom/app-store/stripepayment/lib/customer";
 import { ErrorCode } from "@calcom/features/auth/lib/ErrorCode";
 import { deleteWebUser as syncServicesDeleteWebUser } from "@calcom/lib/sync/SyncServiceManager";
@@ -10,6 +11,13 @@ type DeleteMeWithoutPasswordOptions = {
     user: NonNullable<TrpcSessionUser>;
   };
 };
+
+const client = new MeiliSearch({
+  host: "http://50.116.10.156:7700",
+  apiKey: "50154e166f39249f2cadea6fef3ab7be152cd20befa0c07ad5bd6adcb1fff382", // admin apiKey
+});
+
+const index = client.index("users");
 
 export const deleteMeWithoutPasswordHandler = async ({ ctx }: DeleteMeWithoutPasswordOptions) => {
   const user = await prisma.user.findUnique({
@@ -38,6 +46,12 @@ export const deleteMeWithoutPasswordHandler = async ({ ctx }: DeleteMeWithoutPas
       id: ctx.user.id,
     },
   });
+
+  // remove userInfo to meilisearch by id after remove userInfo
+  if (deletedUser) {
+    await index.deleteDocuments([deletedUser.id]);
+  }
+  
   // Sync Services
   syncServicesDeleteWebUser(deletedUser);
 

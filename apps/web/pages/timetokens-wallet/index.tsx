@@ -1,6 +1,6 @@
 import { instantMeiliSearch } from "@meilisearch/instant-meilisearch";
 import type { GetServerSidePropsContext } from "next";
-import { InstantSearch, SearchBox, Hits, Highlight } from "react-instantsearch-dom";
+import { InstantSearch, SearchBox, Hits } from "react-instantsearch-dom";
 
 import { getLayout } from "@calcom/features/MainLayout";
 import { ShellMain } from "@calcom/features/shell/Shell";
@@ -18,10 +18,18 @@ function TimeTokens() {
   // not working because of https schema
   const searchClient = instantMeiliSearch(
     "http://50.116.10.156:7700", // meilisearch is running on http://50.116.10.156:7700
-    "2306d45c66453e622b9178211e215f15c72568cd6d89c2eec74ea51270a3df89" // search apiKey
+    "1b8cebf037d0fa3d839d40b5632b5f73e5167306c59fd897e760dfaa652bbf5c" // search apiKey
   );
 
-  const Hit = ({ hit }) => <Highlight attribute="title" hit={hit} />;
+  const Hit = ({ hit }) => {
+    console.log(hit);
+    return (
+      <div>
+        <div>Name: {hit.name}</div>
+        <div>Bio: {hit.bio}</div>
+      </div>
+    );
+  };
 
   const mockupData = [
     {
@@ -47,8 +55,7 @@ function TimeTokens() {
         <div key={item.fullname}>{item.fullname}</div>
       ))}
       <div>
-        {/* searching movie titles indexed to meilisearch */}
-        <InstantSearch indexName="movies" searchClient={searchClient}>
+        <InstantSearch indexName="users" searchClient={searchClient}>
           Search New Expert:
           <SearchBox />
           <Hits hitComponent={Hit} />
