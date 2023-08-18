@@ -7,6 +7,8 @@ import { ShellMain } from "@calcom/features/shell/Shell";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { trpc } from "@calcom/trpc/react";
 
+import { Button } from "@calcom/ui";
+
 import PageWrapper from "@components/PageWrapper";
 
 import { ssrInit } from "@server/lib/ssr";
@@ -17,48 +19,52 @@ function TimeTokens() {
 
   // not working because of https schema
   const searchClient = instantMeiliSearch(
-    "http://50.116.10.156:7700", // meilisearch is running on http://50.116.10.156:7700
-    "1b8cebf037d0fa3d839d40b5632b5f73e5167306c59fd897e760dfaa652bbf5c" // search apiKey
+    `https://${process.env.MEILISEARCH_HOST}`,
+    process.env.SEARCH_API_KEY // search apiKey
   );
 
+  console.log(process.env.MEILISEARCH_HOST);
+
   const Hit = ({ hit }) => {
-    console.log(hit);
     return (
-      <div>
+      <div key={`expert-${hit.id}`}>
+        <hr />
         <div>Name: {hit.name}</div>
         <div>Bio: {hit.bio}</div>
+        <hr />
       </div>
     );
   };
 
-  const mockupData = [
-    {
-      fullname: "Expert 1",
-      token_amount: 200,
-      token_price: 5,
-    },
-    {
-      fullname: "Expert 2",
-      token_amount: 200,
-      token_price: 5,
-    },
-    {
-      fullname: "Expert 3",
-      token_amount: 200,
-      token_price: 5,
-    },
-  ];
-
   return (
     <ShellMain heading={t("timetokens_wallet")} hideHeadingOnMobile subtitle={t("buy_sell_timetokens")}>
-      {mockupData.map((item) => (
-        <div key={item.fullname}>{item.fullname}</div>
-      ))}
       <div>
         <InstantSearch indexName="users" searchClient={searchClient}>
-          Search New Expert:
-          <SearchBox />
           <Hits hitComponent={Hit} />
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <h2 style={{ marginRight: "10px" }}>Search New Expert:</h2>
+            <SearchBox
+              translations={{
+                placeholder: "Search for experts",
+              }}
+              submit={<Button>SEARCH</Button>}
+              reset={<Button>CLEAR</Button>}
+            />
+            <style>
+              {`
+                .ais-SearchBox-resetIcon {
+                  background: white;
+                }
+                .ais-SearchBox-submitIcon {
+                  background: white;
+                }
+                .ais-SearchBox-input {
+                  color: var(--cal-text);
+                  background: var(--cal-bg);
+                }
+              `}
+            </style>
+          </div>
         </InstantSearch>
       </div>
     </ShellMain>

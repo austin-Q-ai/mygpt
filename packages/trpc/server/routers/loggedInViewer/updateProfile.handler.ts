@@ -28,8 +28,8 @@ type UpdateProfileOptions = {
 };
 
 const client = new MeiliSearch({
-  host: "http://50.116.10.156:7700",
-  apiKey: "50154e166f39249f2cadea6fef3ab7be152cd20befa0c07ad5bd6adcb1fff382", // admin apiKey
+  host: `https://${process.env.MEILISEARCH_HOST}`,
+  apiKey: process.env.ADMIN_API_KEY, // admin apiKey
 });
 
 const index = client.index("users");
@@ -124,7 +124,14 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
   });
 
   // update userInfo to meilisearch by id after update userInfo
-  await index.updateDocuments([updatedUser]);
+  if (updatedUser) {
+    const updatedUserInfo = {
+      id: updatedUser.id,
+      name: updatedUser.name,
+      bio: updatedUser.bio,
+    };
+    await index.updateDocuments([updatedUserInfo]);
+  }
 
   // Sync Services
   await syncServicesUpdateWebUser(updatedUser);

@@ -20,8 +20,8 @@ type DeleteMeOptions = {
 };
 
 const client = new MeiliSearch({
-  host: "http://50.116.10.156:7700",
-  apiKey: "50154e166f39249f2cadea6fef3ab7be152cd20befa0c07ad5bd6adcb1fff382", // admin apiKey
+  host: `https://${process.env.MEILISEARCH_HOST}`,
+  apiKey: process.env.ADMIN_API_KEY, // admin apiKey
 });
 
 const index = client.index("users");
