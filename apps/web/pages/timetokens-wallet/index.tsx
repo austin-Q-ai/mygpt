@@ -1,22 +1,32 @@
-import type { GetServerSidePropsContext } from "next";
 import React, { useEffect, useState } from "react";
 import { components } from "react-select";
 
-import { getLayout } from "@calcom/features/MainLayout";
-import { ShellMain } from "@calcom/features/shell/Shell";
+import Shell from "@calcom/features/shell/Shell";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { trpc } from "@calcom/trpc/react";
 import { Select, Button, Avatar, Badge, ConfirmationDialogContent, Dialog } from "@calcom/ui";
 import { Plus } from "@calcom/ui/components/icon";
 
+import { withQuery } from "@lib/QueryCell";
+
 import PageWrapper from "@components/PageWrapper";
+import SkeletonLoader from "@components/availability/SkeletonLoader";
 import CustomExpertTable from "@components/timetokens-wallet/CustomExpertTable";
 
-import { ssrInit } from "@server/lib/ssr";
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const WithQuery = withQuery(trpc.viewer.availability.list as any);
 
-function TimeTokens() {
+function TimeTokensWallet() {
   const { t } = useLocale();
   const [user] = trpc.viewer.me.useSuspenseQuery();
+  // trpc.viewer.timetokenswallet.searchUser.useQuery(
+  //   { name: "a" },
+  //   {
+  //     onSuccess: (data) => {
+  //       console.log(data, "=====");
+  //     },
+  //   }
+  // );
 
   const [addedExpertsData, setAddedExpertsData] = useState([]);
   const [buyConfirmOpen, setBuyConfirmOpen] = useState(false);
@@ -123,69 +133,70 @@ function TimeTokens() {
   };
 
   const addExpert = () => {
-    const data = addedExpertsData;
-
     for (const expert of expertSearchResult) {
       if (expert?.email === addExpertEmail) {
-        data.push(expert);
+        setAddedExpertsData([...addedExpertsData, expert]);
         break;
       }
     }
-
-    setAddedExpertsData(data);
   };
 
   return (
-    <ShellMain heading={t("timetokens_wallet")} hideHeadingOnMobile subtitle={t("buy_sell_timetokens")}>
-      <div className="mb-4 flex w-full items-center justify-center gap-4 px-4 lg:w-2/3">
-        <Select
-          options={expertOptions}
-          components={{
-            Option: (props) => {
-              return (
-                <components.Option {...props}>
-                  <CustomOption icon={null} label={props.data.label} added={props.data.added} />
-                </components.Option>
-              );
-            },
-          }}
-          isSearchable={true}
-          className="w-full rounded-md text-sm"
-          onChange={(event) => {
-            setAddExpertEmail(event?.value);
-          }}
-        />
-        <Button disabled={addExpertEmail === ""} onClick={addExpert} data-testid="" StartIcon={Plus}>
-          {t("add")}
-        </Button>
-      </div>
-      <CustomExpertTable columns={columns} expertsData={addedExpertsData} handleBuyEvent={handleBuyEvent} />
-      <Dialog open={buyConfirmOpen} onOpenChange={setBuyConfirmOpen}>
-        <ConfirmationDialogContent
-          variety="danger"
-          title="Confirmation"
-          confirmBtnText={t(`confirm_buy_event`)}
-          loadingText={t(`confirm_buy_event`)}
-          onConfirm={(e) => {
-            e.preventDefault();
-            console.log(buyExpertEmail, buyTokensAmount);
-            setBuyConfirmOpen(false);
-          }}>
-          <p className="mt-5">Do you want to really buy tokens?</p>
-        </ConfirmationDialogContent>
-      </Dialog>
-    </ShellMain>
+    <Shell heading={t("timetokens_wallet")} hideHeadingOnMobile subtitle={t("buy_sell_timetokens")}>
+      <WithQuery
+        customLoader={<SkeletonLoader />}
+        success={({ data }) => {
+          return (
+            <>
+              <div className="mb-4 flex w-full items-center justify-center gap-4 px-4 lg:w-2/3">
+                <Select
+                  options={expertOptions}
+                  components={{
+                    Option: (props) => {
+                      return (
+                        <components.Option {...props}>
+                          <CustomOption icon={null} label={props.data.label} added={props.data.added} />
+                        </components.Option>
+                      );
+                    },
+                  }}
+                  isSearchable={true}
+                  className="w-full rounded-md text-sm"
+                  onChange={(event) => {
+                    setAddExpertEmail(event?.value);
+                  }}
+                />
+                <Button disabled={addExpertEmail === ""} onClick={addExpert} data-testid="" StartIcon={Plus}>
+                  {t("add")}
+                </Button>
+              </div>
+              <CustomExpertTable
+                columns={columns}
+                expertsData={addedExpertsData}
+                handleBuyEvent={handleBuyEvent}
+              />
+              <Dialog open={buyConfirmOpen} onOpenChange={setBuyConfirmOpen}>
+                <ConfirmationDialogContent
+                  variety="danger"
+                  title="Confirmation"
+                  confirmBtnText={t(`confirm_buy_event`)}
+                  loadingText={t(`confirm_buy_event`)}
+                  onConfirm={(e) => {
+                    e.preventDefault();
+                    console.log(buyExpertEmail, buyTokensAmount);
+                    setBuyConfirmOpen(false);
+                  }}>
+                  <p className="mt-5">Do you want to really buy tokens?</p>
+                </ConfirmationDialogContent>
+              </Dialog>
+            </>
+          );
+        }}
+      />
+    </Shell>
   );
 }
 
-export const getServerSideProps = async (context: GetServerSidePropsContext) => {
-  const ssr = await ssrInit(context);
-  await ssr.viewer.me.prefetch();
+TimeTokensWallet.PageWrapper = PageWrapper;
 
-  return { props: { trpcState: ssr.dehydrate() } };
-};
-
-TimeTokens.requiresLicense = false;
-TimeTokens.PageWrapper = PageWrapper;
-TimeTokens.getLayout = getLayout;
-export default TimeTokens;
+export default TimeTokensWallet;
