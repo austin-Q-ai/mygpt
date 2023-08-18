@@ -19,14 +19,14 @@ const WithQuery = withQuery(trpc.viewer.availability.list as any);
 function TimeTokensWallet() {
   const { t } = useLocale();
   const [user] = trpc.viewer.me.useSuspenseQuery();
-  // trpc.viewer.timetokenswallet.searchUser.useQuery(
-  //   { name: "a" },
-  //   {
-  //     onSuccess: (data) => {
-  //       console.log(data, "=====");
-  //     },
-  //   }
-  // );
+  trpc.viewer.timetokenswallet.searchUser.useQuery(
+    { name: "a" },
+    {
+      onSuccess: (data) => {
+        console.log(data, "=====");
+      },
+    }
+  );
 
   const [addedExpertsData, setAddedExpertsData] = useState([]);
   const [buyConfirmOpen, setBuyConfirmOpen] = useState(false);
