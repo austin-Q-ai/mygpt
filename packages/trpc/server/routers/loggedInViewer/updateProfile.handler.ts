@@ -126,7 +126,7 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
   // update userInfo to meilisearch by id after update userInfo
   if (updatedUser) {
     const updatedUserInfo = {
-      id: updatedUser.id,
+      objectID: updatedUser.id,
       name: updatedUser.name,
       bio: updatedUser.bio,
     };

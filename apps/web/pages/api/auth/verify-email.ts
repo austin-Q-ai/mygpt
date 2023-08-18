@@ -46,11 +46,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   // add new user to meilisearch after email verified
   if (user) {
     const newUserInfo = {
-      id: user.id,
+      objectID: user.id,
       name: user.name,
       bio: user.bio,
     };
-    await index.addDocuments([newUserInfo], { primaryKey: "id" });
+    await index.addDocuments([newUserInfo], { primaryKey: "objectID" });
   }
 
   // Delete token from DB after it has been used
