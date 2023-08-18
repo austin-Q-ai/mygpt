@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiRequest, NextApiResponse } from "next";
 import Stripe from "stripe";
 
 interface Item {
@@ -12,7 +12,7 @@ interface Item {
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2023-08-16" });
 export default async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
   const { item }: { item: Item } = req.body;
-
+  console.log("Here!!!", item);
   const redirectURL =
     process.env.NODE_ENV === "development" ? "http://localhost:3000" : "http://localhost:3000";
   const transformedItem = {
@@ -20,11 +20,11 @@ export default async (req: NextApiRequest, res: NextApiResponse): Promise<void> 
       currency: "usd",
       product_data: {
         images: [item?.image],
+        description: item?.description,
         name: item.name,
       },
       unit_amount: item.price * 100,
     },
-    description: item?.description,
     quantity: item?.quantity,
   };
 
