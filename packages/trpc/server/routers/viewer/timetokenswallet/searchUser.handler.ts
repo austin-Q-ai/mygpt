@@ -12,7 +12,7 @@ type SearchUserOptions = {
 };
 
 export const searchUserHandler = async ({ ctx, input }: SearchUserOptions) => {
-  const { prisma } = ctx;
+  // const { prisma } = ctx;
 
   // const user = await prisma.user.findMany({
   //   where: {
@@ -33,7 +33,6 @@ export const searchUserHandler = async ({ ctx, input }: SearchUserOptions) => {
   // }
 
   return {
-    // user: user,
     greeting: "hello!",
   };
 };
