@@ -418,6 +418,13 @@ model Schedule {
   @@index([userId])
 }
 
+// model TimeTokensWallet {
+//   id          Int       @id @default(autoincrement())
+//   owner       
+//   emitter     
+//   amount      
+// }
+
 model Availability {
   id          Int        @id @default(autoincrement())
   user        User?      @relation(fields: [userId], references: [id], onDelete: Cascade)

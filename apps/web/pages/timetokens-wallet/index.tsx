@@ -1,9 +1,7 @@
+import { instantMeiliSearch } from "@meilisearch/instant-meilisearch";
+import { MeiliSearch } from "meilisearch";
 import React, { useEffect, useState } from "react";
 import { components } from "react-select";
-
-import { instantMeiliSearch } from "@meilisearch/instant-meilisearch";
-import type { GetServerSidePropsContext } from "next";
-import { InstantSearch, SearchBox, Hits } from "react-instantsearch-dom";
 
 import Shell from "@calcom/features/shell/Shell";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
@@ -12,8 +10,6 @@ import { Select, Button, Avatar, Badge, ConfirmationDialogContent, Dialog } from
 import { Plus } from "@calcom/ui/components/icon";
 
 import { withQuery } from "@lib/QueryCell";
-
-import { Button } from "@calcom/ui";
 
 import PageWrapper from "@components/PageWrapper";
 import SkeletonLoader from "@components/availability/SkeletonLoader";
@@ -42,7 +38,7 @@ function TimeTokensWallet() {
         }
 
         // setAddedExpertsData(expertData);
-        changeExpertOptions(expertData);
+        // changeExpertOptions(expertData);
       },
     }
   );
@@ -111,7 +107,10 @@ function TimeTokensWallet() {
     process.env.SEARCH_API_KEY // search apiKey
   );
 
-  console.log(process.env.MEILISEARCH_HOST);
+  const meiliClient = new MeiliSearch({
+    host: `https://${process.env.MEILISEARCH_HOST}`,
+    apiKey: process.env.SEARCH_API_KEY,
+  });
 
   const Hit = ({ hit }) => {
     return (
@@ -130,7 +129,7 @@ function TimeTokensWallet() {
     if (expertSearchResult.length === 0) {
       setAddedExpertsData([]);
       setExpertSearchResult(mockupData);
-      changeExpertOptions(mockupData);
+      // changeExpertOptions(mockupData);
     }
   }, []);
 
@@ -140,19 +139,19 @@ function TimeTokensWallet() {
     setBuyTokensAmount(tokens);
   };
 
-  const changeExpertOptions = (searchResult) => {
-    const data = [];
-    for (const expert of searchResult) {
-      data.push({
-        label: expert.fullname,
-        value: expert.email,
-        added: expert.added,
-      });
-    }
+  // const changeExpertOptions = (searchResult) => {
+  //   const data = [];
+  //   for (const expert of searchResult) {
+  //     data.push({
+  //       label: expert.fullname,
+  //       value: expert.email,
+  //       added: expert.added,
+  //     });
+  //   }
 
-    setExpertOptions(data);
-    console.log(data);
-  };
+  //   setExpertOptions(data);
+  //   console.log(data);
+  // };
 
   const CustomOption = ({ icon, label, added }) => {
     return (
@@ -178,8 +177,33 @@ function TimeTokensWallet() {
   };
 
   const customFilter = (option, searchText) => {
-    console.log("searchText");
-    return;
+    return true;
+  };
+
+  const handleExpertSearch = async (value) => {
+    if (value.length === 0) {
+      setExpertOptions([]);
+      return;
+    }
+
+    try {
+      const index = meiliClient.index("users");
+      const searchResults = index.search(value).then((res) => {
+        const data = [];
+        console.log(res.hits);
+        for (const expert of res.hits) {
+          data.push({
+            label: expert?.name,
+            value: expert?.objectId,
+            added: true,
+          });
+        }
+
+        setExpertOptions(data);
+      });
+    } catch (error) {
+      console.error("Error searching:", error);
+    }
   };
 
   return (
@@ -206,6 +230,9 @@ function TimeTokensWallet() {
                   className="w-full rounded-md text-sm"
                   onChange={(event) => {
                     setAddExpertEmail(event?.value);
+                  }}
+                  onInputChange={(value) => {
+                    handleExpertSearch(value);
                   }}
                 />
                 <Button disabled={addExpertEmail === ""} onClick={addExpert} data-testid="" StartIcon={Plus}>
@@ -235,35 +262,6 @@ function TimeTokensWallet() {
           );
         }}
       />
-      <div>
-        <InstantSearch indexName="users" searchClient={searchClient}>
-          <Hits hitComponent={Hit} />
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <h2 style={{ marginRight: "10px" }}>Search New Expert:</h2>
-            <SearchBox
-              translations={{
-                placeholder: "Search for experts",
-              }}
-              submit={<Button>SEARCH</Button>}
-              reset={<Button>CLEAR</Button>}
-            />
-            <style>
-              {`
-                .ais-SearchBox-resetIcon {
-                  background: white;
-                }
-                .ais-SearchBox-submitIcon {
-                  background: white;
-                }
-                .ais-SearchBox-input {
-                  color: var(--cal-text);
-                  background: var(--cal-bg);
-                }
-              `}
-            </style>
-          </div>
-        </InstantSearch>
-      </div>
     </Shell>
   );
 }

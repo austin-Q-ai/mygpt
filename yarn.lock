@@ -33,6 +33,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@algolia/events@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "@algolia/events@npm:4.0.1"
+  checksum: 4f63943f4554cfcfed91d8b8c009a49dca192b81056d8c75e532796f64828cd69899852013e81ff3fff07030df8782b9b95c19a3da0845786bdfe22af42442c2
+  languageName: node
+  linkType: hard
+
 "@ampproject/remapping@npm:^2.1.0":
   version: 2.1.2
   resolution: "@ampproject/remapping@npm:2.1.2"
@@ -4585,6 +4592,7 @@ __metadata:
     "@glidejs/glide": ^3.5.2
     "@hookform/error-message": ^2.0.0
     "@hookform/resolvers": ^2.9.7
+    "@meilisearch/instant-meilisearch": ^0.13.5
     "@microsoft/microsoft-graph-types-beta": 0.15.0-preview
     "@next-auth/prisma-adapter": ^1.0.4
     "@next/bundle-analyzer": ^13.1.6
@@ -4655,13 +4663,14 @@ __metadata:
     lottie-react: ^2.3.1
     markdown-it: ^13.0.1
     md5: ^2.3.0
+    meilisearch: ^0.34.1
     memory-cache: ^0.2.0
     micro: ^10.0.1
     mime-types: ^2.1.35
     module-alias: ^2.2.2
     msw: ^0.42.3
     next: ^13.4.6
-    next-auth: ^4.20.1
+    next-auth: ^4.22.1
     next-axiom: ^0.17.0
     next-collect: ^0.2.1
     next-i18next: ^13.2.2
@@ -4681,6 +4690,7 @@ __metadata:
     react-feather: ^2.0.10
     react-hook-form: ^7.43.3
     react-hot-toast: ^2.3.0
+    react-instantsearch-dom: ^6.40.4
     react-intl: ^5.25.1
     react-live-chat-loader: ^2.8.1
     react-multi-email: ^0.5.3
@@ -4698,6 +4708,7 @@ __metadata:
     stripe: ^9.16.0
     superjson: 1.9.1
     tailwindcss: ^3.3.1
+    tailwindcss-animate: ^1.0.6
     tailwindcss-radix: ^2.6.0
     ts-node: ^10.9.1
     turndown: ^7.1.1
@@ -7019,6 +7030,15 @@ __metadata:
   version: 1.6.22
   resolution: "@mdx-js/util@npm:1.6.22"
   checksum: 4b393907e39a1a75214f0314bf72a0adfa5e5adffd050dd5efe9c055b8549481a3cfc9f308c16dfb33311daf3ff63added7d5fd1fe52db614c004f886e0e559a
+  languageName: node
+  linkType: hard
+
+"@meilisearch/instant-meilisearch@npm:^0.13.5":
+  version: 0.13.5
+  resolution: "@meilisearch/instant-meilisearch@npm:0.13.5"
+  dependencies:
+    meilisearch: ^0.34.0
+  checksum: da5cd4b4aa69d2d24556d1dc8240f139c7bb0fcd52b666e204d629d802609b6623ca863e954001fbf90cd41771ec105fa5ac8c48d3fd0acfecd4ef8de414640e
   languageName: node
   linkType: hard
 
@@ -12923,6 +12943,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"algoliasearch-helper@npm:3.14.0":
+  version: 3.14.0
+  resolution: "algoliasearch-helper@npm:3.14.0"
+  dependencies:
+    "@algolia/events": ^4.0.1
+  peerDependencies:
+    algoliasearch: ">= 3.1 < 6"
+  checksum: bfda2125432eb6807241bb1ebfeb9b43ece456a759e160c28f34ef50c53eb763428fe7276a9e6b32ae70eba7346f89a1251524b5c8cfebe3bce45abe44af669d
+  languageName: node
+  linkType: hard
+
 "ansi-align@npm:^3.0.0":
   version: 3.0.1
   resolution: "ansi-align@npm:3.0.1"
@@ -16130,6 +16161,15 @@ __metadata:
   dependencies:
     node-fetch: 2.6.7
   checksum: f6b8c6ee3ef993ace6277fd789c71b6acf1b504fd5f5c7128df4ef2f125a429e29cd62dc8c127523f04a5f2fa4771ed80e3f3d9695617f441425045f505cf3bb
+  languageName: node
+  linkType: hard
+
+"cross-fetch@npm:^3.1.6":
+  version: 3.1.8
+  resolution: "cross-fetch@npm:3.1.8"
+  dependencies:
+    node-fetch: ^2.6.12
+  checksum: 78f993fa099eaaa041122ab037fe9503ecbbcb9daef234d1d2e0b9230a983f64d645d088c464e21a247b825a08dc444a6e7064adfa93536d3a9454b4745b3632
   languageName: node
   linkType: hard
 
@@ -24224,6 +24264,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"meilisearch@npm:^0.34.0, meilisearch@npm:^0.34.1":
+  version: 0.34.1
+  resolution: "meilisearch@npm:0.34.1"
+  dependencies:
+    cross-fetch: ^3.1.6
+  checksum: 1126700c423bf25bbee2de26c0ba329ae1fe562417d3c44e3abea9b4021d42ccd4f47a4b6c92c9b34e9e5e81cd6ce3c540d325668caa99dd81c392273b7411c3
+  languageName: node
+  linkType: hard
+
 "mem@npm:^8.1.1":
   version: 8.1.1
   resolution: "mem@npm:8.1.1"
@@ -25232,6 +25281,31 @@ __metadata:
   languageName: node
   linkType: hard
 
+"next-auth@npm:^4.22.1":
+  version: 4.23.1
+  resolution: "next-auth@npm:4.23.1"
+  dependencies:
+    "@babel/runtime": ^7.20.13
+    "@panva/hkdf": ^1.0.2
+    cookie: ^0.5.0
+    jose: ^4.11.4
+    oauth: ^0.9.15
+    openid-client: ^5.4.0
+    preact: ^10.6.3
+    preact-render-to-string: ^5.1.19
+    uuid: ^8.3.2
+  peerDependencies:
+    next: ^12.2.5 || ^13
+    nodemailer: ^6.6.5
+    react: ^17.0.2 || ^18
+    react-dom: ^17.0.2 || ^18
+  peerDependenciesMeta:
+    nodemailer:
+      optional: true
+  checksum: 995114797c257ccf71a82d19fb6316fb7709b552aaaf66444591c505a4b8e00b0cae3f4db4316b63a8cc439076044cc391ab171c4f6ee2e086709c5b3bbfed24
+  languageName: node
+  linkType: hard
+
 "next-axiom@npm:^0.17.0":
   version: 0.17.0
   resolution: "next-axiom@npm:0.17.0"
@@ -25456,6 +25530,20 @@ __metadata:
     encoding:
       optional: true
   checksum: 8d816ffd1ee22cab8301c7756ef04f3437f18dace86a1dae22cf81db8ef29c0bf6655f3215cb0cdb22b420b6fe141e64b26905e7f33f9377a7fa59135ea3e10b
+  languageName: node
+  linkType: hard
+
+"node-fetch@npm:^2.6.12":
+  version: 2.6.13
+  resolution: "node-fetch@npm:2.6.13"
+  dependencies:
+    whatwg-url: ^5.0.0
+  peerDependencies:
+    encoding: ^0.1.0
+  peerDependenciesMeta:
+    encoding:
+      optional: true
+  checksum: 055845ae5b4796c78c7053564745345025cf959563b3568b43c385f67d311779e6b00e5fef6ed1b79f86ba4048e4b4b722e1aa948305521b9353eb7e788912c9
   languageName: node
   linkType: hard
 
@@ -28335,6 +28423,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-fast-compare@npm:^3.0.0":
+  version: 3.2.2
+  resolution: "react-fast-compare@npm:3.2.2"
+  checksum: 2071415b4f76a3e6b55c84611c4d24dcb12ffc85811a2840b5a3f1ff2d1a99be1020d9437ee7c6e024c9f4cbb84ceb35e48cf84f28fcb00265ad2dfdd3947704
+  languageName: node
+  linkType: hard
+
 "react-feather@npm:^2.0.10":
   version: 2.0.10
   resolution: "react-feather@npm:2.0.10"
@@ -28440,6 +28535,39 @@ __metadata:
   peerDependencies:
     react: ^16.8.4 || ^17.0.0
   checksum: ca9e4c1fedb94e4e956dd3142838c5a25a9d61375aee5e8a74dd623bae09a263098a93f220e8d84c7fd39e569e1fa4297d363ddbc91b15bca91baeb7281d7f4f
+  languageName: node
+  linkType: hard
+
+"react-instantsearch-core@npm:6.40.4":
+  version: 6.40.4
+  resolution: "react-instantsearch-core@npm:6.40.4"
+  dependencies:
+    "@babel/runtime": ^7.1.2
+    algoliasearch-helper: 3.14.0
+    prop-types: ^15.6.2
+    react-fast-compare: ^3.0.0
+  peerDependencies:
+    algoliasearch: ">= 3.1 < 5"
+    react: ">= 16.3.0 < 19"
+  checksum: 7a49f7ea2b47d7d64406f82c7d8d510b89b6d6ea2c1814762257c802257f49ab0457681a9b7094b10db749d384b42ceabfe864524d0b555ed8712401e29c25ce
+  languageName: node
+  linkType: hard
+
+"react-instantsearch-dom@npm:^6.40.4":
+  version: 6.40.4
+  resolution: "react-instantsearch-dom@npm:6.40.4"
+  dependencies:
+    "@babel/runtime": ^7.1.2
+    algoliasearch-helper: 3.14.0
+    classnames: ^2.2.5
+    prop-types: ^15.6.2
+    react-fast-compare: ^3.0.0
+    react-instantsearch-core: 6.40.4
+  peerDependencies:
+    algoliasearch: ">= 3.1 < 5"
+    react: ">= 16.3.0 < 19"
+    react-dom: ">= 16.3.0 < 19"
+  checksum: 401174b5a5aa9362a9aef17c8bb120d85b69e19d9e63ed193b08534e6695b306bd768801e7be1ed36d4f7d973a2efb6eb49d8a9fc8bb81936da89fcdd2a2d603
   languageName: node
   linkType: hard
 
@@ -31843,6 +31971,15 @@ __metadata:
   peerDependencies:
     tailwindcss: 3.x
   checksum: 8f72ad2d19cffdd53b5deec4fd6a6c4fffa9206c472fd89df803db97c7723a1b0a7fc0b4d5345b69b71f2e0fd7a036eaebc2a533feb4d71caec48dc49bb17ca5
+  languageName: node
+  linkType: hard
+
+"tailwindcss-animate@npm:^1.0.6":
+  version: 1.0.6
+  resolution: "tailwindcss-animate@npm:1.0.6"
+  peerDependencies:
+    tailwindcss: "*"
+  checksum: 01471cb5e64d0936b3dc90bdb1d4b379e8b73b3d285553337d8576e5d458e868ddff99c6db0ae454c1be69ce8f88dc0eed44ea62e4d7bca10d7d2479fc4c8ee0
   languageName: node
   linkType: hard
 
