@@ -49,7 +49,7 @@ function TimeTokensWallet() {
   const [buyTokensAmount, setBuyTokensAmount] = useState(0);
   const [expertSearchResult, setExpertSearchResult] = useState([]);
   const [expertOptions, setExpertOptions] = useState([]);
-  const [addExpertEmail, setAddExpertEmail] = useState<string>("");
+  const [addExpertId, setAddExpertId] = useState<string>("");
 
   const mockupData = [
     {
@@ -168,12 +168,14 @@ function TimeTokensWallet() {
   };
 
   const addExpert = () => {
-    for (const expert of expertSearchResult) {
-      if (expert?.email === addExpertEmail) {
-        setAddedExpertsData([...addedExpertsData, expert]);
-        break;
+    trpc.viewer.timetokenswallet.addExpert.useQuery(
+      { userId: addExpertId },
+      {
+        onSuccess: (data) => {
+          console.log(data, "======");
+        },
       }
-    }
+    );
   };
 
   const customFilter = (option, searchText) => {
@@ -229,13 +231,13 @@ function TimeTokensWallet() {
                   filterOption={customFilter}
                   className="w-full rounded-md text-sm"
                   onChange={(event) => {
-                    setAddExpertEmail(event?.value);
+                    setAddExpertId(event?.value);
                   }}
                   onInputChange={(value) => {
                     handleExpertSearch(value);
                   }}
                 />
-                <Button disabled={addExpertEmail === ""} onClick={addExpert} data-testid="" StartIcon={Plus}>
+                <Button disabled={addExpertId === ""} onClick={addExpert} data-testid="" StartIcon={Plus}>
                   {t("add")}
                 </Button>
               </div>

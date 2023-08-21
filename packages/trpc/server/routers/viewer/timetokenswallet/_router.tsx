@@ -1,6 +1,6 @@
 import authedProcedure from "../../../procedures/authedProcedure";
 import { router } from "../../../trpc";
-import { scheduleRouter } from "./schedule/_router";
+import { ZAddExpertSchema } from "./addExpert.schema";
 import { ZUserInputSchema } from "./user.schema";
 
 type AvailabilityRouterHandlerCache = {
@@ -42,5 +42,19 @@ export const timetokenswalletRouter = router({
     });
   }),
 
-  schedule: scheduleRouter,
+  addExpert: authedProcedure.input(ZAddExpertSchema).query(async ({ ctx, input }) => {
+    if (!UNSTABLE_HANDLER_CACHE.user) {
+      UNSTABLE_HANDLER_CACHE.user = await import("./addExpert.handler").then((mod) => mod.addExpertHandler);
+    }
+
+    // Unreachable code but required for type safety
+    if (!UNSTABLE_HANDLER_CACHE.user) {
+      throw new Error("Failed to load handler");
+    }
+
+    return UNSTABLE_HANDLER_CACHE.user({
+      ctx,
+      input,
+    });
+  }),
 });
