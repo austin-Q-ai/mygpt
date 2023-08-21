@@ -1,3 +1,5 @@
+import { prisma } from "@calcom/prisma";
+
 import type { TrpcSessionUser } from "../../../trpc";
 import type { TAddExpertSchema } from "./addExpert.handler.schema";
 
@@ -9,21 +11,39 @@ type AddExpertOptions = {
 };
 
 export const addExpertHandler = async ({ ctx, input }: AddExpertOptions) => {
-  // const users = await prisma.User.findMany({
-  //   where: {
-  //     name: { contains: input.username },
-  //   },
-  //   select: {
-  //     name: true,
-  //     email: true,
-  //     avatar: true,
-  //   },
-  //   orderBy: {
-  //     id: "asc",
-  //   },
-  // });
+  const { user } = ctx;
+  const { userId } = input;
+  // const ownerId = ctx.user.id;
+  // const emitterId = input.userId;
+
+  await prisma?.timeTokensWallet.create({
+    data: {
+      owner: { connect: { id: user.id } },
+      emitter: { connect: { id: userId } },
+      amount: 0,
+    },
+  });
+
+  const users = await prisma.timeTokensWallet.findMany({
+    where: {
+      ownerId: user.id,
+    },
+    select: {
+      emitter: {
+        select: {
+          id: true,
+          avatar: true,
+          name: true,
+        },
+      },
+      amount: true,
+    },
+    orderBy: {
+      id: "asc",
+    },
+  });
 
   return {
-    user: ctx.user,
+    user: users,
   };
 };

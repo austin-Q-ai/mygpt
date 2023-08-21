@@ -20,28 +20,6 @@ const WithQuery = withQuery(trpc.viewer.availability.list as any);
 
 function TimeTokensWallet() {
   const { t } = useLocale();
-  // const [user] = trpc.viewer.me.useSuspenseQuery();
-  trpc.viewer.timetokenswallet.user.useQuery(
-    { username: "a" },
-    {
-      onSuccess: (data) => {
-        const expertData = [];
-        for (const user of data.users) {
-          expertData.push({
-            email: user.email,
-            fullname: user.name,
-            expert_token_amount: 1000,
-            token_amount: 200,
-            token_price: 5,
-            added: false,
-          });
-        }
-
-        // setAddedExpertsData(expertData);
-        // changeExpertOptions(expertData);
-      },
-    }
-  );
 
   const [addedExpertsData, setAddedExpertsData] = useState([]);
   const [buyConfirmOpen, setBuyConfirmOpen] = useState(false);
@@ -50,56 +28,6 @@ function TimeTokensWallet() {
   const [expertSearchResult, setExpertSearchResult] = useState([]);
   const [expertOptions, setExpertOptions] = useState([]);
   const [addExpertId, setAddExpertId] = useState<string>("");
-
-  const mockupData = [
-    {
-      email: "cawsonoliver33@gmail.com",
-      fullname: "Expert 1",
-      expert_token_amount: 1000,
-      token_amount: 200,
-      token_price: 5,
-      added: false,
-    },
-    {
-      email: "cawsonoliver44@gmail.com",
-      fullname: "Expert 2",
-      expert_token_amount: 1000,
-      token_amount: 200,
-      token_price: 5,
-      added: false,
-    },
-    {
-      email: "cawsonoliver55@gmail.com",
-      fullname: "Expert 3",
-      expert_token_amount: 1000,
-      token_amount: 0,
-      token_price: 5,
-      added: true,
-    },
-    {
-      email: "cawsonoliver66@gmail.com",
-      fullname: "Expert 4",
-      expert_token_amount: 1000,
-      token_amount: 0,
-      token_price: 5,
-      added: true,
-    },
-    {
-      email: "cawsonoliver77@gmail.com",
-      fullname: "Expert 5",
-      expert_token_amount: 1000,
-      token_amount: 200,
-      token_price: 5,
-      added: false,
-    },
-    {
-      email: "cawsonoliver88@gmail.com",
-      fullname: "Expert 6",
-      token_amount: 200,
-      token_price: 5,
-      added: false,
-    },
-  ];
 
   // not working because of https schema
   const searchClient = instantMeiliSearch(
@@ -128,8 +56,6 @@ function TimeTokensWallet() {
   useEffect(() => {
     if (expertSearchResult.length === 0) {
       setAddedExpertsData([]);
-      setExpertSearchResult(mockupData);
-      // changeExpertOptions(mockupData);
     }
   }, []);
 
@@ -138,20 +64,6 @@ function TimeTokensWallet() {
     setBuyExpertEmail(email);
     setBuyTokensAmount(tokens);
   };
-
-  // const changeExpertOptions = (searchResult) => {
-  //   const data = [];
-  //   for (const expert of searchResult) {
-  //     data.push({
-  //       label: expert.fullname,
-  //       value: expert.email,
-  //       added: expert.added,
-  //     });
-  //   }
-
-  //   setExpertOptions(data);
-  //   console.log(data);
-  // };
 
   const CustomOption = ({ icon, label, added }) => {
     return (
@@ -167,15 +79,22 @@ function TimeTokensWallet() {
     );
   };
 
+  trpc.viewer.timetokenswallet.getAddedExperts.useQuery({
+    onSuccess: (data) => {
+      console.log(data, "===== get added experts");
+      setAddedExpertsDataHandler(data);
+    },
+  });
+
+  const mutation = trpc.viewer.timetokenswallet.addExpert.useMutation({
+    onSuccess: (data) => {
+      setAddedExpertsDataHandler(data);
+    },
+  });
+
   const addExpert = () => {
-    trpc.viewer.timetokenswallet.addExpert.useQuery(
-      { userId: addExpertId },
-      {
-        onSuccess: (data) => {
-          console.log(data, "======");
-        },
-      }
-    );
+    console.log(addExpertId, "=====");
+    mutation.mutate({ userId: addExpertId });
   };
 
   const customFilter = (option, searchText) => {
@@ -196,7 +115,7 @@ function TimeTokensWallet() {
         for (const expert of res.hits) {
           data.push({
             label: expert?.name,
-            value: expert?.objectId,
+            value: expert?.objectID,
             added: true,
           });
         }
@@ -206,6 +125,23 @@ function TimeTokensWallet() {
     } catch (error) {
       console.error("Error searching:", error);
     }
+  };
+
+  const setAddedExpertsDataHandler = (users) => {
+    const data = [];
+
+    for (const item of users) {
+      data.push({
+        email: item.emitter.email,
+        fullname: item.emitter.name,
+        expert_token_amount: 3000,
+        token_amount: item.amount,
+        token_price: 5,
+        added: true,
+      });
+    }
+
+    setAddedExpertsData(data);
   };
 
   return (

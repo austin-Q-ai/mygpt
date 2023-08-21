@@ -11,9 +11,11 @@ type AvailabilityRouterHandlerCache = {
 const UNSTABLE_HANDLER_CACHE: AvailabilityRouterHandlerCache = {};
 
 export const timetokenswalletRouter = router({
-  list: authedProcedure.query(async ({ ctx }) => {
+  getAddedExperts: authedProcedure.query(async ({ ctx }) => {
     if (!UNSTABLE_HANDLER_CACHE.list) {
-      UNSTABLE_HANDLER_CACHE.list = await import("./list.handler").then((mod) => mod.listHandler);
+      UNSTABLE_HANDLER_CACHE.list = await import("./getAddedExperts.handler").then(
+        (mod) => mod.getAddedExpertsHandler
+      );
     }
 
     // Unreachable code but required for type safety
@@ -42,7 +44,7 @@ export const timetokenswalletRouter = router({
     });
   }),
 
-  addExpert: authedProcedure.input(ZAddExpertSchema).query(async ({ ctx, input }) => {
+  addExpert: authedProcedure.input(ZAddExpertSchema).mutation(async ({ ctx, input }) => {
     if (!UNSTABLE_HANDLER_CACHE.user) {
       UNSTABLE_HANDLER_CACHE.user = await import("./addExpert.handler").then((mod) => mod.addExpertHandler);
     }

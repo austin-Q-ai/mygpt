@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const ZAddExpertSchema = z.object({
-  userId: z.string(),
+  userId: z.number(),
 });
 
 export type TAddExpertSchema = z.infer<typeof ZAddExpertSchema>;

@@ -43,7 +43,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     },
   });
 
-  // add new user to meilisearch after email verified
+  // add new user to meilisearch and generate a tokenprice record after email verified
   if (user.emailVerified) {
     const newUserInfo = {
       objectID: user.id,
