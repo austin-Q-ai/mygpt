@@ -44,11 +44,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   });
 
   // add new user to meilisearch after email verified
-  if (user) {
+  if (user.emailVerified) {
     const newUserInfo = {
       objectID: user.id,
       name: user.name,
       bio: user.bio,
+      avatar: user.avatar,
     };
     await index.addDocuments([newUserInfo], { primaryKey: "objectID" });
   }

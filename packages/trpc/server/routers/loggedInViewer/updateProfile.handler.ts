@@ -120,6 +120,7 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
       name: true,
       createdDate: true,
       bio: true,
+      avatar: true,
     },
   });
 
@@ -129,6 +130,7 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
       objectID: updatedUser.id,
       name: updatedUser.name,
       bio: updatedUser.bio,
+      avatar: updatedUser.avatar,
     };
     await index.updateDocuments([updatedUserInfo]);
   }
