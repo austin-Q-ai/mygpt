@@ -18,12 +18,25 @@ const WithQuery = withQuery(trpc.viewer.availability.list as any);
 
 function TimeTokensWallet() {
   const { t } = useLocale();
-  const [user] = trpc.viewer.me.useSuspenseQuery();
-  trpc.viewer.timetokenswallet.searchUser.useQuery(
-    { name: "a" },
+  // const [user] = trpc.viewer.me.useSuspenseQuery();
+  trpc.viewer.timetokenswallet.user.useQuery(
+    { username: "a" },
     {
       onSuccess: (data) => {
-        console.log(data, "=====");
+        const expertData = [];
+        for (const user of data.users) {
+          expertData.push({
+            email: user.email,
+            fullname: user.name,
+            expert_token_amount: 1000,
+            token_amount: 200,
+            token_price: 5,
+            added: false,
+          });
+        }
+
+        // setAddedExpertsData(expertData);
+        changeExpertOptions(expertData);
       },
     }
   );
@@ -94,8 +107,6 @@ function TimeTokensWallet() {
       setExpertSearchResult(mockupData);
       changeExpertOptions(mockupData);
     }
-
-    console.log(addedExpertsData);
   }, []);
 
   const handleBuyEvent = (email: string, tokens: number) => {
@@ -141,6 +152,11 @@ function TimeTokensWallet() {
     }
   };
 
+  const customFilter = (option, searchText) => {
+    console.log("searchText");
+    return;
+  };
+
   return (
     <Shell heading={t("timetokens_wallet")} hideHeadingOnMobile subtitle={t("buy_sell_timetokens")}>
       <WithQuery
@@ -161,6 +177,7 @@ function TimeTokensWallet() {
                     },
                   }}
                   isSearchable={true}
+                  filterOption={customFilter}
                   className="w-full rounded-md text-sm"
                   onChange={(event) => {
                     setAddExpertEmail(event?.value);
