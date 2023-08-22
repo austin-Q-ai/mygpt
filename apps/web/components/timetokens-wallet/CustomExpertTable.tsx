@@ -19,7 +19,7 @@ import {
 import { MoreHorizontal, Trash2, ShoppingCart, Newspaper } from "@calcom/ui/components/icon";
 
 export interface ExpertDataType {
-  email: string;
+  userId: number;
   fullname: string;
   expert_token_amount: number;
   token_amount: number;
@@ -30,7 +30,7 @@ export interface ExpertDataType {
 interface CustomExpertTableProps {
   expertsData: ExpertData[];
   columns: string[];
-  handleBuyEvent: (email: string, tokens: number) => void;
+  handleBuyEvent: (userId: number, tokens: number) => void;
 }
 
 function CustomExpertTable(props: CustomExpertTableProps) {
@@ -103,7 +103,7 @@ function CustomExpertTable(props: CustomExpertTableProps) {
                             color="secondary"
                             target="_blank"
                             variant="icon"
-                            onClick={() => handleBuyEvent(data.email, tokensAmount[index])}
+                            onClick={() => handleBuyEvent(data.userId, tokensAmount[index])}
                             StartIcon={ShoppingCart}
                           />
                         </Tooltip>

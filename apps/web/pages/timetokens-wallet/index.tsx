@@ -23,7 +23,7 @@ function TimeTokensWallet() {
 
   const [addedExpertsData, setAddedExpertsData] = useState([]);
   const [buyConfirmOpen, setBuyConfirmOpen] = useState(false);
-  const [buyExpertEmail, setBuyExpertEmail] = useState("");
+  const [buyExpertID, setBuyExpertID] = useState("");
   const [buyTokensAmount, setBuyTokensAmount] = useState(0);
   const [expertSearchResult, setExpertSearchResult] = useState([]);
   const [expertOptions, setExpertOptions] = useState([]);
@@ -37,7 +37,7 @@ function TimeTokensWallet() {
 
   const meiliClient = new MeiliSearch({
     host: `https://${process.env.MEILISEARCH_HOST}`,
-    apiKey: process.env.SEARCH_API_KEY,
+    apiKey: process.env.SEARCH_API_KEY,r
   });
 
   const Hit = ({ hit }) => {
@@ -54,14 +54,11 @@ function TimeTokensWallet() {
   const columns = ["Expert", "Tokens amount", "Token price", ""];
 
   useEffect(() => {
-    if (expertSearchResult.length === 0) {
-      setAddedExpertsData([]);
-    }
   }, []);
 
-  const handleBuyEvent = (email: string, tokens: number) => {
+  const handleBuyEvent = (userId: string, tokens: number) => {
     setBuyConfirmOpen(true);
-    setBuyExpertEmail(email);
+    setBuyExpertID(userId);
     setBuyTokensAmount(tokens);
   };
 
@@ -82,15 +79,21 @@ function TimeTokensWallet() {
   trpc.viewer.timetokenswallet.getAddedExperts.useQuery({
     onSuccess: (data) => {
       console.log(data, "===== get added experts");
-      setAddedExpertsDataHandler(data);
+      setAddedExpertsDataHandler(data.users);
     },
   });
 
-  const mutation = trpc.viewer.timetokenswallet.addExpert.useMutation({
+  const addExpertMutation = trpc.viewer.timetokenswallet.addExpert.useMutation({
     onSuccess: (data) => {
-      setAddedExpertsDataHandler(data);
+      setAddedExpertsDataHandler(data.users);
     },
   });
+
+  const buyTokensMutation = trpc.viewer.timetokenswallet.buyTokens.useMutation({
+    onSuccess: (data) => {
+      setAddedExpertsDataHandler(data.users);
+    },
+  })
 
   const addExpert = () => {
     console.log(addExpertId, "=====");
@@ -132,7 +135,7 @@ function TimeTokensWallet() {
 
     for (const item of users) {
       data.push({
-        email: item.emitter.email,
+        userId: item.emitter.id,
         fullname: item.emitter.name,
         expert_token_amount: 3000,
         token_amount: item.amount,
@@ -190,7 +193,7 @@ function TimeTokensWallet() {
                   loadingText={t(`confirm_buy_event`)}
                   onConfirm={(e) => {
                     e.preventDefault();
-                    console.log(buyExpertEmail, buyTokensAmount);
+                    buyTokensMutation.mutate({userId: buyExpertID, amount: buyTokensAmount})
                     setBuyConfirmOpen(false);
                   }}>
                   <p className="mt-5">Do you want to really buy tokens?</p>
