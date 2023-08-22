@@ -1,5 +1,6 @@
 import type { Prisma } from "@prisma/client";
 import type { NextApiResponse, GetServerSidePropsContext } from "next";
+import { MeiliSearch } from "meilisearch";
 
 import stripe from "@calcom/app-store/stripepayment/lib/server";
 import { getPremiumPlanProductId } from "@calcom/app-store/stripepayment/lib/utils";
@@ -25,6 +26,13 @@ type UpdateProfileOptions = {
   };
   input: TUpdateProfileInputSchema;
 };
+
+const client = new MeiliSearch({
+  host: `https://${process.env.MEILISEARCH_HOST}`,
+  apiKey: process.env.ADMIN_API_KEY, // admin apiKey
+});
+
+const index = client.index("users");
 
 export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions) => {
   const { user } = ctx;
@@ -111,8 +119,21 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
       metadata: true,
       name: true,
       createdDate: true,
+      bio: true,
+      avatar: true,
     },
   });
+
+  // update userInfo to meilisearch by id after update userInfo
+  if (updatedUser) {
+    const updatedUserInfo = {
+      objectID: updatedUser.id,
+      name: updatedUser.name,
+      bio: updatedUser.bio,
+      avatar: updatedUser.avatar,
+    };
+    await index.updateDocuments([updatedUserInfo]);
+  }
 
   // Sync Services
   await syncServicesUpdateWebUser(updatedUser);

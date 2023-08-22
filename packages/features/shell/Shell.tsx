@@ -76,6 +76,7 @@ import {
   Slack,
   Users,
   Zap,
+  Wallet,
   User as UserIcon,
 } from "@calcom/ui/components/icon";
 
@@ -509,6 +510,11 @@ const navigation: NavigationItemType[] = [
       const path = router.asPath.split("?")[0];
       return path.startsWith("/bookings");
     },
+  },
+  {
+    name: "timetokens_wallet",
+    href: "/timetokens-wallet",
+    icon: Wallet,
   },
   {
     name: "availability",
