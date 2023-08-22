@@ -335,6 +335,12 @@ const ProfileForm = ({
   const { t } = useLocale();
   const [firstRender, setFirstRender] = useState(true);
   const [editableHeader, setEditableHeader] = useState(false);
+  const [editableAbout, setEditableAbout] = useState(false);
+  const [editableSkill, setEditableSkill] = useState(false);
+  const [editableExp, setEditableExp] = useState(false);
+  const [editableEducation, setEditableEducation] = useState(false);
+
+  let settable = true;
 
   const profileFormSchema = z.object({
     username: z.string(),
@@ -369,7 +375,7 @@ const ProfileForm = ({
           name="avatar"
           render={({ field: { value } }) => (
             <Card
-              containerProps={{ style: { width: "60%" } }}
+              containerProps={{ style: { width: "60%", borderRadius: "20px" } }}
               variant="ProfileCard"
               description={
                 <div className="flex items-center">
@@ -387,7 +393,7 @@ const ProfileForm = ({
                     />
                   )}
                   <div className="items-left ms-4 flex flex-col">
-                    <div style={{ fontSize: "20px" }}>
+                    <div className="text-xl">
                       {!editableHeader ? (
                         <>{defaultValues.name}</>
                       ) : (
@@ -462,22 +468,187 @@ const ProfileForm = ({
           )}
         />
       </div>
-      {extraField}
       <div className="mt-8">
-        <TextField label={t("email")} hint={t("change_email_hint")} {...formMethods.register("email")} />
+        <Card
+          containerProps={{ style: { width: "100%", borderRadius: "20px" } }}
+          variant="ProfileCard"
+          description={
+            <>
+              <div className="mb-4 flex justify-between">
+                <Label className="text-lg">{t("about")}</Label>
+                <Button
+                  color="secondary"
+                  StartIcon={!editableAbout ? Edit2 : Cross}
+                  className={!editableAbout ? "rounded-full" : "rotate-45 transform rounded-full"}
+                  variant="icon"
+                  onClick={() => {
+                    if (!editableAbout) {
+                      settable = true;
+                    }
+                    setEditableAbout(!editableAbout);
+                  }}
+                />
+              </div>
+              {editableAbout ? (
+                <Editor
+                  getText={() => {
+                    if (settable) {
+                      settable = false;
+                      return md.render(formMethods.getValues("bio") || "");
+                    } else {
+                      return md.render("");
+                    }
+                  }}
+                  setText={(value: string) => {
+                    formMethods.setValue("bio", turndown(value), { shouldDirty: true });
+                  }}
+                  excludedToolbarItems={["blockType"]}
+                  disableLists
+                  firstRender={firstRender}
+                  setFirstRender={setFirstRender}
+                />
+              ) : (
+                <>{defaultValues.bio}</>
+              )}
+            </>
+          }
+        />
       </div>
       <div className="mt-8">
-        <Label>{t("about")}</Label>
-        <Editor
-          getText={() => md.render(formMethods.getValues("bio") || "")}
-          setText={(value: string) => {
-            formMethods.setValue("bio", turndown(value), { shouldDirty: true });
-          }}
-          excludedToolbarItems={["blockType"]}
-          disableLists
-          firstRender={firstRender}
-          setFirstRender={setFirstRender}
+        <Card
+          containerProps={{ style: { width: "100%", borderRadius: "20px" } }}
+          variant="ProfileCard"
+          description={
+            <>
+              <div className="mb-4 flex justify-between">
+                <Label className="text-lg">{t("skill")}</Label>
+                <Button
+                  color="secondary"
+                  StartIcon={!editableSkill ? Edit2 : Cross}
+                  className={!editableSkill ? "rounded-full" : "rotate-45 transform rounded-full"}
+                  variant="icon"
+                  onClick={() => {
+                    setEditableSkill(!editableSkill);
+                  }}
+                />
+              </div>
+            </>
+          }
         />
+      </div>
+      <div className="mt-8 flex gap-2">
+        <Card
+          containerProps={{ style: { width: "50%", borderRadius: "20px" } }}
+          variant="ProfileCard"
+          description={
+            <>
+              <div className="mb-4 flex justify-between">
+                <Label className="text-lg">{t("exp")}</Label>
+                <Button
+                  color="secondary"
+                  StartIcon={!editableExp ? Edit2 : Cross}
+                  className={!editableExp ? "rounded-full" : "rotate-45 transform rounded-full"}
+                  variant="icon"
+                  onClick={() => {
+                    setEditableExp(!editableExp);
+                  }}
+                />
+              </div>
+              <div className="flex flex-col">
+                <div className="items-left mb-4 flex flex-col">
+                  <div className="mb-4 flex gap-2">
+                    <div>
+                      <Avatar alt="" imageSrc="" gravatarFallbackMd5="fallback" size="sm" />
+                    </div>
+                    <div className="flex flex-col">
+                      <div className="mb-1">
+                        <b>Full Stack Software Developer</b>
+                      </div>
+                      <div>Lambda Vision</div>
+                      <div>Aug 2023 - Present : 1 month</div>
+                      <div>24 Nga Tsin Wai Road, Kowloon, Hong Kong</div>
+                    </div>
+                  </div>
+                  <hr />
+                </div>
+                <div className="items-left mb-4 flex flex-col">
+                  <div className="mb-4 flex gap-2">
+                    <div>
+                      <Avatar alt="" imageSrc="" gravatarFallbackMd5="fallback" size="sm" />
+                    </div>
+                    <div className="flex flex-col">
+                      <div className="mb-1">
+                        <b>Full Stack Software Developer</b>
+                      </div>
+                      <div>Lambda Vision</div>
+                      <div>Aug 2023 - Present : 1 month</div>
+                      <div>24 Nga Tsin Wai Road, Kowloon, Hong Kong</div>
+                    </div>
+                  </div>
+                  <hr />
+                </div>
+              </div>
+            </>
+          }
+        />
+        <Card
+          containerProps={{ style: { width: "50%", borderRadius: "20px" } }}
+          variant="ProfileCard"
+          description={
+            <>
+              <div className="mb-4 flex justify-between">
+                <Label className="text-lg">{t("education")}</Label>
+                <Button
+                  color="secondary"
+                  StartIcon={!editableEducation ? Edit2 : Cross}
+                  className={!editableEducation ? "rounded-full" : "rotate-45 transform rounded-full"}
+                  variant="icon"
+                  onClick={() => {
+                    setEditableEducation(!editableEducation);
+                  }}
+                />
+              </div>
+              <div className="flex flex-col">
+                <div className="items-left mb-4 flex flex-col">
+                  <div className="mb-4 flex gap-2">
+                    <div>
+                      <Avatar alt="" imageSrc="" gravatarFallbackMd5="fallback" size="sm" />
+                    </div>
+                    <div className="flex flex-col">
+                      <div className="mb-1">
+                        <b>The Univerity Of Hong Kong</b>
+                      </div>
+                      <div>Bachelor's Degree</div>
+                      <div>Computer Science</div>
+                      <div>Feb 2012 - Feb 2016</div>
+                    </div>
+                  </div>
+                  <hr />
+                </div>
+                <div className="items-left mb-4 flex flex-col">
+                  <div className="mb-4 flex gap-2">
+                    <div>
+                      <Avatar alt="" imageSrc="" gravatarFallbackMd5="fallback" size="sm" />
+                    </div>
+                    <div className="flex flex-col">
+                      <div className="mb-1">
+                        <b>The Univerity Of Hong Kong</b>
+                      </div>
+                      <div>Bachelor's Degree</div>
+                      <div>Computer Science</div>
+                      <div>Feb 2012 - Feb 2016</div>
+                    </div>
+                  </div>
+                  <hr />
+                </div>
+              </div>
+            </>
+          }
+        />
+      </div>
+      <div className="hidden">{extraField}</div>
+      <div className="hidden">
+        <TextField label={t("email")} hint={t("change_email_hint")} {...formMethods.register("email")} />
       </div>
       <Button loading={isLoading} disabled={isDisabled} color="primary" className="mt-8" type="submit">
         {t("update")}
