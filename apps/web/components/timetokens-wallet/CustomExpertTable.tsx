@@ -85,6 +85,7 @@ function CustomExpertTable(props: CustomExpertTableProps) {
                     <Input
                       type="number"
                       min={1}
+                      max={data.expert_token_amount}
                       disabled={false}
                       onChange={(e) => {
                         const val = Number(e.target?.value);

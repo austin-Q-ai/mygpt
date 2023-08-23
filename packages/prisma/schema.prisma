@@ -436,7 +436,7 @@ model TokenPrice {
   emitter   User     @relation(fields: [emitterId], references: [id], onDelete: Cascade)
   emitterId Int
   tokens    Int
-  price     Int
+  price     Int      @default(1)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

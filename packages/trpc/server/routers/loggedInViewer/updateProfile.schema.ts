@@ -6,6 +6,7 @@ import { userMetadata } from "@calcom/prisma/zod-utils";
 export const ZUpdateProfileInputSchema = z.object({
   username: z.string().optional(),
   name: z.string().max(FULL_NAME_LENGTH_MAX_LIMIT).optional(),
+  price: z.number().min(0).optional(),
   email: z.string().optional(),
   bio: z.string().optional(),
   avatar: z.string().optional(),

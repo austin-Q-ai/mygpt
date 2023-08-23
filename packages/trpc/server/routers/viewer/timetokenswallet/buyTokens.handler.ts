@@ -31,7 +31,7 @@ export const buyTokensHandler = async ({ ctx, input }: BuyTokensOptions) => {
       id: emitterId,
     },
     data: {
-      tokens: { decrement: amount },
+    tokens: { decrement: amount },
     }
   })
 
@@ -45,14 +45,14 @@ export const buyTokensHandler = async ({ ctx, input }: BuyTokensOptions) => {
           id: true,
           avatar: true,
           name: true,
-        },
+        }
       },
       amount: true,
     },
     orderBy: {
       id: "asc",
-    },
-  });
+    }
+  })
 
   return {
     users: users,
