@@ -1,3 +1,4 @@
+import { MeiliSearch } from "meilisearch";
 import { authenticator } from "otplib";
 
 import { deleteStripeCustomer } from "@calcom/app-store/stripepayment/lib/customer";
@@ -17,6 +18,13 @@ type DeleteMeOptions = {
   };
   input: TDeleteMeInputSchema;
 };
+
+const client = new MeiliSearch({
+  host: `https://${process.env.MEILISEARCH_HOST}`,
+  apiKey: process.env.ADMIN_API_KEY, // admin apiKey
+});
+
+const index = client.index("users");
 
 export const deleteMeHandler = async ({ ctx, input }: DeleteMeOptions) => {
   // Check if input.password is correct
@@ -80,6 +88,11 @@ export const deleteMeHandler = async ({ ctx, input }: DeleteMeOptions) => {
       id: ctx.user.id,
     },
   });
+
+  // remove userInfo to meilisearch by id after remove userInfo
+  if (deletedUser) {
+    await index.deleteDocuments([deletedUser.id]);
+  }
 
   // Sync Services
   syncServicesDeleteWebUser(deletedUser);

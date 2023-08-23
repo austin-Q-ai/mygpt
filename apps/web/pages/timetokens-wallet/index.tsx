@@ -1,5 +1,5 @@
+import MeiliSearch from "meilisearch";
 import React, { useEffect, useState } from "react";
-import { components } from "react-select";
 
 import Shell from "@calcom/features/shell/Shell";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
@@ -35,6 +35,7 @@ function TimeTokensWallet() {
   const [expertSearchResult, setExpertSearchResult] = useState([]);
   const [expertOptions, setExpertOptions] = useState([]);
   const [addExpertEmail, setAddExpertEmail] = useState<string>("");
+  const [searchResults, setSearchResults] = useState([]);
 
   const mockupData = [
     {
@@ -86,6 +87,13 @@ function TimeTokensWallet() {
     },
   ];
 
+  const client = new MeiliSearch({
+    host: `https://${process.env.MEILISEARCH_HOST}`,
+    apiKey: process.env.SEARCH_API_KEY, // search apiKey
+  });
+
+  console.log(process.env.MEILISEARCH_HOST);
+
   const columns = ["Expert", "Tokens amount", "Token price", ""];
 
   useEffect(() => {
@@ -96,6 +104,14 @@ function TimeTokensWallet() {
     }
 
     console.log(addedExpertsData);
+  }, []);
+
+  useEffect(() => {
+    const search = async () => {
+      const results = await client.index("users").search("");
+      setSearchResults(results.hits);
+    };
+    search();
   }, []);
 
   const handleBuyEvent = (email: string, tokens: number) => {
@@ -193,6 +209,11 @@ function TimeTokensWallet() {
           );
         }}
       />
+      <div>
+        {searchResults.map((result, index) => (
+          <p key={result.objectID}>{result.name}</p> // Or whatever property your objects have
+        ))}
+      </div>
     </Shell>
   );
 }
