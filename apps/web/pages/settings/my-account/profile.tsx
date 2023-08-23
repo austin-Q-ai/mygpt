@@ -82,6 +82,8 @@ type FormValues = {
   name: string;
   email: string;
   bio: string;
+  role: string;
+  address: string;
 };
 
 const ProfileView = () => {
@@ -204,6 +206,8 @@ const ProfileView = () => {
     name: user.name || "",
     email: user.email || "",
     bio: user.bio || "",
+    role: user.role || "",
+    address: user.address || "",
   };
 
   return (
@@ -354,6 +358,8 @@ const ProfileForm = ({
       }),
     email: z.string().email(),
     bio: z.string(),
+    role: z.string(),
+    address: z.string(),
   });
 
   const formMethods = useForm<FormValues>({
@@ -400,8 +406,20 @@ const ProfileForm = ({
                         <TextField label={t("full_name")} {...formMethods.register("name")} />
                       )}
                     </div>
-                    <div className="mt-4">Full Stack Software Developer</div>
-                    <div className="mt-2">24 Nga Tsin Wai Road, Kowloon, Hong Kong</div>
+                    <div className="mt-4">
+                      {!editableHeader ? (
+                        <>{defaultValues.role}</>
+                      ) : (
+                        <TextField label={t("full_name")} {...formMethods.register("role")} />
+                      )}
+                    </div>
+                    <div className="mt-2">
+                      {!editableHeader ? (
+                        <>{defaultValues.address}</>
+                      ) : (
+                        <TextField label={t("full_name")} {...formMethods.register("address")} />
+                      )}
+                    </div>
                     <div className="mt-2 flex items-center gap-2">
                       <div>
                         <Button color="secondary" className="rounded-full text-gray-500" variant="icon">
