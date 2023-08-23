@@ -1,28 +1,39 @@
 import { prisma } from "@calcom/prisma";
 
 import type { TrpcSessionUser } from "../../../trpc";
-import type { TAddExpertSchema } from "./addExpert.handler.schema";
+import type { TBuyTokensSchema } from "./addExpert.handler.schema";
 
-type AddExpertOptions = {
+type BuyTokensOptions = {
   ctx: {
     user: NonNullable<TrpcSessionUser>;
   };
-  input: TAddExpertSchema;
+  input: TBuyTokensSchema;
 };
 
-export const addExpertHandler = async ({ ctx, input }: AddExpertOptions) => {
+export const buyTokensHandler = async ({ ctx, input }: BuyTokensOptions) => {
   const { user } = ctx;
-  const { userId } = input;
+  const { emitterId, amount } = input;
   // const ownerId = ctx.user.id;
   // const emitterId = input.userId;
 
-  await prisma?.timeTokensWallet.create({
+  await prisma?.timeTokensWallet.update({
+    where: {
+      ownerId: user.id,
+      emitterId: emitterId,
+    },
     data: {
-      owner: { connect: { id: user.id } },
-      emitter: { connect: { id: userId } },
-      amount: 0,
+      amount: { increment: amount },
     },
   });
+
+  await prisma?.user.update({
+    where: {
+      id: emitterId,
+    },
+    data: {
+    tokens: { decrement: amount },
+    }
+  })
 
   const users = await prisma.timeTokensWallet.findMany({
     where: {
@@ -34,14 +45,14 @@ export const addExpertHandler = async ({ ctx, input }: AddExpertOptions) => {
           id: true,
           avatar: true,
           name: true,
-        },
+        }
       },
       amount: true,
     },
     orderBy: {
       id: "asc",
-    },
-  });
+    }
+  })
 
   return {
     users: users,
