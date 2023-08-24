@@ -28,7 +28,7 @@ export interface ExpertDataType {
 }
 
 interface CustomExpertTableProps {
-  expertsData: ExpertData[];
+  expertsData: ExpertDataType[];
   columns: string[];
   handleBuyEvent: (email: string, tokens: number) => void;
 }

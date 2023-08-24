@@ -166,10 +166,37 @@ enum UserPermissionRole {
   ADMIN
 }
 
+model Experience {
+  id        Int      @id @default(autoincrement())
+  position  String
+  company   String
+  address   String?
+  startDate DateTime @default(now())
+  endDate   DateTime @default(now())
+  avatar    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    Int?
+}
+
+model Education {
+  id        Int      @id @default(autoincrement())
+  school    String
+  major     String?
+  degree    String?
+  startDate DateTime @default(now())
+  endDate   DateTime @default(now())
+  avatar    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    Int?
+}
+
 model User {
   id                   Int                     @id @default(autoincrement())
   username             String?
   name                 String?
+  position             String?
+  address              String?
+  skills               String[]
   /// @zod.email()
   email                String
   emailVerified        DateTime?
@@ -233,6 +260,8 @@ model User {
   //linkedByUserId       Int?
   //linkedBy             User?                   @relation("linked_account", fields: [linkedByUserId], references: [id], onDelete: Cascade)
   //linkedUsers          User[]                  @relation("linked_account")*/
+  experience           Experience[]
+  education            Education[]
 
   @@unique([email])
   @@unique([email, username])
