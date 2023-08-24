@@ -168,8 +168,8 @@ enum UserPermissionRole {
 
 model Experience {
   id        Int      @id @default(autoincrement())
-  position  String
-  company   String
+  position  String   @default("")
+  company   String   @default("")
   address   String?
   startDate DateTime @default(now())
   endDate   DateTime @default(now())
@@ -180,7 +180,7 @@ model Experience {
 
 model Education {
   id        Int      @id @default(autoincrement())
-  school    String
+  school    String   @default("")
   major     String?
   degree    String?
   startDate DateTime @default(now())
@@ -260,8 +260,8 @@ model User {
   //linkedByUserId       Int?
   //linkedBy             User?                   @relation("linked_account", fields: [linkedByUserId], references: [id], onDelete: Cascade)
   //linkedUsers          User[]                  @relation("linked_account")*/
-  experience           Experience[]
-  education            Education[]
+  experiences          Experience[]
+  educations           Education[]
 
   @@unique([email])
   @@unique([email, username])
