@@ -17,41 +17,41 @@ import { CreditCard } from "@calcom/ui/components/icon";
 import type { PaymentPageProps } from "../pages/payment";
 import PaymentComponent from "./Payment";
 
-const PaymentPage: FC<PaymentPageProps> = (props) => {
-  console.log("I'm here --yangcam", props)
+const TokenPaymentPage: FC<PaymentPageProps> = (props) => {
   const { t, i18n } = useLocale();
   const [is24h, setIs24h] = useState(isBrowserLocale24h());
-  const [date, setDate] = useState(dayjs.utc(props.booking.startTime));
-  const [timezone, setTimezone] = useState<string | null>(null);
-  useTheme(props.profile.theme);
+  // const [date, setDate] = useState(dayjs.utc(props.booking.startTime));
+  // const [timezone, setTimezone] = useState<string | null>(null);
+  // useTheme(props.profile.theme);
   const isEmbed = useIsEmbed();
   const paymentAppData = getPaymentAppData(props.eventType);
-  useEffect(() => {
-    let embedIframeWidth = 0;
-    const _timezone = localStorage.getItem("timeOption.preferredTimeZone") || dayjs.tz.guess();
-    setTimezone(_timezone);
-    setDate(date.tz(_timezone));
-    setIs24h(!!getIs24hClockFromLocalStorage());
-    if (isEmbed) {
-      requestAnimationFrame(function fixStripeIframe() {
-        // HACK: Look for stripe iframe and center position it just above the embed content
-        const stripeIframeWrapper = document.querySelector(
-          'iframe[src*="https://js.stripe.com/v3/authorize-with-url-inner"]'
-        )?.parentElement;
-        if (stripeIframeWrapper) {
-          stripeIframeWrapper.style.margin = "0 auto";
-          stripeIframeWrapper.style.width = embedIframeWidth + "px";
-        }
-        requestAnimationFrame(fixStripeIframe);
-      });
-      sdkActionManager?.on("__dimensionChanged", (e) => {
-        embedIframeWidth = e.detail.data.iframeWidth as number;
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isEmbed]);
+  // useEffect(() => {
+  //   let embedIframeWidth = 0;
+  //   const _timezone = localStorage.getItem("timeOption.preferredTimeZone") || dayjs.tz.guess();
+  //   setTimezone(_timezone);
+  //   setDate(date.tz(_timezone));
+  //   setIs24h(!!getIs24hClockFromLocalStorage());
+  //   if (isEmbed) {
+  //     requestAnimationFrame(function fixStripeIframe() {
+  //       // HACK: Look for stripe iframe and center position it just above the embed content
+  //       const stripeIframeWrapper = document.querySelector(
+  //         'iframe[src*="https://js.stripe.com/v3/authorize-with-url-inner"]'
+  //       )?.parentElement;
+  //       if (stripeIframeWrapper) {
+  //         stripeIframeWrapper.style.margin = "0 auto";
+  //         stripeIframeWrapper.style.width = embedIframeWidth + "px";
+  //       }
+  //       requestAnimationFrame(fixStripeIframe);
+  //     });
+  //     sdkActionManager?.on("__dimensionChanged", (e) => {
+  //       embedIframeWidth = e.detail.data.iframeWidth as number;
+  //     });
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [isEmbed]);
 
-  const eventName = props.booking.title;
+  // const eventName = props.booking.title;
+  const eventName = "Token Purchase";
 
   return (
     <div className="h-screen">
@@ -82,29 +82,15 @@ const PaymentPage: FC<PaymentPageProps> = (props) => {
                   </div>
 
                   <div className="mt-3 text-center sm:mt-5">
-                    <h3 className="text-emphasis text-2xl font-semibold leading-6" id="modal-headline">
+                    {/* <h3 className="text-emphasis text-2xl font-semibold leading-6" id="modal-headline">
                       {paymentAppData.paymentOption === "HOLD" ? t("complete_your_booking") : t("payment")}
-                    </h3>
+                    </h3> */}
                     <div className="text-default mt-4 grid grid-cols-3 border-b border-t py-4 text-left dark:border-gray-900 dark:text-gray-300">
                       <div className="font-medium">{t("what")}</div>
                       <div className="col-span-2 mb-6">{eventName}</div>
                       <div className="font-medium">{t("when")}</div>
-                      <div className="col-span-2 mb-6">
-                        {date.format("dddd, DD MMMM YYYY")}
-                        <br />
-                        {date.format(is24h ? "H:mm" : "h:mma")} - {props.eventType.length} mins{" "}
-                        <span className="text-subtle">({timezone})</span>
-                      </div>
-                      {props.booking.location && (
-                        <>
-                          <div className="font-medium">{t("where")}</div>
-                          <div className="col-span-2 mb-6">
-                            {getSuccessPageLocationMessage(props.booking.location, t)}
-                          </div>
-                        </>
-                      )}
                       <div className="font-medium">
-                        {props.payment.paymentOption === "HOLD" ? t("no_show_fee") : t("price")}
+                        {"props.payment.paymentOption" === "HOLD" ? t("no_show_fee") : t("price")}
                       </div>
                       <div className="col-span-2 mb-6 font-semibold">
                         {new Intl.NumberFormat(i18n.language, {
@@ -115,7 +101,15 @@ const PaymentPage: FC<PaymentPageProps> = (props) => {
                     </div>
                   </div>
                 </div>
-                <div>
+                                    <PaymentComponent
+                      payment={"props.payment"}
+                      eventType={"props.eventType"}
+                      user={"props.user"}
+                      location={"1"}
+                      bookingId={"1"}
+                      bookingUid={"1"}
+                    />
+                {/* <div>
                   {props.payment.success && !props.payment.refunded && (
                     <div className="text-default mt-4 text-center dark:text-gray-300">{t("paid")}</div>
                   )}
@@ -139,7 +133,7 @@ const PaymentPage: FC<PaymentPageProps> = (props) => {
                       {t("create_booking_link_with_calcom", { appName: APP_NAME })}
                     </a>
                   </div>
-                )}
+                )} */}
               </div>
             </div>
           </div>
@@ -149,4 +143,4 @@ const PaymentPage: FC<PaymentPageProps> = (props) => {
   );
 };
 
-export default PaymentPage;
+export default TokenPaymentPage;

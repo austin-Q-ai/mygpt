@@ -6,13 +6,12 @@ import { z } from "zod";
 import { WEBAPP_URL } from "@calcom/lib/constants";
 import prisma from "@calcom/prisma";
 
-import { getStripeAppKeys } from "../lib/getStripeAppKeys";
-
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { client_id } = await getStripeAppKeys();
+  // const { client_id } = await getStripeAppKeys();
 
   if (req.method === "GET") {
     // Get user
+
     const user = await prisma.user.findUnique({
       where: {
         id: req.session?.user?.id,
@@ -25,7 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const redirect_uri = encodeURI(WEBAPP_URL + "/api/integrations/stripepayment/callback");
     const stripeConnectParams: Stripe.OAuthAuthorizeUrlParams = {
-      client_id,
+      client_id: "ca_OVXXZQKHTKCt3Fap1ioJVOkL6fdnXgy3",
       scope: "read_write",
       response_type: "code",
       stripe_user: {

@@ -1801,7 +1801,7 @@ async function handler(
           id: organizerUser.id,
         },
       },
-      destinationCalendar: evt.destinationCalendar
+      destinationCalendar: evt.desUsertinationCalendar
         ? {
             connect: { id: evt.destinationCalendar.id },
           }
@@ -1878,6 +1878,24 @@ async function handler(
   type Booking = Prisma.PromiseReturnType<typeof createBooking>;
   let booking: (Booking & { appsStatus?: AppsStatus[] }) | null = null;
   try {
+    const timeTokens = await prisma.timeTokensWallet.findFirst({
+      where: {
+        ownerId: userId,
+        emitterId: eventType.userId
+      },
+      select: {
+        amount: true,
+      }
+    })
+
+    if (!timeTokens || timeTokens.amount < eventType.length / 5) return {
+      error: "Not enough tokens",
+    } 
+    else {
+      return {
+        success: "Your token is enough",
+      }
+    }
     booking = await createBooking();
 
     // @NOTE: Add specific try catch for all subsequent async calls to avoid error

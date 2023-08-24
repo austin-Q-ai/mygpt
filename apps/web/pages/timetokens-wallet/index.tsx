@@ -2,7 +2,7 @@ import { instantMeiliSearch } from "@meilisearch/instant-meilisearch";
 import { MeiliSearch } from "meilisearch";
 import React, { useState, useEffect } from "react";
 import { components } from "react-select";
-
+import { useRouter } from "next/router";
 import Shell from "@calcom/features/shell/Shell";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { trpc } from "@calcom/trpc/react";
@@ -14,13 +14,15 @@ import { withQuery } from "@lib/QueryCell";
 import PageWrapper from "@components/PageWrapper";
 import SkeletonLoader from "@components/availability/SkeletonLoader";
 import CustomExpertTable from "@components/timetokens-wallet/CustomExpertTable";
+import { createPaymentLink } from "@calcom/app-store/stripepayment/lib/client";
+
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const WithQuery = withQuery(trpc.viewer.availability.list as any);
 
 function TimeTokensWallet() {
   const { t } = useLocale();
-
+  const router = useRouter();
   const [addedExpertsData, setAddedExpertsData] = useState([]);
   const [buyConfirmOpen, setBuyConfirmOpen] = useState(false);
   const [buyExpertID, setBuyExpertID] = useState("");
@@ -44,10 +46,21 @@ function TimeTokensWallet() {
 
   useEffect(() => {}, [addedExpertsData]);
 
-  const handleBuyEvent = (userId: string, tokens: number) => {
-    setBuyConfirmOpen(true);
-    setBuyExpertID(userId);
-    setBuyTokensAmount(tokens);
+  const handleBuyEvent = async (userId: string, tokens: number) => {
+    console.log("paragon ---here")
+    return await router.push(
+      createPaymentLink({
+        paymentUid:"123ssbaerfwewaf",
+        date: 30,
+              name: "paragon",
+              email: "paragon@gmail.com",
+              absolute: false,
+      })
+    );
+
+    // setBuyConfirmOpen(true);
+    // setBuyExpertID(userId);
+    // setBuyTokensAmount(tokens);
   };
 
   const CustomOption = ({ icon, label, added }) => {
@@ -76,7 +89,7 @@ function TimeTokensWallet() {
 
   const addExpertMutation = trpc.viewer.timetokenswallet.addExpert.useMutation({
     onSuccess: (data) => {
-      console.log("=== add expert ====")
+      console.log("=== add expert ====");
       setAddedExpertsDataHandler(data.users);
     },
   });
