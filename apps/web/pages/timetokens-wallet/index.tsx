@@ -22,12 +22,14 @@ function TimeTokensWallet() {
   const { t } = useLocale();
 
   const [addedExpertsData, setAddedExpertsData] = useState([]);
-  const [buyConfirmOpen, setBuyConfirmOpen] = useState(false);
-  const [buyExpertID, setBuyExpertID] = useState("");
-  const [buyTokensAmount, setBuyTokensAmount] = useState(0);
+  const [buyConfirmOpen, setBuyConfirmOpen] = useState<boolean>(false);
+  const [removeConfirmOpen, setRemoveConfirmOpen] = useState<boolean>(false);
+  const [buyExpertID, setBuyExpertID] = useState<number>(0);
+  const [removeExpertID, setRemoveExpertID] = useState<number>(0);
+  const [buyTokensAmount, setBuyTokensAmount] = useState<number>(0);
   const [expertSearchResult, setExpertSearchResult] = useState([]);
   const [expertOptions, setExpertOptions] = useState([]);
-  const [addExpertId, setAddExpertId] = useState<string>(null);
+  const [addExpertId, setAddExpertId] = useState<number>(null);
 
   // not working because of https schema
   const searchClient = instantMeiliSearch(
@@ -44,10 +46,15 @@ function TimeTokensWallet() {
 
   useEffect(() => {}, [addedExpertsData]);
 
-  const handleBuyEvent = (userId: string, tokens: number) => {
+  const handleBuyEvent = (emitterId: string, tokens: number) => {
     setBuyConfirmOpen(true);
-    setBuyExpertID(userId);
+    setBuyExpertID(emitterId);
     setBuyTokensAmount(tokens);
+  };
+
+  const handleRemoveEvent = (emitterId: string) => {
+    setRemoveConfirmOpen(true);
+    setRemoveExpertID(emitterId);
   };
 
   const CustomOption = ({ icon, label, added }) => {
@@ -76,7 +83,14 @@ function TimeTokensWallet() {
 
   const addExpertMutation = trpc.viewer.timetokenswallet.addExpert.useMutation({
     onSuccess: (data) => {
-      console.log("=== add expert ====")
+      console.log("=== add expert ====");
+      setAddedExpertsDataHandler(data.users);
+    },
+  });
+
+  const removeExpertMutation = trpc.viewer.timetokenswallet.removeExpert.useMutation({
+    onSuccess: (data) => {
+      console.log("=== remove expert ====");
       setAddedExpertsDataHandler(data.users);
     },
   });
@@ -173,11 +187,14 @@ function TimeTokensWallet() {
                   {t("add")}
                 </Button>
               </div>
+
               <CustomExpertTable
                 columns={columns}
                 expertsData={addedExpertsData}
                 handleBuyEvent={handleBuyEvent}
+                handleRemoveEvent={handleRemoveEvent}
               />
+
               <Dialog open={buyConfirmOpen} onOpenChange={setBuyConfirmOpen}>
                 <ConfirmationDialogContent
                   variety="danger"
@@ -190,6 +207,21 @@ function TimeTokensWallet() {
                     setBuyConfirmOpen(false);
                   }}>
                   <p className="mt-5">Do you want to really buy tokens?</p>
+                </ConfirmationDialogContent>
+              </Dialog>
+
+              <Dialog open={removeConfirmOpen} onOpenChange={setRemoveConfirmOpen}>
+                <ConfirmationDialogContent
+                  variety="danger"
+                  title="Confirmation"
+                  confirmBtnText={t(`confirm_buy_event`)}
+                  loadingText={t(`confirm_buy_event`)}
+                  onConfirm={(e) => {
+                    e.preventDefault();
+                    removeExpertMutation.mutate({ emitterId: removeExpertID });
+                    setRemoveConfirmOpen(false);
+                  }}>
+                  <p className="mt-5">Do you want to really remove this expert?</p>
                 </ConfirmationDialogContent>
               </Dialog>
             </>

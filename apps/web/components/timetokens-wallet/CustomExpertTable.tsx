@@ -12,7 +12,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
   Tooltip,
-  showToast,
   Input,
   EmptyScreen,
 } from "@calcom/ui";
@@ -30,14 +29,15 @@ export interface ExpertDataType {
 interface CustomExpertTableProps {
   expertsData: ExpertData[];
   columns: string[];
-  handleBuyEvent: (userId: number, tokens: number) => void;
+  handleBuyEvent: (emitterId: number, tokens: number) => void;
+  handleRemoveEvent: (emitterId: number) => void;
 }
 
 function CustomExpertTable(props: CustomExpertTableProps) {
   const { t } = useLocale();
   const [user] = trpc.viewer.me.useSuspenseQuery();
 
-  const { expertsData, columns, handleBuyEvent } = props;
+  const { expertsData, columns, handleBuyEvent, handleRemoveEvent } = props;
 
   const data: number[] = [];
   for (let i = 0; i < expertsData.length; i++) {
@@ -125,9 +125,9 @@ function CustomExpertTable(props: CustomExpertTableProps) {
                             <DropdownItem
                               type="button"
                               data-testid="event-type-edit-"
-                              disabled={data.token_amount === 0}
+                              disabled={data.token_amount !== 0}
                               StartIcon={Trash2}
-                              onClick={() => showToast(t("remove"), "error")}>
+                              onClick={() => handleRemoveEvent(data.userId)}>
                               {t("remove")}
                             </DropdownItem>
                           </DropdownMenuItem>
