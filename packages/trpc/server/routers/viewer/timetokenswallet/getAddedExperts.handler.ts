@@ -15,16 +15,18 @@ export const getAddedExpertsHandler = async ({ ctx }: ListOptions) => {
     },
     select: {
       emitter: {
-        id: true,
-      avatar: true,
-      name: true,
+        select: {
+          id: true,
+          avatar: true,
+          name: true,
+        },
       },
       amount: true,
     },
     orderBy: {
-      id: 'asc',
+      id: "asc",
     },
-  })
+  });
 
   return {
     users: users,

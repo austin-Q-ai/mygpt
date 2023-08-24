@@ -30,7 +30,7 @@ const UserSettings = (props: IUserSettingsProps) => {
       .max(FULL_NAME_LENGTH_MAX_LIMIT, {
         message: t("max_limit_allowed_hint", { limit: FULL_NAME_LENGTH_MAX_LIMIT }),
       }),
-    price: z.number().min(0),
+    price: z.string(),
   });
   const {
     register,
@@ -59,9 +59,10 @@ const UserSettings = (props: IUserSettingsProps) => {
   });
 
   const onSubmit = handleSubmit((data) => {
+    console.log(data);
     mutation.mutate({
       name: data.name,
-      price: data.price,
+      price: parseInt(data.price),
       timeZone: selectedTimeZone,
     });
   });
@@ -112,6 +113,11 @@ const UserSettings = (props: IUserSettingsProps) => {
             min="0"
             className="border-default w-full rounded-md border text-sm"
           />
+          {errors.price && (
+            <p data-testid="required" className="py-2 text-xs text-red-500">
+              {errors.price.message}
+            </p>
+          )}
         </div>
         {/* Timezone select field */}
         <div className="w-full">
