@@ -1,3 +1,5 @@
+import { MeiliSearch } from "meilisearch";
+
 import { prisma } from "@calcom/prisma";
 
 import type { TrpcSessionUser } from "../../../trpc";
@@ -10,11 +12,39 @@ type AddExpertOptions = {
   input: TAddExpertSchema;
 };
 
+const client = new MeiliSearch({
+  host: `https://${process.env.MEILISEARCH_HOST}`,
+  apiKey: process.env.ADMIN_API_KEY, // admin apiKey
+});
+
+const index = client.index("users");
+
 export const addExpertHandler = async ({ ctx, input }: AddExpertOptions) => {
   const { user } = ctx;
   const { emitterId } = input;
-  // const ownerId = ctx.user.id;
-  // const emitterId = input.userId;
+
+  const emitter = await prisma?.user.findFirst({
+    where: {
+      id: emitterId,
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  if (!emitter) throw new Error("Expert not found");
+
+  const emitterRecord = await prisma?.timeTokensWallet.findFirst({
+    where: {
+      ownerId: user.id,
+      emitterId: emitterId,
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  if (emitterRecord) throw new Error("Expert already exsits");
 
   await prisma?.timeTokensWallet.create({
     data: {
@@ -24,7 +54,31 @@ export const addExpertHandler = async ({ ctx, input }: AddExpertOptions) => {
     },
   });
 
-  const users = await prisma.timeTokensWallet.findMany({
+  const owners = await prisma?.timeTokensWallet.findMany({
+    where: {
+      emitterId: emitterId,
+    },
+    orderBy: {
+      id: "asc",
+    },
+  });
+
+  const ownerIds: number[] = [];
+
+  for (const owner of owners) {
+    ownerIds.push(owner.ownerId);
+  }
+
+  const updatedUserInfo = {
+    objectID: emitter.id,
+    name: emitter.name,
+    bio: emitter.bio,
+    avatar: emitter.avatar,
+    added: ownerIds,
+  };
+  await index.updateDocuments([updatedUserInfo]);
+
+  const users = await prisma?.timeTokensWallet.findMany({
     where: {
       ownerId: user.id,
     },
@@ -34,6 +88,8 @@ export const addExpertHandler = async ({ ctx, input }: AddExpertOptions) => {
           id: true,
           avatar: true,
           name: true,
+          tokens: true,
+          price: true,
         },
       },
       amount: true,

@@ -9,7 +9,7 @@ type ListOptions = {
 export const getAddedExpertsHandler = async ({ ctx }: ListOptions) => {
   const { user } = ctx;
 
-  const users = await prisma.timeTokensWallet.findMany({
+  const users = await prisma?.timeTokensWallet.findMany({
     where: {
       ownerId: user.id,
     },
@@ -19,6 +19,8 @@ export const getAddedExpertsHandler = async ({ ctx }: ListOptions) => {
           id: true,
           avatar: true,
           name: true,
+          price: true,
+          tokens: true,
         },
       },
       amount: true,

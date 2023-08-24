@@ -39,7 +39,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       email: foundToken?.identifier,
     },
     data: {
-      tokens: ProcessingInstruction.env.AMOUNT_MINTED_DEFAULT,  // amount of tokens minted for 6 months default
+      tokens: parseInt(process.env.AMOUNT_MINTED_DEFAULT), // amount of tokens minted for 6 months default
       emailVerified: new Date(),
     },
   });
@@ -51,6 +51,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       name: user.name,
       bio: user.bio,
       avatar: user.avatar,
+      added: [],
     };
     await index.addDocuments([newUserInfo], { primaryKey: "objectID" });
   }
