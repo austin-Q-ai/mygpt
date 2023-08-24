@@ -1,6 +1,6 @@
 import type { Prisma } from "@prisma/client";
-import type { NextApiResponse, GetServerSidePropsContext } from "next";
 import { MeiliSearch } from "meilisearch";
+import type { NextApiResponse, GetServerSidePropsContext } from "next";
 
 import stripe from "@calcom/app-store/stripepayment/lib/server";
 import { getPremiumPlanProductId } from "@calcom/app-store/stripepayment/lib/utils";
@@ -40,6 +40,12 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
     ...input,
     metadata: input.metadata as Prisma.InputJsonValue,
   };
+
+  const price = data.price;
+
+  if (price) {
+    delete data.price;
+  }
 
   let isPremiumUsername = false;
 
@@ -123,6 +129,26 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
       avatar: true,
     },
   });
+
+  if (price) {
+    const emitter = await prisma.tokenPrice.findFirst({
+      where: {
+        emitterId: user.id,
+      },
+      select: {
+        id: true,
+      }
+    })
+
+    await prisma.tokenPrice.update({
+      where: {
+        id: emitter.id,
+      },
+      data: {
+        price: price,
+      },
+    });
+  }
 
   // update userInfo to meilisearch by id after update userInfo
   if (updatedUser) {

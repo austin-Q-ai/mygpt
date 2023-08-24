@@ -12,14 +12,14 @@ type AddExpertOptions = {
 
 export const addExpertHandler = async ({ ctx, input }: AddExpertOptions) => {
   const { user } = ctx;
-  const { userId } = input;
+  const { emitterId } = input;
   // const ownerId = ctx.user.id;
   // const emitterId = input.userId;
 
   await prisma?.timeTokensWallet.create({
     data: {
       owner: { connect: { id: user.id } },
-      emitter: { connect: { id: userId } },
+      emitter: { connect: { id: emitterId } },
       amount: 0,
     },
   });

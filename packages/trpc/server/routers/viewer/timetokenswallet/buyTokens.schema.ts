@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const ZBuyTokensSchema = z.object({
-  userId: z.number(),
+  emitterId: z.number(),
   amount: z.number(),
 });
 

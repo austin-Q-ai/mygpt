@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { trpc } from "@calcom/trpc/react";
@@ -37,15 +37,14 @@ function CustomExpertTable(props: CustomExpertTableProps) {
   const { t } = useLocale();
   const [user] = trpc.viewer.me.useSuspenseQuery();
 
-  const [tokensAmount, setTokensAmount] = useState<number[]>([]);
-
-  useEffect(() => {
-    const data: number[] = [];
-    data.fill(10, 0, expertsData.length);
-    setTokensAmount(data);
-  }, []);
-
   const { expertsData, columns, handleBuyEvent } = props;
+
+  const data: number[] = [];
+  for (let i = 0; i < expertsData.length; i++) {
+    data.push(10);
+  }
+
+  const [tokensAmount, setTokensAmount] = useState<number[]>(data);
 
   return (
     <div>

@@ -14797,6 +14797,7 @@ __metadata:
   dependencies:
     "@changesets/cli": ^2.26.1
     "@deploysentinel/playwright": ^0.3.3
+    "@meilisearch/instant-meilisearch": ^0.13.5
     "@playwright/test": ^1.31.2
     "@snaplet/copycat": ^0.3.0
     "@types/dompurify": ^2.4.0
@@ -14809,6 +14810,7 @@ __metadata:
     jsdom: ^22.0.0
     lint-staged: ^12.5.0
     lucide-react: ^0.171.0
+    meilisearch: ^0.34.1
     prettier: ^2.8.6
     tsc-absolute: ^1.0.0
     turbo: ^1.10.1

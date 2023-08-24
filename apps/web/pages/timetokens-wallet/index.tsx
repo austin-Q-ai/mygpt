@@ -1,6 +1,6 @@
 import { instantMeiliSearch } from "@meilisearch/instant-meilisearch";
 import { MeiliSearch } from "meilisearch";
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { components } from "react-select";
 
 import Shell from "@calcom/features/shell/Shell";
@@ -27,7 +27,7 @@ function TimeTokensWallet() {
   const [buyTokensAmount, setBuyTokensAmount] = useState(0);
   const [expertSearchResult, setExpertSearchResult] = useState([]);
   const [expertOptions, setExpertOptions] = useState([]);
-  const [addExpertId, setAddExpertId] = useState<string>("");
+  const [addExpertId, setAddExpertId] = useState<string>(null);
 
   // not working because of https schema
   const searchClient = instantMeiliSearch(
@@ -37,24 +37,12 @@ function TimeTokensWallet() {
 
   const meiliClient = new MeiliSearch({
     host: `https://${process.env.MEILISEARCH_HOST}`,
-    apiKey: process.env.SEARCH_API_KEY,r
+    apiKey: process.env.SEARCH_API_KEY,
   });
-
-  const Hit = ({ hit }) => {
-    return (
-      <div key={`expert-${hit.id}`}>
-        <hr />
-        <div>Name: {hit.name}</div>
-        <div>Bio: {hit.bio}</div>
-        <hr />
-      </div>
-    );
-  };
 
   const columns = ["Expert", "Tokens amount", "Token price", ""];
 
-  useEffect(() => {
-  }, []);
+  useEffect(() => {}, [addedExpertsData]);
 
   const handleBuyEvent = (userId: string, tokens: number) => {
     setBuyConfirmOpen(true);
@@ -76,15 +64,19 @@ function TimeTokensWallet() {
     );
   };
 
-  trpc.viewer.timetokenswallet.getAddedExperts.useQuery({
+  trpc.viewer.timetokenswallet.getAddedExperts.useQuery(undefined, {
     onSuccess: (data) => {
       console.log(data, "===== get added experts");
       setAddedExpertsDataHandler(data.users);
+    },
+    onError: (error) => {
+      console.log("error", "==== error ====");
     },
   });
 
   const addExpertMutation = trpc.viewer.timetokenswallet.addExpert.useMutation({
     onSuccess: (data) => {
+      console.log("=== add expert ====")
       setAddedExpertsDataHandler(data.users);
     },
   });
@@ -93,11 +85,11 @@ function TimeTokensWallet() {
     onSuccess: (data) => {
       setAddedExpertsDataHandler(data.users);
     },
-  })
+  });
 
   const addExpert = () => {
     console.log(addExpertId, "=====");
-    mutation.mutate({ userId: addExpertId });
+    addExpertMutation.mutate({ emitterId: addExpertId });
   };
 
   const customFilter = (option, searchText) => {
@@ -170,6 +162,7 @@ function TimeTokensWallet() {
                   filterOption={customFilter}
                   className="w-full rounded-md text-sm"
                   onChange={(event) => {
+                    console.log(event?.value, "====");
                     setAddExpertId(event?.value);
                   }}
                   onInputChange={(value) => {
@@ -193,7 +186,7 @@ function TimeTokensWallet() {
                   loadingText={t(`confirm_buy_event`)}
                   onConfirm={(e) => {
                     e.preventDefault();
-                    buyTokensMutation.mutate({userId: buyExpertID, amount: buyTokensAmount})
+                    buyTokensMutation.mutate({ emitterId: buyExpertID, amount: buyTokensAmount });
                     setBuyConfirmOpen(false);
                   }}>
                   <p className="mt-5">Do you want to really buy tokens?</p>
