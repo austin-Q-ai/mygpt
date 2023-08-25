@@ -16,7 +16,7 @@ export const buyTokensHandler = async ({ ctx, input }: BuyTokensOptions) => {
   // const ownerId = ctx.user.id;
   // const emitterId = input.userId;
 
-  const emitter = await prisma?.timeTokensWallet.findFirst({
+  const emitterRecord = await prisma?.timeTokensWallet.findFirst({
     where: {
       ownerId: user.id,
       emitterId: emitterId,
@@ -26,17 +26,28 @@ export const buyTokensHandler = async ({ ctx, input }: BuyTokensOptions) => {
     },
   });
 
-  console.log(emitter);
+  const emitter = await prisma?.user.findFirst({
+    where: {
+      id: emitterId,
+    },
+    select: {
+      tokens: true,
+    },
+  });
 
-  if (emitter)
-    await prisma?.timeTokensWallet.update({
-      where: {
-        id: emitter.id,
-      },
-      data: {
-        amount: { increment: amount },
-      },
-    });
+  if (!emitter) throw new Error("Expert not found");
+  if (!emitterRecord) throw new Error("Added Expert not found");
+
+  if (emitter.tokens < amount) throw new Error("Expert does not have enough tokens");
+
+  await prisma?.timeTokensWallet.update({
+    where: {
+      id: emitterRecord.id,
+    },
+    data: {
+      amount: { increment: amount },
+    },
+  });
 
   await prisma?.user.update({
     where: {
@@ -47,7 +58,7 @@ export const buyTokensHandler = async ({ ctx, input }: BuyTokensOptions) => {
     },
   });
 
-  const users = await prisma.timeTokensWallet.findMany({
+  const users = await prisma?.timeTokensWallet.findMany({
     where: {
       ownerId: user.id,
     },
@@ -57,6 +68,8 @@ export const buyTokensHandler = async ({ ctx, input }: BuyTokensOptions) => {
           id: true,
           avatar: true,
           name: true,
+          tokens: true,
+          price: true,
         },
       },
       amount: true,

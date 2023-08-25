@@ -1,8 +1,10 @@
 import { instantMeiliSearch } from "@meilisearch/instant-meilisearch";
 import { MeiliSearch } from "meilisearch";
+import { useRouter } from "next/router";
 import React, { useState, useEffect } from "react";
 import { components } from "react-select";
-import { useRouter } from "next/router";
+
+import { createPaymentLink } from "@calcom/app-store/stripepayment/lib/client";
 import Shell from "@calcom/features/shell/Shell";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { trpc } from "@calcom/trpc/react";
@@ -14,8 +16,6 @@ import { withQuery } from "@lib/QueryCell";
 import PageWrapper from "@components/PageWrapper";
 import SkeletonLoader from "@components/availability/SkeletonLoader";
 import CustomExpertTable from "@components/timetokens-wallet/CustomExpertTable";
-import { createPaymentLink } from "@calcom/app-store/stripepayment/lib/client";
-
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const WithQuery = withQuery(trpc.viewer.availability.list as any);
@@ -23,13 +23,18 @@ const WithQuery = withQuery(trpc.viewer.availability.list as any);
 function TimeTokensWallet() {
   const { t } = useLocale();
   const router = useRouter();
+  // const [user] = trpc.viewer.me.useSuspenseQuery();
+
   const [addedExpertsData, setAddedExpertsData] = useState([]);
-  const [buyConfirmOpen, setBuyConfirmOpen] = useState(false);
-  const [buyExpertID, setBuyExpertID] = useState("");
-  const [buyTokensAmount, setBuyTokensAmount] = useState(0);
+  const [buyConfirmOpen, setBuyConfirmOpen] = useState<boolean>(false);
+  const [removeConfirmOpen, setRemoveConfirmOpen] = useState<boolean>(false);
+  const [buyExpertID, setBuyExpertID] = useState<number>(0);
+  const [removeExpertID, setRemoveExpertID] = useState<number>(0);
+  const [buyTokensAmount, setBuyTokensAmount] = useState<number>(0);
   const [expertSearchResult, setExpertSearchResult] = useState([]);
   const [expertOptions, setExpertOptions] = useState([]);
-  const [addExpertId, setAddExpertId] = useState<string>(null);
+  const [addExpertId, setAddExpertId] = useState<number>(null);
+  const [user, setUser] = useState(null);
 
   // not working because of https schema
   const searchClient = instantMeiliSearch(
@@ -42,25 +47,30 @@ function TimeTokensWallet() {
     apiKey: process.env.SEARCH_API_KEY,
   });
 
-  const columns = ["Expert", "Tokens amount", "Token price", ""];
+  const columns = ["Expert", "Tokens amount(expert)", "Tokens amount(me)", "Token price", ""];
 
   useEffect(() => {}, [addedExpertsData]);
 
   const handleBuyEvent = async (userId: string, tokens: number) => {
-    console.log("paragon ---here")
+    console.log("paragon ---here");
     return await router.push(
       createPaymentLink({
-        paymentUid:"123ssbaerfwewaf",
+        paymentUid: "123ssbaerfwewaf",
         date: 30,
-              name: "paragon",
-              email: "paragon@gmail.com",
-              absolute: false,
+        name: "paragon",
+        email: "paragon@gmail.com",
+        absolute: false,
       })
     );
 
     // setBuyConfirmOpen(true);
     // setBuyExpertID(userId);
     // setBuyTokensAmount(tokens);
+  };
+
+  const handleRemoveEvent = (emitterId: string) => {
+    setRemoveConfirmOpen(true);
+    setRemoveExpertID(emitterId);
   };
 
   const CustomOption = ({ icon, label, added }) => {
@@ -87,9 +97,25 @@ function TimeTokensWallet() {
     },
   });
 
+  trpc.viewer.me.useQuery(undefined, {
+    onSuccess: (data) => {
+      setUser(data);
+    },
+    onError: (error) => {
+      console.log("error", "==== error ====");
+    },
+  });
+
   const addExpertMutation = trpc.viewer.timetokenswallet.addExpert.useMutation({
     onSuccess: (data) => {
       console.log("=== add expert ====");
+      setAddedExpertsDataHandler(data.users);
+    },
+  });
+
+  const removeExpertMutation = trpc.viewer.timetokenswallet.removeExpert.useMutation({
+    onSuccess: (data) => {
+      console.log("=== remove expert ====");
       setAddedExpertsDataHandler(data.users);
     },
   });
@@ -121,10 +147,11 @@ function TimeTokensWallet() {
         const data = [];
         console.log(res.hits);
         for (const expert of res.hits) {
+          if (expert?.objectID === user.id) continue;
           data.push({
             label: expert?.name,
             value: expert?.objectID,
-            added: true,
+            added: expert?.added && expert?.added.indexOf(user.id) > -1,
           });
         }
 
@@ -142,9 +169,10 @@ function TimeTokensWallet() {
       data.push({
         userId: item.emitter.id,
         fullname: item.emitter.name,
-        expert_token_amount: 3000,
+        expert_token_amount: item.emitter.tokens,
         token_amount: item.amount,
-        token_price: 5,
+        token_price: item.emitter.price[item.emitter.price.length - 1],
+        buy_amount: 10,
         added: true,
       });
     }
@@ -159,7 +187,7 @@ function TimeTokensWallet() {
         success={({ data }) => {
           return (
             <>
-              <div className="mb-4 flex w-full items-center justify-center gap-4 px-4 lg:w-2/3">
+              <div className="mb-12 flex w-full items-center justify-center gap-4 px-4 lg:w-2/3">
                 <Select
                   options={expertOptions}
                   components={{
@@ -186,11 +214,14 @@ function TimeTokensWallet() {
                   {t("add")}
                 </Button>
               </div>
+
               <CustomExpertTable
                 columns={columns}
                 expertsData={addedExpertsData}
                 handleBuyEvent={handleBuyEvent}
+                handleRemoveEvent={handleRemoveEvent}
               />
+
               <Dialog open={buyConfirmOpen} onOpenChange={setBuyConfirmOpen}>
                 <ConfirmationDialogContent
                   variety="danger"
@@ -202,7 +233,22 @@ function TimeTokensWallet() {
                     buyTokensMutation.mutate({ emitterId: buyExpertID, amount: buyTokensAmount });
                     setBuyConfirmOpen(false);
                   }}>
-                  <p className="mt-5">Do you want to really buy tokens?</p>
+                  <p className="mt-5">{t(`confirm_buy_question`)}</p>
+                </ConfirmationDialogContent>
+              </Dialog>
+
+              <Dialog open={removeConfirmOpen} onOpenChange={setRemoveConfirmOpen}>
+                <ConfirmationDialogContent
+                  variety="danger"
+                  title="Confirmation"
+                  confirmBtnText={t(`confirm_remove_event`)}
+                  loadingText={t(`confirm_remove_event`)}
+                  onConfirm={(e) => {
+                    e.preventDefault();
+                    removeExpertMutation.mutate({ emitterId: removeExpertID });
+                    setRemoveConfirmOpen(false);
+                  }}>
+                  <p className="mt-5">{t(`confirm_remove_question`)}</p>
                 </ConfirmationDialogContent>
               </Dialog>
             </>

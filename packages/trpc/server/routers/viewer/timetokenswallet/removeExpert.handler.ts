@@ -3,13 +3,13 @@ import { MeiliSearch } from "meilisearch";
 import { prisma } from "@calcom/prisma";
 
 import type { TrpcSessionUser } from "../../../trpc";
-import type { TAddExpertSchema } from "./addExpert.handler.schema";
+import type { TRemoveExpertSchema } from "./removeExpert.schema";
 
-type AddExpertOptions = {
+type RemoveExpertOptions = {
   ctx: {
     user: NonNullable<TrpcSessionUser>;
   };
-  input: TAddExpertSchema;
+  input: TRemoveExpertSchema;
 };
 
 const client = new MeiliSearch({
@@ -19,22 +19,11 @@ const client = new MeiliSearch({
 
 const index = client.index("users");
 
-export const addExpertHandler = async ({ ctx, input }: AddExpertOptions) => {
+export const removeExpertHandler = async ({ ctx, input }: RemoveExpertOptions) => {
   const { user } = ctx;
   const { emitterId } = input;
 
-  const emitter = await prisma?.user.findFirst({
-    where: {
-      id: emitterId,
-    },
-    select: {
-      id: true,
-    },
-  });
-
-  if (!emitter) throw new Error("Expert not found");
-
-  const emitterRecord = await prisma?.timeTokensWallet.findFirst({
+  const emitter = await prisma?.timeTokensWallet.findFirst({
     where: {
       ownerId: user.id,
       emitterId: emitterId,
@@ -44,13 +33,14 @@ export const addExpertHandler = async ({ ctx, input }: AddExpertOptions) => {
     },
   });
 
-  if (emitterRecord) throw new Error("Expert already exsits");
+  if (!emitter) throw new Error("Expert not found");
 
-  await prisma?.timeTokensWallet.create({
-    data: {
-      owner: { connect: { id: user.id } },
-      emitter: { connect: { id: emitterId } },
-      amount: 0,
+  const deletedUser = await prisma?.timeTokensWallet.delete({
+    where: {
+      id: emitter.id,
+    },
+    select: {
+      emitter: true,
     },
   });
 
@@ -70,10 +60,10 @@ export const addExpertHandler = async ({ ctx, input }: AddExpertOptions) => {
   }
 
   const updatedUserInfo = {
-    objectID: emitter.id,
-    name: emitter.name,
-    bio: emitter.bio,
-    avatar: emitter.avatar,
+    objectID: deletedUser.emitter.id,
+    name: deletedUser.emitter.name,
+    bio: deletedUser.emitter.bio,
+    avatar: deletedUser.emitter.avatar,
     added: ownerIds,
   };
   await index.updateDocuments([updatedUserInfo]);

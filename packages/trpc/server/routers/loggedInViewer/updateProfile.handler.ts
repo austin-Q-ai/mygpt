@@ -131,21 +131,14 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
   });
 
   if (price) {
-    const emitter = await prisma.tokenPrice.findFirst({
+    await prisma.user.update({
       where: {
-        emitterId: user.id,
-      },
-      select: {
-        id: true,
-      }
-    })
-
-    await prisma.tokenPrice.update({
-      where: {
-        id: emitter.id,
+        id: user.id,
       },
       data: {
-        price: price,
+        price: {
+          push: price,
+        },
       },
     });
   }
