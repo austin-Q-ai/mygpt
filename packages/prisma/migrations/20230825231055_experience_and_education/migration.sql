@@ -1,5 +1,6 @@
 -- AlterTable
 ALTER TABLE "users" ADD COLUMN     "address" TEXT,
+ADD COLUMN     "lastRewardedDate" TIMESTAMP(3),
 ADD COLUMN     "position" TEXT,
 ADD COLUMN     "skills" TEXT[];
 
