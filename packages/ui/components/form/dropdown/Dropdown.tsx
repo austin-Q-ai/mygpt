@@ -109,6 +109,7 @@ type DropdownItemProps = {
   EndIcon?: SVGComponent;
   href?: string;
   disabled?: boolean;
+  className?: string;
   childrenClassName?: string;
 } & ButtonOrLinkProps;
 
@@ -131,13 +132,14 @@ export function ButtonOrLink({ href, ...props }: ButtonOrLinkProps) {
 }
 
 export const DropdownItem = (props: DropdownItemProps) => {
-  const { StartIcon, EndIcon, children, color, childrenClassName, ...rest } = props;
+  const { StartIcon, EndIcon, children, color, className, childrenClassName, ...rest } = props;
 
   return (
     <ButtonOrLink
       {...rest}
       className={classNames(
         "hover:text-emphasis text-default inline-flex w-full items-center space-x-2 px-3 py-2 disabled:cursor-not-allowed",
+        className,
         color === "destructive" ? "hover:bg-error hover:text-red-700" : "hover:bg-subtle"
       )}>
       <>

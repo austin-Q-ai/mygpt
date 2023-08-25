@@ -12,11 +12,11 @@ import { Plus } from "@calcom/ui/components/icon";
 import { withQuery } from "@lib/QueryCell";
 
 import PageWrapper from "@components/PageWrapper";
-import SkeletonLoader from "@components/availability/SkeletonLoader";
 import CustomExpertTable from "@components/timetokens-wallet/CustomExpertTable";
+import SkeletonLoader from "@components/timetokens-wallet/SkeletonLoader";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const WithQuery = withQuery(trpc.viewer.availability.list as any);
+const WithQuery = withQuery(trpc.viewer.timetokenswallet.getAddedExperts as any);
 
 function TimeTokensWallet() {
   const { t } = useLocale();
@@ -65,7 +65,7 @@ function TimeTokensWallet() {
         <Avatar className="mr-2" alt="Nameless" size="sm" imageSrc={icon} />
         <span>{label}</span>
         {added && (
-          <Badge className="ml-auto" size="md" variant="gray">
+          <Badge className="ml-auto text-[.5rem] sm:text-sm" size="md" variant="gray">
             {t("added")}
           </Badge>
         )}
@@ -173,7 +173,7 @@ function TimeTokensWallet() {
         success={({ data }) => {
           return (
             <>
-              <div className="mb-12 flex w-full items-center justify-center gap-4 px-4 lg:w-2/3">
+              <div className="mb-8 flex w-full items-center justify-center gap-4 px-1 sm:mb-12 sm:px-4 lg:w-2/3">
                 <Select
                   options={expertOptions}
                   components={{
@@ -187,7 +187,7 @@ function TimeTokensWallet() {
                   }}
                   isSearchable={true}
                   filterOption={customFilter}
-                  className="w-full rounded-md text-sm"
+                  className="w-full rounded-md text-[.5rem] sm:text-sm "
                   onChange={(event) => {
                     console.log(event?.value, "====");
                     setAddExpertId(event?.value);
@@ -196,7 +196,12 @@ function TimeTokensWallet() {
                     handleExpertSearch(value);
                   }}
                 />
-                <Button disabled={addExpertId === ""} onClick={addExpert} data-testid="" StartIcon={Plus}>
+                <Button
+                  disabled={addExpertId === ""}
+                  className="text-[.5rem] sm:text-sm"
+                  onClick={addExpert}
+                  data-testid=""
+                  StartIcon={Plus}>
                   {t("add")}
                 </Button>
               </div>
