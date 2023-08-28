@@ -18,7 +18,6 @@ import type { PaymentPageProps } from "../pages/payment";
 import PaymentComponent from "./Payment";
 
 const PaymentPage: FC<PaymentPageProps> = (props) => {
-  console.log("I'm here --yangcam", props)
   const { t, i18n } = useLocale();
   const [is24h, setIs24h] = useState(isBrowserLocale24h());
   const [date, setDate] = useState(dayjs.utc(props.booking.startTime));

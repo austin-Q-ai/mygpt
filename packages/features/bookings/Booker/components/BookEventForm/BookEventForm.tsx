@@ -192,14 +192,19 @@ export const BookEventForm = ({ onCancel }: BookEventFormProps) => {
 
   const createBookingMutation = useMutation(createBooking, {
     onSuccess: async (responseData) => {
-      const { error, success, uid, paymentUid } = responseData;
+      const { error, uid,amount, paymentUid } = responseData;
+      // const { uid, paymentUid } = responseData;
 
-      if (error) {
-        console.log(error);
-        return;
-      } else if (success) {
-        alert(success);
-        return
+      // if (error) {
+      //   console.log(error);
+      //   return;
+      // } else if (success) {
+      //   alert(success);
+      //   return
+      // }
+
+      if (error){
+        console.log("paragon, not enough tokens------", amount)
       }
       if (paymentUid) {
         return await router.push(

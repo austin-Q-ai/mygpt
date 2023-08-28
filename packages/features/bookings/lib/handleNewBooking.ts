@@ -42,7 +42,6 @@ import { deleteScheduledEmailReminder } from "@calcom/features/ee/workflows/lib/
 import { scheduleWorkflowReminders } from "@calcom/features/ee/workflows/lib/reminders/reminderScheduler";
 import { deleteScheduledSMSReminder } from "@calcom/features/ee/workflows/lib/reminders/smsReminderManager";
 import { deleteScheduledWhatsappReminder } from "@calcom/features/ee/workflows/lib/reminders/whatsappReminderManager";
-
 import type { GetSubscriberOptions } from "@calcom/features/webhooks/lib/getWebhooks";
 import getWebhooks from "@calcom/features/webhooks/lib/getWebhooks";
 import { isPrismaObjOrUndefined, parseRecurringEvent } from "@calcom/lib";
@@ -1890,12 +1889,13 @@ async function handler(
 
     if (!timeTokens || timeTokens.amount < eventType.length / 5) return {
       error: "Not enough tokens",
-    } 
-    else {
-      return {
-        success: "Your token is enough",
-      }
+      amount: eventType.length / 5 - timeTokens.amount
     }
+    // else {
+    //   return {
+    //     success: "Your token is enough",
+    //   }
+    // }
     booking = await createBooking();
 
     // @NOTE: Add specific try catch for all subsequent async calls to avoid error

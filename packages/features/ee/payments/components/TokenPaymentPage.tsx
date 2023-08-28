@@ -1,56 +1,83 @@
 import classNames from "classnames";
 import Head from "next/head";
 import type { FC } from "react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-import { getSuccessPageLocationMessage } from "@calcom/app-store/locations";
-import dayjs from "@calcom/dayjs";
-import { sdkActionManager, useIsEmbed } from "@calcom/embed-core/embed-iframe";
-import { APP_NAME, WEBSITE_URL } from "@calcom/lib/constants";
+import { useIsEmbed } from "@calcom/embed-core/embed-iframe";
+import { APP_NAME } from "@calcom/lib/constants";
 import getPaymentAppData from "@calcom/lib/getPaymentAppData";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
-import useTheme from "@calcom/lib/hooks/useTheme";
-import { getIs24hClockFromLocalStorage, isBrowserLocale24h } from "@calcom/lib/timeFormat";
-import { localStorage } from "@calcom/lib/webstorage";
+import { isBrowserLocale24h } from "@calcom/lib/timeFormat";
 import { CreditCard } from "@calcom/ui/components/icon";
-
-import type { PaymentPageProps } from "../pages/payment";
-import PaymentComponent from "./Payment";
-
+import TokenPaymentComponent from "./TokenPayment";
+const user_example = {
+    name: 'linPhill',
+    username: 'globalstar',
+    hideBranding: false,
+    theme: null
+  }
+const props_example = {
+  success: false,
+  uid: "9269051d-edc0-466b-965b-eb16de818cc6",
+  refunded: false,
+  bookingId: 31,
+  appId: "stripe",
+  amount: 1000,
+  currency: "usd",
+  paymentOption: "ON_BOOKING",
+  data: {
+    id: "pi_3NiuFyAiCJmAoe1U0GkivjuL",
+    amount: 1000,
+    object: "payment_intent",
+    review: null,
+    source: null,
+    status: "requires_payment_method",
+    charges: [Object],
+    created: 1692947794,
+    invoice: null,
+    currency: "usd",
+    customer: "cus_OVw86A3O3Jx0Xv",
+    livemode: false,
+    metadata: {},
+    shipping: null,
+    processing: null,
+    application: "ca_OVXXZQKHTKCt3Fap1ioJVOkL6fdnXgy3",
+    canceled_at: null,
+    description: null,
+    next_action: null,
+    on_behalf_of: null,
+    client_secret: "pi_3NiuFyAiCJmAoe1U0GkivjuL_secret_r8eJ3YOB5SeMUtLxQAy86NO5q",
+    latest_charge: null,
+    receipt_email: null,
+    stripeAccount: "acct_1NitPKAiCJmAoe1U",
+    transfer_data: null,
+    amount_details: [Object],
+    capture_method: "automatic",
+    payment_method: null,
+    transfer_group: null,
+    amount_received: 0,
+    amount_capturable: 0,
+    last_payment_error: null,
+    setup_future_usage: null,
+    cancellation_reason: null,
+    confirmation_method: "automatic",
+    payment_method_types: [Array],
+    statement_descriptor: null,
+    application_fee_amount: null,
+    payment_method_options: [Object],
+    stripe_publishable_key:
+      "pk_test_51NitPKAiCJmAoe1UifBt6MFNyNsEkJtHudSYE8r1RJV0Gsfphxv2eSSfAOV4B4jimzZB46RRadr4nggiH6RQyzRy00Wg3qUz1I",
+    automatic_payment_methods: null,
+    statement_descriptor_suffix: null,
+  },
+};
 const TokenPaymentPage: FC<PaymentPageProps> = (props) => {
+  console.log("paragon here------", props)
+  const expert_user = props?.expertData
   const { t, i18n } = useLocale();
   const [is24h, setIs24h] = useState(isBrowserLocale24h());
-  // const [date, setDate] = useState(dayjs.utc(props.booking.startTime));
-  // const [timezone, setTimezone] = useState<string | null>(null);
-  // useTheme(props.profile.theme);
   const isEmbed = useIsEmbed();
   const paymentAppData = getPaymentAppData(props.eventType);
-  // useEffect(() => {
-  //   let embedIframeWidth = 0;
-  //   const _timezone = localStorage.getItem("timeOption.preferredTimeZone") || dayjs.tz.guess();
-  //   setTimezone(_timezone);
-  //   setDate(date.tz(_timezone));
-  //   setIs24h(!!getIs24hClockFromLocalStorage());
-  //   if (isEmbed) {
-  //     requestAnimationFrame(function fixStripeIframe() {
-  //       // HACK: Look for stripe iframe and center position it just above the embed content
-  //       const stripeIframeWrapper = document.querySelector(
-  //         'iframe[src*="https://js.stripe.com/v3/authorize-with-url-inner"]'
-  //       )?.parentElement;
-  //       if (stripeIframeWrapper) {
-  //         stripeIframeWrapper.style.margin = "0 auto";
-  //         stripeIframeWrapper.style.width = embedIframeWidth + "px";
-  //       }
-  //       requestAnimationFrame(fixStripeIframe);
-  //     });
-  //     sdkActionManager?.on("__dimensionChanged", (e) => {
-  //       embedIframeWidth = e.detail.data.iframeWidth as number;
-  //     });
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [isEmbed]);
-
-  // const eventName = props.booking.title;
   const eventName = "Token Purchase";
 
   return (
@@ -82,33 +109,27 @@ const TokenPaymentPage: FC<PaymentPageProps> = (props) => {
                   </div>
 
                   <div className="mt-3 text-center sm:mt-5">
-                    {/* <h3 className="text-emphasis text-2xl font-semibold leading-6" id="modal-headline">
-                      {paymentAppData.paymentOption === "HOLD" ? t("complete_your_booking") : t("payment")}
-                    </h3> */}
+                    <h3 className="text-emphasis text-2xl font-semibold leading-6" id="modal-headline">
+                      {t("Token Purchase")}
+                    </h3>
                     <div className="text-default mt-4 grid grid-cols-3 border-b border-t py-4 text-left dark:border-gray-900 dark:text-gray-300">
-                      <div className="font-medium">{t("what")}</div>
-                      <div className="col-span-2 mb-6">{eventName}</div>
-                      <div className="font-medium">{t("when")}</div>
-                      <div className="font-medium">
-                        {"props.payment.paymentOption" === "HOLD" ? t("no_show_fee") : t("price")}
-                      </div>
-                      <div className="col-span-2 mb-6 font-semibold">
-                        {new Intl.NumberFormat(i18n.language, {
-                          style: "currency",
-                          currency: paymentAppData.currency,
-                        }).format(paymentAppData.price / 100.0)}
-                      </div>
+                      <div className="font-medium">{t("From")}</div>
+                      <div className="col-span-2 mb-6">{expert_user?.name}</div>
+                      <div className="font-medium">{t("Amount")}</div>
+                      <div className="col-span-2 mb-6">{props.amount}</div>
+                      <div className="font-medium">{t("Price")}</div>
+                      <div className="col-span-2 mb-6">{expert_user?.price[expert_user?.price.length -1]}</div>
                     </div>
                   </div>
                 </div>
-                                    <PaymentComponent
-                      payment={"props.payment"}
-                      eventType={"props.eventType"}
-                      user={"props.user"}
-                      location={"1"}
-                      bookingId={"1"}
-                      bookingUid={"1"}
-                    />
+                <TokenPaymentComponent
+                  payment={props_example}
+                  eventType="props.eventType"
+                  user={user_example}
+                  location="1"
+                  bookingId="1"
+                  bookingUid="1"
+                />
                 {/* <div>
                   {props.payment.success && !props.payment.refunded && (
                     <div className="text-default mt-4 text-center dark:text-gray-300">{t("paid")}</div>

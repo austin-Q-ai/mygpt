@@ -52,13 +52,10 @@ function TimeTokensWallet() {
   useEffect(() => {}, [addedExpertsData]);
 
   const handleBuyEvent = async (userId: string, tokens: number) => {
-    console.log("paragon ---here");
     return await router.push(
       createPaymentLink({
-        paymentUid: "123ssbaerfwewaf",
-        date: 30,
-        name: "paragon",
-        email: "paragon@gmail.com",
+        expertid: userId,
+        amount: tokens,
         absolute: false,
       })
     );
