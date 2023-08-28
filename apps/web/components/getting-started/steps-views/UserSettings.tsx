@@ -39,7 +39,7 @@ const UserSettings = (props: IUserSettingsProps) => {
   } = useForm<z.infer<typeof userSettingsSchema>>({
     defaultValues: {
       name: user?.name || "",
-      price: 1,
+      price: '1',
     },
     reValidateMode: "onChange",
     resolver: zodResolver(userSettingsSchema),

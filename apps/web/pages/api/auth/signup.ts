@@ -184,12 +184,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
   }
 
-  console.log("*-*-*-*", {
-    username,
-    email: userEmail,
-    password: hashedPassword,
-  });
-
   await sendEmailVerification({
     email: userEmail,
     username,
