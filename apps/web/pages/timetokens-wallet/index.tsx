@@ -1,5 +1,6 @@
 import MeiliSearch from "meilisearch";
 import React, { useEffect, useState } from "react";
+import { components } from "react-select";
 
 import Shell from "@calcom/features/shell/Shell";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
@@ -18,7 +19,7 @@ const WithQuery = withQuery(trpc.viewer.availability.list as any);
 
 function TimeTokensWallet() {
   const { t } = useLocale();
-  const [user] = trpc.viewer.me.useSuspenseQuery();
+
   trpc.viewer.timetokenswallet.searchUser.useQuery(
     { name: "a" },
     {
@@ -28,16 +29,16 @@ function TimeTokensWallet() {
     }
   );
 
-  const [addedExpertsData, setAddedExpertsData] = useState([]);
-  const [buyConfirmOpen, setBuyConfirmOpen] = useState(false);
-  const [buyExpertEmail, setBuyExpertEmail] = useState("");
-  const [buyTokensAmount, setBuyTokensAmount] = useState(0);
-  const [expertSearchResult, setExpertSearchResult] = useState([]);
-  const [expertOptions, setExpertOptions] = useState([]);
+  const [addedExpertsData, setAddedExpertsData] = useState<any[]>([]);
+  const [buyConfirmOpen, setBuyConfirmOpen] = useState<boolean>(false);
+  const [buyExpertEmail, setBuyExpertEmail] = useState<string>("");
+  const [buyTokensAmount, setBuyTokensAmount] = useState<number>(0);
+  const [expertSearchResult, setExpertSearchResult] = useState<any[]>([]);
+  const [expertOptions, setExpertOptions] = useState<any[]>([]);
   const [addExpertEmail, setAddExpertEmail] = useState<string>("");
-  const [searchResults, setSearchResults] = useState([]);
+  const [searchResults, setSearchResults] = useState<any[]>([]);
 
-  const mockupData = [
+  const mockupData: any[] = [
     {
       email: "cawsonoliver33@gmail.com",
       fullname: "Expert 1",
@@ -94,7 +95,7 @@ function TimeTokensWallet() {
 
   console.log(process.env.MEILISEARCH_HOST);
 
-  const columns = ["Expert", "Tokens amount", "Token price", ""];
+  const columns: string[] = ["Expert", "Tokens amount", "Token price", ""];
 
   useEffect(() => {
     if (expertSearchResult.length === 0) {
@@ -120,7 +121,7 @@ function TimeTokensWallet() {
     setBuyTokensAmount(tokens);
   };
 
-  const changeExpertOptions = (searchResult) => {
+  const changeExpertOptions = (searchResult: any[]) => {
     const data = [];
     for (const expert of searchResult) {
       data.push({
@@ -134,7 +135,7 @@ function TimeTokensWallet() {
     console.log(data);
   };
 
-  const CustomOption = ({ icon, label, added }) => {
+  const CustomOption = ({ icon, label, added }: { icon: string; label: string; added: boolean }) => {
     return (
       <div className="flex items-center">
         <Avatar className="mr-2" alt="Nameless" size="sm" imageSrc={icon} />
@@ -171,7 +172,11 @@ function TimeTokensWallet() {
                     Option: (props) => {
                       return (
                         <components.Option {...props}>
-                          <CustomOption icon={null} label={props.data.label} added={props.data.added} />
+                          <CustomOption
+                            icon={props.data.icon}
+                            label={props.data.label}
+                            added={props.data.added}
+                          />
                         </components.Option>
                       );
                     },

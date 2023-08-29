@@ -76,34 +76,12 @@ interface DeleteAccountValues {
   totpCode: string;
 }
 
-type ExperienceInput = {
-  position: string;
-  company: string;
-  address?: string;
-  startDate?: string;
-  endDate?: string;
-  avatar?: string;
-};
-
-type EducationInput = {
-  school: string;
-  major?: string;
-  degree?: string;
-  startDate?: string;
-  endDate?: string;
-  avatar?: string;
-};
-
 type FormValues = {
   username: string;
   avatar: string;
   name: string;
   email: string;
   bio: string;
-  position: string;
-  address: string;
-  experiences: ExperienceInput[];
-  educations: EducationInput[];
 };
 
 const ProfileView = () => {
@@ -226,10 +204,6 @@ const ProfileView = () => {
     name: user.name || "",
     email: user.email || "",
     bio: user.bio || "",
-    position: user.position || "",
-    address: user.address || "",
-    experiences: user.experiences || [],
-    educations: user.educations || [],
   };
 
   return (
@@ -380,28 +354,6 @@ const ProfileForm = ({
       }),
     email: z.string().email(),
     bio: z.string(),
-    position: z.string(),
-    address: z.string(),
-    experiences: z.array(
-      z.object({
-        position: z.string(),
-        company: z.string(),
-        address: z.string().optional(),
-        startDate: z.string().optional(),
-        endDate: z.string().optional(),
-        avatar: z.string().optional(),
-      })
-    ),
-    education: z.array(
-      z.object({
-        school: z.string(),
-        major: z.string().optional(),
-        degree: z.string().optional(),
-        startDate: z.string().optional(),
-        endDate: z.string().optional(),
-        avatar: z.string().optional(),
-      })
-    ),
   });
 
   const formMethods = useForm<FormValues>({
@@ -423,6 +375,7 @@ const ProfileForm = ({
           name="avatar"
           render={({ field: { value } }) => (
             <Card
+              title=""
               containerProps={{ style: { width: "60%", borderRadius: "20px" } }}
               variant="ProfileCard"
               description={
@@ -448,20 +401,8 @@ const ProfileForm = ({
                         <TextField label={t("full_name")} {...formMethods.register("name")} />
                       )}
                     </div>
-                    <div className="mt-4">
-                      {!editableHeader ? (
-                        <>{defaultValues.position}</>
-                      ) : (
-                        <TextField label={t("position")} {...formMethods.register("position")} />
-                      )}
-                    </div>
-                    <div className="mt-2">
-                      {!editableHeader ? (
-                        <>{defaultValues.address}</>
-                      ) : (
-                        <TextField label={t("address")} {...formMethods.register("address")} />
-                      )}
-                    </div>
+                    <div className="mt-4">Full Stack Software Developer</div>
+                    <div className="mt-2">24 Nga Tsin Wai Road, Kowloon, Hong Kong</div>
                     <div className="mt-2 flex items-center gap-2">
                       <div>
                         <Button color="secondary" className="rounded-full text-gray-500" variant="icon">
@@ -530,6 +471,7 @@ const ProfileForm = ({
       </div>
       <div className="mt-8">
         <Card
+          title=""
           containerProps={{ style: { width: "100%", borderRadius: "20px" } }}
           variant="ProfileCard"
           description={
@@ -576,6 +518,7 @@ const ProfileForm = ({
       </div>
       <div className="mt-8">
         <Card
+          title=""
           containerProps={{ style: { width: "100%", borderRadius: "20px" } }}
           variant="ProfileCard"
           description={
@@ -598,6 +541,7 @@ const ProfileForm = ({
       </div>
       <div className="mt-8 flex gap-2">
         <Card
+          title=""
           containerProps={{ style: { width: "50%", borderRadius: "20px" } }}
           variant="ProfileCard"
           description={
@@ -615,31 +559,44 @@ const ProfileForm = ({
                 />
               </div>
               <div className="flex flex-col">
-                {defaultValues.experiences.map((exp, i) => {
-                  return (
-                    <div className="items-left mb-4 flex flex-col" key={`exp-${i}`}>
-                      <div className="mb-4 flex gap-2">
-                        <div>
-                          <Avatar alt="" imageSrc="" gravatarFallbackMd5="fallback" size="sm" />
-                        </div>
-                        <div className="flex flex-col">
-                          <div className="mb-1">
-                            <b>{exp.position}</b>
-                          </div>
-                          <div>{exp.company}</div>
-                          <div>{exp.startDate} - {exp.endDate}</div>
-                          <div>{exp.address}</div>
-                        </div>
-                      </div>
-                      <hr />
+                <div className="items-left mb-4 flex flex-col">
+                  <div className="mb-4 flex gap-2">
+                    <div>
+                      <Avatar alt="" imageSrc="" gravatarFallbackMd5="fallback" size="sm" />
                     </div>
-                  );
-                })}
+                    <div className="flex flex-col">
+                      <div className="mb-1">
+                        <b>Full Stack Software Developer</b>
+                      </div>
+                      <div>Lambda Vision</div>
+                      <div>Aug 2023 - Present : 1 month</div>
+                      <div>24 Nga Tsin Wai Road, Kowloon, Hong Kong</div>
+                    </div>
+                  </div>
+                  <hr />
+                </div>
+                <div className="items-left mb-4 flex flex-col">
+                  <div className="mb-4 flex gap-2">
+                    <div>
+                      <Avatar alt="" imageSrc="" gravatarFallbackMd5="fallback" size="sm" />
+                    </div>
+                    <div className="flex flex-col">
+                      <div className="mb-1">
+                        <b>Full Stack Software Developer</b>
+                      </div>
+                      <div>Lambda Vision</div>
+                      <div>Aug 2023 - Present : 1 month</div>
+                      <div>24 Nga Tsin Wai Road, Kowloon, Hong Kong</div>
+                    </div>
+                  </div>
+                  <hr />
+                </div>
               </div>
             </>
           }
         />
         <Card
+          title=""
           containerProps={{ style: { width: "50%", borderRadius: "20px" } }}
           variant="ProfileCard"
           description={
@@ -657,28 +614,38 @@ const ProfileForm = ({
                 />
               </div>
               <div className="flex flex-col">
-                {
-                  defaultValues.educations.map((edu, i) => {
-                    return (
-                      <div className="items-left mb-4 flex flex-col" key={`edu-${i}`}>
-                        <div className="mb-4 flex gap-2">
-                          <div>
-                            <Avatar alt="" imageSrc="" gravatarFallbackMd5="fallback" size="sm" />
-                          </div>
-                          <div className="flex flex-col">
-                            <div className="mb-1">
-                              <b>{edu.school}</b>
-                            </div>
-                            <div>{edu.degree}</div>
-                            <div>{edu.major}</div>
-                            <div>{edu.startDate} - {edu.endDate}</div>
-                          </div>
-                        </div>
-                        <hr />
+                <div className="items-left mb-4 flex flex-col">
+                  <div className="mb-4 flex gap-2">
+                    <div>
+                      <Avatar alt="" imageSrc="" gravatarFallbackMd5="fallback" size="sm" />
+                    </div>
+                    <div className="flex flex-col">
+                      <div className="mb-1">
+                        <b>The Univerity Of Hong Kong</b>
                       </div>
-                    );
-                  })
-                }
+                      <div>Bachelor's Degree</div>
+                      <div>Computer Science</div>
+                      <div>Feb 2012 - Feb 2016</div>
+                    </div>
+                  </div>
+                  <hr />
+                </div>
+                <div className="items-left mb-4 flex flex-col">
+                  <div className="mb-4 flex gap-2">
+                    <div>
+                      <Avatar alt="" imageSrc="" gravatarFallbackMd5="fallback" size="sm" />
+                    </div>
+                    <div className="flex flex-col">
+                      <div className="mb-1">
+                        <b>The Univerity Of Hong Kong</b>
+                      </div>
+                      <div>Bachelor's Degree</div>
+                      <div>Computer Science</div>
+                      <div>Feb 2012 - Feb 2016</div>
+                    </div>
+                  </div>
+                  <hr />
+                </div>
               </div>
             </>
           }
