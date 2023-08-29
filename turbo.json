@@ -37,7 +37,9 @@
         "STRIPE_ORG_MONTHLY_PRICE_ID",
         "MEILISEARCH_HOST",
         "SEARCH_API_KEY",
-        "ADMIN_API_KEY"
+        "ADMIN_API_KEY",
+        "AMOUNT_MINTED_PER_MONTH",
+        "AMOUNT_MINTED_DEFAULT"
       ]
     },
     "@calcom/web#dx": {
@@ -74,7 +76,9 @@
         "MOTIFLAND_DOCS_PROJECT_ID",
         "MEILISEARCH_HOST",
         "SEARCH_API_KEY",
-        "ADMIN_API_KEY"
+        "ADMIN_API_KEY",
+        "AMOUNT_MINTED_PER_MONTH",
+        "AMOUNT_MINTED_DEFAULT"
       ]
     },
     "build": {
@@ -297,6 +301,8 @@
     "ZOOM_CLIENT_SECRET",
     "MEILISEARCH_HOST",
     "SEARCH_API_KEY",
-    "ADMIN_API_KEY"
+    "ADMIN_API_KEY",
+    "AMOUNT_MINTED_PER_MONTH",
+    "AMOUNT_MINTED_DEFAULT"
   ]
 }

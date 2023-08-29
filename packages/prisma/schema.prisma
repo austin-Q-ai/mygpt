@@ -166,78 +166,108 @@ enum UserPermissionRole {
   ADMIN
 }
 
+model Experience {
+  id        Int      @id @default(autoincrement())
+  position  String   @default("")
+  company   String   @default("")
+  address   String?
+  startDate DateTime @default(now())
+  endDate   DateTime @default(now())
+  avatar    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    Int?
+}
+
+model Education {
+  id        Int      @id @default(autoincrement())
+  school    String   @default("")
+  major     String?
+  degree    String?
+  startDate DateTime @default(now())
+  endDate   DateTime @default(now())
+  avatar    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    Int?
+}
+
 model User {
-  id                   Int                     @id @default(autoincrement())
-  username             String?
-  name                 String?
+  id                    Int                     @id @default(autoincrement())
+  username              String?
+  name                  String?
+  position              String?
+  address               String?
+  skills                String[]
   /// @zod.email()
-  email                String
-  emailVerified        DateTime?
-  password             String?
-  amountsMintedPerMonth Int                    @default(3000)
-  tokens               Int                     @default(0)
-  price                Int[]                   @default([1])
-  bio                  String?
-  avatar               String?
-  timeZone             String                  @default("Europe/London")
-  weekStart            String                  @default("Sunday")
+  email                 String
+  emailVerified         DateTime?
+  password              String?
+  amountsMintedPerMonth Int                     @default(3000)
+  tokens                Int                     @default(0)
+  lastRewardedDate      DateTime?
+  price                 Int[]                   @default([1])
+  bio                   String?
+  avatar                String?
+  timeZone              String                  @default("Europe/London")
+  weekStart             String                  @default("Sunday")
   // DEPRECATED - TO BE REMOVED
-  startTime            Int                     @default(0)
-  endTime              Int                     @default(1440)
+  startTime             Int                     @default(0)
+  endTime               Int                     @default(1440)
   // </DEPRECATED>
-  bufferTime           Int                     @default(0)
-  hideBranding         Boolean                 @default(false)
-  theme                String?
-  createdDate          DateTime                @default(now()) @map(name: "created")
-  trialEndsAt          DateTime?
-  eventTypes           EventType[]             @relation("user_eventtype")
-  credentials          Credential[]
-  teams                Membership[]
-  bookings             Booking[]
-  schedules            Schedule[]
-  defaultScheduleId    Int?
-  selectedCalendars    SelectedCalendar[]
-  completedOnboarding  Boolean                 @default(false)
-  locale               String?
-  timeFormat           Int?                    @default(12)
-  twoFactorSecret      String?
-  twoFactorEnabled     Boolean                 @default(false)
-  identityProvider     IdentityProvider        @default(CAL)
-  identityProviderId   String?
-  availability         Availability[]
-  invitedTo            Int?
-  webhooks             Webhook[]
-  brandColor           String                  @default("#292929")
-  darkBrandColor       String                  @default("#fafafa")
+  bufferTime            Int                     @default(0)
+  hideBranding          Boolean                 @default(false)
+  theme                 String?
+  createdDate           DateTime                @default(now()) @map(name: "created")
+  trialEndsAt           DateTime?
+  eventTypes            EventType[]             @relation("user_eventtype")
+  credentials           Credential[]
+  teams                 Membership[]
+  bookings              Booking[]
+  schedules             Schedule[]
+  defaultScheduleId     Int?
+  selectedCalendars     SelectedCalendar[]
+  completedOnboarding   Boolean                 @default(false)
+  locale                String?
+  timeFormat            Int?                    @default(12)
+  twoFactorSecret       String?
+  twoFactorEnabled      Boolean                 @default(false)
+  identityProvider      IdentityProvider        @default(CAL)
+  identityProviderId    String?
+  availability          Availability[]
+  invitedTo             Int?
+  webhooks              Webhook[]
+  brandColor            String                  @default("#292929")
+  darkBrandColor        String                  @default("#fafafa")
   // the location where the events will end up
-  destinationCalendar  DestinationCalendar?
-  away                 Boolean                 @default(false)
+  destinationCalendar   DestinationCalendar?
+  away                  Boolean                 @default(false)
   // participate in dynamic group booking or not
-  allowDynamicBooking  Boolean?                @default(true)
+  allowDynamicBooking   Boolean?                @default(true)
   /// @zod.custom(imports.userMetadata)
-  metadata             Json?
-  verified             Boolean?                @default(false)
-  role                 UserPermissionRole      @default(USER)
-  disableImpersonation Boolean                 @default(false)
-  impersonatedUsers    Impersonations[]        @relation("impersonated_user")
-  impersonatedBy       Impersonations[]        @relation("impersonated_by_user")
-  apiKeys              ApiKey[]
-  accounts             Account[]
-  sessions             Session[]
-  Feedback             Feedback[]
-  ownedEventTypes      EventType[]             @relation("owner")
-  workflows            Workflow[]
-  routingForms         App_RoutingForms_Form[] @relation("routing-form")
-  verifiedNumbers      VerifiedNumber[]
-  hosts                Host[]
-  organizationId       Int?
-  organization         Team?                   @relation("scope", fields: [organizationId], references: [id], onDelete: SetNull)
+  metadata              Json?
+  verified              Boolean?                @default(false)
+  role                  UserPermissionRole      @default(USER)
+  disableImpersonation  Boolean                 @default(false)
+  impersonatedUsers     Impersonations[]        @relation("impersonated_user")
+  impersonatedBy        Impersonations[]        @relation("impersonated_by_user")
+  apiKeys               ApiKey[]
+  accounts              Account[]
+  sessions              Session[]
+  Feedback              Feedback[]
+  ownedEventTypes       EventType[]             @relation("owner")
+  workflows             Workflow[]
+  routingForms          App_RoutingForms_Form[] @relation("routing-form")
+  verifiedNumbers       VerifiedNumber[]
+  hosts                 Host[]
+  organizationId        Int?
+  organization          Team?                   @relation("scope", fields: [organizationId], references: [id], onDelete: SetNull)
   // Linking account code for orgs v2
   //linkedByUserId       Int?
   //linkedBy             User?                   @relation("linked_account", fields: [linkedByUserId], references: [id], onDelete: Cascade)
   //linkedUsers          User[]                  @relation("linked_account")*/
-  ownerTimeTokens      TimeTokensWallet[]      @relation("owner_relation")
-  emitterTimeTokens    TimeTokensWallet[]      @relation("emitter_relation")
+  experiences           Experience[]
+  educations            Education[]
+  ownerTimeTokens       TimeTokensWallet[]      @relation("owner_relation")
+  emitterTimeTokens     TimeTokensWallet[]      @relation("emitter_relation")
 
   @@unique([email])
   @@unique([email, username])

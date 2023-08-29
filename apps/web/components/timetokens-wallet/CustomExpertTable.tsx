@@ -16,15 +16,16 @@ import {
 } from "@calcom/ui";
 import { MoreHorizontal, Trash2, ShoppingCart, Newspaper } from "@calcom/ui/components/icon";
 
-export interface ExpertDataType {
+export type ExpertDataType = {
   userId: number;
   fullname: string;
+  avatar: string;
   expert_token_amount: number;
   token_amount: number;
   token_price: number;
   added: boolean;
   buy_amount: number;
-}
+};
 
 interface CustomExpertTableProps {
   expertsData: ExpertDataType[];
@@ -62,22 +63,27 @@ function CustomExpertTable(props: CustomExpertTableProps) {
         </div>
       )}
       {expertsData.length > 0 && (
-        <table className="sm:text-sm w-full border-collapse text-[.5rem]">
+        <table className="w-full border-collapse text-[.5rem] sm:text-sm">
           <thead>
             <tr>
               {columns.map((column, index) => (
-                <th className="text-left px-1 sm:px-4 sm:py-2" key={column}>
+                <th className="px-1 text-left sm:px-4 sm:py-2" key={column}>
                   {column}
                 </th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {expertsData.map((data, index) => (
+            {expertsData.map((data: ExpertDataType, index: number) => (
               <tr key={data.fullname} className="">
                 <td className="px-1 sm:px-4 sm:py-2">
-                  <div className="flex items-center whitespace-nowrap overflow-hidden">
-                    <Avatar className="mr-1 hidden sm:block sm:mr-2" alt={data.fullname} size="sm" imageSrc="" />
+                  <div className="flex items-center overflow-hidden whitespace-nowrap">
+                    <Avatar
+                      className="mr-1 hidden sm:mr-2 sm:block"
+                      alt={data.fullname || "unknown"}
+                      size="sm"
+                      imageSrc=""
+                    />
                     {data.fullname}
                   </div>
                 </td>
@@ -88,7 +94,7 @@ function CustomExpertTable(props: CustomExpertTableProps) {
                   <ButtonGroup combined>
                     <Input
                       type="number"
-                      min={Math.min(1, data.expert_token_amount)}
+                      min={Math.min(1, data.expert_token_amount || 1)}
                       max={data.expert_token_amount}
                       disabled={data.expert_token_amount === 0}
                       onChange={(e) => {
@@ -100,14 +106,14 @@ function CustomExpertTable(props: CustomExpertTableProps) {
                         // setTokensAmount(tokensAmountData);
                         data.buy_amount = val;
                       }}
-                      className="border-default rounded-r-0 w-10 text-[.5rem] sm:text-sm [appearance:textfield] sm:w-24"
+                      className="border-default rounded-r-0 w-10 text-[.5rem] [appearance:textfield] sm:w-24 sm:text-sm"
                       defaultValue={Math.min(10, data.expert_token_amount)}
                     />
                     {true && (
                       <>
                         <Tooltip content={t("buy_expert_tokens")}>
                           <Button
-                            className="hidden md:block text-[.5rem] sm:text-sm"
+                            className="hidden text-[.5rem] sm:text-sm md:block"
                             data-testid="preview-link-button"
                             color="secondary"
                             target="_blank"

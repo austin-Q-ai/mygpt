@@ -1,4 +1,3 @@
-import { instantMeiliSearch } from "@meilisearch/instant-meilisearch";
 import { MeiliSearch } from "meilisearch";
 import React, { useState, useEffect } from "react";
 import { components } from "react-select";
@@ -13,53 +12,55 @@ import { withQuery } from "@lib/QueryCell";
 
 import PageWrapper from "@components/PageWrapper";
 import CustomExpertTable from "@components/timetokens-wallet/CustomExpertTable";
+import type { ExpertDataType } from "@components/timetokens-wallet/CustomExpertTable";
 import SkeletonLoader from "@components/timetokens-wallet/SkeletonLoader";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const WithQuery = withQuery(trpc.viewer.timetokenswallet.getAddedExperts as any);
 
+type ExpertOptionType = {
+  label: string;
+  value: number;
+  avatar: string;
+  added: boolean;
+};
+
 function TimeTokensWallet() {
   const { t } = useLocale();
   // const [user] = trpc.viewer.me.useSuspenseQuery();
 
-  const [addedExpertsData, setAddedExpertsData] = useState([]);
+  const [addedExpertsData, setAddedExpertsData] = useState<ExpertDataType[]>([]);
   const [buyConfirmOpen, setBuyConfirmOpen] = useState<boolean>(false);
   const [removeConfirmOpen, setRemoveConfirmOpen] = useState<boolean>(false);
-  const [buyExpertID, setBuyExpertID] = useState<number>(0);
-  const [removeExpertID, setRemoveExpertID] = useState<number>(0);
+  const [buyExpertID, setBuyExpertID] = useState<number>(-1);
+  const [removeExpertID, setRemoveExpertID] = useState<number>(-1);
   const [buyTokensAmount, setBuyTokensAmount] = useState<number>(0);
   const [expertSearchResult, setExpertSearchResult] = useState([]);
-  const [expertOptions, setExpertOptions] = useState([]);
-  const [addExpertId, setAddExpertId] = useState<number>(null);
-  const [user, setUser] = useState(null);
-
-  // not working because of https schema
-  const searchClient = instantMeiliSearch(
-    `https://${process.env.MEILISEARCH_HOST}`,
-    process.env.SEARCH_API_KEY // search apiKey
-  );
+  const [expertOptions, setExpertOptions] = useState<ExpertOptionType[]>([]);
+  const [addExpertId, setAddExpertId] = useState<number>(-1);
+  const [user, setUser] = useState<any>(null);
 
   const meiliClient = new MeiliSearch({
     host: `https://${process.env.MEILISEARCH_HOST}`,
     apiKey: process.env.SEARCH_API_KEY,
   });
 
-  const columns = ["Expert", "Tokens amount(expert)", "Tokens amount(me)", "Token price", ""];
+  const columns: string[] = ["Expert", "Tokens amount(expert)", "Tokens amount(me)", "Token price", ""];
 
   useEffect(() => {}, [addedExpertsData]);
 
-  const handleBuyEvent = (emitterId: string, tokens: number) => {
+  const handleBuyEvent = (emitterId: number, tokens: number) => {
     setBuyConfirmOpen(true);
     setBuyExpertID(emitterId);
     setBuyTokensAmount(tokens);
   };
 
-  const handleRemoveEvent = (emitterId: string) => {
+  const handleRemoveEvent = (emitterId: number) => {
     setRemoveConfirmOpen(true);
     setRemoveExpertID(emitterId);
   };
 
-  const CustomOption = ({ icon, label, added }) => {
+  const CustomOption = ({ icon, label, added }: { icon: string; label: string; added: boolean }) => {
     return (
       <div className="flex items-center">
         <Avatar className="mr-2" alt="Nameless" size="sm" imageSrc={icon} />
@@ -117,11 +118,11 @@ function TimeTokensWallet() {
     addExpertMutation.mutate({ emitterId: addExpertId });
   };
 
-  const customFilter = (option, searchText) => {
+  const customFilter = (option: any, searchText: string) => {
     return true;
   };
 
-  const handleExpertSearch = async (value) => {
+  const handleExpertSearch = async (value: string) => {
     if (value.length === 0) {
       setExpertOptions([]);
       return;
@@ -133,11 +134,12 @@ function TimeTokensWallet() {
         const data = [];
         console.log(res.hits);
         for (const expert of res.hits) {
-          if (expert?.objectID === user.id) continue;
+          if (expert.objectID === user.id) continue;
           data.push({
-            label: expert?.name,
-            value: expert?.objectID,
-            added: expert?.added && expert?.added.indexOf(user.id) > -1,
+            label: expert.name,
+            value: expert.objectID,
+            avatar: expert.avatar,
+            added: expert.added && expert?.added.indexOf(user.id) > -1,
           });
         }
 
@@ -148,13 +150,14 @@ function TimeTokensWallet() {
     }
   };
 
-  const setAddedExpertsDataHandler = (users) => {
+  const setAddedExpertsDataHandler = (users: any) => {
     const data = [];
 
     for (const item of users) {
       data.push({
         userId: item.emitter.id,
         fullname: item.emitter.name,
+        avatar: item.emitter.avatar,
         expert_token_amount: item.emitter.tokens,
         token_amount: item.amount,
         token_price: item.emitter.price[item.emitter.price.length - 1],
@@ -180,7 +183,7 @@ function TimeTokensWallet() {
                     Option: (props) => {
                       return (
                         <components.Option {...props}>
-                          <CustomOption icon={null} label={props.data.label} added={props.data.added} />
+                          <CustomOption icon={props.data.avatar} label={props.data.label} added={props.data.added} />
                         </components.Option>
                       );
                     },
@@ -190,14 +193,14 @@ function TimeTokensWallet() {
                   className="w-full rounded-md text-[.5rem] sm:text-sm "
                   onChange={(event) => {
                     console.log(event?.value, "====");
-                    setAddExpertId(event?.value);
+                    setAddExpertId(event?.value || -1);
                   }}
                   onInputChange={(value) => {
                     handleExpertSearch(value);
                   }}
                 />
                 <Button
-                  disabled={addExpertId === ""}
+                  disabled={addExpertId === -1}
                   className="text-[.5rem] sm:text-sm"
                   onClick={addExpert}
                   data-testid=""
