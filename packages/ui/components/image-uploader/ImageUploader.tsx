@@ -61,7 +61,7 @@ const useFileReader = (options: UseFileReaderProps) => {
 
 type ImageUploaderProps = {
   id: string;
-  buttonMsg: string;
+  buttonMsg: string | JSX.Element;
   handleAvatarChange: (imageSrc: string) => void;
   imageSrc?: string;
   target: string;

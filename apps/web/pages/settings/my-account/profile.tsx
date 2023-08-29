@@ -375,6 +375,7 @@ const ProfileForm = ({
           name="avatar"
           render={({ field: { value } }) => (
             <Card
+              title=""
               containerProps={{ style: { width: "60%", borderRadius: "20px" } }}
               variant="ProfileCard"
               description={
@@ -470,6 +471,7 @@ const ProfileForm = ({
       </div>
       <div className="mt-8">
         <Card
+          title=""
           containerProps={{ style: { width: "100%", borderRadius: "20px" } }}
           variant="ProfileCard"
           description={
@@ -516,6 +518,7 @@ const ProfileForm = ({
       </div>
       <div className="mt-8">
         <Card
+          title=""
           containerProps={{ style: { width: "100%", borderRadius: "20px" } }}
           variant="ProfileCard"
           description={
@@ -538,6 +541,7 @@ const ProfileForm = ({
       </div>
       <div className="mt-8 flex gap-2">
         <Card
+          title=""
           containerProps={{ style: { width: "50%", borderRadius: "20px" } }}
           variant="ProfileCard"
           description={
@@ -592,6 +596,7 @@ const ProfileForm = ({
           }
         />
         <Card
+          title=""
           containerProps={{ style: { width: "50%", borderRadius: "20px" } }}
           variant="ProfileCard"
           description={
