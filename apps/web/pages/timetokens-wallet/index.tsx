@@ -27,7 +27,7 @@ type ExpertOptionType = {
 
 function TimeTokensWallet() {
   const { t } = useLocale();
-  // const [user] = trpc.viewer.me.useSuspenseQuery();
+  const { data: user, isLoading } = trpc.viewer.me.useQuery();
 
   const [addedExpertsData, setAddedExpertsData] = useState<ExpertDataType[]>([]);
   const [buyConfirmOpen, setBuyConfirmOpen] = useState<boolean>(false);
@@ -38,7 +38,7 @@ function TimeTokensWallet() {
   const [expertSearchResult, setExpertSearchResult] = useState([]);
   const [expertOptions, setExpertOptions] = useState<ExpertOptionType[]>([]);
   const [addExpertId, setAddExpertId] = useState<number>(-1);
-  const [user, setUser] = useState<any>(null);
+  // const [user, setUser] = useState<any>(null);
 
   const meiliClient = new MeiliSearch({
     host: `https://${process.env.MEILISEARCH_HOST}`,
@@ -84,14 +84,14 @@ function TimeTokensWallet() {
     },
   });
 
-  trpc.viewer.me.useQuery(undefined, {
-    onSuccess: (data) => {
-      setUser(data);
-    },
-    onError: (error) => {
-      console.log("error", "==== error ====");
-    },
-  });
+  // trpc.viewer.me.useQuery(undefined, {
+  //   onSuccess: (data) => {
+  //     setUser(data);
+  //   },
+  //   onError: (error) => {
+  //     console.log("error", "==== error ====");
+  //   },
+  // });
 
   const addExpertMutation = trpc.viewer.timetokenswallet.addExpert.useMutation({
     onSuccess: (data) => {
@@ -122,7 +122,7 @@ function TimeTokensWallet() {
     return true;
   };
 
-  const handleExpertSearch = async (value: string) => {
+  const handleExpertSearch = (value: string) => {
     if (value.length === 0) {
       setExpertOptions([]);
       return;
@@ -130,11 +130,11 @@ function TimeTokensWallet() {
 
     try {
       const index = meiliClient.index("users");
-      const searchResults = index.search(value).then((res) => {
+      index.search(value).then((res) => {
         const data = [];
-        console.log(res.hits);
+        
         for (const expert of res.hits) {
-          if (expert.objectID === user.id) continue;
+          if (isLoading || expert.objectID === user.id) continue;
           data.push({
             label: expert.name,
             value: expert.objectID,
@@ -183,7 +183,11 @@ function TimeTokensWallet() {
                     Option: (props) => {
                       return (
                         <components.Option {...props}>
-                          <CustomOption icon={props.data.avatar} label={props.data.label} added={props.data.added} />
+                          <CustomOption
+                            icon={props.data.avatar}
+                            label={props.data.label}
+                            added={props.data.added}
+                          />
                         </components.Option>
                       );
                     },
