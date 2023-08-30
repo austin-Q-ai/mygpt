@@ -28,7 +28,7 @@ const TokenPaymentPage: FC<PaymentPageProps> = (props) => {
         <title>
           {t("payment")} | {eventName} | {APP_NAME}
         </title>
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="iy" href="/favicon.ico" />
       </Head>
       <main className="mx-auto max-w-3xl py-24">
         <div className="fixed inset-0 z-50 overflow-y-auto scroll-auto">
@@ -67,11 +67,8 @@ const TokenPaymentPage: FC<PaymentPageProps> = (props) => {
                   </div>
                 </div>
                 <TokenPaymentComponent
-                  eventType="props.eventType"
-                  user={user_example}
-                  location="1"
-                  bookingId="1"
-                  bookingUid="1"
+                  amount={props.amount}
+                  expertId={expert_user?.id}
                 />
               </div>
             </div>

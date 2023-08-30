@@ -35,7 +35,7 @@ function TimeTokensWallet() {
   const [addedExpertsData, setAddedExpertsData] = useState<ExpertDataType[]>([]);
   const [buyConfirmOpen, setBuyConfirmOpen] = useState<boolean>(false);
   const [removeConfirmOpen, setRemoveConfirmOpen] = useState<boolean>(false);
-ekn  const [buyExpertID, setBuyExpertID] = useState<number>(-1);
+  const [buyExpertID, setBuyExpertID] = useState<number>(-1);
   const [removeExpertID, setRemoveExpertID] = useState<number>(-1);
   const [buyTokensAmount, setBuyTokensAmount] = useState<number>(0);
   const [expertSearchResult, setExpertSearchResult] = useState([]);
@@ -53,17 +53,9 @@ ekn  const [buyExpertID, setBuyExpertID] = useState<number>(-1);
   useEffect(() => {}, [addedExpertsData]);
 
   const handleBuyEvent = async (userId: string, tokens: number) => {
-    return await router.push(
-      createPaymentLink({
-        expertid: userId,
-        amount: tokens,
-        absolute: false,
-      })
-    );
-
-    // setBuyConfirmOpen(true);
-    // setBuyExpertID(userId);
-    // setBuyTokensAmount(tokens);
+    setBuyConfirmOpen(true);
+    setBuyExpertID(userId);
+    setBuyTokensAmount(tokens);
   };
 
   const handleRemoveEvent = (emitterId: number) => {
@@ -239,7 +231,13 @@ ekn  const [buyExpertID, setBuyExpertID] = useState<number>(-1);
                   loadingText={t(`confirm_buy_event`)}
                   onConfirm={(e) => {
                     e.preventDefault();
-                    buyTokensMutation.mutate({ emitterId: buyExpertID, amount: buyTokensAmount });
+                    router.push(
+                      createPaymentLink({
+                        expertid: buyExpertID,
+                        amount: buyTokensAmount,
+                        absolute: false,
+                      })
+                    );
                     setBuyConfirmOpen(false);
                   }}>
                   <p className="mt-5">{t(`confirm_buy_question`)}</p>

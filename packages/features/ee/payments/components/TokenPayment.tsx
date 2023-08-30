@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 
 import type { StripePaymentData, StripeSetupIntentData } from "@calcom/app-store/stripepayment/lib/server";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
+import { trpc } from "@calcom/trpc/react";
 import { Button } from "@calcom/ui";
 
 import type { EventType } from ".prisma/client";
@@ -36,6 +37,11 @@ const PaymentForm = (props: Props) => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const stripe = useStripe();
   const elements = useElements();
+  const buyTokensMutation = trpc.viewer.timetokenswallet.buyTokens.useMutation({
+    onSuccess: (data) => {
+      setAddedExpertsDataHandler(data.users);
+    },
+  });
   // const paymentOption = props.payment.paymentOption;
   // const [holdAcknowledged, setHoldAcknowledged] = useState<boolean>(paymentOption === "HOLD" ? false : true);
 
@@ -50,38 +56,28 @@ const PaymentForm = (props: Props) => {
     setErrorMessage(null);
     if (!stripe || !elements) return;
     const paymentElement = elements.getElement(PaymentElement);
-    console.log("paragon here5----");
-
     if (!paymentElement) return;
-    console.log("paragon here6----");
-
+    let payload;
     try {
-      const { error, paymentMethod } = await stripe.createPaymentMethod({
-        type: "card",
-        card: paymentElement,
-      });
+      payload = await stripe
+        .confirmPayment({
+          elements,
+          // confirmParams: {
+          //   return_url: "http://localhost:3000/timetokens-wallet",
+          // },
+          redirect: "if_required",
+        })
+        .then(async (result) => {
+          if (result.error) {
+            throw new Error("Failed to process payment");
+          }
+          console.log("paragon herehere22----", props.expertId, props.amount);
 
-      if (error) {
-        throw new Error(error.message);
-      }
-
-      const response = await fetch("/api/purchase-tokens", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ paymentMethodId: paymentMethod?.id }),
-      });
-      console.log("paragon herehere----");
-
-      if (!response.ok) {
-        throw new Error("Failed to process payment");
-      }
-
-      // const { tokenCount } = await response.json();
-
-      setState({ status: "ok" });
-      // onPaymentSuccess(tokenCount);
+          await buyTokensMutation.mutate({ emitterId: props.expertId, amount: parseInt(props.amount) });
+          setState({ status: "ok" });
+          router.push("http://localhost:3000/timetokens-wallet");
+          // onPaymentSuccess(tokenCount);
+        });
     } catch (error: any) {
       setState({ status: "error" });
       setErrorMessage(error.message);
@@ -137,35 +133,34 @@ const ELEMENT_STYLES_DARK: stripejs.Appearance = {
 };
 
 export default function TokenPaymentComponent(props: Props) {
+  const [clientSecret, setClientSecret] = useState("");
+  useEffect(() => {
+    // Create PaymentIntent as soon as the page loads
+    fetch("/api/purchase-tokens", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ amount: [{ id: "xl-tshirt" }] }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setClientSecret(data.client_secret);
+      });
+  }, []);
   const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
-  // console.log("paragon stripe key1 here ----", process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
-  // console.log(
-  //   "paragon stripe key here ----",
-  //   (props.payment.data as StripePaymentData).stripe_publishable_key
-  // );
-  // const stripePromise = getStripe((props.payment.data as StripePaymentData).stripe_publishable_key);
-  // const paymentOption = props.payment.paymentOption;
   const [darkMode, setDarkMode] = useState<boolean>(false);
-  let clientSecret: string | null;
-
   useEffect(() => {
     setDarkMode(window.matchMedia("(prefers-color-scheme: dark)").matches);
   }, []);
-
-  // if (paymentOption === "HOLD" && "setupIntent" in props.payment.data) {
-  //   clientSecret = props.payment.data.setupIntent.client_secret;
-  // } else if (!("setupIntent" in props.payment.data)) {
-
-  // console.log("paragon, client scret key----", clientSecret);
-
-  return (
-    <Elements
-      stripe={stripePromise}
-      options={{
-        // clientSecret: clientSecret!,
-        appearance: darkMode ? ELEMENT_STYLES_DARK : ELEMENT_STYLES,
-      }}>
-      <PaymentForm {...props} />
-    </Elements>
-  );
+  if (clientSecret != "")
+    return (
+      <Elements
+        stripe={stripePromise}
+        options={{
+          clientSecret: clientSecret!,
+          appearance: darkMode ? ELEMENT_STYLES_DARK : ELEMENT_STYLES,
+        }}>
+        <PaymentForm {...props} />
+      </Elements>
+    );
+  else return <></>;
 }
