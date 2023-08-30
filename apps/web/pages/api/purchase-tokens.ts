@@ -1,11 +1,11 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiRequest, NextApiResponse } from "next";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2023-08-16" });
+const stripe = new Stripe(process.env.STRIPE_PRIVATE_KEY!, { apiVersion: "2023-08-16" });
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const { paymentMethodId } = req.body;
-
+  console.log("paragon here are payment--s", paymentMethodId)
   try {
     // Create a payment intent
     const paymentIntent = await stripe.paymentIntents.create({
