@@ -11,11 +11,17 @@ export const meHandler = async ({ ctx }: MeOptions) => {
   const { user } = ctx;
   // Destructuring here only makes it more illegible
   // pick only the part we want to expose in the API
+
   return {
     id: user.id,
     name: user.name,
     username: user.username,
     email: user.email,
+    position: user.position,
+    address: user.address,
+    experiences: user.experiences,
+    educations: user.educations,
+    skills: user.skills,
     emailMd5: crypto.createHash("md5").update(user.email).digest("hex"),
     startTime: user.startTime,
     endTime: user.endTime,

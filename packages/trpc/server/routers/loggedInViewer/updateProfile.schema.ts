@@ -7,6 +7,8 @@ export const ZUpdateProfileInputSchema = z.object({
   username: z.string().optional(),
   name: z.string().max(FULL_NAME_LENGTH_MAX_LIMIT).optional(),
   email: z.string().optional(),
+  position: z.string(),
+  address: z.string(),
   bio: z.string().optional(),
   avatar: z.string().optional(),
   timeZone: z.string().optional(),

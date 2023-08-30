@@ -116,6 +116,8 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
       id: true,
       username: true,
       email: true,
+      position: true,
+      address: true,
       metadata: true,
       name: true,
       createdDate: true,
@@ -123,6 +125,8 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
       avatar: true,
     },
   });
+
+  console.log(input, data);
 
   // update userInfo to meilisearch by id after update userInfo
   if (updatedUser) {

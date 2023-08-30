@@ -38,6 +38,7 @@ import {
   TextField,
   Editor,
   Card,
+  Input,
 } from "@calcom/ui";
 import {
   AlertTriangle,
@@ -76,12 +77,35 @@ interface DeleteAccountValues {
   totpCode: string;
 }
 
+type ExperienceInput = {
+  position: string;
+  company: string;
+  address?: string;
+  startDate?: string;
+  endDate?: string;
+  avatar?: string;
+};
+
+type EducationInput = {
+  school: string;
+  major?: string;
+  degree?: string;
+  startDate?: string;
+  endDate?: string;
+  avatar?: string;
+};
+
 type FormValues = {
   username: string;
   avatar: string;
   name: string;
   email: string;
   bio: string;
+  position: string;
+  address: string;
+  experiences: ExperienceInput[];
+  educations: EducationInput[];
+  skills: string[];
 };
 
 const ProfileView = () => {
@@ -204,6 +228,11 @@ const ProfileView = () => {
     name: user.name || "",
     email: user.email || "",
     bio: user.bio || "",
+    position: user.position || "",
+    address: user.address || "",
+    experiences: user.experiences || [],
+    educations: user.educations || [],
+    skills: user.skills || [],
   };
 
   return (
@@ -214,6 +243,7 @@ const ProfileView = () => {
         defaultValues={defaultValues}
         isLoading={mutation.isLoading}
         onSubmit={(values) => {
+          console.log(values);
           if (values.email !== user.email && isCALIdentityProviver) {
             setTempFormValues(values);
             setConfirmPasswordOpen(true);
@@ -354,6 +384,29 @@ const ProfileForm = ({
       }),
     email: z.string().email(),
     bio: z.string(),
+    position: z.string(),
+    address: z.string(),
+    experiences: z.array(
+      z.object({
+        position: z.string(),
+        company: z.string(),
+        address: z.string().optional(),
+        startDate: z.string().optional(),
+        endDate: z.string().optional(),
+        avatar: z.string().optional(),
+      })
+    ),
+    educations: z.array(
+      z.object({
+        school: z.string(),
+        major: z.string().optional(),
+        degree: z.string().optional(),
+        startDate: z.string().optional(),
+        endDate: z.string().optional(),
+        avatar: z.string().optional(),
+      })
+    ),
+    skills: z.array(z.string()),
   });
 
   const formMethods = useForm<FormValues>({
@@ -366,6 +419,12 @@ const ProfileForm = ({
   } = formMethods;
 
   const isDisabled = isSubmitting || !isDirty;
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const options = { month: 'short', year: 'numeric' };
+    return date.toLocaleString('en-US', options);
+  }
 
   return (
     <Form form={formMethods} handleSubmit={onSubmit}>
@@ -401,8 +460,20 @@ const ProfileForm = ({
                         <TextField label={t("full_name")} {...formMethods.register("name")} />
                       )}
                     </div>
-                    <div className="mt-4">Full Stack Software Developer</div>
-                    <div className="mt-2">24 Nga Tsin Wai Road, Kowloon, Hong Kong</div>
+                    <div className="mt-4">
+                      {!editableHeader ? (
+                        <>{defaultValues.position}</>
+                      ) : (
+                        <TextField label={t("position")} {...formMethods.register("position")} />
+                      )}
+                    </div>
+                    <div className="mt-2">
+                      {!editableHeader ? (
+                        <>{defaultValues.address}</>
+                      ) : (
+                        <TextField label={t("address")} {...formMethods.register("address")} />
+                      )}
+                    </div>
                     <div className="mt-2 flex items-center gap-2">
                       <div>
                         <Button color="secondary" className="rounded-full text-gray-500" variant="icon">
@@ -525,15 +596,43 @@ const ProfileForm = ({
             <>
               <div className="mb-4 flex justify-between">
                 <Label className="text-lg">{t("skill")}</Label>
-                <Button
-                  color="secondary"
-                  StartIcon={!editableSkill ? Edit2 : Cross}
-                  className={!editableSkill ? "rounded-full" : "rotate-45 transform rounded-full"}
-                  variant="icon"
-                  onClick={() => {
-                    setEditableSkill(!editableSkill);
-                  }}
-                />
+                <div className="flex gap-2">
+                  {editableSkill && <Button
+                    color="secondary"
+                    StartIcon={Cross}
+                    className="rounded-full"
+                    variant="icon"
+                    onClick={() => {
+                    }}
+                  />}
+                  <Button
+                    color="secondary"
+                    StartIcon={!editableSkill ? Edit2 : Cross}
+                    className={!editableSkill ? "rounded-full" : "rotate-45 transform rounded-full"}
+                    variant="icon"
+                    onClick={() => {
+                      setEditableSkill(!editableSkill);
+                    }}
+                  />
+                </div>
+              </div>
+              <div className="mb-4 flex gap-2 w-[100%] overflow-x-auto">
+                {defaultValues.skills.map((skill, i) => {
+                    return (
+                      !editableSkill ?
+                      <div key={`skill-${i}`} className="w-[100%] border border-solid border-gray-500 text-center p-2 rounded rounded-md" >{skill}</div> :
+                      <div className="flex">
+                        <Input className="w-[100px] rounded-tr-none" />
+                        <Button
+                          color="secondary"
+                          StartIcon={Cross}
+                          className="rotate-45 transform rounded-full rounded-bl-none"
+                          variant="icon"
+                          onClick={() => {
+                          }}
+                        />
+                      </div>);
+                })}
               </div>
             </>
           }
@@ -559,38 +658,26 @@ const ProfileForm = ({
                 />
               </div>
               <div className="flex flex-col">
-                <div className="items-left mb-4 flex flex-col">
-                  <div className="mb-4 flex gap-2">
-                    <div>
-                      <Avatar alt="" imageSrc="" gravatarFallbackMd5="fallback" size="sm" />
-                    </div>
-                    <div className="flex flex-col">
-                      <div className="mb-1">
-                        <b>Full Stack Software Developer</b>
+                {defaultValues.experiences.map((exp, i) => {
+                  return (
+                    <div className="items-left mb-4 flex flex-col" key={`exp-${i}`}>
+                      <div className="mb-4 flex gap-2">
+                        <div>
+                          <Avatar alt="" imageSrc="" gravatarFallbackMd5="fallback" size="sm" />
+                        </div>
+                        <div className="flex flex-col">
+                          <div className="mb-1">
+                            <b>{exp.position}</b>
+                          </div>
+                          <div>{exp.company}</div>
+                          <div>{`${formatDate(exp.startDate)} - ${formatDate(exp.endDate)}`}</div>
+                          <div>{exp.address}</div>
+                        </div>
                       </div>
-                      <div>Lambda Vision</div>
-                      <div>Aug 2023 - Present : 1 month</div>
-                      <div>24 Nga Tsin Wai Road, Kowloon, Hong Kong</div>
+                      <hr />
                     </div>
-                  </div>
-                  <hr />
-                </div>
-                <div className="items-left mb-4 flex flex-col">
-                  <div className="mb-4 flex gap-2">
-                    <div>
-                      <Avatar alt="" imageSrc="" gravatarFallbackMd5="fallback" size="sm" />
-                    </div>
-                    <div className="flex flex-col">
-                      <div className="mb-1">
-                        <b>Full Stack Software Developer</b>
-                      </div>
-                      <div>Lambda Vision</div>
-                      <div>Aug 2023 - Present : 1 month</div>
-                      <div>24 Nga Tsin Wai Road, Kowloon, Hong Kong</div>
-                    </div>
-                  </div>
-                  <hr />
-                </div>
+                  );
+                })}
               </div>
             </>
           }
@@ -614,38 +701,26 @@ const ProfileForm = ({
                 />
               </div>
               <div className="flex flex-col">
-                <div className="items-left mb-4 flex flex-col">
-                  <div className="mb-4 flex gap-2">
-                    <div>
-                      <Avatar alt="" imageSrc="" gravatarFallbackMd5="fallback" size="sm" />
-                    </div>
-                    <div className="flex flex-col">
-                      <div className="mb-1">
-                        <b>The Univerity Of Hong Kong</b>
+                {defaultValues.educations.map((edu, i) => {
+                  return (
+                    <div className="items-left mb-4 flex flex-col" key={`edu-${i}`}>
+                      <div className="mb-4 flex gap-2">
+                        <div>
+                          <Avatar alt="" imageSrc="" gravatarFallbackMd5="fallback" size="sm" />
+                        </div>
+                        <div className="flex flex-col">
+                          <div className="mb-1">
+                            <b>{edu.school}</b>
+                          </div>
+                          <div>{edu.degree}</div>
+                          <div>{edu.major}</div>
+                          <div>{`${formatDate(edu.startDate)} - ${formatDate(edu.endDate)}`}</div>
+                        </div>
                       </div>
-                      <div>Bachelor's Degree</div>
-                      <div>Computer Science</div>
-                      <div>Feb 2012 - Feb 2016</div>
+                      <hr />
                     </div>
-                  </div>
-                  <hr />
-                </div>
-                <div className="items-left mb-4 flex flex-col">
-                  <div className="mb-4 flex gap-2">
-                    <div>
-                      <Avatar alt="" imageSrc="" gravatarFallbackMd5="fallback" size="sm" />
-                    </div>
-                    <div className="flex flex-col">
-                      <div className="mb-1">
-                        <b>The Univerity Of Hong Kong</b>
-                      </div>
-                      <div>Bachelor's Degree</div>
-                      <div>Computer Science</div>
-                      <div>Feb 2012 - Feb 2016</div>
-                    </div>
-                  </div>
-                  <hr />
-                </div>
+                  );
+                })}
               </div>
             </>
           }
