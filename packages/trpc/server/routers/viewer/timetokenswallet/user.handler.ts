@@ -8,7 +8,7 @@ type UserOptions = {
 };
 
 export const userHandler = async ({ input }: UserOptions) => {
-  const users = await prisma.User.findMany({
+  const users = await prisma.user.findMany({
     where: {
       name: { contains: input.username },
     },

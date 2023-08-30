@@ -3,7 +3,7 @@ import { MeiliSearch } from "meilisearch";
 import { prisma } from "@calcom/prisma";
 
 import type { TrpcSessionUser } from "../../../trpc";
-import type { TAddExpertSchema } from "./addExpert.handler.schema";
+import type { TAddExpertSchema } from "./addExpert.schema";
 
 type AddExpertOptions = {
   ctx: {
@@ -29,6 +29,9 @@ export const addExpertHandler = async ({ ctx, input }: AddExpertOptions) => {
     },
     select: {
       id: true,
+      name: true,
+      bio: true,
+      avatar: true,
     },
   });
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import {
@@ -16,15 +16,16 @@ import {
 } from "@calcom/ui";
 import { MoreHorizontal, Trash2, ShoppingCart, Newspaper } from "@calcom/ui/components/icon";
 
-export interface ExpertDataType {
+export type ExpertDataType = {
   userId: number;
   fullname: string;
+  avatar: string;
   expert_token_amount: number;
   token_amount: number;
   token_price: number;
   added: boolean;
   buy_amount: number;
-}
+};
 
 interface CustomExpertTableProps {
   expertsData: ExpertDataType[];
@@ -43,9 +44,8 @@ function CustomExpertTable(props: CustomExpertTableProps) {
   //   data.push(10);
   // }
 
-  
   // const [tokensAmount, setTokensAmount] = useState<number[]>([]);
-  
+
   // useEffect(() => {
   //   console.log('=====================')
   //   setTokensAmount(data);
@@ -54,7 +54,7 @@ function CustomExpertTable(props: CustomExpertTableProps) {
   return (
     <div>
       {expertsData.length === 0 && (
-        <div className="w-full px-4 2xl:w-2/3">
+        <div className="w-full px-1 sm:px-4 2xl:w-2/3">
           <EmptyScreen
             Icon={Newspaper}
             headline={t("no_expert_data")}
@@ -63,33 +63,38 @@ function CustomExpertTable(props: CustomExpertTableProps) {
         </div>
       )}
       {expertsData.length > 0 && (
-        <table className="w-full border-collapse">
+        <table className="w-full border-collapse text-[.5rem] sm:text-sm">
           <thead>
             <tr>
               {columns.map((column, index) => (
-                <th className="px-4 py-2 text-left" key={column}>
+                <th className="px-1 text-left sm:px-4 sm:py-2" key={column}>
                   {column}
                 </th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {expertsData.map((data, index) => (
+            {expertsData.map((data: ExpertDataType, index: number) => (
               <tr key={data.fullname} className="">
-                <td className="px-4 py-2">
-                  <div className="flex items-center">
-                    <Avatar className="mr-2" alt="Nameless" size="sm" imageSrc="" />
+                <td className="px-1 sm:px-4 sm:py-2">
+                  <div className="flex items-center overflow-hidden whitespace-nowrap">
+                    <Avatar
+                      className="mr-1 hidden sm:mr-2 sm:block"
+                      alt={data.fullname || "unknown"}
+                      size="sm"
+                      imageSrc=""
+                    />
                     {data.fullname}
                   </div>
                 </td>
-                <td className="px-4 py-2">{data.expert_token_amount}</td>
-                <td className="px-4 py-2">{data.token_amount}</td>
-                <td className="px-4 py-2">{data.token_price}</td>
-                <td className="flex justify-end px-4 py-2">
+                <td className="px-1 sm:px-4 sm:py-2">{data.expert_token_amount}</td>
+                <td className="px-1 sm:px-4 sm:py-2">{data.token_amount}</td>
+                <td className="px-1 sm:px-4 sm:py-2">{data.token_price}</td>
+                <td className="flex justify-end px-1 sm:px-4 sm:py-2">
                   <ButtonGroup combined>
                     <Input
                       type="number"
-                      min={Math.min(1, data.expert_token_amount)}
+                      min={Math.min(1, data.expert_token_amount || 1)}
                       max={data.expert_token_amount}
                       disabled={data.expert_token_amount === 0}
                       onChange={(e) => {
@@ -101,13 +106,14 @@ function CustomExpertTable(props: CustomExpertTableProps) {
                         // setTokensAmount(tokensAmountData);
                         data.buy_amount = val;
                       }}
-                      className="border-default rounded-r-0 w-24 text-sm [appearance:textfield]"
+                      className="border-default rounded-r-0 w-10 text-[.5rem] [appearance:textfield] sm:w-24 sm:text-sm"
                       defaultValue={Math.min(10, data.expert_token_amount)}
                     />
                     {true && (
                       <>
                         <Tooltip content={t("buy_expert_tokens")}>
                           <Button
+                            className="hidden text-[.5rem] sm:text-sm md:block"
                             data-testid="preview-link-button"
                             color="secondary"
                             target="_blank"
@@ -128,7 +134,7 @@ function CustomExpertTable(props: CustomExpertTableProps) {
                           variant="icon"
                           color="secondary"
                           StartIcon={MoreHorizontal}
-                          className="ltr:radix-state-open:rounded-r-md rtl:radix-state-open:rounded-l-md"
+                          className="ltr:radix-state-open:rounded-r-md rtl:radix-state-open:rounded-l-md p-1"
                         />
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
@@ -136,7 +142,20 @@ function CustomExpertTable(props: CustomExpertTableProps) {
                           <DropdownMenuItem>
                             <DropdownItem
                               type="button"
-                              data-testid="event-type-edit-"
+                              className="md:hidden"
+                              childrenClassName="text-[.5rem] sm:text-sm"
+                              data-testid="buy-tokens-of-expert"
+                              disabled={data.token_amount !== 0}
+                              StartIcon={ShoppingCart}
+                              onClick={() => {
+                                handleBuyEvent(data.userId, data.buy_amount);
+                              }}>
+                              {t("buy")}
+                            </DropdownItem>
+                            <DropdownItem
+                              type="button"
+                              childrenClassName="text-[.5rem] sm:text-sm"
+                              data-testid="remove-expert"
                               disabled={data.token_amount !== 0}
                               StartIcon={Trash2}
                               onClick={() => handleRemoveEvent(data.userId)}>

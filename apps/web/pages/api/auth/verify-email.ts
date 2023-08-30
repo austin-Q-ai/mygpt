@@ -39,7 +39,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       email: foundToken?.identifier,
     },
     data: {
-      tokens: parseInt(process.env.AMOUNT_MINTED_DEFAULT), // amount of tokens minted for 6 months default
+      tokens: parseInt(process.env.AMOUNT_MINTED_DEFAULT || "0"), // amount of tokens minted for 6 months default
       emailVerified: new Date(),
     },
   });
