@@ -171,8 +171,10 @@ model Experience {
   position  String   @default("")
   company   String   @default("")
   address   String?
-  startDate DateTime @default(now())
-  endDate   DateTime @default(now())
+  startMonth Int     @default(1)
+  startYear  Int     @default(2000)
+  endMonth   Int     @default(1)
+  endYear    Int     @default(2000)
   avatar    String?
   user      User?    @relation(fields: [userId], references: [id])
   userId    Int?
@@ -183,8 +185,10 @@ model Education {
   school    String   @default("")
   major     String?
   degree    String?
-  startDate DateTime @default(now())
-  endDate   DateTime @default(now())
+  startMonth Int     @default(1)
+  startYear  Int     @default(2000)
+  endMonth   Int     @default(1)
+  endYear    Int     @default(2000)
   avatar    String?
   user      User?    @relation(fields: [userId], references: [id])
   userId    Int?

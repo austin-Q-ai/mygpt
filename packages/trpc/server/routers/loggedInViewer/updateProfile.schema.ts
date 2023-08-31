@@ -9,6 +9,19 @@ export const ZUpdateProfileInputSchema = z.object({
   email: z.string().optional(),
   position: z.string(),
   address: z.string(),
+  experiences: z.array(
+    z.object({
+      position: z.string(),
+      company: z.string(),
+      address: z.string().optional(),
+      startMonth: z.string().optional(),
+      startYear: z.string().optional(),
+      endMonth: z.string().optional(),
+      endYear: z.string().optional(),
+      avatar: z.string().optional(),
+    })
+  ),
+  skills: z.array(z.string()),
   bio: z.string().optional(),
   avatar: z.string().optional(),
   timeZone: z.string().optional(),

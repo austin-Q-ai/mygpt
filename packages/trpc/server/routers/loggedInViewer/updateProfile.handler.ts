@@ -118,6 +118,8 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
       email: true,
       position: true,
       address: true,
+      experiences: true,
+      skills: true,
       metadata: true,
       name: true,
       createdDate: true,
