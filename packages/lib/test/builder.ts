@@ -185,6 +185,7 @@ export const buildUser = <T extends Partial<UserPayload>>(user?: T): UserPayload
     username: faker.internet.userName(),
     address: null,
     id: 0,
+    address: null,
     position: null,
     skills: [],
     price: [],

@@ -1,5 +1,5 @@
-import MeiliSearch from "meilisearch";
-import React, { useEffect, useState } from "react";
+import { MeiliSearch } from "meilisearch";
+import React, { useState } from "react";
 import { components } from "react-select";
 
 import Shell from "@calcom/features/shell/Shell";
@@ -11,128 +11,50 @@ import { Plus } from "@calcom/ui/components/icon";
 import { withQuery } from "@lib/QueryCell";
 
 import PageWrapper from "@components/PageWrapper";
-import SkeletonLoader from "@components/availability/SkeletonLoader";
 import CustomExpertTable from "@components/timetokens-wallet/CustomExpertTable";
+import type { ExpertDataType } from "@components/timetokens-wallet/CustomExpertTable";
+import SkeletonLoader from "@components/timetokens-wallet/SkeletonLoader";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const WithQuery = withQuery(trpc.viewer.availability.list as any);
+const WithQuery = withQuery(trpc.viewer.timetokenswallet.getAddedExperts as any);
+
+type ExpertOptionType = {
+  label: string;
+  value: number;
+  avatar: string;
+  added: boolean;
+};
 
 function TimeTokensWallet() {
   const { t } = useLocale();
+  const { data: user, isLoading } = trpc.viewer.me.useQuery();
 
-  trpc.viewer.timetokenswallet.searchUser.useQuery(
-    { name: "a" },
-    {
-      onSuccess: (data) => {
-        console.log(data, "=====");
-      },
-    }
-  );
-
-  const [addedExpertsData, setAddedExpertsData] = useState<any[]>([]);
+  const [addedExpertsData, setAddedExpertsData] = useState<ExpertDataType[]>([]);
   const [buyConfirmOpen, setBuyConfirmOpen] = useState<boolean>(false);
-  const [buyExpertEmail, setBuyExpertEmail] = useState<string>("");
+  const [removeConfirmOpen, setRemoveConfirmOpen] = useState<boolean>(false);
+  const [buyExpertID, setBuyExpertID] = useState<number>(-1);
+  const [removeExpertID, setRemoveExpertID] = useState<number>(-1);
   const [buyTokensAmount, setBuyTokensAmount] = useState<number>(0);
-  const [expertSearchResult, setExpertSearchResult] = useState<any[]>([]);
-  const [expertOptions, setExpertOptions] = useState<any[]>([]);
-  const [addExpertEmail, setAddExpertEmail] = useState<string>("");
-  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [expertOptions, setExpertOptions] = useState<ExpertOptionType[]>([]);
+  const [addExpertId, setAddExpertId] = useState<number>(-1);
+  // const [user, setUser] = useState<any>(null);
 
-  const mockupData: any[] = [
-    {
-      email: "cawsonoliver33@gmail.com",
-      fullname: "Expert 1",
-      expert_token_amount: 1000,
-      token_amount: 200,
-      token_price: 5,
-      added: false,
-    },
-    {
-      email: "cawsonoliver44@gmail.com",
-      fullname: "Expert 2",
-      expert_token_amount: 1000,
-      token_amount: 200,
-      token_price: 5,
-      added: false,
-    },
-    {
-      email: "cawsonoliver55@gmail.com",
-      fullname: "Expert 3",
-      expert_token_amount: 1000,
-      token_amount: 0,
-      token_price: 5,
-      added: true,
-    },
-    {
-      email: "cawsonoliver66@gmail.com",
-      fullname: "Expert 4",
-      expert_token_amount: 1000,
-      token_amount: 0,
-      token_price: 5,
-      added: true,
-    },
-    {
-      email: "cawsonoliver77@gmail.com",
-      fullname: "Expert 5",
-      expert_token_amount: 1000,
-      token_amount: 200,
-      token_price: 5,
-      added: false,
-    },
-    {
-      email: "cawsonoliver88@gmail.com",
-      fullname: "Expert 6",
-      token_amount: 200,
-      token_price: 5,
-      added: false,
-    },
-  ];
-
-  const client = new MeiliSearch({
+  const meiliClient = new MeiliSearch({
     host: `https://${process.env.MEILISEARCH_HOST}`,
-    apiKey: process.env.SEARCH_API_KEY, // search apiKey
+    apiKey: process.env.SEARCH_API_KEY,
   });
 
-  console.log(process.env.MEILISEARCH_HOST);
+  const columns: string[] = ["Expert", "Tokens amount(expert)", "Tokens amount(me)", "Token price", ""];
 
-  const columns: string[] = ["Expert", "Tokens amount", "Token price", ""];
-
-  useEffect(() => {
-    if (expertSearchResult.length === 0) {
-      setAddedExpertsData([]);
-      setExpertSearchResult(mockupData);
-      changeExpertOptions(mockupData);
-    }
-
-    console.log(addedExpertsData);
-  }, []);
-
-  useEffect(() => {
-    const search = async () => {
-      const results = await client.index("users").search("");
-      setSearchResults(results.hits);
-    };
-    search();
-  }, []);
-
-  const handleBuyEvent = (email: string, tokens: number) => {
+  const handleBuyEvent = (emitterId: number, tokens: number) => {
     setBuyConfirmOpen(true);
-    setBuyExpertEmail(email);
+    setBuyExpertID(emitterId);
     setBuyTokensAmount(tokens);
   };
 
-  const changeExpertOptions = (searchResult: any[]) => {
-    const data = [];
-    for (const expert of searchResult) {
-      data.push({
-        label: expert.fullname,
-        value: expert.email,
-        added: expert.added,
-      });
-    }
-
-    setExpertOptions(data);
-    console.log(data);
+  const handleRemoveEvent = (emitterId: number) => {
+    setRemoveConfirmOpen(true);
+    setRemoveExpertID(emitterId);
   };
 
   const CustomOption = ({ icon, label, added }: { icon: string; label: string; added: boolean }) => {
@@ -141,7 +63,7 @@ function TimeTokensWallet() {
         <Avatar className="mr-2" alt="Nameless" size="sm" imageSrc={icon} />
         <span>{label}</span>
         {added && (
-          <Badge className="ml-auto" size="md" variant="gray">
+          <Badge className="ml-auto text-[.5rem] sm:text-sm" size="md" variant="gray">
             {t("added")}
           </Badge>
         )}
@@ -149,13 +71,99 @@ function TimeTokensWallet() {
     );
   };
 
+  trpc.viewer.timetokenswallet.getAddedExperts.useQuery(undefined, {
+    onSuccess: (data) => {
+      console.log(data, "===== get added experts");
+      setAddedExpertsDataHandler(data.users);
+    },
+    onError: (error) => {
+      console.log("Error", error);
+    },
+  });
+
+  // trpc.viewer.me.useQuery(undefined, {
+  //   onSuccess: (data) => {
+  //     setUser(data);
+  //   },
+  //   onError: (error) => {
+  //     console.log("error", "==== error ====");
+  //   },
+  // });
+
+  const addExpertMutation = trpc.viewer.timetokenswallet.addExpert.useMutation({
+    onSuccess: (data) => {
+      console.log("=== add expert ====");
+      setAddedExpertsDataHandler(data.users);
+    },
+  });
+
+  const removeExpertMutation = trpc.viewer.timetokenswallet.removeExpert.useMutation({
+    onSuccess: (data) => {
+      console.log("=== remove expert ====");
+      setAddedExpertsDataHandler(data.users);
+    },
+  });
+
+  const buyTokensMutation = trpc.viewer.timetokenswallet.buyTokens.useMutation({
+    onSuccess: (data) => {
+      setAddedExpertsDataHandler(data.users);
+    },
+  });
+
   const addExpert = () => {
-    for (const expert of expertSearchResult) {
-      if (expert?.email === addExpertEmail) {
-        setAddedExpertsData([...addedExpertsData, expert]);
-        break;
-      }
+    console.log(addExpertId, "=====");
+    addExpertMutation.mutate({ emitterId: addExpertId });
+  };
+
+  const customFilter = (option: any, searchText: string) => {
+    return true;
+  };
+
+  const handleExpertSearch = (value: string) => {
+    if (value.length === 0) {
+      setExpertOptions([]);
+      return;
     }
+
+    try {
+      const index = meiliClient.index("users");
+      index.search(value).then((res) => {
+        const data = [];
+
+        for (const expert of res.hits) {
+          if (isLoading || expert.objectID === user.id) continue;
+          data.push({
+            label: expert.name,
+            value: expert.objectID,
+            avatar: expert.avatar,
+            added: expert.added && expert?.added.indexOf(user.id) > -1,
+          });
+        }
+
+        setExpertOptions(data);
+      });
+    } catch (error) {
+      console.error("Error searching:", error);
+    }
+  };
+
+  const setAddedExpertsDataHandler = (users: any) => {
+    const data = [];
+
+    for (const item of users) {
+      data.push({
+        userId: item.emitter.id,
+        fullname: item.emitter.name,
+        avatar: item.emitter.avatar,
+        expert_token_amount: item.emitter.tokens,
+        token_amount: item.amount,
+        token_price: item.emitter.price[item.emitter.price.length - 1],
+        buy_amount: 10,
+        added: true,
+      });
+    }
+
+    setAddedExpertsData(data);
   };
 
   return (
@@ -165,7 +173,7 @@ function TimeTokensWallet() {
         success={({ data }) => {
           return (
             <>
-              <div className="mb-4 flex w-full items-center justify-center gap-4 px-4 lg:w-2/3">
+              <div className="mb-8 flex w-full items-center justify-center gap-4 px-1 sm:mb-12 sm:px-4 lg:w-2/3">
                 <Select
                   options={expertOptions}
                   components={{
@@ -173,7 +181,7 @@ function TimeTokensWallet() {
                       return (
                         <components.Option {...props}>
                           <CustomOption
-                            icon={props.data.icon}
+                            icon={props.data.avatar}
                             label={props.data.label}
                             added={props.data.added}
                           />
@@ -182,20 +190,32 @@ function TimeTokensWallet() {
                     },
                   }}
                   isSearchable={true}
-                  className="w-full rounded-md text-sm"
+                  filterOption={customFilter}
+                  className="w-full rounded-md text-[.5rem] sm:text-sm"
                   onChange={(event) => {
-                    setAddExpertEmail(event?.value);
+                    setAddExpertId(event?.added ? -1 : event?.value || -1);
+                  }}
+                  onInputChange={(value) => {
+                    handleExpertSearch(value);
                   }}
                 />
-                <Button disabled={addExpertEmail === ""} onClick={addExpert} data-testid="" StartIcon={Plus}>
+                <Button
+                  disabled={addExpertId === -1}
+                  className="text-[.5rem] sm:text-sm"
+                  onClick={addExpert}
+                  data-testid=""
+                  StartIcon={Plus}>
                   {t("add")}
                 </Button>
               </div>
+
               <CustomExpertTable
                 columns={columns}
                 expertsData={addedExpertsData}
                 handleBuyEvent={handleBuyEvent}
+                handleRemoveEvent={handleRemoveEvent}
               />
+
               <Dialog open={buyConfirmOpen} onOpenChange={setBuyConfirmOpen}>
                 <ConfirmationDialogContent
                   variety="danger"
@@ -204,21 +224,31 @@ function TimeTokensWallet() {
                   loadingText={t(`confirm_buy_event`)}
                   onConfirm={(e) => {
                     e.preventDefault();
-                    console.log(buyExpertEmail, buyTokensAmount);
+                    buyTokensMutation.mutate({ emitterId: buyExpertID, amount: buyTokensAmount });
                     setBuyConfirmOpen(false);
                   }}>
-                  <p className="mt-5">Do you want to really buy tokens?</p>
+                  <p className="mt-5">{t(`confirm_buy_question`)}</p>
+                </ConfirmationDialogContent>
+              </Dialog>
+
+              <Dialog open={removeConfirmOpen} onOpenChange={setRemoveConfirmOpen}>
+                <ConfirmationDialogContent
+                  variety="danger"
+                  title="Confirmation"
+                  confirmBtnText={t(`confirm_remove_event`)}
+                  loadingText={t(`confirm_remove_event`)}
+                  onConfirm={(e) => {
+                    e.preventDefault();
+                    removeExpertMutation.mutate({ emitterId: removeExpertID });
+                    setRemoveConfirmOpen(false);
+                  }}>
+                  <p className="mt-5">{t(`confirm_remove_question`)}</p>
                 </ConfirmationDialogContent>
               </Dialog>
             </>
           );
         }}
       />
-      <div>
-        {searchResults.map((result, index) => (
-          <p key={result.objectID}>{result.name}</p> // Or whatever property your objects have
-        ))}
-      </div>
     </Shell>
   );
 }

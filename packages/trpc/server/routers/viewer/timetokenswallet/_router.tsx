@@ -1,35 +1,105 @@
 import authedProcedure from "../../../procedures/authedProcedure";
 import { router } from "../../../trpc";
-import { ZSearchUserInputSchema } from "./searchUser.schema";
+import { ZAddExpertSchema } from "./addExpert.schema";
+import { ZBuyTokensSchema } from "./buyTokens.schema";
+import { ZRemoveExpertSchema } from "./removeExpert.schema";
+import { ZUserInputSchema } from "./user.schema";
 
-type TimetokenswalletRouterHandlerCache = {
-  searchUser?: typeof import("./searchUser.handler").searchUserHandler;
+type TimeTokensWalletRouterHandlerCache = {
+  user?: typeof import("./user.handler").userHandler;
+  getAddedExperts?: typeof import("./getAddedExperts.handler").getAddedExpertsHandler;
+  addExpert?: typeof import("./addExpert.handler").addExpertHandler;
+  removeExpert?: typeof import("./removeExpert.handler").removeExpertHandler;
+  buyTokens?: typeof import("./buyTokens.handler").buyTokensHandler;
 };
 
-const UNSTABLE_HANDLER_CACHE: TimetokenswalletRouterHandlerCache = {};
+const UNSTABLE_HANDLER_CACHE: TimeTokensWalletRouterHandlerCache = {};
 
 export const timetokenswalletRouter = router({
-  searchUser: authedProcedure.input(ZSearchUserInputSchema).query(async ({ input, ctx }) => {
-    if (!UNSTABLE_HANDLER_CACHE.searchUser) {
-      UNSTABLE_HANDLER_CACHE.searchUser = await import("./searchUser.handler").then(
-        (mod) => mod.searchUserHandler
+  user: authedProcedure.input(ZUserInputSchema).query(async ({ ctx, input }) => {
+    if (!UNSTABLE_HANDLER_CACHE.user) {
+      UNSTABLE_HANDLER_CACHE.user = await import("./user.handler").then((mod) => mod.userHandler);
+    }
+
+    // Unreachable code but required for type safety
+    if (!UNSTABLE_HANDLER_CACHE.user) {
+      throw new Error("Failed to load handler");
+    }
+
+    return UNSTABLE_HANDLER_CACHE.user({
+      ctx,
+      input,
+    });
+  }),
+
+  getAddedExperts: authedProcedure.query(async ({ ctx }) => {
+    if (!UNSTABLE_HANDLER_CACHE.getAddedExperts) {
+      UNSTABLE_HANDLER_CACHE.getAddedExperts = await import("./getAddedExperts.handler").then(
+        (mod) => mod.getAddedExpertsHandler
       );
     }
 
     // Unreachable code but required for type safety
-    if (!UNSTABLE_HANDLER_CACHE.searchUser) {
+    if (!UNSTABLE_HANDLER_CACHE.getAddedExperts) {
       throw new Error("Failed to load handler");
     }
 
-    // const timer = logP(`searchUser(${ctx.user.id})`);
+    return UNSTABLE_HANDLER_CACHE.getAddedExperts({
+      ctx,
+    });
+  }),
 
-    const result = await UNSTABLE_HANDLER_CACHE.searchUser({
+  addExpert: authedProcedure.input(ZAddExpertSchema).mutation(async ({ ctx, input }) => {
+    if (!UNSTABLE_HANDLER_CACHE.addExpert) {
+      UNSTABLE_HANDLER_CACHE.addExpert = await import("./addExpert.handler").then(
+        (mod) => mod.addExpertHandler
+      );
+    }
+
+    // Unreachable code but required for type safety
+    if (!UNSTABLE_HANDLER_CACHE.addExpert) {
+      throw new Error("Failed to load handler");
+    }
+
+    return UNSTABLE_HANDLER_CACHE.addExpert({
       ctx,
       input,
     });
+  }),
 
-    // timer();
+  removeExpert: authedProcedure.input(ZRemoveExpertSchema).mutation(async ({ ctx, input }) => {
+    if (!UNSTABLE_HANDLER_CACHE.removeExpert) {
+      UNSTABLE_HANDLER_CACHE.removeExpert = await import("./removeExpert.handler").then(
+        (mod) => mod.removeExpertHandler
+      );
+    }
 
-    return result;
+    // Unreachable code but required for type safety
+    if (!UNSTABLE_HANDLER_CACHE.removeExpert) {
+      throw new Error("Failed to load handler");
+    }
+
+    return UNSTABLE_HANDLER_CACHE.removeExpert({
+      ctx,
+      input,
+    });
+  }),
+
+  buyTokens: authedProcedure.input(ZBuyTokensSchema).mutation(async ({ ctx, input }) => {
+    if (!UNSTABLE_HANDLER_CACHE.buyTokens) {
+      UNSTABLE_HANDLER_CACHE.buyTokens = await import("./buyTokens.handler").then(
+        (mod) => mod.buyTokensHandler
+      );
+    }
+
+    // Unreachable code but required for type safety
+    if (!UNSTABLE_HANDLER_CACHE.buyTokens) {
+      throw new Error("Failed to load handler");
+    }
+
+    return UNSTABLE_HANDLER_CACHE.buyTokens({
+      ctx,
+      input,
+    });
   }),
 });

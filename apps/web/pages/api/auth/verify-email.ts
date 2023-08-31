@@ -39,17 +39,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       email: foundToken?.identifier,
     },
     data: {
+      tokens: parseInt(process.env.AMOUNT_MINTED_DEFAULT || "0"), // amount of tokens minted for 6 months default
       emailVerified: new Date(),
     },
   });
 
-  // add new user to meilisearch after email verified
+  // add new user to meilisearch and generate a tokenprice record after email verified
   if (user.emailVerified) {
     const newUserInfo = {
       objectID: user.id,
       name: user.name,
       bio: user.bio,
       avatar: user.avatar,
+      added: [],
     };
     await index.addDocuments([newUserInfo], { primaryKey: "objectID" });
   }

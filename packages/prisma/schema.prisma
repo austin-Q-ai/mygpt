@@ -203,7 +203,7 @@ model User {
   password              String?
   amountsMintedPerMonth Int                     @default(3000)
   tokens                Int                     @default(0)
-  lastRewardedDate      DateTime?
+  lastRewardedDate      DateTime                @default(now())
   price                 Int[]                   @default([1])
   bio                   String?
   avatar                String?
