@@ -1,5 +1,5 @@
 import { MeiliSearch } from "meilisearch";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { components } from "react-select";
 
 import Shell from "@calcom/features/shell/Shell";
@@ -46,8 +46,6 @@ function TimeTokensWallet() {
   });
 
   const columns: string[] = ["Expert", "Tokens amount(expert)", "Tokens amount(me)", "Token price", ""];
-
-  useEffect(() => {}, [addedExpertsData]);
 
   const handleBuyEvent = (emitterId: number, tokens: number) => {
     setBuyConfirmOpen(true);
@@ -132,7 +130,7 @@ function TimeTokensWallet() {
       const index = meiliClient.index("users");
       index.search(value).then((res) => {
         const data = [];
-        
+
         for (const expert of res.hits) {
           if (isLoading || expert.objectID === user.id) continue;
           data.push({
