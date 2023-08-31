@@ -192,10 +192,9 @@ function TimeTokensWallet() {
                   }}
                   isSearchable={true}
                   filterOption={customFilter}
-                  className="w-full rounded-md text-[.5rem] sm:text-sm "
+                  className="w-full rounded-md text-[.5rem] sm:text-sm"
                   onChange={(event) => {
-                    console.log(event?.value, "====");
-                    setAddExpertId(event?.value || -1);
+                    setAddExpertId(event?.added ? -1 : (event?.value || -1));
                   }}
                   onInputChange={(value) => {
                     handleExpertSearch(value);
