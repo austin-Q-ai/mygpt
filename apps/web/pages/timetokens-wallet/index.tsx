@@ -131,12 +131,12 @@ function TimeTokensWallet() {
         const data = [];
 
         for (const expert of res.hits) {
-          if (isLoading || expert.objectID === user.id) continue;
+          if (isLoading || expert.objectID === user?.id) continue;
           data.push({
             label: expert.name,
             value: expert.objectID,
             avatar: expert.avatar,
-            added: expert.added && expert?.added.indexOf(user.id) > -1,
+            added: expert.added && expert?.added.indexOf(user?.id) > -1,
           });
         }
 

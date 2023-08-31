@@ -183,7 +183,6 @@ export const buildUser = <T extends Partial<UserPayload>>(user?: T): UserPayload
     email: faker.internet.email(),
     timeZone: faker.address.timeZone(),
     username: faker.internet.userName(),
-    address: null,
     id: 0,
     address: null,
     position: null,

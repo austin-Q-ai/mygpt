@@ -140,7 +140,7 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
       },
     });
 
-    if (checkUser.price[checkUser.price.length - 1] !== price) {
+    if (checkUser !== null && checkUser.price[checkUser.price.length - 1] !== price) {
       await prisma.user.update({
         where: {
           id: user.id,
