@@ -131,16 +131,27 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
   });
 
   if (price) {
-    await prisma.user.update({
+    const checkUser = await prisma.user.findUnique({
       where: {
         id: user.id,
       },
-      data: {
-        price: {
-          push: price,
-        },
+      select: {
+        price: true,
       },
     });
+
+    if (checkUser.price[checkUser.price.length - 1] !== price) {
+      await prisma.user.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          price: {
+            push: price,
+          },
+        },
+      });
+    }
   }
 
   // update userInfo to meilisearch by id after update userInfo
