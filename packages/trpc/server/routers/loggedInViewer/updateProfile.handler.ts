@@ -111,7 +111,39 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
     where: {
       id: user.id,
     },
-    data,
+    data: {
+      ...data,
+      experiences: data.experiences ? {
+        updateMany: data.experiences.filter(exp => exp.id !== undefined && !exp.delete).map((exp) => {
+          const { id, userId, ...data} = exp;
+          return {
+            where: {
+              id: exp.id,
+            },
+            data,
+          }
+        }),
+        create: data.experiences.filter(exp => exp.id === undefined && !exp.delete),
+        deleteMany: data.experiences.filter((exp) => exp.id !== undefined && exp.delete).map((exp) => ({
+          id: exp.id,
+        })),
+      } : {},
+      educations: data.educations ? {
+        updateMany: data.educations.filter(edu => edu.id !== undefined && !edu.delete).map((edu) => {
+          const { id, userId, ...data} = edu;
+          return {
+            where: {
+              id: edu.id,
+            },
+            data,
+          }
+        }),
+        create: data.educations.filter(edu => edu.id === undefined && !edu.delete),
+        deleteMany: data.educations.filter((edu) => edu.id !== undefined && edu.delete).map((edu) => ({
+          id: edu.id,
+        })),
+      } : {}
+    },
     select: {
       id: true,
       username: true,
@@ -119,6 +151,7 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
       position: true,
       address: true,
       experiences: true,
+      educations: true,
       skills: true,
       metadata: true,
       name: true,
@@ -127,8 +160,6 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
       avatar: true,
     },
   });
-
-  console.log(input, data);
 
   // update userInfo to meilisearch by id after update userInfo
   if (updatedUser) {

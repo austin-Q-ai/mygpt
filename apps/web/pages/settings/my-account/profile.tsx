@@ -248,7 +248,6 @@ const ProfileView = () => {
         defaultValues={defaultValues}
         isLoading={mutation.isLoading}
         onSubmit={(values) => {
-          console.log(values);
           if (values.email !== user.email && isCALIdentityProviver) {
             setTempFormValues(values);
             setConfirmPasswordOpen(true);
@@ -370,11 +369,15 @@ const ProfileForm = ({
   const { t } = useLocale();
   const [firstRender, setFirstRender] = useState(true);
   const [editableHeader, setEditableHeader] = useState(false);
+  const [editableExp, setEditableExp] = useState(false);
+  const [editableEdu, setEditableEdu] = useState(false);
+  const [showErrorInHeader, setShowErrorInHeader] = useState(false);
   const [editableAbout, setEditableAbout] = useState(false);
   const [editableSkill, setEditableSkill] = useState(false);
   const [skills, setSkills] = useState([]);
 
   const [addExpOpen, setAddExpOpen] = useState(false);
+  const [showErrorInExp, setShowErrorInExp] = useState(false);
   const [experiences, setExperiences] = useState([]);
   const [indexExp, setIndexExp] = useState(-1);
   const [positionExp, setPositionExp] = useState("");
@@ -386,6 +389,7 @@ const ProfileForm = ({
   const [endYearExp, setEndYearExp] = useState(new Date().getFullYear());
 
   const [addEduOpen, setAddEduOpen] = useState(false);
+  const [showErrorInEdu, setShowErrorInEdu] = useState(false);
   const [educations, setEducations] = useState([]);
   const [indexEdu, setIndexEdu] = useState(-1);
   const [schoolEdu, setSchoolEdu] = useState("");
@@ -414,26 +418,32 @@ const ProfileForm = ({
     address: z.string(),
     experiences: z.array(
       z.object({
+        id: z.number().optional(),
         position: z.string(),
         company: z.string(),
         address: z.string().optional(),
-        startMonth: z.string().optional(),
-        startYear: z.string().optional(),
-        endMonth: z.string().optional(),
-        endYear: z.string().optional(),
-        avatar: z.string().optional(),
+        startMonth: z.number().optional(),
+        startYear: z.number().optional(),
+        endMonth: z.number().optional(),
+        endYear: z.number().optional(),
+        avatar: z.nullable(z.string()),
+        userId: z.number().optional(),
+        delete: z.boolean().optional(),
       })
     ),
     educations: z.array(
       z.object({
+        id: z.number().optional(),
         school: z.string(),
         major: z.string().optional(),
         degree: z.string().optional(),
-        startMonth: z.string().optional(),
-        startYear: z.string().optional(),
-        endMonth: z.string().optional(),
-        endYear: z.string().optional(),
-        avatar: z.string().optional(),
+        startMonth: z.number().optional(),
+        startYear: z.number().optional(),
+        endMonth: z.number().optional(),
+        endYear: z.number().optional(),
+        avatar: z.nullable(z.string()),
+        userId: z.number().optional(),
+        delete: z.boolean().optional(),
       })
     ),
     skills: z.array(z.string()),
@@ -452,8 +462,18 @@ const ProfileForm = ({
 
   useEffect(() => {
     setSkills(formMethods.getValues("skills"));
-    setExperiences(formMethods.getValues("experiences"));
-    setEducations(formMethods.getValues("educations"));
+    setExperiences(formMethods.getValues("experiences").map((exp) => {
+      return {
+        ...exp,
+        key: Math.floor(Math.random() * 1000000).toString(),
+      }
+    }));
+    setEducations(formMethods.getValues("educations").map((edu) => {
+      return {
+        ...edu,
+        key: Math.floor(Math.random() * 1000000).toString(),
+      }
+    }));
   }, []);
 
   const months = [
@@ -474,6 +494,7 @@ const ProfileForm = ({
   return (
     <>
       <Form form={formMethods} handleSubmit={onSubmit}>
+        {!isDisabled && <Alert className="mb-4" key="info_save_change" severity="info" title={t("info_save_change")} />}
         <div className="flex items-center">
           <Controller
             control={formMethods.control}
@@ -494,6 +515,7 @@ const ProfileForm = ({
                           id="avatar-upload"
                           buttonMsg={<Edit2 />}
                           handleAvatarChange={(newAvatar) => {
+                            console.log(newAvatar);
                             formMethods.setValue("avatar", newAvatar, { shouldDirty: true });
                           }}
                           imageSrc={value || undefined}
@@ -503,26 +525,35 @@ const ProfileForm = ({
                     <div className="items-left ms-4 flex flex-col flex-grow">
                       <div className="text-xl">
                         {!editableHeader ? (
-                          <>{defaultValues.name}</>
+                          <>{defaultValues.name ? defaultValues.name : t("nameless")}</>
                         ) : (
-                          <TextField label={`${t("full_name")}*`} {...formMethods.register("name")} />
+                          <>
+                            <TextField label={`${t("full_name")}*`} {...formMethods.register("name")} />
+                            {showErrorInHeader && !formMethods.getValues("name") && <Alert key="error_full_name_required" severity="error" title={t("error_full_name_required")} />}
+                          </>
                         )}
                       </div>
-                      <div className="mt-4">
+                      <div className={!editableHeader && defaultValues.position ? "mt-4" : ""}>
                         {!editableHeader ? (
                           <>{defaultValues.position}</>
                         ) : (
-                          <TextField label={`${t("position")}*`} {...formMethods.register("position")} />
+                          <>
+                            <TextField label={`${t("position")}*`} {...formMethods.register("position")} />
+                            {showErrorInHeader && !formMethods.getValues("position") && <Alert key="error_current_position_required" severity="error" title={t("error_current_position_required")} />}
+                          </>
                         )}
                       </div>
-                      <div className="mt-2">
+                      <div className={!editableHeader && defaultValues.address ? "mt-2" : ""}>
                         {!editableHeader ? (
                           <>{defaultValues.address}</>
                         ) : (
-                          <TextField label={`${t("address")}*`} {...formMethods.register("address")} />
+                          <>
+                            <TextField label={`${t("address")}*`} {...formMethods.register("address")} />
+                            {showErrorInHeader && !formMethods.getValues("address") && <Alert className="mb-2" key="error_address_required" severity="error" title={t("error_address_required")} />}
+                          </>
                         )}
                       </div>
-                      <div className="mt-2 flex items-center gap-2">
+                      <div className={!editableHeader ? "mt-2 flex items-center gap-2" : "flex items-center gap-2"}>
                         <div>
                           <Button color="secondary" className="rounded-full text-gray-500" variant="icon">
                             <svg
@@ -578,7 +609,12 @@ const ProfileForm = ({
                         className={!editableHeader ? "rounded-full" : "rotate-45 transform rounded-full"}
                         variant="icon"
                         onClick={() => {
-                          setEditableHeader(!editableHeader);
+                          if ((formMethods.getValues("name") && formMethods.getValues("position") && formMethods.getValues("address")) || !editableHeader) {
+                            setEditableHeader(!editableHeader);
+                            setShowErrorInHeader(false);
+                          } else {
+                            setShowErrorInHeader(true);
+                          }
                         }}
                       />
                     </div>
@@ -629,7 +665,7 @@ const ProfileForm = ({
                     setFirstRender={setFirstRender}
                   />
                 ) : (
-                  <>{defaultValues.bio}</>
+                  <div className="m-4">{defaultValues.bio}</div>
                 )}
               </>
             }
@@ -652,7 +688,6 @@ const ProfileForm = ({
                       variant="icon"
                       onClick={() => {
                         const tmp = skills.concat("");
-                        formMethods.setValue("skills", tmp, { shouldDirty: true });
                         setSkills(tmp);
                       }}
                     />}
@@ -668,37 +703,46 @@ const ProfileForm = ({
                   </div>
                 </div>
                 <div className="mb-4 flex gap-2 w-[100%] overflow-x-auto">
-                  {!editableSkill ? defaultValues.skills.map((skill, i) => {
-                      return (<div className="w-[100%] border border-solid border-gray-500 text-center p-2 rounded rounded-md">{skill}</div>);
-                  }) : skills.map((skill, i) => {
-                      return (
-                        <div className="flex">
-                          <Input
-                            className="w-[100px] rounded-tr-none"
-                            value={skill}
-                            onChange={(event) => {
-                              const formData = [...skills];
-                              formData[i] = event.target.value;
-                              formMethods.setValue("skills", formData, { shouldDirty: true });
-                              setSkills(formData);
-                            }}
-                          />
-                          <Button
-                            color="secondary"
-                            StartIcon={Cross}
-                            className="rotate-45 transform rounded-full rounded-bl-none"
-                            variant="icon"
-                            onClick={() => {
-                              const formData = [...skills.slice(0, i), ...skills.slice(i+1)];
-                              console.log(formData);
-                              formMethods.setValue("skills", formData, { shouldDirty: true });
-                              setSkills(formData);
-                            }}
-                          />
-                        </div>
-                      );
-                    })
-                  }
+                  {(!editableSkill && defaultValues.skills.length === 0) || (editableSkill && skills.length === 0) ? (
+                    <div className="w-[100%] text-center p-2">{t("no_data_yet")}</div>
+                  ) : (
+                    <>
+                      {!editableSkill
+                        ? defaultValues.skills.map((skill, i) => (
+                            <div className="w-[100%] border border-solid border-gray-500 text-center p-2 rounded rounded-md" key={i}>
+                              {skill}
+                            </div>
+                          ))
+                        : skills.map((skill, i) => (
+                            <div className="flex" key={i}>
+                              <Input
+                                className="w-[100px] rounded-tr-none"
+                                value={skill}
+                                onChange={(event) => {
+                                  const formData = [...skills];
+                                  formData[i] = event.target.value;
+                                  formMethods.setValue("skills", formData.filter((skill) => skill), {
+                                    shouldDirty: true,
+                                  });
+                                  setSkills(formData);
+                                }}
+                              />
+                              <Button
+                                color="secondary"
+                                StartIcon={Cross}
+                                className="rotate-45 transform rounded-full rounded-bl-none"
+                                variant="icon"
+                                onClick={() => {
+                                  const formData = [...skills.slice(0, i), ...skills.slice(i + 1)];
+                                  formMethods.setValue("skills", formData, { shouldDirty: true });
+                                  setSkills(formData);
+                                }}
+                              />
+                            </div>
+                          ))
+                      }
+                    </>
+                  )}
                 </div>
               </>
             }
@@ -713,64 +757,115 @@ const ProfileForm = ({
               <>
                 <div className="mb-4 flex justify-between">
                   <Label className="text-lg">{t("exp")}</Label>
-                  <Button
-                    color="secondary"
-                    StartIcon={Cross}
-                    className="rounded-full"
-                    variant="icon"
-                    onClick={() => {
-                      setAddExpOpen(true);
-                      setPositionExp("");
-                      setCompanyExp("");
-                      setAddressExp("");
-                      setStartMonthExp(new Date().getMonth() + 1);
-                      setStartYearExp(new Date().getFullYear());
-                      setEndMonthExp(new Date().getMonth() + 1);
-                      setEndYearExp(new Date().getFullYear());
-                    }}
-                  />
+                  <div className="flex gap-2">
+                    {editableExp && <Button
+                      color="secondary"
+                      StartIcon={Cross}
+                      className="rounded-full"
+                      variant="icon"
+                      onClick={() => {
+                        setAddExpOpen(true);
+                        setPositionExp("");
+                        setCompanyExp("");
+                        setAddressExp("");
+                        setIndexExp(-1);
+                        setStartMonthExp(new Date().getMonth() + 1);
+                        setStartYearExp(new Date().getFullYear());
+                        setEndMonthExp(new Date().getMonth() + 1);
+                        setEndYearExp(new Date().getFullYear());
+                      }}
+                    />}
+                    <Button
+                      color="secondary"
+                      StartIcon={!editableExp ? Edit2 : Cross}
+                      className={!editableExp ? "rounded-full" : "rotate-45 transform rounded-full"}
+                      variant="icon"
+                      onClick={() => {
+                        setEditableExp(!editableExp);
+                      }}
+                    />
+                  </div>
                 </div>
-                <div className="flex flex-col">
-                  {experiences.map((exp, i) => {
-                    return (
-                      <div className="items-left mb-4 flex flex-col" key={`exp-${exp.id}`}>
-                        <div className="mb-4 flex gap-2">
-                          <div className="flex-grow">
-                            <Avatar alt="" imageSrc="" gravatarFallbackMd5="fallback" size="sm" />
-                          </div>
-                          <div className="flex flex-col flex-grow justify-start">
-                            <div className="mb-1">
-                              <b>{exp.position}</b>
-                            </div>
-                            <div>{exp.company}</div>
-                            <div>{`${months[exp.startMonth - 1]['label']} ${exp.startYear} - ${months[exp.endMonth - 1]['label']} ${exp.endYear}`}</div>
-                            {exp.address && <div>{exp.address}</div>}
-                          </div>
-                          <div className="flex-grow flex justify-end">
-                            <Button
-                              color="secondary"
-                              StartIcon={Edit2}
-                              className="rounded-full"
-                              variant="icon"
-                              size="sm"
-                              onClick={() => {
-                                setAddExpOpen(true);
-                                setIndexExp(i);
-                                setPositionExp(exp.position);
-                                setCompanyExp(exp.company);
-                                setAddressExp(exp.address);
-                                setStartMonthExp(exp.startMonth);
-                                setStartYearExp(exp.startYear);
-                                setEndMonthExp(exp.endMonth);
-                                setEndYearExp(exp.endYear);
-                              }}
-                            />
-                          </div>
-                        </div>
-                        <hr />
-                      </div>
-                    );
-                  })}
+                <div className="flex flex-col pl-4">
+                  {
+                    !editableExp ?
+                    (<>
+                      {defaultValues.experiences.length === 0 ?
+                        (<div className="w-[100%] text-center p-2">{t("no_data_yet")}</div>) :
+                        (<>
+                          {defaultValues.experiences.map((exp, i) => {
+                            return (
+                              <div className="items-left mb-4 flex flex-col" key={`exp-${exp.id}`}>
+                                <div className="mb-4 flex gap-2">
+                                  <div className="mr-4">
+                                    <Avatar alt="" imageSrc="" gravatarFallbackMd5="fallback" size="sm" />
+                                  </div>
+                                  <div className="flex flex-col justify-start">
+                                    <div className="mb-1">
+                                      <b>{exp.position}</b>
+                                    </div>
+                                    <div>{exp.company}</div>
+                                    <div>{`${months[exp.startMonth - 1]['label']} ${exp.startYear} - ${months[exp.endMonth - 1]['label']} ${exp.endYear}`}</div>
+                                    {exp.address && <div>{exp.address}</div>}
+                                  </div>
+                                </div>
+                                <hr />
+                              </div>
+                            );
+                          })}
+                        </>)}
+                    </>) :
+                    (<>
+                      {experiences.filter(exp => !exp.delete).length === 0 ?
+                        (<div className="w-[100%] text-center p-2">{t("no_data_yet")}</div>) :
+                        (<>
+                          {experiences.map((exp, i) => {
+                            if (exp.delete){
+                              return(<></>);
+                            } else {
+                              return (
+                                <div className="items-left mb-4 flex flex-col" key={exp.key}>
+                                  <div className="mb-4 flex gap-2">
+                                    <div className="flex-grow">
+                                      <Avatar alt="" imageSrc="" gravatarFallbackMd5="fallback" size="sm" />
+                                    </div>
+                                    <div className="flex flex-col flex-grow justify-start">
+                                      <div className="mb-1">
+                                        <b>{exp.position}</b>
+                                      </div>
+                                      <div>{exp.company}</div>
+                                      <div>{`${months[exp.startMonth - 1]['label']} ${exp.startYear} - ${months[exp.endMonth - 1]['label']} ${exp.endYear}`}</div>
+                                      {exp.address && <div>{exp.address}</div>}
+                                    </div>
+                                    <div className="flex-grow flex justify-end">
+                                      <Button
+                                        color="secondary"
+                                        StartIcon={Edit2}
+                                        className="rounded-full"
+                                        variant="icon"
+                                        size="sm"
+                                        onClick={() => {
+                                          setAddExpOpen(true);
+                                          setIndexExp(i);
+                                          setPositionExp(exp.position);
+                                          setCompanyExp(exp.company);
+                                          setAddressExp(exp.address);
+                                          setStartMonthExp(exp.startMonth);
+                                          setStartYearExp(exp.startYear);
+                                          setEndMonthExp(exp.endMonth);
+                                          setEndYearExp(exp.endYear);
+                                        }}
+                                      />
+                                    </div>
+                                  </div>
+                                  <hr />
+                                </div>
+                              );
+                            }
+                          })}
+                        </>)}
+                    </>)
+                  }
                 </div>
               </>
             }
@@ -783,64 +878,114 @@ const ProfileForm = ({
               <>
                 <div className="mb-4 flex justify-between">
                   <Label className="text-lg">{t("edu")}</Label>
-                  <Button
-                    color="secondary"
-                    StartIcon={Cross}
-                    className="rounded-full"
-                    variant="icon"
-                    onClick={() => {
-                      setAddEduOpen(true);
-                      setSchoolEdu("");
-                      setDegreeEdu("");
-                      setMajorEdu("");
-                      setStartMonthEdu(new Date().getMonth() + 1);
-                      setStartYearEdu(new Date().getFullYear());
-                      setEndMonthEdu(new Date().getMonth() + 1);
-                      setEndYearEdu(new Date().getFullYear());
-                    }}
-                  />
+                  <div className="flex gap-2">
+                    {editableEdu && <Button
+                      color="secondary"
+                      StartIcon={Cross}
+                      className="rounded-full"
+                      variant="icon"
+                      onClick={() => {
+                        setAddEduOpen(true);
+                        setSchoolEdu("");
+                        setDegreeEdu("");
+                        setMajorEdu("");
+                        setIndexEdu(-1);
+                        setStartMonthEdu(new Date().getMonth() + 1);
+                        setStartYearEdu(new Date().getFullYear());
+                        setEndMonthEdu(new Date().getMonth() + 1);
+                        setEndYearEdu(new Date().getFullYear());
+                      }}
+                    />}
+                    <Button
+                      color="secondary"
+                      StartIcon={!editableEdu ? Edit2 : Cross}
+                      className={!editableEdu ? "rounded-full" : "rotate-45 transform rounded-full"}
+                      variant="icon"
+                      onClick={() => {
+                        setEditableEdu(!editableEdu);
+                      }}
+                    />
+                  </div>
                 </div>
-                <div className="flex flex-col">
-                  {educations.map((edu, i) => {
-                    return (
-                      <div className="items-left mb-4 flex flex-col" key={`edu-${edu.id}`}>
-                        <div className="mb-4 flex gap-2">
-                          <div className="flex-grow">
-                            <Avatar alt="" imageSrc="" gravatarFallbackMd5="fallback" size="sm" />
-                          </div>
-                          <div className="flex flex-col flex-grow justify-start">
-                            <div className="mb-1">
-                              <b>{edu.school}</b>
+                <div className="flex flex-col pl-4">
+                  {
+                    !editableEdu ?
+                    (<>
+                      {defaultValues.educations.length === 0 ?
+                        (<div className="w-[100%] text-center p-2">{t("no_data_yet")}</div>) :
+                        (<>
+                        {defaultValues.educations.map((edu, i) => {
+                          return (
+                            <div className="items-left mb-4 flex flex-col" key={`edu-${edu.id}`}>
+                              <div className="mb-4 flex gap-2">
+                                <div className="mr-4">
+                                  <Avatar alt="" imageSrc="" gravatarFallbackMd5="fallback" size="sm" />
+                                </div>
+                                <div className="flex flex-col justify-start">
+                                  <div className="mb-1">
+                                    <b>{edu.school}</b>
+                                  </div>
+                                  {edu.degree && <div>{edu.degree}</div>}
+                                  <div>{`${months[edu.startMonth - 1]['label']} ${edu.startYear} - ${months[edu.endMonth - 1]['label']} ${edu.endYear}`}</div>
+                                  {edu.major && <div>{edu.major}</div>}
+                                </div>
+                              </div>
+                              <hr />
                             </div>
-                            {edu.degree && <div>{edu.degree}</div>}
-                            <div>{`${months[edu.startMonth - 1]['label']} ${edu.startYear} - ${months[edu.endMonth - 1]['label']} ${edu.endYear}`}</div>
-                            {edu.major && <div>{edu.major}</div>}
-                          </div>
-                          <div className="flex-grow flex justify-end">
-                            <Button
-                              color="secondary"
-                              StartIcon={Edit2}
-                              className="rounded-full"
-                              variant="icon"
-                              size="sm"
-                              onClick={() => {
-                                setAddEduOpen(true);
-                                setIndexEdu(i);
-                                setPositionEdu(edu.school);
-                                setCompanyEdu(edu.degree);
-                                setAddressEdu(edu.major);
-                                setStartMonthEdu(edu.startMonth);
-                                setStartYearEdu(edu.startYear);
-                                setEndMonthEdu(edu.endMonth);
-                                setEndYearEdu(edu.endYear);
-                              }}
-                            />
-                          </div>
-                        </div>
-                        <hr />
-                      </div>
-                    );
-                  })}
+                          );
+                        })}
+                      </>)}
+                    </>) :
+                    (<>
+                      {educations.filter(edu => !edu.delete).length === 0 ?
+                        (<div className="w-[100%] text-center p-2">{t("no_data_yet")}</div>) :
+                        (<>
+                        {educations.map((edu, i) => {
+                          if (edu.delete){
+                            return(<></>);
+                          } else {
+                            return (
+                              <div className="items-left mb-4 flex flex-col" key={edu.key}>
+                                <div className="mb-4 flex gap-2">
+                                  <div className="flex-grow">
+                                    <Avatar alt="" imageSrc="" gravatarFallbackMd5="fallback" size="sm" />
+                                  </div>
+                                  <div className="flex flex-col flex-grow justify-start">
+                                    <div className="mb-1">
+                                      <b>{edu.school}</b>
+                                    </div>
+                                    {edu.degree && <div>{edu.degree}</div>}
+                                    <div>{`${months[edu.startMonth - 1]['label']} ${edu.startYear} - ${months[edu.endMonth - 1]['label']} ${edu.endYear}`}</div>
+                                    {edu.major && <div>{edu.major}</div>}
+                                  </div>
+                                  <div className="flex-grow flex justify-end">
+                                    <Button
+                                      color="secondary"
+                                      StartIcon={Edit2}
+                                      className="rounded-full"
+                                      variant="icon"
+                                      size="sm"
+                                      onClick={() => {
+                                        setAddEduOpen(true);
+                                        setIndexEdu(i);
+                                        setSchoolEdu(edu.school);
+                                        setDegreeEdu(edu.degree);
+                                        setMajorEdu(edu.major);
+                                        setStartMonthEdu(edu.startMonth);
+                                        setStartYearEdu(edu.startYear);
+                                        setEndMonthEdu(edu.endMonth);
+                                        setEndYearEdu(edu.endYear);
+                                      }}
+                                    />
+                                  </div>
+                                </div>
+                                <hr />
+                              </div>
+                            );
+                          }
+                        })}
+                      </>)}
+                    </>)}
                 </div>
               </>
             }
@@ -850,9 +995,36 @@ const ProfileForm = ({
         <div className="hidden">
           <TextField label={t("email")} hint={t("change_email_hint")} {...formMethods.register("email")} />
         </div>
-        <Button loading={isLoading} disabled={isDisabled} color="primary" className="mt-8" type="submit">
+        <Button loading={isLoading} disabled={isDisabled} color="primary" className="mt-8 mr-4" type="submit">
           {t("update")}
         </Button>
+        {!isDisabled && <Button
+          onClick={() => {
+            formMethods.reset(defaultValues);
+            setSkills(formMethods.getValues("skills"));
+            setExperiences(formMethods.getValues("experiences").map((exp) => {
+              return {
+                ...exp,
+                key: Math.floor(Math.random() * 1000000).toString(),
+              }
+            }));
+            setEducations(formMethods.getValues("educations").map((edu) => {
+              return {
+                ...edu,
+                key: Math.floor(Math.random() * 1000000).toString(),
+              }
+            }));
+            setEditableHeader(false);
+            setEditableExp(false);
+            setEditableEdu(false);
+            setEditableAbout(false);
+            setEditableSkill(false);
+          }}
+          color="secondary"
+          className="mt-8"
+        >
+          {t("restore")}
+        </Button>}
       </Form>
       {/* add Exp */}
       <Dialog open={addExpOpen} onOpenChange={setAddExpOpen}>
@@ -865,9 +1037,11 @@ const ProfileForm = ({
             <TextField className="mb-2" label={`${t("position")}*`} name={t("position")} value={positionExp} onChange={e => {
               setPositionExp(e.target.value);
             }}/>
+            {showErrorInExp && !positionExp && <Alert key="error_position_required" severity="error" title={t("error_position_required")} />}
             <TextField className="mb-2" label={`${t("company")}*`} name={t("company")} value={companyExp} onChange={e => {
               setCompanyExp(e.target.value);
             }}/>
+            {showErrorInExp && !companyExp && <Alert key="error_company_required" severity="error" title={t("error_company_required")} />}
             <div className="flex justify-between mb-2">
               <div className="flex gap-2">
                 <SelectField
@@ -941,43 +1115,56 @@ const ProfileForm = ({
           <DialogFooter showDivider>
             {indexExp !== -1 && <Button color="primary" onClick={(e) => {
               setAddExpOpen(false);
-              const formData = [...experiences.slice(0, indexExp),...experiences.slice(indexExp+1)];
+              const formData = [...experiences];
+              formData[indexExp].delete = true;
               setExperiences(formData);
               formMethods.setValue("experiences", formData, { shouldDirty: true });
+              setShowErrorInEdu(false);
             }}>
               {t("delete")}
             </Button>}
             <Button color="primary" onClick={(e) => {
-              setAddExpOpen(false);
-              let formData;
-              if (indexExp === -1) {
-                formData = experiences.concat({
-                  position: positionExp,
-                  company: companyExp,
-                  address: addressExp,
-                  startMonth: startMonthExp,
-                  startYear: startYearExp,
-                  endMonth: endMonthExp,
-                  endYear: endYearExp,
-                });
+              if (positionExp && companyExp) {
+                setAddExpOpen(false);
+                let formData;
+                if (indexExp === -1) {
+                  formData = experiences.concat({
+                    position: positionExp,
+                    company: companyExp,
+                    address: addressExp,
+                    startMonth: startMonthExp,
+                    startYear: startYearExp,
+                    endMonth: endMonthExp,
+                    endYear: endYearExp,
+                    avatar: "",
+                    key: Math.floor(Math.random() * 1000000).toString(),
+                  });
+                } else {
+                  formData = [...experiences];
+                  formData[indexExp] = {
+                    ...formData[indexExp],
+                    position: positionExp,
+                    company: companyExp,
+                    address: addressExp,
+                    startMonth: startMonthExp,
+                    startYear: startYearExp,
+                    endMonth: endMonthExp,
+                    endYear: endYearExp,
+                    avatar: "",
+                  };
+                }
+                setExperiences(formData);
+                formMethods.setValue("experiences", formData.map(({ key, ...rest }) => rest), { shouldDirty: true });
+                setShowErrorInExp(false);
               } else {
-                formData = [...experiences];
-                formData[indexExp] = {
-                  position: positionExp,
-                  company: companyExp,
-                  address: addressExp,
-                  startMonth: startMonthExp,
-                  startYear: startYearExp,
-                  endMonth: endMonthExp,
-                  endYear: endYearExp,
-                };
+                setShowErrorInExp(true);
               }
-              setExperiences(formData);
-              formMethods.setValue("experiences", formData, { shouldDirty: true });
             }}>
               {indexExp === -1 ? t("add") : t("update")}
             </Button>
-            <DialogClose />
+            <DialogClose onClick={() => {
+              setShowErrorInEdu(false);
+            }} />
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -993,6 +1180,7 @@ const ProfileForm = ({
             <TextField className="mb-2" label={`${t("school")}*`} name={t("school")} value={schoolEdu} onChange={e => {
               setSchoolEdu(e.target.value);
             }}/>
+            {showErrorInEdu && !schoolEdu && <Alert key="error_school_required" severity="error" title={t("error_school_required")} />}
             <TextField className="mb-2" label={t("degree")} name={t("degree")} value={degreeEdu} onChange={e => {
               setDegreeEdu(e.target.value);
             }}/>
@@ -1069,43 +1257,56 @@ const ProfileForm = ({
           <DialogFooter showDivider>
             {indexEdu !== -1 && <Button color="primary" onClick={(e) => {
               setAddEduOpen(false);
-              const formData = [...educations.slice(0, indexEdu),...educations.slice(indexEdu+1)];
+              const formData = [...educations];
+              formData[indexEdu].delete = true;
               setEducations(formData);
               formMethods.setValue("educations", formData, { shouldDirty: true });
+              setShowErrorInEdu(false);
             }}>
               {t("delete")}
             </Button>}
             <Button color="primary" onClick={(e) => {
-              setAddEduOpen(false);
-              let formData;
-              if (indexEdu === -1) {
-                formData = educations.concat({
-                  school: schoolEdu,
-                  degree: degreeEdu,
-                  major: majorEdu,
-                  startMonth: startMonthEdu,
-                  startYear: startYearEdu,
-                  endMonth: endMonthEdu,
-                  endYear: endYearEdu,
-                });
+              if (schoolEdu) {
+                setAddEduOpen(false);
+                let formData;
+                if (indexEdu === -1) {
+                  formData = educations.concat({
+                    school: schoolEdu,
+                    degree: degreeEdu,
+                    major: majorEdu,
+                    startMonth: startMonthEdu,
+                    startYear: startYearEdu,
+                    endMonth: endMonthEdu,
+                    endYear: endYearEdu,
+                    avatar: "",
+                    key: Math.floor(Math.random() * 1000000).toString(),
+                  });
+                } else {
+                  formData = [...educations];
+                  formData[indexEdu] = {
+                    ...formData[indexEdu],
+                    school: schoolEdu,
+                    degree: degreeEdu,
+                    major: majorEdu,
+                    startMonth: startMonthEdu,
+                    startYear: startYearEdu,
+                    endMonth: endMonthEdu,
+                    endYear: endYearEdu,
+                    avatar: "",
+                  };
+                }
+                setEducations(formData);
+                formMethods.setValue("educations", formData.map(({ key, ...rest }) => rest), { shouldDirty: true });
+                setShowErrorInEdu(false);
               } else {
-                formData = [...educations];
-                formData[indexEdu] = {
-                  school: schoolEdu,
-                  degree: degreeEdu,
-                  major: majorEdu,
-                  startMonth: startMonthEdu,
-                  startYear: startYearEdu,
-                  endMonth: endMonthEdu,
-                  endYear: endYearEdu,
-                };
+                setShowErrorInEdu(true);
               }
-              setEducations(formData);
-              formMethods.setValue("educations", formData, { shouldDirty: true });
             }}>
               {indexEdu === -1 ? t("add") : t("update")}
             </Button>
-            <DialogClose />
+            <DialogClose onClick={() => {
+              setShowErrorInEdu(false);
+            }} />
           </DialogFooter>
         </DialogContent>
       </Dialog>
