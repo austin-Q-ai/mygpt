@@ -37,9 +37,11 @@ import { FormSkeleton } from "./Skeleton";
 
 type BookEventFormProps = {
   onCancel?: () => void;
+  onCallPayment?: () => void;
+  onSetModalData?: () => void;
 };
 
-export const BookEventForm = ({ onCancel }: BookEventFormProps) => {
+export const BookEventForm = ({ onCancel,onCallPayment,onSetModalData }: BookEventFormProps, ) => {
   const reserveSlotMutation = trpc.viewer.public.slots.reserveSlot.useMutation({
     trpc: { context: { skipBatch: true } },
   });
@@ -192,30 +194,23 @@ export const BookEventForm = ({ onCancel }: BookEventFormProps) => {
 
   const createBookingMutation = useMutation(createBooking, {
     onSuccess: async (responseData) => {
-      const { error, uid,amount, paymentUid } = responseData;
-      // const { uid, paymentUid } = responseData;
-
-      // if (error) {
-      //   console.log(error);
-      //   return;
-      // } else if (success) {
-      //   alert(success);
-      //   return
+      const { error, uid, data, paymentUid } = responseData;
+      // if (paymentUid) {
+      //   return await router.push(
+      //     createPaymentLink({
+      //       paymentUid,
+      //       date: timeslot,
+      //       name: bookingForm.getValues("responses.name"),
+      //       email: bookingForm.getValues("responses.email"),
+      //       absolute: false,
+      //     })
+      //   );
       // }
-
-      if (error){
-        console.log("paragon, not enough tokens------", amount)
-      }
-      if (paymentUid) {
-        return await router.push(
-          createPaymentLink({
-            paymentUid,
-            date: timeslot,
-            name: bookingForm.getValues("responses.name"),
-            email: bookingForm.getValues("responses.email"),
-            absolute: false,
-          })
-        );
+      if (error) {
+        console.log("Error: ", data);
+        onSetModalData(data)
+        onCallPayment(true)
+        return;
       }
 
       if (!uid) {

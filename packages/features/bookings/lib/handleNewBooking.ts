@@ -678,6 +678,7 @@ async function handler(
     isNotAnApiCall: false,
   }
 ) {
+  
   const { userId } = req;
 
   const userIp = getIP(req);
@@ -692,6 +693,51 @@ async function handler(
     !req.body.eventTypeId && !!req.body.eventTypeSlug
       ? getDefaultEvent(req.body.eventTypeSlug)
       : await getEventTypesFromDB(req.body.eventTypeId);
+
+  const timeTokens = await prisma.timeTokensWallet.findFirst({
+    where: {
+      ownerId: userId,
+      emitterId: eventType.userId
+    },
+    select: {
+      id: true,
+      amount: true,
+    }
+  })
+
+  const expert = await prisma.user.findUnique({
+    where: {
+      id: eventType.userId,
+    },
+    select: {
+      id: true,
+      username: true,
+      name: true,
+      price: true,
+    }
+  })
+  if (!timeTokens || timeTokens?.amount < eventType.length / 5) return {
+    error: "Not enough tokens",
+    data: {
+      amount: eventType.length / 5 - (timeTokens?.amount || 0),
+      expertId: expert.id,
+      username: expert.username,
+      name: expert.name,
+      price: expert.price,
+    }
+  }
+  else {
+    await prisma.timeTokensWallet.update({
+      where: {
+        id: timeTokens.id,
+      },
+      data: {
+        amount: {
+          decrement: eventType.length / 5,
+        }
+      }
+    })
+  }
 
   eventType = {
     ...eventType,
@@ -1663,17 +1709,17 @@ async function handler(
           throw new HttpError({ statusCode: 400, message: "Missing payment app id" });
         }
 
-        const payment = await handlePayment(
-          evt,
-          eventType,
-          eventTypePaymentAppCredential as IEventTypePaymentCredentialType,
-          booking,
-          bookerEmail
-        );
+        // const payment = await handlePayment(
+        //   evt,
+        //   eventType,
+        //   eventTypePaymentAppCredential as IEventTypePaymentCredentialType,
+        //   booking,
+        //   bookerEmail
+        // );
 
         resultBooking = { ...foundBooking };
-        resultBooking["message"] = "Payment required";
-        resultBooking["paymentUid"] = payment?.uid;
+        // resultBooking["message"] = "Payment required";
+        // resultBooking["paymentUid"] = payment?.uid;
       } else {
         resultBooking = { ...foundBooking };
       }
@@ -1877,25 +1923,6 @@ async function handler(
   type Booking = Prisma.PromiseReturnType<typeof createBooking>;
   let booking: (Booking & { appsStatus?: AppsStatus[] }) | null = null;
   try {
-    const timeTokens = await prisma.timeTokensWallet.findFirst({
-      where: {
-        ownerId: userId,
-        emitterId: eventType.userId
-      },
-      select: {
-        amount: true,
-      }
-    })
-
-    if (!timeTokens || timeTokens.amount < eventType.length / 5) return {
-      error: "Not enough tokens",
-      amount: eventType.length / 5 - timeTokens.amount
-    }
-    // else {
-    //   return {
-    //     success: "Your token is enough",
-    //   }
-    // }
     booking = await createBooking();
 
     // @NOTE: Add specific try catch for all subsequent async calls to avoid error

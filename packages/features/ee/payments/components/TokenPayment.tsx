@@ -30,18 +30,15 @@ type States =
   | { status: "error"; error: Error }
   | { status: "ok" };
 
-const PaymentForm = (props: Props) => {
+const PaymentForm = (props) => {
+  console.log("paragon payment---", props);
   const { t, i18n } = useLocale();
   const router = useRouter();
   const [state, setState] = useState<States>({ status: "idle" });
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const stripe = useStripe();
   const elements = useElements();
-  const buyTokensMutation = trpc.viewer.timetokenswallet.buyTokens.useMutation({
-    onSuccess: (data) => {
-      setAddedExpertsDataHandler(data.users);
-    },
-  });
+  const buyTokensMutation = trpc.viewer.timetokenswallet.buyTokens.useMutation();
   // const paymentOption = props.payment.paymentOption;
   // const [holdAcknowledged, setHoldAcknowledged] = useState<boolean>(paymentOption === "HOLD" ? false : true);
 
@@ -75,7 +72,8 @@ const PaymentForm = (props: Props) => {
 
           await buyTokensMutation.mutate({ emitterId: props.expertId, amount: parseInt(props.amount) });
           setState({ status: "ok" });
-          router.push("http://localhost:3000/timetokens-wallet");
+          if (props?.renderUrl) router.push(props.renderUrl);
+          else props.setModalVisible(false);
           // onPaymentSuccess(tokenCount);
         });
     } catch (error: any) {
@@ -139,7 +137,7 @@ export default function TokenPaymentComponent(props: Props) {
     fetch("/api/purchase-tokens", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ amount: [{ id: "xl-tshirt" }] }),
+      body: JSON.stringify({ amount: props.amount }),
     })
       .then((res) => res.json())
       .then((data) => {

@@ -28,6 +28,6 @@ export async function getServerSideProps(context: PaymentProps) {
   });
   if (!expertData) return { notFound: true };
   return {
-    props: { expertid: uid, amount: amount, ...{ expertData } }, // will be passed to the page component as props
+    props: { expertId:expertData.id, amount: parseInt(amount), ...expertData, renderUrl:`${process.env.NEXT_PUBLIC_WEBAPP_URL}/timetokens-wallet` }, // will be passed to the page component as props
   };
 }

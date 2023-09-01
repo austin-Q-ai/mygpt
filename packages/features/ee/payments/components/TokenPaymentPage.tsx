@@ -1,6 +1,5 @@
 import classNames from "classnames";
 import Head from "next/head";
-import type { FC } from "react";
 
 import { useIsEmbed } from "@calcom/embed-core/embed-iframe";
 import { APP_NAME } from "@calcom/lib/constants";
@@ -16,8 +15,17 @@ const user_example = {
   theme: null,
 };
 
-const TokenPaymentPage: FC<PaymentPageProps> = (props) => {
-  const expert_user = props?.expertData;
+type PaymentPageProps = {
+  expertId: number;
+  username: string;
+  name: string;
+  price: number;
+  amount: number;
+  setModalVisible: (value: boolean) => void;
+};
+
+const TokenPaymentPage = (props: PaymentPageProps) => {
+  console.log("paragon there---", props);
   const { t, i18n } = useLocale();
   const isEmbed = useIsEmbed();
   const eventName = "Token Purchase";
@@ -56,19 +64,19 @@ const TokenPaymentPage: FC<PaymentPageProps> = (props) => {
                     </h3>
                     <div className="text-default mt-4 grid grid-cols-3 border-b border-t py-4 text-left dark:border-gray-900 dark:text-gray-300">
                       <div className="font-medium">{t("From")}</div>
-                      <div className="col-span-2 mb-6">{expert_user?.name}</div>
+                      <div className="col-span-2 mb-6">{props?.name}</div>
                       <div className="font-medium">{t("Amount")}</div>
                       <div className="col-span-2 mb-6">{props.amount}</div>
                       <div className="font-medium">{t("Price")}</div>
-                      <div className="col-span-2 mb-6">
-                        {expert_user?.price[expert_user?.price.length - 1]}
-                      </div>
+                      <div className="col-span-2 mb-6">{props?.price[props?.price.length - 1]}</div>
                     </div>
                   </div>
                 </div>
                 <TokenPaymentComponent
                   amount={props.amount}
-                  expertId={expert_user?.id}
+                  expertId={props.expertId}
+                  renderUrl={props.renderUrl}
+                  setModalVisible={props.setModalVisible}
                 />
               </div>
             </div>
