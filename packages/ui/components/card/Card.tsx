@@ -162,11 +162,28 @@ export function Card({
           {title}
         </h5>
         {description && (
-          <p
-            title={description.toString()}
-            className={classNames(cvaCardTypeByVariant({ variant, structure: "description" }), "pt-1")}>
-            {description}
-          </p>
+          <>
+            {typeof description === "string" ? (
+              <p
+                title={description}
+                className={classNames(
+                  cvaCardTypeByVariant({ variant, structure: "description" }),
+                  "pt-1"
+                )}
+              >
+                {description}
+              </p>
+            ) : (
+              <div
+                className={classNames(
+                  cvaCardTypeByVariant({ variant, structure: "description" }),
+                  "pt-1"
+                )}
+              >
+                {description}
+              </div>
+            )}
+          </>
         )}
       </div>
       {variant === "SidebarCard" && (

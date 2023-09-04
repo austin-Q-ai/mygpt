@@ -26,7 +26,7 @@ import { stripMarkdown } from "@calcom/lib/stripMarkdown";
 import prisma from "@calcom/prisma";
 import { baseEventTypeSelect } from "@calcom/prisma/selects";
 import { EventTypeMetaDataSchema } from "@calcom/prisma/zod-utils";
-import { Avatar, AvatarGroup, HeadSeo, Card, Button } from "@calcom/ui";
+import { Avatar, AvatarGroup, HeadSeo, Card, Button, Label } from "@calcom/ui";
 import {
   Verified,
   ArrowRight,
@@ -42,6 +42,21 @@ import type { EmbedProps } from "@lib/withEmbedSsr";
 import PageWrapper from "@components/PageWrapper";
 
 import { ssrInit } from "@server/lib/ssr";
+
+const months = [
+  { value: 1, label: 'Jan' },
+  { value: 2, label: 'Feb' },
+  { value: 3, label: 'Mar' },
+  { value: 4, label: 'Apr' },
+  { value: 5, label: 'May' },
+  { value: 6, label: 'Jun' },
+  { value: 7, label: 'Jul' },
+  { value: 8, label: 'Aug' },
+  { value: 9, label: 'Sep' },
+  { value: 10, label: 'Oct' },
+  { value: 11, label: 'Nov' },
+  { value: 12, label: 'Dec' }
+];
 
 export type UserPageProps = inferSSRProps<typeof getServerSideProps> & EmbedProps;
 export function UserPage(props: UserPageProps) {
@@ -143,20 +158,14 @@ export function UserPage(props: UserPageProps) {
             "max-w-3xl px-4 py-24"
           )}>
           {isSingleUser && ( // When we deal with a single user, not dynamic group
-            <div className="flex justify-center">
-              <Link
-                prefetch={false}
-                href={{
-                  pathname: `/${user.username}/profile`,
-                }}
-              >
+            <div className="flex flex-col justify-center">
+              <div className="flex justify-center">
                 <Card
                   title=""
-                  containerProps={{ style: { width: "60%", minWidth: "410px", marginBottom: "32px", borderRadius: "20px", padding: "1px" } }}
+                  containerProps={{ style: { width: "60%", minWidth: "410px", borderRadius: "20px" } }}
                   variant="ProfileCard"
                   description={
-                    <div className="flex items-center p-4 group relative">
-                      <ArrowRight className="text-emphasis  absolute right-4 top-4 h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100" />
+                    <div className="flex items-center">
                       <div className="flex-grow">
                         <Avatar imageSrc={user.avatar} size="xl" alt={nameOrUsername} />
                       </div>
@@ -225,55 +234,151 @@ export function UserPage(props: UserPageProps) {
                     </div>
                   }
                 />
-              </Link>
+              </div>
+              <div className="mt-8">
+                <Card
+                  title=""
+                  containerProps={{ style: { width: "100%", borderRadius: "20px" } }}
+                  variant="ProfileCard"
+                  description={
+                    <>
+                      <div className="mb-4 flex justify-between">
+                        <Label className="text-lg">{t("about")}</Label>
+                      </div>
+                      <div className={user.bio.length ? "m-4" : "w-[100%] text-center p-2"}>
+                        {user.bio.length ? (
+                          user.bio
+                        ) : (
+                          t("no_data_yet")
+                        )}
+                      </div>
+                    </>
+                  }
+                />
+              </div>
+              <div className="mt-8">
+                <Card
+                  title=""
+                  containerProps={{ style: { width: "100%", borderRadius: "20px" } }}
+                  variant="ProfileCard"
+                  description={
+                    <>
+                      <div className="mb-4 flex justify-between">
+                        <Label className="text-lg">{t("skill")}</Label>
+                      </div>
+                      <div className="mb-4 flex gap-2 w-[100%] overflow-x-auto">
+                        {user.skills.length === 0 ? (
+                          <div className="w-[100%] text-center p-2">{t("no_data_yet")}</div>
+                        ) : (
+                          <>
+                            {user.skills.map((skill, i) => (
+                              <div className="w-[100%] border border-solid border-gray-500 text-center p-2 rounded rounded-md" key={i}>
+                                {skill}
+                              </div>
+                            ))}
+                          </>
+                        )}
+                      </div>
+                    </>
+                  }
+                />
+              </div>
+              <div className="mt-8 flex gap-2">
+                <Card
+                  title=""
+                  containerProps={{ style: { width: "50%", borderRadius: "20px" } }}
+                  variant="ProfileCard"
+                  description={
+                    <>
+                      <div className="mb-4 flex justify-between">
+                        <Label className="text-lg">{t("exp")}</Label>
+                      </div>
+                      <div className="flex flex-col pl-4">
+                        {user.experiences.length === 0 ?
+                          (<div className="w-[100%] text-center p-2">{t("no_data_yet")}</div>) :
+                          (<>
+                            {user.experiences.map((exp, i) => {
+                              return (
+                                <div className="items-left mb-4 flex flex-col" key={`exp-${exp.id}`}>
+                                  <div className="mb-4 flex gap-2">
+                                    <div className="mr-4">
+                                      <Avatar alt="" imageSrc="" gravatarFallbackMd5="fallback" size="sm" />
+                                    </div>
+                                    <div className="flex flex-col justify-start">
+                                      <div className="mb-1">
+                                        <b>{exp.position}</b>
+                                      </div>
+                                      <div>{exp.company}</div>
+                                      <div>{`${months[exp.startMonth - 1]['label']} ${exp.startYear} - ${months[exp.endMonth - 1]['label']} ${exp.endYear}`}</div>
+                                      {exp.address && <div>{exp.address}</div>}
+                                    </div>
+                                  </div>
+                                  <hr />
+                                </div>
+                              );
+                            })}
+                          </>)}
+                      </div>
+                    </>
+                  }
+                />
+                <Card
+                  title=""
+                  containerProps={{ style: { width: "50%", borderRadius: "20px" } }}
+                  variant="ProfileCard"
+                  description={
+                    <>
+                      <div className="mb-4 flex justify-between">
+                        <Label className="text-lg">{t("edu")}</Label>
+                      </div>
+                      <div className="flex flex-col pl-4">
+                        {user.educations.length === 0 ?
+                          (<div className="w-[100%] text-center p-2">{t("no_data_yet")}</div>) :
+                          (<>
+                          {user.educations.map((edu, i) => {
+                            return (
+                              <div className="items-left mb-4 flex flex-col" key={`edu-${edu.id}`}>
+                                <div className="mb-4 flex gap-2">
+                                  <div className="mr-4">
+                                    <Avatar alt="" imageSrc="" gravatarFallbackMd5="fallback" size="sm" />
+                                  </div>
+                                  <div className="flex flex-col justify-start">
+                                    <div className="mb-1">
+                                      <b>{edu.school}</b>
+                                    </div>
+                                    {edu.degree && <div>{edu.degree}</div>}
+                                    <div>{`${months[edu.startMonth - 1]['label']} ${edu.startYear} - ${months[edu.endMonth - 1]['label']} ${edu.endYear}`}</div>
+                                    {edu.major && <div>{edu.major}</div>}
+                                  </div>
+                                </div>
+                                <hr />
+                              </div>
+                            );
+                          })}
+                        </>)}
+                      </div>
+                    </>
+                  }
+                />
+              </div>
+              <div className="mt-8 flex justify-end">
+                <Link
+                  prefetch={false}
+                  href={{
+                    pathname: `/${user.username}`
+                  }}
+                >
+                  <Button
+                    color="secondary"
+                    EndIcon={ArrowRight}
+                    variant="icon"
+                  >
+                    {t("back")}
+                  </Button>
+                </Link>
+              </div>
             </div>
           )}
-
-          <div
-            className={classNames("rounded-md ", !isEventListEmpty && "border-subtle border")}
-            data-testid="event-types">
-            {user.away ? (
-              <div className="overflow-hidden rounded-sm border ">
-                <div className="text-muted  p-8 text-center">
-                  <h2 className="font-cal text-default mb-2 text-3xl">😴{" " + t("user_away")}</h2>
-                  <p className="mx-auto max-w-md">{t("user_away_description") as string}</p>
-                </div>
-              </div>
-            ) : isDynamicGroup ? ( //When we deal with dynamic group (users > 1)
-              groupEventTypes
-            ) : (
-              eventTypes.map((type) => (
-                <div
-                  key={type.id}
-                  style={{ display: "flex", ...eventTypeListItemEmbedStyles }}
-                  className="bg-default border-subtle dark:bg-muted dark:hover:bg-emphasis hover:bg-muted group relative border-b first:rounded-t-md last:rounded-b-md last:border-b-0">
-                  <ArrowRight className="text-emphasis  absolute right-4 top-4 h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100" />
-                  {/* Don't prefetch till the time we drop the amount of javascript in [user][type] page which is impacting score for [user] page */}
-                  <div className="block w-full p-5">
-                    <Link
-                      prefetch={false}
-                      href={{
-                        pathname: `/${user.username}/${type.slug}`,
-                        query,
-                      }}
-                      passHref
-                      onClick={async () => {
-                        sdkActionManager?.fire("eventTypeSelected", {
-                          eventType: type,
-                        });
-                      }}
-                      data-testid="event-type-link">
-                      <div className="flex flex-wrap items-center">
-                        <h2 className=" text-default pr-2 text-sm font-semibold">{type.title}</h2>
-                      </div>
-                      <EventTypeDescription eventType={type} isPublic={true} />
-                    </Link>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-
           {isEventListEmpty && <EmptyPage name={user.name ?? "User"} />}
         </main>
         <Toaster position="bottom-right" />
@@ -354,6 +459,9 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
       bio: true,
       position: true,
       address: true,
+      skills: true,
+      experiences: true,
+      educations: true,
       brandColor: true,
       darkBrandColor: true,
       organizationId: true,

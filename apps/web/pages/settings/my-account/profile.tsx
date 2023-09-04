@@ -49,6 +49,7 @@ import {
   Instagram,
   Linkedin,
   Cross,
+  MousePointer2,
 } from "@calcom/ui/components/icon";
 
 import PageWrapper from "@components/PageWrapper";
@@ -502,20 +503,19 @@ const ProfileForm = ({
             render={({ field: { value } }) => (
               <Card
                 title=""
-                containerProps={{ style: { width: "60%", borderRadius: "20px" } }}
+                containerProps={{ style: { width: "60%", minWidth: "410px", borderRadius: "20px" } }}
                 variant="ProfileCard"
                 description={
                   <div className="flex items-center">
-                    <div className="flex-grow">
+                    <div>
                       {!editableHeader ? (
-                        <Avatar alt="" imageSrc={value} gravatarFallbackMd5="fallback" size="lg" />
+                        <Avatar alt="" imageSrc={value} gravatarFallbackMd5="fallback" size="xl" />
                       ) : (
                         <ImageUploader
                           target="avatar"
                           id="avatar-upload"
                           buttonMsg={<Edit2 />}
                           handleAvatarChange={(newAvatar) => {
-                            console.log(newAvatar);
                             formMethods.setValue("avatar", newAvatar, { shouldDirty: true });
                           }}
                           imageSrc={value || undefined}
@@ -543,9 +543,9 @@ const ProfileForm = ({
                           </>
                         )}
                       </div>
-                      <div className={!editableHeader && defaultValues.address ? "mt-2" : ""}>
+                      <div className={!editableHeader && defaultValues.address ? "mt-2 flex" : ""}>
                         {!editableHeader ? (
-                          <>{defaultValues.address}</>
+                          <><MousePointer2 className="rotate-90 transform w-4 h-4" />{defaultValues.address}</>
                         ) : (
                           <>
                             <TextField label={`${t("address")}*`} {...formMethods.register("address")} />
@@ -602,7 +602,7 @@ const ProfileForm = ({
                         </div>
                       </div>
                     </div>
-                    <div className="ms-4 flex-grow">
+                    <div className="ms-4 flex-grow flex justify-end">
                       <Button
                         color="secondary"
                         StartIcon={!editableHeader ? Edit2 : Cross}
@@ -665,7 +665,13 @@ const ProfileForm = ({
                     setFirstRender={setFirstRender}
                   />
                 ) : (
-                  <div className="m-4">{defaultValues.bio}</div>
+                  <div className={defaultValues.bio.length ? "m-4" : "w-[100%] text-center p-2"}>
+                    {defaultValues.bio.length ? (
+                      defaultValues.bio
+                    ) : (
+                      t("no_data_yet")
+                    )}
+                  </div>
                 )}
               </>
             }
