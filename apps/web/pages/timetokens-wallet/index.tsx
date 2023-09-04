@@ -1,6 +1,5 @@
 import { MeiliSearch } from "meilisearch";
-import { useRouter } from "next/router";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { components } from "react-select";
 
 import { createPaymentLink } from "@calcom/app-store/stripepayment/lib/client";
@@ -29,8 +28,7 @@ type ExpertOptionType = {
 
 function TimeTokensWallet() {
   const { t } = useLocale();
-  const router = useRouter();
-  // const [user] = trpc.viewer.me.useSuspenseQuery();
+  const { data: user, isLoading } = trpc.viewer.me.useQuery();
 
   const [addedExpertsData, setAddedExpertsData] = useState<ExpertDataType[]>([]);
   const [buyConfirmOpen, setBuyConfirmOpen] = useState<boolean>(false);
@@ -38,10 +36,9 @@ function TimeTokensWallet() {
   const [buyExpertID, setBuyExpertID] = useState<number>(-1);
   const [removeExpertID, setRemoveExpertID] = useState<number>(-1);
   const [buyTokensAmount, setBuyTokensAmount] = useState<number>(0);
-  const [expertSearchResult, setExpertSearchResult] = useState([]);
   const [expertOptions, setExpertOptions] = useState<ExpertOptionType[]>([]);
   const [addExpertId, setAddExpertId] = useState<number>(-1);
-  const [user, setUser] = useState<any>(null);
+  // const [user, setUser] = useState<any>(null);
 
   const meiliClient = new MeiliSearch({
     host: `https://${process.env.MEILISEARCH_HOST}`,
@@ -50,9 +47,7 @@ function TimeTokensWallet() {
 
   const columns: string[] = ["Expert", "Tokens amount(expert)", "Tokens amount(me)", "Token price", ""];
 
-  useEffect(() => {}, [addedExpertsData]);
-
-  const handleBuyEvent = async (userId: string, tokens: number) => {
+  const handleBuyEvent = (emitterId: number, tokens: number) => {
     setBuyConfirmOpen(true);
     setBuyExpertID(userId);
     setBuyTokensAmount(tokens);
@@ -83,18 +78,18 @@ function TimeTokensWallet() {
       setAddedExpertsDataHandler(data.users);
     },
     onError: (error) => {
-      console.log("error", "==== error ====");
+      console.log("Error", error);
     },
   });
 
-  trpc.viewer.me.useQuery(undefined, {
-    onSuccess: (data) => {
-      setUser(data);
-    },
-    onError: (error) => {
-      console.log("error", "==== error ====");
-    },
-  });
+  // trpc.viewer.me.useQuery(undefined, {
+  //   onSuccess: (data) => {
+  //     setUser(data);
+  //   },
+  //   onError: (error) => {
+  //     console.log("error", "==== error ====");
+  //   },
+  // });
 
   const addExpertMutation = trpc.viewer.timetokenswallet.addExpert.useMutation({
     onSuccess: (data) => {
@@ -125,7 +120,7 @@ function TimeTokensWallet() {
     return true;
   };
 
-  const handleExpertSearch = async (value: string) => {
+  const handleExpertSearch = (value: string) => {
     if (value.length === 0) {
       setExpertOptions([]);
       return;
@@ -133,16 +128,16 @@ function TimeTokensWallet() {
 
     try {
       const index = meiliClient.index("users");
-      const searchResults = index.search(value).then((res) => {
+      index.search(value).then((res) => {
         const data = [];
-        console.log(res.hits);
+
         for (const expert of res.hits) {
-          if (expert.objectID === user.id) continue;
+          if (isLoading || expert.objectID === user?.id) continue;
           data.push({
             label: expert.name,
             value: expert.objectID,
             avatar: expert.avatar,
-            added: expert.added && expert?.added.indexOf(user.id) > -1,
+            added: expert.added && expert?.added.indexOf(user?.id) > -1,
           });
         }
 
@@ -197,10 +192,9 @@ function TimeTokensWallet() {
                   }}
                   isSearchable={true}
                   filterOption={customFilter}
-                  className="w-full rounded-md text-[.5rem] sm:text-sm "
+                  className="w-full rounded-md text-[.5rem] sm:text-sm"
                   onChange={(event) => {
-                    console.log(event?.value, "====");
-                    setAddExpertId(event?.value || -1);
+                    setAddExpertId(event?.added ? -1 : event?.value || -1);
                   }}
                   onInputChange={(value) => {
                     handleExpertSearch(value);

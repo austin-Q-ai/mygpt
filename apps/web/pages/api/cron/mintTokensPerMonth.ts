@@ -2,51 +2,43 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 import prisma from "@calcom/prisma";
 
-type DateType = {
-  year: number;
-  month: number;
-  date: number;
-};
+// type DateType = {
+//   year: number;
+//   month: number;
+//   date: number;
+// };
 
-function convertDateToTimezone(date: Date, timezone: string): string {
-  // Get the local date/time string in the specified timezone
-  const options: Intl.DateTimeFormatOptions = {
-    timeZone: timezone,
-  };
+// function convertDateToTimezone(date: Date, timezone: string): string {
+//   // Get the local date/time string in the specified timezone
+//   const options: Intl.DateTimeFormatOptions = {
+//     timeZone: timezone,
+//   };
 
-  const convertedDate: string = date.toLocaleString("en-US", options);
+//   const convertedDate: string = date.toLocaleString("en-US", options);
 
-  return convertedDate;
-}
+//   return convertedDate;
+// }
 
-function extractDataFromDate(currentDate: string): DateType {
-  // Extract year and month
-  const year: number = new Date(currentDate).getFullYear();
-  const month: number = new Date(currentDate).getMonth() + 1;
-  const date: number = new Date(currentDate).getDate();
+// function extractDataFromDate(currentDate: string): DateType {
+//   // Extract year and month
+//   const year: number = new Date(currentDate).getFullYear();
+//   const month: number = new Date(currentDate).getMonth() + 1;
+//   const date: number = new Date(currentDate).getDate();
 
-  return {
-    year: year,
-    month: month,
-    date: date,
-  };
-}
+//   return {
+//     year: year,
+//     month: month,
+//     date: date,
+//   };
+// }
 
-function checkNeedReward(timezone: string, lastRewardedDate: Date | null): number {
-  if (lastRewardedDate === null) return 0;
-  const lastRewarded: DateType = extractDataFromDate(convertDateToTimezone(lastRewardedDate, timezone));
-  const currentDate: DateType = extractDataFromDate(convertDateToTimezone(new Date(), timezone));
+function checkNeedReward(lastRewardedDate: Date): boolean {
+  const currentDate: Date = new Date();
 
-  if (lastRewarded.year === currentDate.year) {
-    const delta: number = currentDate.month - lastRewarded.month;
-    if (delta > 0) {
-      return delta;
-    }
-  } else if (lastRewarded.year < currentDate.year) {
-    return (currentDate.year - lastRewarded.year) * 12 + (currentDate.month - lastRewarded.month);
-  }
+  const differenceInMilliseconds: number = currentDate.getTime() - lastRewardedDate.getTime();
+  const differenceInDays: number = differenceInMilliseconds / (1000 * 60 * 60 * 24);
 
-  return -1;
+  return differenceInDays > 30;
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -64,24 +56,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const users = await prisma.user.findMany();
 
   for (const user of users) {
-    const delta: number = checkNeedReward(user.timeZone, user.lastRewardedDate);
-    if (delta > 0) {
-      const updatedUser = await prisma.user.update({
+    if (checkNeedReward(user.lastRewardedDate)) {
+      await prisma.user.update({
         where: {
           id: user.id,
         },
         data: {
           tokens: {
-            increment: parseInt(process.env.AMOUNT_MINTED_PER_MONTH || "480") * delta,
+            increment: parseInt(process.env.AMOUNT_MINTED_PER_MONTH || "480"),
           },
           lastRewardedDate: new Date(),
-        },
-        select: {
-          tokens: true,
         },
       });
     }
   }
 
-  res.json({ ok: true, users: users });
+  res.json({ ok: true });
 }

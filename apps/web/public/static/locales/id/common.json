@@ -125,5 +125,17 @@
   "logged_out": "Telah keluar",
   "please_try_again_and_contact_us": "Silakan coba lagi dan hubungi kami jika masalah terulang.",
   "incorrect_2fa_code": "Kode dua faktor salah.",
-  "no_account_exists": "Tidak ada akun dengan email tersebut."
+  "no_account_exists": "Tidak ada akun dengan email tersebut.",
+  "timetokens_wallet": "Dompet TimeTokens",
+  "buy_sell_timetokens": "Beli dan Jual TimeTokens",
+  "buy_expert_tokens": "Beli token ahli.",
+  "added": "ditambahkan",
+  "confirm_buy_question": "Apakah Anda yakin ingin membeli token?",
+  "confirm_buy_event": "Ya, beli",
+  "buy": "Beli",
+  "confirm_remove_question": "Apakah Anda yakin ingin menghapus ahli ini?",
+  "confirm_remove_event": "Ya, hapus ahli",
+  "no_expert_data": "Tidak ada ahli yang ditambahkan",
+  "no_expert_data_description": "Saat ini Anda belum menambahkan ahli apapun. Anda dapat menambahkan ahli-ahli yang Anda inginkan dan membeli token mereka untuk melakukan pemesanan wawancara dengan mereka.",
+  "token_price": "Harga Token"
 }

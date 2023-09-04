@@ -61,7 +61,7 @@ const useFileReader = (options: UseFileReaderProps) => {
 
 type ImageUploaderProps = {
   id: string;
-  buttonMsg: string;
+  buttonMsg: string | JSX.Element;
   handleAvatarChange: (imageSrc: string) => void;
   imageSrc?: string;
   target: string;
@@ -169,7 +169,7 @@ export default function ImageUploader({
         (opened) => !opened && setFile(null) // unset file on close
       }>
       <DialogTrigger asChild>
-        <Button color="secondary" type="button" className="py-1 text-sm">
+        <Button color="secondary" className="h-[64px] w-[64px] rounded-full" variant="icon">
           {buttonMsg}
         </Button>
       </DialogTrigger>
