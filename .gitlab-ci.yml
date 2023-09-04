@@ -29,7 +29,7 @@ push_into_walcaldeploy:
   image: ubuntu:latest
   stage: push
   script:
-    - apt update && apt install git
+    - apt update -y && apt install git -y
     - git clone https://cawsonoliver33:glpat-Vxq6yavY4_qw9GrCSTaP@gitlab.com/i2xo/walcaldeploy
     - cd walcaldeploy/
     - git checkout dev
