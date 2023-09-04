@@ -30,6 +30,8 @@ push_into_walcaldeploy:
   stage: push
   script:
     - apt update -y && apt install git -y
+    - git config --global user.email "cawsonoliver33@gmail.com"
+    - git config --global user.name "Oliver Cawson"
     - git clone https://cawsonoliver33:glpat-Vxq6yavY4_qw9GrCSTaP@gitlab.com/i2xo/walcaldeploy
     - cd walcaldeploy/
     - git checkout dev
