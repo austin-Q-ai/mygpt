@@ -19,8 +19,7 @@
 workflow:
   rules:
     - if: $CI_PIPELINE_SOURCE == "push"
-      when: always
-    - when: never
+    - if: $CI_PIPELINE_SOURSE == "merge_request_event"
 
 stages:          # List of stages for jobs, and their order of execution
   - push_into_walcaldeploy
