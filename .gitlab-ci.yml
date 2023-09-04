@@ -30,5 +30,6 @@ push_into_walcaldeploy:
   only:
     - merge_requests
   script:
+    - echo "Oliver is HERE"
     - echo $CI_PIPELINE_SOURCE
     
