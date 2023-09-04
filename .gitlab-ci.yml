@@ -16,10 +16,11 @@
 # This specific template is located at:
 # https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Getting-Started.gitlab-ci.yml
 
----
 workflow:
   rules:
-    - when: always
+    - if: $CI_PIPELINE_SOURCE == "push"
+      when: always
+    - when: never
 
 stages:          # List of stages for jobs, and their order of execution
   - push
@@ -27,8 +28,6 @@ stages:          # List of stages for jobs, and their order of execution
 push_into_walcaldeploy:
   image: ubuntu:latest
   stage: push
-  only:
-    - merge_requests
   script:
     - echo "Oliver is HERE"
     - echo $CI_PIPELINE_SOURCE
