@@ -104,8 +104,8 @@ export default function AppCard({
         </div>
       </div>
       <div ref={animationRef}>
-        {app?.isInstalled && switchChecked && <hr className="border-subtle" />}
-        {app?.isInstalled && switchChecked ? <div className="p-4 text-sm sm:px-4">{children}</div> : null}
+        {/* {app?.isInstalled && switchChecked && <hr className="border-subtle" />}
+        {app?.isInstalled && switchChecked ? <div className="p-4 text-sm sm:px-4">{children}</div> : null} */}
       </div>
     </div>
   );

@@ -21,19 +21,19 @@ export default function Type({ slug, user, booking, away, isBrandingHidden, resc
   const isEmbed = typeof window !== "undefined" && window?.isEmbed?.();
   return (
     <main className={classNames("flex h-full items-center justify-center", !isEmbed && "min-h-[100dvh]")}>
-      <BookerSeo
+      {/* <BookerSeo
         username={user}
         eventSlug={slug}
         rescheduleUid={rescheduleUid ?? undefined}
         hideBranding={isBrandingHidden}
-      />
-      <Booker
+      /> */}
+      {/* <Booker
         username={user}
         eventSlug={slug}
         bookingData={booking}
         isAway={away}
         hideBranding={isBrandingHidden}
-      />
+      /> */}
     </main>
   );
 }

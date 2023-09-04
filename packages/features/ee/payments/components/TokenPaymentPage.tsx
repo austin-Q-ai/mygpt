@@ -60,14 +60,14 @@ const TokenPaymentPage = (props: PaymentPageProps) => {
 
                   <div className="mt-3 text-center sm:mt-5">
                     <h3 className="text-emphasis text-2xl font-semibold leading-6" id="modal-headline">
-                      {t("Token Purchase")}
+                      {t("token_purchase")}
                     </h3>
                     <div className="text-default mt-4 grid grid-cols-3 border-b border-t py-4 text-left dark:border-gray-900 dark:text-gray-300">
-                      <div className="font-medium">{t("From")}</div>
+                      <div className="font-medium">{t("from")}</div>
                       <div className="col-span-2 mb-6">{props?.name}</div>
-                      <div className="font-medium">{t("Amount")}</div>
+                      <div className="font-medium">{t("amount")}</div>
                       <div className="col-span-2 mb-6">{props.amount}</div>
-                      <div className="font-medium">{t("Price")}</div>
+                      <div className="font-medium">{t("price")}</div>
                       <div className="col-span-2 mb-6">{props?.price[props?.price.length - 1]}</div>
                     </div>
                   </div>

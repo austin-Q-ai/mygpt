@@ -694,51 +694,6 @@ async function handler(
       ? getDefaultEvent(req.body.eventTypeSlug)
       : await getEventTypesFromDB(req.body.eventTypeId);
 
-  const timeTokens = await prisma.timeTokensWallet.findFirst({
-    where: {
-      ownerId: userId,
-      emitterId: eventType.userId
-    },
-    select: {
-      id: true,
-      amount: true,
-    }
-  })
-
-  const expert = await prisma.user.findUnique({
-    where: {
-      id: eventType.userId,
-    },
-    select: {
-      id: true,
-      username: true,
-      name: true,
-      price: true,
-    }
-  })
-  if (!timeTokens || timeTokens?.amount < eventType.length / 5) return {
-    error: "Not enough tokens",
-    data: {
-      amount: eventType.length / 5 - (timeTokens?.amount || 0),
-      expertId: expert.id,
-      username: expert.username,
-      name: expert.name,
-      price: expert.price,
-    }
-  }
-  else {
-    await prisma.timeTokensWallet.update({
-      where: {
-        id: timeTokens.id,
-      },
-      data: {
-        amount: {
-          decrement: eventType.length / 5,
-        }
-      }
-    })
-  }
-
   eventType = {
     ...eventType,
     bookingFields: getBookingFieldsWithSystemFields(eventType),
@@ -1675,6 +1630,51 @@ async function handler(
       const foundBooking = await findBookingQuery(booking.id);
 
       if (!Number.isNaN(paymentAppData.price) && paymentAppData.price > 0 && !!booking) {
+        const timeTokens = await prisma.timeTokensWallet.findFirst({
+          where: {
+            ownerId: userId,
+            emitterId: eventType.userId
+          },
+          select: {
+            id: true,
+            amount: true,
+          }
+        });
+      
+        const expert = await prisma.user.findUnique({
+          where: {
+            id: eventType.userId,
+          },
+          select: {
+            id: true,
+            username: true,
+            name: true,
+            price: true,
+          }
+        })
+        if (!timeTokens || timeTokens?.amount < eventType.length / 5) return {
+          error: "Not enough tokens",
+          data: {
+            amount: eventType.length / 5 - (timeTokens?.amount || 0),
+            expertId: expert.id,
+            username: expert.username,
+            name: expert.name,
+            price: expert.price,
+          }
+        }
+        else {
+          await prisma.timeTokensWallet.update({
+            where: {
+              id: timeTokens.id,
+            },
+            data: {
+              amount: {
+                decrement: eventType.length / 5,
+              }
+            }
+          })
+        }
+      
         const credentialPaymentAppCategories = await prisma.credential.findMany({
           where: {
             ...(paymentAppData.credentialId
@@ -2221,6 +2221,50 @@ async function handler(
 
   if (bookingRequiresPayment) {
     // Load credentials.app.categories
+    const timeTokens = await prisma.timeTokensWallet.findFirst({
+      where: {
+        ownerId: userId,
+        emitterId: eventType.userId
+      },
+      select: {
+        id: true,
+        amount: true,
+      }
+    });
+  
+    const expert = await prisma.user.findUnique({
+      where: {
+        id: eventType.userId,
+      },
+      select: {
+        id: true,
+        username: true,
+        name: true,
+        price: true,
+      }
+    })
+    if (!timeTokens || timeTokens?.amount < eventType.length / 5) return {
+      error: "Not enough tokens",
+      data: {
+        amount: eventType.length / 5 - (timeTokens?.amount || 0),
+        expertId: expert.id,
+        username: expert.username,
+        name: expert.name,
+        price: expert.price,
+      }
+    }
+    else {
+      await prisma.timeTokensWallet.update({
+        where: {
+          id: timeTokens.id,
+        },
+        data: {
+          amount: {
+            decrement: eventType.length / 5,
+          }
+        }
+      })
+    }  
     const credentialPaymentAppCategories = await prisma.credential.findMany({
       where: {
         ...(paymentAppData.credentialId ? { id: paymentAppData.credentialId } : { userId: organizerUser.id }),

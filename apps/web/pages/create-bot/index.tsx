@@ -1,20 +1,16 @@
 import { MeiliSearch } from "meilisearch";
-import React, { useState, useEffect } from "react";
-import { components } from "react-select";
 import { useRouter } from "next/router";
-import { createPaymentLink } from "@calcom/app-store/stripepayment/lib/client";
+import React, { useState } from "react";
+
 import Shell from "@calcom/features/shell/Shell";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { trpc } from "@calcom/trpc/react";
-import { Select, Button, Avatar, Badge, ConfirmationDialogContent, Dialog } from "@calcom/ui";
-import { Plus } from "@calcom/ui/components/icon";
+import { Avatar, Badge } from "@calcom/ui";
 
 import { withQuery } from "@lib/QueryCell";
 
 import PageWrapper from "@components/PageWrapper";
-import CustomExpertTable from "@components/timetokens-wallet/CustomExpertTable";
 import type { ExpertDataType } from "@components/timetokens-wallet/CustomExpertTable";
-import SkeletonLoader from "@components/timetokens-wallet/SkeletonLoader";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const WithQuery = withQuery(trpc.viewer.timetokenswallet.getAddedExperts as any);
@@ -168,8 +164,8 @@ function TimeTokensWallet() {
   };
 
   return (
-    <Shell heading={t("timetokens_wallet")} hideHeadingOnMobile subtitle={t("buy_sell_timetokens")}>
-      <WithQuery
+    <Shell heading={t("Create Bot")} hideHeadingOnMobile subtitle={t("Create your telegram bot")}>
+      {/* <WithQuery
         customLoader={<SkeletonLoader />}
         success={({ data }) => {
           return (
@@ -255,7 +251,7 @@ function TimeTokensWallet() {
             </>
           );
         }}
-      />
+      /> */}
     </Shell>
   );
 }
