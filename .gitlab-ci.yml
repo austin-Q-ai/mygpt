@@ -23,12 +23,20 @@ workflow:
     - when: never
 
 stages:          # List of stages for jobs, and their order of execution
-  - push
+  - push_into_walcaldeploy
 
 push_into_walcaldeploy:
   image: ubuntu:latest
-  stage: push
+  stage: push_into_walcaldeploy
   script:
-    - echo "Oliver is HERE"
-    - echo $CI_PIPELINE_SOURCE
+    - apt update -y && apt install git -y
+    - git config --global user.email "cawsonoliver33@gmail.com"
+    - git config --global user.name "Oliver Cawson"
+    - git clone https://cawsonoliver33:glpat-Vxq6yavY4_qw9GrCSTaP@gitlab.com/i2xo/walcaldeploy
+    - cd walcaldeploy/
+    - git checkout dev
+    - git submodule update --remote --init
+    - git add .
+    - git commit -m "update submodule on dev"
+    - git push
     
