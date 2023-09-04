@@ -18,7 +18,7 @@
 
 workflow:
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_COMMIT_REF_NAME == "dev"'
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == "dev"
       when: always
     - when: never
 
@@ -36,3 +36,4 @@ push_into_walcaldeploy:
     - git submodule update --remote --init
     - git add .
     - git commit -m "update submodule on dev"
+    - git push
