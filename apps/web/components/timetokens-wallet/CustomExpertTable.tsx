@@ -39,18 +39,6 @@ function CustomExpertTable(props: CustomExpertTableProps) {
 
   const { expertsData, columns, handleBuyEvent, handleRemoveEvent } = props;
 
-  // const data: number[] = [];
-  // for (let i = 0; i < expertsData.length; i++) {
-  //   data.push(10);
-  // }
-
-  // const [tokensAmount, setTokensAmount] = useState<number[]>([]);
-
-  // useEffect(() => {
-  //   console.log('=====================')
-  //   setTokensAmount(data);
-  // }, [])
-
   return (
     <div>
       {expertsData.length === 0 && (
