@@ -25,6 +25,7 @@ push_into_walcaldeploy:
   only:
     - merge_requests
   script:
+    - echo $CI_PIPELINE_SOURCE
     - apt update -y && apt install git -y
     - git config --global user.email "cawsonoliver33@gmail.com"
     - git config --global user.name "Oliver Cawson"
