@@ -403,6 +403,15 @@ select:focus {
   }
 }
 
+
+.show-edit:hover .edit-btn {
+  display: flex;
+}
+
+.edit-btn {
+  display: none;
+}
+
 .text-inverted-important {
   color: white !important;
 }

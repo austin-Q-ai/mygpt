@@ -96,6 +96,9 @@
     "eslint": "^8.34.0",
     "lucide-react": "^0.171.0",
     "meilisearch": "^0.34.1",
+    "mic-recorder-to-mp3": "^2.2.2",
+    "react-countdown": "^2.3.5",
+    "react-webcam": "^7.1.1",
     "turbo": "^1.10.1"
   },
   "resolutions": {

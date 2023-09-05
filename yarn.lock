@@ -14810,7 +14810,10 @@ __metadata:
     lint-staged: ^12.5.0
     lucide-react: ^0.171.0
     meilisearch: ^0.34.1
+    mic-recorder-to-mp3: ^2.2.2
     prettier: ^2.8.6
+    react-countdown: ^2.3.5
+    react-webcam: ^7.1.1
     tsc-absolute: ^1.0.0
     turbo: ^1.10.1
     typescript: ^4.9.4
@@ -23134,6 +23137,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lamejs@npm:^1.2.0":
+  version: 1.2.1
+  resolution: "lamejs@npm:1.2.1"
+  dependencies:
+    use-strict: 1.0.1
+  checksum: bb49d2fcb48d087f7c3efb7d0ac5a2972def8c9ab2795e42cf20565b9198cdbae0faedd1fc6c7019ee3868f17e7af31976793dbc96c95fc08ccb692b8df5895d
+  languageName: node
+  linkType: hard
+
 "language-subtag-registry@npm:~0.3.2":
   version: 0.3.21
   resolution: "language-subtag-registry@npm:0.3.21"
@@ -24455,6 +24467,17 @@ __metadata:
   version: 1.1.2
   resolution: "methods@npm:1.1.2"
   checksum: 0917ff4041fa8e2f2fda5425a955fe16ca411591fbd123c0d722fcf02b73971ed6f764d85f0a6f547ce49ee0221ce2c19a5fa692157931cecb422984f1dcd13a
+  languageName: node
+  linkType: hard
+
+"mic-recorder-to-mp3@npm:^2.2.2":
+  version: 2.2.2
+  resolution: "mic-recorder-to-mp3@npm:2.2.2"
+  dependencies:
+    lamejs: ^1.2.0
+  peerDependencies:
+    webrtc-adapter: ">=4.1.1"
+  checksum: bea0ea95c3628de27cc3e2db4f910a617b3151e140cadb9166b4c63f82393b84e5741348aeb19cf32241ea1691255501a76e7867f7e68afaace2c6f310d47ac8
   languageName: node
   linkType: hard
 
@@ -28250,6 +28273,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-countdown@npm:^2.3.5":
+  version: 2.3.5
+  resolution: "react-countdown@npm:2.3.5"
+  dependencies:
+    prop-types: ^15.7.2
+  peerDependencies:
+    react: ">= 15"
+    react-dom: ">= 15"
+  checksum: 24289f40591e88003052270e4eb9f7a87838e403ec2036fbd5ef99d57851c8d9739dae619d65f339494e582e34e2691c033a975bd8f7416730fc9beaf76a2b4b
+  languageName: node
+  linkType: hard
+
 "react-date-picker@npm:^8.3.6, react-date-picker@npm:^8.4.0":
   version: 8.4.0
   resolution: "react-date-picker@npm:8.4.0"
@@ -28977,6 +29012,16 @@ __metadata:
   peerDependencies:
     react: ^16.6.3 || ^17.0.0
   checksum: 1bebc741b01057829a7d7f29256114caecf0597d41b187cb41e75af77f24a87c780bc1a81ec11205b78ee2e9c801fc5e36b20a9e1ab7ddc70a18dd95417795f8
+  languageName: node
+  linkType: hard
+
+"react-webcam@npm:^7.1.1":
+  version: 7.1.1
+  resolution: "react-webcam@npm:7.1.1"
+  peerDependencies:
+    react: ">=16.2.0"
+    react-dom: ">=16.2.0"
+  checksum: 98310037b477ff8a99ca9ee67151389cbc24fe1d3f2fd5ff8afabca7b703c88d8a4275d85c2f1a4ac428602f4e1f0f9375a23379efc88b6ed88cd25e988a4e65
   languageName: node
   linkType: hard
 
@@ -33737,6 +33782,13 @@ __metadata:
     "@types/react":
       optional: true
   checksum: 925d1922f9853e516eaad526b6fed1be38008073067274f0ecc3f56b17bb8ab63480140dd7c271f94150027c996cea4efe83d3e3525e8f3eda22055f6a39220b
+  languageName: node
+  linkType: hard
+
+"use-strict@npm:1.0.1":
+  version: 1.0.1
+  resolution: "use-strict@npm:1.0.1"
+  checksum: e2798c587b8dc95483ac376e1b9b13fbab179bbd498ed7bd55cba2ef72792569621ba25d9aa5df21f884a161d28624d39165070a690fc5f088bf903e097fc267
   languageName: node
   linkType: hard
 

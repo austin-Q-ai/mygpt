@@ -9,12 +9,13 @@ import { withQuery } from "@lib/QueryCell";
 
 import PageWrapper from "@components/PageWrapper";
 import ImageUploader from "@components/create-bot/ImageUploader";
+import VoiceUploader from "@components/create-bot/VoiceUploader";
 import SkeletonLoader from "@components/timetokens-wallet/SkeletonLoader";
-
+import BotDataInputForm from "@components/create-bot/BotDataInputForm";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const WithQuery = withQuery(trpc.viewer.timetokenswallet.getAddedExperts as any);
 
-function TimeTokensWallet() {
+function CreateBot() {
   const { t } = useLocale();
   const { data: user, isLoading } = trpc.viewer.me.useQuery();
   const router = useRouter();
@@ -27,6 +28,8 @@ function TimeTokensWallet() {
           return (
             <>
               <ImageUploader />
+              <VoiceUploader />
+              <BotDataInputForm />
             </>
           );
         }}
@@ -35,6 +38,6 @@ function TimeTokensWallet() {
   );
 }
 
-TimeTokensWallet.PageWrapper = PageWrapper;
+CreateBot.PageWrapper = PageWrapper;
 
-export default TimeTokensWallet;
+export default CreateBot;
