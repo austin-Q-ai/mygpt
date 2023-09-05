@@ -337,6 +337,7 @@
   "email": "E-post",
   "email_placeholder": "ola.nordman@eksempel.no",
   "full_name": "Fullt navn",
+  "token_price": "Tokenpris",
   "browse_api_documentation": "Se gjennom API-dokumentasjonen vår",
   "leverage_our_api": "Bruk vår API for full kontroll og tilpasningsmuligheter.",
   "create_webhook": "Opprett Webhook",

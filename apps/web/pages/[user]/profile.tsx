@@ -245,8 +245,8 @@ export function UserPage(props: UserPageProps) {
                       <div className="mb-4 flex justify-between">
                         <Label className="text-lg">{t("about")}</Label>
                       </div>
-                      <div className={user.bio.length ? "m-4" : "w-[100%] text-center p-2"}>
-                        {user.bio.length ? (
+                      <div className={user.bio && user.bio.length ? "m-4" : "w-[100%] text-center p-2"}>
+                        {user.bio && user.bio.length ? (
                           user.bio
                         ) : (
                           t("no_data_yet")

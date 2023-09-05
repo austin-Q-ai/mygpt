@@ -33,6 +33,7 @@ export async function getUserFromSession(ctx: TRPCContextInner, session: Maybe<S
       skills: true,
       emailVerified: true,
       bio: true,
+      lastRewardedDate: true,
       timeZone: true,
       weekStart: true,
       startTime: true,

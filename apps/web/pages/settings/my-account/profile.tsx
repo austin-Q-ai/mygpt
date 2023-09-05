@@ -80,25 +80,31 @@ interface DeleteAccountValues {
 }
 
 type ExperienceInput = {
+  id: number | undefined;
+  key: string;
   position: string;
   company: string;
-  address?: string;
-  startMonth?: string;
-  startYear?: string;
-  endMonth?: string;
-  endYear?: string;
-  avatar?: string;
+  address: string | undefined;
+  startMonth: number;
+  startYear: number;
+  endMonth: number;
+  endYear: number;
+  avatar: string | null;
+  delete: boolean | undefined;
 };
 
 type EducationInput = {
+  id: number | undefined;
+  key: string;
   school: string;
-  major?: string;
-  degree?: string;
-  startMonth?: string;
-  startYear?: string;
-  endMonth?: string;
-  endYear?: string;
-  avatar?: string;
+  major: string | undefined;
+  degree: string | undefined;
+  startMonth: number;
+  startYear: number;
+  endMonth: number;
+  endYear: number;
+  avatar: string | null;
+  delete: boolean | undefined;
 };
 
 type FormValues = {
@@ -228,7 +234,7 @@ const ProfileView = () => {
       <SkeletonLoader title={t("profile")} description={t("profile_description", { appName: APP_NAME })} />
     );
 
-  const defaultValues = {
+  const defaultValues: FormValues = {
     username: user.username || "",
     avatar: avatar.avatar || "",
     name: user.name || "",
@@ -236,8 +242,36 @@ const ProfileView = () => {
     bio: user.bio || "",
     position: user.position || "",
     address: user.address || "",
-    experiences: user.experiences || [],
-    educations: user.educations || [],
+    experiences: user.experiences
+      ? user.experiences.map((experience) => ({
+          id: experience.id,
+          key: '0',
+          position: experience.position,
+          company: experience.company,
+          address: experience.address || "",
+          startMonth: experience.startMonth,
+          startYear: experience.startYear,
+          endMonth: experience.endMonth,
+          endYear: experience.endYear,
+          avatar: experience.avatar || null,
+          delete: false,
+        }))
+      : ([] as ExperienceInput[]),
+    educations: user.educations
+      ? user.educations.map((education) => ({
+        id: education.id,
+        key: '0',
+        school: education.school,
+        major: education.major || "",
+        degree: education.degree || "",
+        startMonth: education.startMonth,
+        startYear: education.startYear,
+        endMonth: education.endMonth,
+        endYear: education.endYear,
+        avatar: education.avatar || null,
+        delete: false,
+      }))
+      : ([] as EducationInput[]),
     skills: user.skills || [],
   };
 
@@ -375,15 +409,15 @@ const ProfileForm = ({
   const [showErrorInHeader, setShowErrorInHeader] = useState(false);
   const [editableAbout, setEditableAbout] = useState(false);
   const [editableSkill, setEditableSkill] = useState(false);
-  const [skills, setSkills] = useState([]);
+  const [skills, setSkills] = useState<string[]>([]);
 
   const [addExpOpen, setAddExpOpen] = useState(false);
   const [showErrorInExp, setShowErrorInExp] = useState(false);
-  const [experiences, setExperiences] = useState([]);
+  const [experiences, setExperiences] = useState<ExperienceInput[]>([]);
   const [indexExp, setIndexExp] = useState(-1);
   const [positionExp, setPositionExp] = useState("");
   const [companyExp, setCompanyExp] = useState("");
-  const [addressExp, setAddressExp] = useState("");
+  const [addressExp, setAddressExp] = useState<string | undefined>("");
   const [startMonthExp, setStartMonthExp] = useState(new Date().getMonth() + 1);
   const [startYearExp, setStartYearExp] = useState(new Date().getFullYear());
   const [endMonthExp, setEndMonthExp] = useState(new Date().getMonth() + 1);
@@ -391,11 +425,11 @@ const ProfileForm = ({
 
   const [addEduOpen, setAddEduOpen] = useState(false);
   const [showErrorInEdu, setShowErrorInEdu] = useState(false);
-  const [educations, setEducations] = useState([]);
+  const [educations, setEducations] = useState<EducationInput[]>([]);
   const [indexEdu, setIndexEdu] = useState(-1);
   const [schoolEdu, setSchoolEdu] = useState("");
-  const [majorEdu, setMajorEdu] = useState("");
-  const [degreeEdu, setDegreeEdu] = useState("");
+  const [majorEdu, setMajorEdu] = useState<string | undefined>("");
+  const [degreeEdu, setDegreeEdu] = useState<string | undefined>("");
   const [startMonthEdu, setStartMonthEdu] = useState(new Date().getMonth() + 1);
   const [startYearEdu, setStartYearEdu] = useState(new Date().getFullYear());
   const [endMonthEdu, setEndMonthEdu] = useState(new Date().getMonth() + 1);
@@ -1055,8 +1089,8 @@ const ProfileForm = ({
                   label={t("startMonth")}
                   value={{ value: startMonthExp, label: months[startMonthExp-1]['label'] }}
                   onChange={(e) => {
-                    if (startYearExp < endYearExp || e.value <= endMonthExp) {
-                      setStartMonthExp(e.value);
+                    if (e && (startYearExp < endYearExp || e.value <= endMonthExp)) {
+                       setStartMonthExp(e.value);
                     }
                   }}
                 />
@@ -1074,7 +1108,7 @@ const ProfileForm = ({
                   label={t("startYear")}
                   value={{ value: startYearExp, label: `${startYearExp}` }}
                   onChange={(e) => {
-                    if (e.value < endYearExp || (e.value === endYearExp && startMonthExp <= endMonthExp)) {
+                    if (e && (e.value < endYearExp || (e.value === endYearExp && startMonthExp <= endMonthExp))) {
                       setStartYearExp(e.value);
                     }
                   }}
@@ -1086,7 +1120,7 @@ const ProfileForm = ({
                   label={t("endMonth")}
                   value={{ value: endMonthExp, label: months[endMonthExp-1]['label'] }}
                   onChange={(e) => {
-                    if (startYearExp < endYearExp || e.value >= startMonthExp) {
+                    if (e && (startYearExp < endYearExp || e.value >= startMonthExp)) {
                       if (!(endYearExp === new Date().getFullYear() && e.value > new Date().getMonth() + 1)) {
                         setEndMonthExp(e.value);
                       }
@@ -1107,7 +1141,7 @@ const ProfileForm = ({
                   label={t("endYear")}
                   value={{ value: endYearExp, label: `${endYearExp}` }}
                   onChange={(e) => {
-                    if (e.value > startYearExp || (e.value === startYearExp && startMonthExp <= endMonthExp)) {
+                    if (e && (e.value > startYearExp || (e.value === startYearExp && startMonthExp <= endMonthExp))) {
                       setEndYearExp(e.value);
                     }
                   }}
@@ -1135,6 +1169,8 @@ const ProfileForm = ({
                 let formData;
                 if (indexExp === -1) {
                   formData = experiences.concat({
+                    id: undefined,
+                    key: Math.floor(Math.random() * 1000000).toString(),
                     position: positionExp,
                     company: companyExp,
                     address: addressExp,
@@ -1143,7 +1179,7 @@ const ProfileForm = ({
                     endMonth: endMonthExp,
                     endYear: endYearExp,
                     avatar: "",
-                    key: Math.floor(Math.random() * 1000000).toString(),
+                    delete: undefined,
                   });
                 } else {
                   formData = [...experiences];
@@ -1160,7 +1196,7 @@ const ProfileForm = ({
                   };
                 }
                 setExperiences(formData);
-                formMethods.setValue("experiences", formData.map(({ key, ...rest }) => rest), { shouldDirty: true });
+                formMethods.setValue("experiences", formData, { shouldDirty: true });
                 setShowErrorInExp(false);
               } else {
                 setShowErrorInExp(true);
@@ -1197,7 +1233,7 @@ const ProfileForm = ({
                   label={t("startMonth")}
                   value={{ value: startMonthEdu, label: months[startMonthEdu-1]['label'] }}
                   onChange={(e) => {
-                    if (startYearEdu < endYearEdu || e.value <= endMonthEdu) {
+                    if (e && (startYearEdu < endYearEdu || e.value <= endMonthEdu)) {
                       setStartMonthEdu(e.value);
                     }
                   }}
@@ -1216,7 +1252,7 @@ const ProfileForm = ({
                   label={t("startYear")}
                   value={{ value: startYearEdu, label: `${startYearEdu}` }}
                   onChange={(e) => {
-                    if (e.value < endYearEdu || (e.value === endYearEdu && startMonthEdu <= endMonthEdu)) {
+                    if (e && (e.value < endYearEdu || (e.value === endYearEdu && startMonthEdu <= endMonthEdu))) {
                       setStartYearEdu(e.value);
                     }
                   }}
@@ -1228,7 +1264,7 @@ const ProfileForm = ({
                   label={t("endMonth")}
                   value={{ value: endMonthEdu, label: months[endMonthEdu-1]['label'] }}
                   onChange={(e) => {
-                    if (startYearEdu < endYearEdu || e.value >= startMonthEdu) {
+                    if (e && (startYearEdu < endYearEdu || e.value >= startMonthEdu)) {
                       if (!(endYearEdu === new Date().getFullYear() && e.value > new Date().getMonth() + 1)) {
                         setEndMonthEdu(e.value);
                       }
@@ -1249,7 +1285,7 @@ const ProfileForm = ({
                   label={t("endYear")}
                   value={{ value: endYearEdu, label: `${endYearEdu}` }}
                   onChange={(e) => {
-                    if (e.value > startYearEdu || (e.value === startYearEdu && startMonthEdu <= endMonthEdu)) {
+                    if (e && (e.value > startYearEdu || (e.value === startYearEdu && startMonthEdu <= endMonthEdu))) {
                       setEndYearEdu(e.value);
                     }
                   }}
@@ -1277,6 +1313,8 @@ const ProfileForm = ({
                 let formData;
                 if (indexEdu === -1) {
                   formData = educations.concat({
+                    id: undefined,
+                    key: Math.floor(Math.random() * 1000000).toString(),
                     school: schoolEdu,
                     degree: degreeEdu,
                     major: majorEdu,
@@ -1285,7 +1323,7 @@ const ProfileForm = ({
                     endMonth: endMonthEdu,
                     endYear: endYearEdu,
                     avatar: "",
-                    key: Math.floor(Math.random() * 1000000).toString(),
+                    delete: undefined,
                   });
                 } else {
                   formData = [...educations];
@@ -1302,7 +1340,7 @@ const ProfileForm = ({
                   };
                 }
                 setEducations(formData);
-                formMethods.setValue("educations", formData.map(({ key, ...rest }) => rest), { shouldDirty: true });
+                formMethods.setValue("educations", formData, { shouldDirty: true });
                 setShowErrorInEdu(false);
               } else {
                 setShowErrorInEdu(true);

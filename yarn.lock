@@ -4592,7 +4592,6 @@ __metadata:
     "@glidejs/glide": ^3.5.2
     "@hookform/error-message": ^2.0.0
     "@hookform/resolvers": ^2.9.7
-    "@meilisearch/instant-meilisearch": ^0.13.4
     "@microsoft/microsoft-graph-types-beta": 0.15.0-preview
     "@next-auth/prisma-adapter": ^1.0.4
     "@next/bundle-analyzer": ^13.1.6
@@ -7033,7 +7032,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@meilisearch/instant-meilisearch@npm:^0.13.4":
+"@meilisearch/instant-meilisearch@npm:^0.13.5":
   version: 0.13.5
   resolution: "@meilisearch/instant-meilisearch@npm:0.13.5"
   dependencies:
@@ -14797,6 +14796,7 @@ __metadata:
   dependencies:
     "@changesets/cli": ^2.26.1
     "@deploysentinel/playwright": ^0.3.3
+    "@meilisearch/instant-meilisearch": ^0.13.5
     "@playwright/test": ^1.31.2
     "@snaplet/copycat": ^0.3.0
     "@types/dompurify": ^2.4.0
@@ -14809,6 +14809,7 @@ __metadata:
     jsdom: ^22.0.0
     lint-staged: ^12.5.0
     lucide-react: ^0.171.0
+    meilisearch: ^0.34.1
     prettier: ^2.8.6
     tsc-absolute: ^1.0.0
     turbo: ^1.10.1

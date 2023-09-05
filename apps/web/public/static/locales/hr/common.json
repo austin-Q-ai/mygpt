@@ -302,6 +302,17 @@
   "past_bookings": "Ovdje će se prikazati vaše prethodne rezervacije.",
   "unconfirmed_bookings": "Ovdje će se prikazati vaše nepotvrđene rezervacije.",
   "unconfirmed_bookings_tooltip": "Nepotvrđene rezervacije",
+  "timetokens_wallet": "TimeTokens Novčanik",
+  "buy_sell_timetokens": "Kupi i prodaj TimeTokens",
+  "buy_expert_tokens": "Kupi tokene stručnjaka.",
+  "added": "dodano",
+  "confirm_buy_question": "Jeste li sigurni da želite kupiti tokene?",
+  "confirm_buy_event": "Da, kupi",
+  "buy": "Kupi",
+  "confirm_remove_question": "Jeste li sigurni da želite ukloniti ovog stručnjaka?",
+  "confirm_remove_event": "Da, ukloni stručnjaka",
+  "no_expert_data": "Nema dodanih stručnjaka",
+  "no_expert_data_description": "Trenutno nema dodanih stručnjaka. Možete dodati bilo koje stručnjake koje želite i kupiti njihove tokene za rezervaciju intervjua s njima.",
   "on": "u",
   "and": "i",
   "calendar_shows_busy_between": "Vaš kalendar pokazuje da ste zauzeti između",
@@ -358,5 +369,6 @@
   "exp": "Iskustvo",
   "edu": "Obrazovanje",
   "skill": "Vještine",
-  "position": "Položaj"
+  "position": "Položaj",
+  "token_price": "Cijena tokena"
 }

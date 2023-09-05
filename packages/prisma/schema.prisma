@@ -167,31 +167,31 @@ enum UserPermissionRole {
 }
 
 model Experience {
-  id        Int      @id @default(autoincrement())
-  position  String   @default("")
-  company   String   @default("")
-  address   String?
+  id         Int     @id @default(autoincrement())
+  position   String  @default("")
+  company    String  @default("")
+  address    String?
   startMonth Int     @default(1)
   startYear  Int     @default(2000)
   endMonth   Int     @default(1)
   endYear    Int     @default(2000)
-  avatar    String?
-  user      User?    @relation(fields: [userId], references: [id])
-  userId    Int?
+  avatar     String?
+  user       User?   @relation(fields: [userId], references: [id])
+  userId     Int?
 }
 
 model Education {
-  id        Int      @id @default(autoincrement())
-  school    String   @default("")
-  major     String?
-  degree    String?
+  id         Int     @id @default(autoincrement())
+  school     String  @default("")
+  major      String?
+  degree     String?
   startMonth Int     @default(1)
   startYear  Int     @default(2000)
   endMonth   Int     @default(1)
   endYear    Int     @default(2000)
-  avatar    String?
-  user      User?    @relation(fields: [userId], references: [id])
-  userId    Int?
+  avatar     String?
+  user       User?   @relation(fields: [userId], references: [id])
+  userId     Int?
 }
 
 model User {
@@ -207,7 +207,7 @@ model User {
   password              String?
   amountsMintedPerMonth Int                     @default(3000)
   tokens                Int                     @default(0)
-  lastRewardedDate      DateTime?
+  lastRewardedDate      DateTime                @default(now())
   price                 Int[]                   @default([1])
   bio                   String?
   avatar                String?

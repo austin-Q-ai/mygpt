@@ -87,6 +87,7 @@
   "email": "Email",
   "email_placeholder": "pista@pelda.hu",
   "full_name": "Teljes név",
+  "token_price": "Token ár",
   "create_webhook": "Webhook létrehozása",
   "new_webhook": "Új Webhook",
   "loading": "Betöltés...",
@@ -235,5 +236,16 @@
   "exp": "Tapasztalat",
   "edu": "Oktatás",
   "skill": "Képességek",
-  "position": "Pozíció"
+  "position": "Pozíció",
+  "timetokens_wallet": "TimeTokens Pénztárca",
+  "buy_sell_timetokens": "TimeTokens Vásárlása és Eladása",
+  "buy_expert_tokens": "Szakértői Tokenek Vásárlása.",
+  "added": "hozzáadva",
+  "confirm_buy_question": "Valóban vásárolni szeretnél tokeneket?",
+  "confirm_buy_event": "Igen, vásárlás",
+  "buy": "Vásárlás",
+  "confirm_remove_question": "Valóban eltávolítani szeretnéd ezt az szakértőt?",
+  "confirm_remove_event": "Igen, szakértő eltávolítása",
+  "no_expert_data": "Nincsenek hozzáadott szakértők",
+  "no_expert_data_description": "Jelenleg nincsenek hozzáadott szakértők. Bármilyen szakértőt hozzáadhatsz és megvásárolhatod a tokenjeiket, hogy lefoglalj interjúidat velük."
 }
