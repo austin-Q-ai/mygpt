@@ -3,17 +3,15 @@ import { z } from "zod";
 import { FULL_NAME_LENGTH_MAX_LIMIT } from "@calcom/lib/constants";
 import { userMetadata } from "@calcom/prisma/zod-utils";
 
-export const ZUpdateProfileInputSchema = z.object({
-  username: z.string().optional(),
+export const ZUploadProfileInputSchema = z.object({
+  username: z.string(),
   name: z.string().max(FULL_NAME_LENGTH_MAX_LIMIT).optional(),
   price: z.number().min(0).optional(),
-  email: z.string().optional(),
+  email: z.string(),
   position: z.string().optional(),
   address: z.string().optional(),
   experiences: z.array(
     z.object({
-      id: z.number().optional(),
-      key: z.string().optional(),
       position: z.string(),
       company: z.string(),
       address: z.string().optional(),
@@ -21,15 +19,11 @@ export const ZUpdateProfileInputSchema = z.object({
       startYear: z.number().optional(),
       endMonth: z.number().optional(),
       endYear: z.number().optional(),
-      avatar: z.nullable(z.string()),
-      userId: z.number().optional(),
-      delete: z.boolean().optional(),
+      avatar: z.nullable(z.string()).optional(),
     })
   ).optional(),
   educations: z.array(
     z.object({
-      id: z.number().optional(),
-      key: z.string().optional(),
       school: z.string(),
       major: z.string().optional(),
       degree: z.string().optional(),
@@ -37,9 +31,7 @@ export const ZUpdateProfileInputSchema = z.object({
       startYear: z.number().optional(),
       endMonth: z.number().optional(),
       endYear: z.number().optional(),
-      avatar: z.nullable(z.string()),
-      userId: z.number().optional(),
-      delete: z.boolean().optional(),
+      avatar: z.nullable(z.string()).optional(),
     })
   ).optional(),
   skills: z.array(z.string()).optional(),
@@ -59,4 +51,4 @@ export const ZUpdateProfileInputSchema = z.object({
   metadata: userMetadata.optional(),
 });
 
-export type TUpdateProfileInputSchema = z.infer<typeof ZUpdateProfileInputSchema>;
+export type TUploadProfileInputSchema = z.infer<typeof ZUploadProfileInputSchema>;
