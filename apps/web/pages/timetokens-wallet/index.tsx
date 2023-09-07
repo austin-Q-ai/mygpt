@@ -219,6 +219,7 @@ function TimeTokensWallet() {
                   filterOption={customFilter}
                   className="w-full rounded-md text-[.5rem] sm:text-sm"
                   onChange={(event) => {
+                    console.log(event);
                     setAddExpertId(event?.added ? -1 : event?.value || -1);
                   }}
                   onInputChange={(value) => {
