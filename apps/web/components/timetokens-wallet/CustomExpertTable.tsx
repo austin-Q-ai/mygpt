@@ -138,31 +138,31 @@ function CustomExpertTable(props: CustomExpertTableProps) {
                         />
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
-                        {true && (
-                          <DropdownMenuItem>
-                            <DropdownItem
-                              type="button"
-                              className="md:hidden"
-                              childrenClassName="text-[.5rem] sm:text-sm"
-                              data-testid="buy-tokens-of-expert"
-                              disabled={data.token_amount !== 0}
-                              StartIcon={ShoppingCart}
-                              onClick={() => {
-                                handleBuyEvent(data.userId, data.buy_amount);
-                              }}>
-                              {t("buy")}
-                            </DropdownItem>
-                            <DropdownItem
-                              type="button"
-                              childrenClassName="text-[.5rem] sm:text-sm"
-                              data-testid="remove-expert"
-                              disabled={data.token_amount !== 0}
-                              StartIcon={Trash2}
-                              onClick={() => handleRemoveEvent(data.userId)}>
-                              {t("remove")}
-                            </DropdownItem>
-                          </DropdownMenuItem>
-                        )}
+                        <DropdownMenuItem>
+                          <DropdownItem
+                            type="button"
+                            className="md:hidden"
+                            childrenClassName="text-[.5rem] sm:text-sm"
+                            data-testid="buy-tokens-of-expert"
+                            disabled={data.token_amount !== 0}
+                            StartIcon={ShoppingCart}
+                            onClick={() => {
+                              handleBuyEvent(data.userId, data.buy_amount);
+                            }}>
+                            {t("buy")}
+                          </DropdownItem>
+                        <DropdownMenuItem>
+                        </DropdownMenuItem>
+                          <DropdownItem
+                            type="button"
+                            childrenClassName="text-[.5rem] sm:text-sm"
+                            data-testid="remove-expert"
+                            disabled={data.token_amount !== 0}
+                            StartIcon={Trash2}
+                            onClick={() => handleRemoveEvent(data.userId)}>
+                            {t("remove")}
+                          </DropdownItem>
+                        </DropdownMenuItem>
                       </DropdownMenuContent>
                     </Dropdown>
                   </ButtonGroup>
