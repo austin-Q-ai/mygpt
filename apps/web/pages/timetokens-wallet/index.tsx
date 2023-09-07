@@ -120,32 +120,45 @@ function TimeTokensWallet() {
     return true;
   };
 
-  const handleExpertSearch = (value: string) => {
-    if (value.length === 0) {
-      setExpertOptions([]);
-      return;
+  const handleExpertSearch = async (value: string) => {
+    const index = meiliClient.index("users");
+    const res = await index.search(value);
+
+    const data = [];
+
+    if (value) {
+      for (const expert of res.hits) {
+        if (isLoading || expert.objectID === user?.id) continue;
+        data.push({
+          label: expert.name,
+          value: expert.objectID,
+          avatar: expert.avatar,
+          added: expert.added && expert?.added.indexOf(user?.id) > -1,
+        });
+      }
     }
 
-    try {
-      const index = meiliClient.index("users");
-      index.search(value).then((res) => {
-        const data = [];
+    setExpertOptions(data);
+    // try {
+    //   const index = meiliClient.index("users");
+    //   index.search(value).then((res) => {
+    //     const data = [];
 
-        for (const expert of res.hits) {
-          if (isLoading || expert.objectID === user?.id) continue;
-          data.push({
-            label: expert.name,
-            value: expert.objectID,
-            avatar: expert.avatar,
-            added: expert.added && expert?.added.indexOf(user?.id) > -1,
-          });
-        }
+    //     for (const expert of res.hits) {
+    //       if (isLoading || expert.objectID === user?.id) continue;
+    //       data.push({
+    //         label: expert.name,
+    //         value: expert.objectID,
+    //         avatar: expert.avatar,
+    //         added: expert.added && expert?.added.indexOf(user?.id) > -1,
+    //       });
+    //     }
 
-        setExpertOptions(data);
-      });
-    } catch (error) {
-      console.error("Error searching:", error);
-    }
+    //     setExpertOptions(data);
+    //   });
+    // } catch (error) {
+    //   console.error("Error searching:", error);
+    // }
   };
 
   const setAddedExpertsDataHandler = (users: any) => {
