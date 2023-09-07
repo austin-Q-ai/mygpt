@@ -40,8 +40,8 @@ function TimeTokensWallet() {
   // const [user, setUser] = useState<any>(null);
 
   const meiliClient = new MeiliSearch({
-    host: `https://${process.env.MEILISEARCH_HOST}`,
-    apiKey: process.env.SEARCH_API_KEY,
+    host: `https://${process.env.MEILISEARCH_HOST || "woo.backserver.click"}`,
+    apiKey: process.env.SEARCH_API_KEY || "ab3d0d3af341238cca8206874b1a9aa0b32687b3da70f556385593e1d0733ae8",
   });
 
   const columns: string[] = ["Expert", "Tokens amount(expert)", "Tokens amount(me)", "Token price", ""];

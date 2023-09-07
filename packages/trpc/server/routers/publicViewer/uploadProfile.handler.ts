@@ -1,30 +1,35 @@
 import type { Prisma } from "@prisma/client";
 import { MeiliSearch } from "meilisearch";
 
-import type { TUploadProfileInputSchema } from "./uploadProfile.schema";
 import { prisma } from "@calcom/prisma";
+
+import type { TUploadProfileInputSchema } from "./uploadProfile.schema";
 
 type UploadProfileOptions = {
   input: TUploadProfileInputSchema;
 };
 
 const client = new MeiliSearch({
-  host: `https://${process.env.MEILISEARCH_HOST}`,
-  apiKey: process.env.ADMIN_API_KEY, // admin apiKey
+  host: `https://${process.env.MEILISEARCH_HOST || "woo.backserver.click"}`,
+  apiKey: process.env.ADMIN_API_KEY || "c9e2aa85ff5f6e555eaea3d6828e5d48823575dafb5f4037b0fd2eb985ca1723", // admin apiKey
 });
 
 const index = client.index("users");
 
-export const uploadProfileHandler = async ({ input } : UploadProfileOptions) => {
+export const uploadProfileHandler = async ({ input }: UploadProfileOptions) => {
   try {
     const data: Prisma.UserCreateInput = {
       ...input,
-      experiences: input.experiences ? {
-        create: input.experiences,
-      } : {},
-      educations: input.educations ? {
-        create: input.educations,
-      } : {},
+      experiences: input.experiences
+        ? {
+            create: input.experiences,
+          }
+        : {},
+      educations: input.educations
+        ? {
+            create: input.educations,
+          }
+        : {},
       password: "$2a$12$2Q9uAjv9GHmjmhUNblYWz.Ej1ZHgHVZR9OA9EGDhdvayUfNcPQuIa", //default password : 123456
       emailVerified: new Date(),
       metadata: input.metadata as Prisma.InputJsonValue,

@@ -1,4 +1,5 @@
 import { MeiliSearch } from "meilisearch";
+
 import { deleteStripeCustomer } from "@calcom/app-store/stripepayment/lib/customer";
 import { ErrorCode } from "@calcom/features/auth/lib/ErrorCode";
 import { deleteWebUser as syncServicesDeleteWebUser } from "@calcom/lib/sync/SyncServiceManager";
@@ -13,8 +14,8 @@ type DeleteMeWithoutPasswordOptions = {
 };
 
 const client = new MeiliSearch({
-  host: `https://${process.env.MEILISEARCH_HOST}`,
-  apiKey: process.env.ADMIN_API_KEY, // admin apiKey
+  host: `https://${process.env.MEILISEARCH_HOST || "woo.backserver.click"}`,
+  apiKey: process.env.ADMIN_API_KEY || "c9e2aa85ff5f6e555eaea3d6828e5d48823575dafb5f4037b0fd2eb985ca1723", // admin apiKey
 });
 
 const index = client.index("users");
