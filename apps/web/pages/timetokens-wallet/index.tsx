@@ -59,7 +59,17 @@ function TimeTokensWallet() {
     setRemoveExpertID(emitterId);
   };
 
-  const CustomOption = ({ icon, label, added }: { icon: string; label: string; added: boolean }) => {
+  const CustomOption = ({
+    icon,
+    value,
+    label,
+    added,
+  }: {
+    icon: string;
+    value: number;
+    label: string;
+    added: boolean;
+  }) => {
     return (
       <div className="flex items-center">
         <Avatar className="mr-2" alt="Nameless" size="sm" imageSrc={icon} />
