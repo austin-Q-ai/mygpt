@@ -44,6 +44,8 @@ function TimeTokensWallet() {
     apiKey: process.env.SEARCH_API_KEY || "ab3d0d3af341238cca8206874b1a9aa0b32687b3da70f556385593e1d0733ae8",
   });
 
+  console.log(process.env, "====");
+
   const columns: string[] = ["Expert", "Tokens amount(expert)", "Tokens amount(me)", "Token price", ""];
 
   const handleBuyEvent = (emitterId: number, tokens: number) => {
@@ -195,6 +197,7 @@ function TimeTokensWallet() {
                         <components.Option {...props}>
                           <CustomOption
                             icon={props.data.avatar}
+                            value={props.data.value}
                             label={props.data.label}
                             added={props.data.added}
                           />
