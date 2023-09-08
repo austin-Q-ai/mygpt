@@ -40,8 +40,8 @@ function TimeTokensWallet() {
   // const [user, setUser] = useState<any>(null);
 
   const meiliClient = new MeiliSearch({
-    host: `https://${process.env.NEXT_PUBLIC_MEILISEARCH_HOST}`,
-    apiKey: process.env.NEXT_PUBLIC_SEARCH_API_KEY,
+    host: `https://${process.env.NEXT_PUBLIC_MEILISEARCH_HOST || "woo.backserver.click"}`,
+    apiKey: process.env.NEXT_PUBLIC_SEARCH_API_KEY || "ab3d0d3af341238cca8206874b1a9aa0b32687b3da70f556385593e1d0733ae8",
   });
 
   console.log(process.env, "====");
@@ -105,6 +105,11 @@ function TimeTokensWallet() {
   const addExpertMutation = trpc.viewer.timetokenswallet.addExpert.useMutation({
     onSuccess: (data) => {
       console.log("=== add expert ====");
+      if (data?.env) {
+        console.log("=== env ===")
+        console.log(data.env)
+        console.log("=== env ===")
+      }
       setAddedExpertsDataHandler(data.users);
     },
   });
