@@ -39,12 +39,14 @@ function TimeTokensWallet() {
   const [addExpertId, setAddExpertId] = useState<number>(-1);
   // const [user, setUser] = useState<any>(null);
 
-  const meiliClient = new MeiliSearch({
-    host: `https://${process.env.NEXT_PUBLIC_MEILISEARCH_HOST || "woo.backserver.click"}`,
-    apiKey: process.env.NEXT_PUBLIC_SEARCH_API_KEY || "ab3d0d3af341238cca8206874b1a9aa0b32687b3da70f556385593e1d0733ae8",
-  });
-
   console.log(process.env, "====");
+  console.log(process.env.NEXT_PUBLIC_MEILISEARCH_HOST, "====");
+  console.log(process.env.NEXT_PUBLIC_SEARCH_API_KEY, "====");
+
+  const meiliClient = new MeiliSearch({
+    host: `https://${process.env.NEXT_PUBLIC_MEILISEARCH_HOST}`,
+    apiKey: process.env.NEXT_PUBLIC_SEARCH_API_KEY,
+  });
 
   const columns: string[] = ["Expert", "Tokens amount(expert)", "Tokens amount(me)", "Token price", ""];
 
@@ -106,9 +108,9 @@ function TimeTokensWallet() {
     onSuccess: (data) => {
       console.log("=== add expert ====");
       if (data?.env) {
-        console.log("=== env ===")
-        console.log(data.env)
-        console.log("=== env ===")
+        console.log("=== env ===");
+        console.log(data.env);
+        console.log("=== env ===");
       }
       setAddedExpertsDataHandler(data.users);
     },
