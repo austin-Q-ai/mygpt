@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { components } from "react-select";
 
 import Shell from "@calcom/features/shell/Shell";
+import { MEILISEARCH_HOST, MEILISEARCH_SEARCH_API_KEY } from "@calcom/lib/constants";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { trpc } from "@calcom/trpc/react";
 import { Select, Button, Avatar, Badge, ConfirmationDialogContent, Dialog } from "@calcom/ui";
@@ -39,15 +40,9 @@ function TimeTokensWallet() {
   const [addExpertId, setAddExpertId] = useState<number>(-1);
   // const [user, setUser] = useState<any>(null);
 
-  console.log(process.env, "====");
-  console.log(process.env.NEXT_PUBLIC_MEILISEARCH_HOST, "====");
-  console.log(process.env.NEXT_PUBLIC_SEARCH_API_KEY, "====");
-
   const meiliClient = new MeiliSearch({
-    host: `https://${process.env.NEXT_PUBLIC_MEILISEARCH_HOST || "http://165.232.33.105:7700/"}`,
-    apiKey:
-      process.env.NEXT_PUBLIC_SEARCH_API_KEY ||
-      "4b043e95cf8ec6a38ee4bccdb813fc4d4e184df52be1fdf8e196b13195cc85ed",
+    host: `https://${MEILISEARCH_HOST}`,
+    apiKey: MEILISEARCH_SEARCH_API_KEY,
   });
 
   const columns: string[] = ["Expert", "Tokens amount(expert)", "Tokens amount(me)", "Token price", ""];
