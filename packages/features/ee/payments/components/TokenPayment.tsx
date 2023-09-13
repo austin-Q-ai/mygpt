@@ -24,13 +24,20 @@ type Props = {
   bookingUid: string;
 };
 
+type PaymentFromProps = {
+  amount: number;
+  expertId: number;
+  renderUrl: string;
+  setModalVisible: (value: boolean) => void;
+};
+
 type States =
   | { status: "idle" }
   | { status: "processing" }
   | { status: "error"; error: Error }
   | { status: "ok" };
 
-const PaymentForm = (props) => {
+const PaymentForm = (props: PaymentFromProps) => {
   console.log("paragon payment---", props);
   const { t, i18n } = useLocale();
   const router = useRouter();
@@ -130,7 +137,7 @@ const ELEMENT_STYLES_DARK: stripejs.Appearance = {
   },
 };
 
-export default function TokenPaymentComponent(props: Props) {
+export default function TokenPaymentComponent(props: PaymentFromProps) {
   const [clientSecret, setClientSecret] = useState("");
   useEffect(() => {
     // Create PaymentIntent as soon as the page loads

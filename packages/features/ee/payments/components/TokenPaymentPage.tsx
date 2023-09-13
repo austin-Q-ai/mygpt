@@ -15,7 +15,7 @@ const user_example = {
   theme: null,
 };
 
-type PaymentPageProps = {
+export type PaymentPageProps = {
   expertId: number;
   username: string;
   name: string;

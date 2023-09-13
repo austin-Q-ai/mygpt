@@ -9,9 +9,9 @@ export function createPaymentLink(opts: {
   amount?: Maybe<number>;
   absolute?: boolean;
 }): string {
-  const { expertid, amount, email, date, absolute = true } = opts;
+  const { expertid, amount, absolute = true } = opts;
   let link = "";
   if (absolute) link = WEBSITE_URL;
-  const query = stringify({ amount});
+  const query = stringify({ amount });
   return link + `/payment/${expertid}?${query}`;
 }

@@ -678,7 +678,6 @@ async function handler(
     isNotAnApiCall: false,
   }
 ) {
-  
   const { userId } = req;
 
   const userIp = getIP(req);
@@ -1141,6 +1140,14 @@ async function handler(
           seatReferenceUid?: string;
           paymentUid?: string;
           message?: string;
+          error?: string;
+          data?: {
+            amount: number;
+            expertId: number;
+            username: string;
+            name: string;
+            price: number;
+          };
         })
       | null = null;
 
@@ -1633,14 +1640,14 @@ async function handler(
         const timeTokens = await prisma.timeTokensWallet.findFirst({
           where: {
             ownerId: userId,
-            emitterId: eventType.userId
+            emitterId: eventType.userId,
           },
           select: {
             id: true,
             amount: true,
-          }
+          },
         });
-      
+
         const expert = await prisma.user.findUnique({
           where: {
             id: eventType.userId,
@@ -1650,18 +1657,19 @@ async function handler(
             username: true,
             name: true,
             price: true,
-          }
-        })
-        if (!timeTokens || timeTokens?.amount < eventType.length / 5) return {
-          error: "Not enough tokens",
-          data: {
-            amount: eventType.length / 5 - (timeTokens?.amount || 0),
-            expertId: expert.id,
-            username: expert.username,
-            name: expert.name,
-            price: expert.price,
-          }
-        }
+          },
+        });
+        if (!timeTokens || timeTokens?.amount < eventType.length / 5)
+          return {
+            error: "Not enough tokens",
+            data: {
+              amount: eventType.length / 5 - (timeTokens?.amount || 0),
+              expertId: expert.id,
+              username: expert.username,
+              name: expert.name,
+              price: expert.price,
+            },
+          };
         else {
           await prisma.timeTokensWallet.update({
             where: {
@@ -1670,11 +1678,11 @@ async function handler(
             data: {
               amount: {
                 decrement: eventType.length / 5,
-              }
-            }
-          })
+              },
+            },
+          });
         }
-      
+
         const credentialPaymentAppCategories = await prisma.credential.findMany({
           where: {
             ...(paymentAppData.credentialId
@@ -2224,14 +2232,14 @@ async function handler(
     const timeTokens = await prisma.timeTokensWallet.findFirst({
       where: {
         ownerId: userId,
-        emitterId: eventType.userId
+        emitterId: eventType.userId,
       },
       select: {
         id: true,
         amount: true,
-      }
+      },
     });
-  
+
     const expert = await prisma.user.findUnique({
       where: {
         id: eventType.userId,
@@ -2241,18 +2249,19 @@ async function handler(
         username: true,
         name: true,
         price: true,
-      }
-    })
-    if (!timeTokens || timeTokens?.amount < eventType.length / 5) return {
-      error: "Not enough tokens",
-      data: {
-        amount: eventType.length / 5 - (timeTokens?.amount || 0),
-        expertId: expert.id,
-        username: expert.username,
-        name: expert.name,
-        price: expert.price,
-      }
-    }
+      },
+    });
+    if (!timeTokens || timeTokens?.amount < eventType.length / 5)
+      return {
+        error: "Not enough tokens",
+        data: {
+          amount: eventType.length / 5 - (timeTokens?.amount || 0),
+          expertId: expert.id,
+          username: expert.username,
+          name: expert.name,
+          price: expert.price,
+        },
+      };
     else {
       await prisma.timeTokensWallet.update({
         where: {
@@ -2261,10 +2270,10 @@ async function handler(
         data: {
           amount: {
             decrement: eventType.length / 5,
-          }
-        }
-      })
-    }  
+          },
+        },
+      });
+    }
     const credentialPaymentAppCategories = await prisma.credential.findMany({
       where: {
         ...(paymentAppData.credentialId ? { id: paymentAppData.credentialId } : { userId: organizerUser.id }),

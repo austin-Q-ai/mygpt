@@ -9,7 +9,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import type { EventLocationType } from "@calcom/app-store/locations";
-import { createPaymentLink } from "@calcom/app-store/stripepayment/lib/client";
 import dayjs from "@calcom/dayjs";
 import {
   useTimePreferences,
@@ -35,13 +34,21 @@ import { useEvent } from "../../utils/event";
 import { BookingFields } from "./BookingFields";
 import { FormSkeleton } from "./Skeleton";
 
-type BookEventFormProps = {
-  onCancel?: () => void;
-  onCallPayment?: () => void;
-  onSetModalData?: () => void;
+export type BookEventModalProps = {
+  expertId: number;
+  username: string;
+  name: string;
+  amount: number;
+  price: number;
 };
 
-export const BookEventForm = ({ onCancel,onCallPayment,onSetModalData }: BookEventFormProps, ) => {
+type BookEventFormProps = {
+  onCancel?: () => void;
+  onCallPayment?: (value: boolean) => void;
+  onSetModalData?: (data: BookEventModalProps) => void;
+};
+
+export const BookEventForm = ({ onCancel, onCallPayment, onSetModalData }: BookEventFormProps) => {
   const reserveSlotMutation = trpc.viewer.public.slots.reserveSlot.useMutation({
     trpc: { context: { skipBatch: true } },
   });
@@ -208,8 +215,8 @@ export const BookEventForm = ({ onCancel,onCallPayment,onSetModalData }: BookEve
       // }
       if (error) {
         console.log("Error: ", data);
-        onSetModalData(data)
-        onCallPayment(true)
+        onSetModalData(data);
+        onCallPayment(true);
         return;
       }
 

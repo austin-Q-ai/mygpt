@@ -1,14 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_PRIVATE_KEY!, { apiVersion: "2023-08-16" });
+const stripe = new Stripe(process.env.STRIPE_PRIVATE_KEY!, { apiVersion: "2020-08-27" });
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const { amount } = req.body;
   try {
     // Create a payment intent
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: parseInt(amount)*1000, // Amount in cents
+      amount: parseInt(amount) * 1000, // Amount in cents
       currency: "usd",
       payment_method_types: ["card"],
       description: "Timed Token Purchase",
