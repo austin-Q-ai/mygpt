@@ -19,8 +19,9 @@ export type PaymentPageProps = {
   expertId: number;
   username: string;
   name: string;
-  price: number;
+  price: number[];
   amount: number;
+  renderUrl?: string;
   setModalVisible: (value: boolean) => void;
 };
 
@@ -64,18 +65,18 @@ const TokenPaymentPage = (props: PaymentPageProps) => {
                     </h3>
                     <div className="text-default mt-4 grid grid-cols-3 border-b border-t py-4 text-left dark:border-gray-900 dark:text-gray-300">
                       <div className="font-medium">{t("from")}</div>
-                      <div className="col-span-2 mb-6">{props?.name}</div>
+                      <div className="col-span-2 mb-6">{props.name}</div>
                       <div className="font-medium">{t("amount")}</div>
                       <div className="col-span-2 mb-6">{props.amount}</div>
                       <div className="font-medium">{t("price")}</div>
-                      <div className="col-span-2 mb-6">{props?.price[props?.price.length - 1]}</div>
+                      <div className="col-span-2 mb-6">{props.price[props.price.length - 1]}</div>
                     </div>
                   </div>
                 </div>
                 <TokenPaymentComponent
                   amount={props.amount}
                   expertId={props.expertId}
-                  renderUrl={props.renderUrl}
+                  renderUrl={props?.renderUrl}
                   setModalVisible={props.setModalVisible}
                 />
               </div>

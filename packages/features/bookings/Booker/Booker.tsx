@@ -63,7 +63,7 @@ const BookerComponent = ({
     username: "user",
     name: "name",
     amount: 0,
-    price: 1,
+    price: [1],
   });
   // In Embed we give preference to embed configuration for the layout.If that's not set, we use the App configuration for the event layout
   // But if it's mobile view, there is only one layout supported which is 'mobile'

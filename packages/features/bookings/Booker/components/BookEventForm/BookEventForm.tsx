@@ -39,7 +39,7 @@ export type BookEventModalProps = {
   username: string;
   name: string;
   amount: number;
-  price: number;
+  price: number[];
 };
 
 type BookEventFormProps = {
@@ -201,7 +201,7 @@ export const BookEventForm = ({ onCancel, onCallPayment, onSetModalData }: BookE
 
   const createBookingMutation = useMutation(createBooking, {
     onSuccess: async (responseData) => {
-      const { error, uid, data, paymentUid } = responseData;
+      const { uid, paymentUid, error, data } = responseData;
       // if (paymentUid) {
       //   return await router.push(
       //     createPaymentLink({
@@ -215,8 +215,8 @@ export const BookEventForm = ({ onCancel, onCallPayment, onSetModalData }: BookE
       // }
       if (error) {
         console.log("Error: ", data);
-        onSetModalData(data);
-        onCallPayment(true);
+        if (onSetModalData && data) onSetModalData(data);
+        if (onCallPayment) onCallPayment(true);
         return;
       }
 

@@ -1146,7 +1146,7 @@ async function handler(
             expertId: number;
             username: string;
             name: string;
-            price: number;
+            price: number[];
           };
         })
       | null = null;
@@ -1640,7 +1640,7 @@ async function handler(
         const timeTokens = await prisma.timeTokensWallet.findFirst({
           where: {
             ownerId: userId,
-            emitterId: eventType.userId,
+            emitterId: eventType.userId ? eventType.userId : undefined,
           },
           select: {
             id: true,
@@ -1648,9 +1648,14 @@ async function handler(
           },
         });
 
-        const expert = await prisma.user.findUnique({
+        const expert: {
+          id: number;
+          username: string | null;
+          name: string | null;
+          price: number[];
+        } | null = await prisma.user.findUnique({
           where: {
-            id: eventType.userId,
+            id: eventType.userId ? eventType.userId : undefined,
           },
           select: {
             id: true,
@@ -1659,18 +1664,20 @@ async function handler(
             price: true,
           },
         });
-        if (!timeTokens || timeTokens?.amount < eventType.length / 5)
-          return {
+        if (!timeTokens || timeTokens?.amount < eventType.length / 5) {
+          resultBooking = {
             error: "Not enough tokens",
             data: {
               amount: eventType.length / 5 - (timeTokens?.amount || 0),
-              expertId: expert.id,
-              username: expert.username,
-              name: expert.name,
-              price: expert.price,
+              expertId: expert?.id || -1,
+              username: expert?.username || "",
+              name: expert?.name || "",
+              price: expert?.price || [1],
             },
           };
-        else {
+
+          return resultBooking;
+        } else {
           await prisma.timeTokensWallet.update({
             where: {
               id: timeTokens.id,
@@ -1717,17 +1724,17 @@ async function handler(
           throw new HttpError({ statusCode: 400, message: "Missing payment app id" });
         }
 
-        // const payment = await handlePayment(
-        //   evt,
-        //   eventType,
-        //   eventTypePaymentAppCredential as IEventTypePaymentCredentialType,
-        //   booking,
-        //   bookerEmail
-        // );
+        const payment = await handlePayment(
+          evt,
+          eventType,
+          eventTypePaymentAppCredential as IEventTypePaymentCredentialType,
+          booking,
+          bookerEmail
+        );
 
         resultBooking = { ...foundBooking };
-        // resultBooking["message"] = "Payment required";
-        // resultBooking["paymentUid"] = payment?.uid;
+        resultBooking["message"] = "Payment required";
+        resultBooking["paymentUid"] = payment?.uid;
       } else {
         resultBooking = { ...foundBooking };
       }
@@ -1854,7 +1861,7 @@ async function handler(
           id: organizerUser.id,
         },
       },
-      destinationCalendar: evt.desUsertinationCalendar
+      destinationCalendar: evt.destinationCalendar
         ? {
             connect: { id: evt.destinationCalendar.id },
           }
@@ -2232,7 +2239,7 @@ async function handler(
     const timeTokens = await prisma.timeTokensWallet.findFirst({
       where: {
         ownerId: userId,
-        emitterId: eventType.userId,
+        emitterId: eventType.userId ? eventType.userId : undefined,
       },
       select: {
         id: true,
@@ -2240,9 +2247,14 @@ async function handler(
       },
     });
 
-    const expert = await prisma.user.findUnique({
+    const expert: {
+      id: number;
+      username: string | null;
+      name: string | null;
+      price: number[];
+    } | null = await prisma.user.findUnique({
       where: {
-        id: eventType.userId,
+        id: eventType.userId ? eventType.userId : undefined,
       },
       select: {
         id: true,
@@ -2251,18 +2263,19 @@ async function handler(
         price: true,
       },
     });
-    if (!timeTokens || timeTokens?.amount < eventType.length / 5)
+    if (!timeTokens || timeTokens?.amount < eventType.length / 5) {
       return {
+        ...booking,
         error: "Not enough tokens",
         data: {
           amount: eventType.length / 5 - (timeTokens?.amount || 0),
-          expertId: expert.id,
-          username: expert.username,
-          name: expert.name,
-          price: expert.price,
+          expertId: expert?.id || -1,
+          username: expert?.username || "",
+          name: expert?.name || "",
+          price: expert?.price || [1],
         },
       };
-    else {
+    } else {
       await prisma.timeTokensWallet.update({
         where: {
           id: timeTokens.id,
@@ -2274,6 +2287,7 @@ async function handler(
         },
       });
     }
+
     const credentialPaymentAppCategories = await prisma.credential.findMany({
       where: {
         ...(paymentAppData.credentialId ? { id: paymentAppData.credentialId } : { userId: organizerUser.id }),
