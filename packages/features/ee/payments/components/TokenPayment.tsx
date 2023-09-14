@@ -24,13 +24,16 @@ type Props = {
   bookingUid: string;
 };
 
-type States =
-  | { status: "idle" }
-  | { status: "processing" }
-  | { status: "error"; error: Error }
-  | { status: "ok" };
+type PaymentFormProps = {
+  amount: number;
+  expertId: number;
+  renderUrl?: string;
+  setModalVisible: (value: boolean) => void;
+};
 
-const PaymentForm = (props) => {
+type States = { status: "idle" } | { status: "processing" } | { status: "error" } | { status: "ok" };
+
+const PaymentForm = (props: PaymentFormProps) => {
   console.log("paragon payment---", props);
   const { t, i18n } = useLocale();
   const router = useRouter();
@@ -70,7 +73,7 @@ const PaymentForm = (props) => {
           }
           console.log("paragon herehere22----", props.expertId, props.amount);
 
-          await buyTokensMutation.mutate({ emitterId: props.expertId, amount: parseInt(props.amount) });
+          await buyTokensMutation.mutate({ emitterId: props.expertId, amount: props.amount });
           setState({ status: "ok" });
           if (props?.renderUrl) router.push(props.renderUrl);
           else props.setModalVisible(false);
@@ -130,7 +133,7 @@ const ELEMENT_STYLES_DARK: stripejs.Appearance = {
   },
 };
 
-export default function TokenPaymentComponent(props: Props) {
+export default function TokenPaymentComponent(props: PaymentFormProps) {
   const [clientSecret, setClientSecret] = useState("");
   useEffect(() => {
     // Create PaymentIntent as soon as the page loads

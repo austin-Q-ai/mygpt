@@ -1,10 +1,10 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiRequest, NextApiResponse } from "next";
 import nc from "next-connect";
 import Stripe from "stripe";
 
 const createSubscription = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2023-08-16" });
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2020-08-27" });
     const { customerId, priceId } = req.body;
 
     const subscription = await stripe.subscriptions.create({
@@ -33,7 +33,7 @@ const createSubscription = async (req: NextApiRequest, res: NextApiResponse) => 
 
 const cancelSubscription = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2023-08-16" });
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2020-08-27" });
     const { subscriptionId } = req.body;
 
     const deletedSubscription = await stripe.subscriptions.del(subscriptionId);

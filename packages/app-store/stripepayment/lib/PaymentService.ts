@@ -10,7 +10,6 @@ import type { CalendarEvent } from "@calcom/types/Calendar";
 import type { IAbstractPaymentService } from "@calcom/types/PaymentService";
 
 import { paymentOptionEnum } from "../zod";
-import { createPaymentLink } from "./client";
 import { retrieveOrCreateStripeCustomerByEmail } from "./customer";
 import type { StripeSetupIntentData, StripePaymentData } from "./server";
 
@@ -330,12 +329,12 @@ export class PaymentService implements IAbstractPaymentService {
     await sendAwaitingPaymentEmail({
       ...event,
       paymentInfo: {
-        link: createPaymentLink({
-          paymentUid: paymentData.uid,
-          name: booking.user?.name,
-          email: booking.user?.email,
-          date: booking.startTime.toISOString(),
-        }),
+        // link: createPaymentLink({
+        //   paymentUid: paymentData.uid,
+        //   name: booking.user?.name,
+        //   email: booking.user?.email,
+        //   date: booking.startTime.toISOString(),
+        // }),
         paymentOption: paymentData.paymentOption || "ON_BOOKING",
         amount: paymentData.amount,
         currency: paymentData.currency,

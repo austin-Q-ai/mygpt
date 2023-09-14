@@ -14,6 +14,7 @@ import { Dialog, DialogContent } from "@calcom/ui";
 
 import { AvailableTimeSlots } from "./components/AvailableTimeSlots";
 import { BookEventForm } from "./components/BookEventForm";
+import type { BookEventModalProps } from "./components/BookEventForm";
 import { BookFormAsModal } from "./components/BookEventForm/BookFormAsModal";
 import { EventMeta } from "./components/EventMeta";
 import { Header } from "./components/Header";
@@ -31,13 +32,6 @@ const PoweredBy = dynamic(() => import("@calcom/ee/components/PoweredBy"));
 const DatePicker = dynamic(() => import("./components/DatePicker").then((mod) => mod.DatePicker), {
   ssr: false,
 });
-
-type ModalPropsType = {
-  expertId: number;
-  username: string;
-  name: string;
-  price: number;
-};
 
 const BookerComponent = ({
   username,
@@ -64,7 +58,13 @@ const BookerComponent = ({
   const hasDarkBackground = isEmbed && embedType !== "inline";
   const embedUiConfig = useEmbedUiConfig();
   const [visible, setVisible] = useState(false);
-  const [modalProps, setModalProps] = useState<ModalPropsType>({});
+  const [modalProps, setModalProps] = useState<BookEventModalProps>({
+    expertId: -1,
+    username: "user",
+    name: "name",
+    amount: 0,
+    price: [1],
+  });
   // In Embed we give preference to embed configuration for the layout.If that's not set, we use the App configuration for the event layout
   // But if it's mobile view, there is only one layout supported which is 'mobile'
   const layout = isEmbed ? (isMobile ? "mobile" : validateLayout(embedUiConfig.layout) || _layout) : _layout;
@@ -222,7 +222,7 @@ const BookerComponent = ({
                   }
                 }}
                 onCallPayment={(value: boolean) => setVisible(value)}
-                onSetModalData={(data: any) => setModalProps(data)}
+                onSetModalData={(data: BookEventModalProps) => setModalProps(data)}
               />
             </BookerSection>
 

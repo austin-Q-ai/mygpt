@@ -1,7 +1,8 @@
 import { MeiliSearch } from "meilisearch";
-import React, { useState, useEffect } from "react";
-import { components } from "react-select";
 import { useRouter } from "next/router";
+import React, { useState } from "react";
+import { components } from "react-select";
+
 import { createPaymentLink } from "@calcom/app-store/stripepayment/lib/client";
 import Shell from "@calcom/features/shell/Shell";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
@@ -240,7 +241,7 @@ function TimeTokensWallet() {
                     e.preventDefault();
                     router.push(
                       createPaymentLink({
-                        expertid: buyExpertID,
+                        expertid: buyExpertID.toString(),
                         amount: buyTokensAmount,
                         absolute: false,
                       })
