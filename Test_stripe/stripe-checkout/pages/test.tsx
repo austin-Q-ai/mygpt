@@ -1,9 +1,7 @@
-import { loadStripe, StripeError } from "@stripe/stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
-import { GetServerSideProps } from "next";
-import { getSession, providers, csrfToken as getCsrfToken } from "next-auth/client";
 import { useRouter } from "next/router";
-import React, { ChangeEvent, useState } from "react";
+import React, { useState } from "react";
 
 export default function Home() {
   const router = useRouter();

@@ -31,6 +31,7 @@ export class PaymentService implements IAbstractPaymentService {
 
   constructor(credentials: { key: Prisma.JsonValue }) {
     // parse credentials key
+    console.log("process.env.STRIPE_PRIVATE_KEY", process.env.STRIPE_PRIVATE_KEY);
     this.credentials = stripeCredentialKeysSchema.parse(credentials.key);
     this.stripe = new Stripe(process.env.STRIPE_PRIVATE_KEY || "", {
       apiVersion: "2020-08-27",
