@@ -21,14 +21,16 @@ function CreateBot() {
   const { t } = useLocale();
   const { data: user, isLoading } = trpc.viewer.me.useQuery();
   const router = useRouter();
-  const [image, setImage] = useState("");
-  const [voice, setVoice] = useState("");
-  const [botname, setBotName] = useState("");
-  const [username, setUserName] = useState("");
-  const [token, setToken] = useState("");
+  const [image, setImage] = useState<string>("");
+  const [voice, setVoice] = useState<string>("");
+  const [botname, setBotName] = useState<string>("");
+  const [username, setUserName] = useState<string>("");
+  const [token, setToken] = useState<string>("");
+
   useEffect(() => {
     console.log(voice);
   }, [voice]);
+
   const handleSubmit = async () => {
     // Perform API call using image, voice, and bot data
     const formData = new FormData();
@@ -37,6 +39,7 @@ function CreateBot() {
     formData.append("botname", botname);
     formData.append("username", username);
     formData.append("token", token);
+
     try {
       const response = await fetch("https://your-api-endpoint", {
         method: "POST",
@@ -58,8 +61,8 @@ function CreateBot() {
               <ImageUploader setImage={setImage} />
               <VoiceUploader setVoice={setVoice} />
               <BotDataInput setBotName={setBotName} setUserName={setUserName} setToken={setToken} />
-              <div className="flex items-center justify-center mt-4">
-              <Button onClick={handleSubmit}>Submit</Button>
+              <div className="mt-4 flex items-center justify-center">
+                <Button onClick={handleSubmit}>Submit</Button>
               </div>
             </>
           );

@@ -3,16 +3,24 @@ import React, { useState, useEffect } from "react";
 import Countdown from "react-countdown";
 
 const Mp3Recorder = new MicRecorder({ bitRate: 128 });
-const VoiceUploader = (props) => {
-  const [isRecording, setIsRecording] = useState(false);
-  const [blobURL, setBlobURL] = useState("");
-  const [isBlocked, setIsBlocked] = useState(false);
 
-  const onData = () => {};
+interface VoiceUploaderProps {
+  setVoice: (voiceURL: string) => void;
+}
 
-  const onStop = (blob) => {
-    setAudioDetails({ blobURL: URL.createObjectURL(blob.blob) });
-  };
+const VoiceUploader: React.FC<VoiceUploaderProps> = ({ setVoice }) => {
+  const [isRecording, setIsRecording] = useState<boolean>(false);
+  const [blobURL, setBlobURL] = useState<string>("");
+  const [isBlocked, setIsBlocked] = useState<boolean>(false);
+
+  const sampleText = `
+    Hi, you’ve reached [your name]. Thanks for calling. I can’t answer your call at the moment, however if you leave your 
+    name, number and message, I’ll get back to you as soon I can.
+
+    There’s nothing wrong with this classic style of voicemail greeting. It’s short, sharp, and to the point. While it might 
+    seem rushed, it states all necessary information the caller needs to include and avoids any irrelevant details the caller 
+    doesn’t need at that point in time.
+  `;
 
   const startRecording = () => {
     if (isBlocked) {
@@ -22,49 +30,39 @@ const VoiceUploader = (props) => {
         .then(() => {
           setIsRecording(true);
         })
-        .catch((e) => console.error(e));
+        .catch((e: any) => console.error(e));
     }
   };
 
   const stopRecording = () => {
     Mp3Recorder.stop()
       .getMp3()
-      .then(([buffer, blob]) => {
+      .then(([, blob]: [unknown, Blob]) => {
         const blobURL = URL.createObjectURL(blob);
         setBlobURL(blobURL);
-        props.setVoice(blobURL);
+        setVoice(blobURL);
         setIsRecording(false);
       })
-      .catch((e) => console.log(e));
+      .catch((e: any) => console.log(e));
   };
 
-  const onSave = (blob) => {
-    console.log("onSave", blob);
-  };
-
-  const onSaveFailure = (error) => {
-    console.error("onSaveFailure", error);
-  };
   useEffect(() => {
-    navigator.getUserMedia(
-      { audio: true },
-      () => {
+    navigator.mediaDevices
+      .getUserMedia({ audio: true })
+      .then(() => {
         console.log("Permission Granted");
         setIsBlocked(false);
-      },
-      () => {
+      })
+      .catch(() => {
         console.log("Permission Denied");
         setIsBlocked(true);
-      }
-    );
+      });
   }, []);
-  const sampleText =
-    "In today's fast-paced world, technology has become an integral part of our lives. From smartphones to social media platforms, we are constantly connected and reliant on digital tools. The IT industry plays a pivotal role in shaping this digital landscape, driving innovation and enabling seamless communication. From software development to network infrastructure, IT professionals tackle complex challenges to keep businesses running efficiently. With a focus on cybersecurity and data management, their expertise ensures the integrity and safety of valuable information. In an increasingly interconnected world, the field of IT continues to evolve and shape the way we live and work.";
 
   return (
-    <div className="flex flex-col items-center justify-center rounded-[10px] p-8">
-      <h1 className="mb-8 text-center text-3xl font-semibold">Voice Recorder</h1>
-      <p className="mb-8 text-justify text-lg">{sampleText}</p>
+    <div className="flex flex-col items-center justify-center rounded-[10px] border-2 border-dashed border-white p-8">
+      <h1 className="mb-8 text-center text-2xl font-semibold">Voice Recorder</h1>
+      <p className="mb-8 text-justify text-sm">{sampleText}</p>
       {isRecording ? (
         <Countdown
           date={Date.now() + 30000}
@@ -80,7 +78,7 @@ const VoiceUploader = (props) => {
       )}
       <div className="flex items-center justify-center">
         <button
-          className={`mt-8 w-full rounded-sm px-8 py-4 text-lg font-semibold shadow-lg ${
+          className={`mt-8 w-full rounded-sm px-8 py-4 text-sm font-semibold shadow-lg ${
             isRecording ? "bg-red-500" : "bg-blue-500"
           }`}
           onClick={isRecording ? stopRecording : startRecording}>

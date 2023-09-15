@@ -10,26 +10,26 @@ function SkeletonLoader() {
         <SkeletonText className="w-[60%]" />
         <SkeletonText className="w-[20%]" />
       </div>
-      <div className="mb-8 flex flex-col w-full items-center gap-4 px-1 sm:mb-12 sm:px-4 lg:w-2/3">
-        <div className="w-full flex justify-between">
-            <SkeletonText className="w-[10%]" />
-            <SkeletonText className="w-[70%]" />
-            <SkeletonText className="w-[15%]" />
+      <div className="mb-8 flex w-full flex-col items-center gap-4 px-1 sm:mb-12 sm:px-4 lg:w-2/3">
+        <div className="flex w-full justify-between">
+          <SkeletonText className="w-[10%]" />
+          <SkeletonText className="w-[70%]" />
+          <SkeletonText className="w-[15%]" />
         </div>
-        <div className="w-full flex justify-between">
-            <Avatar alt="SkeletonAvatar" size="sm" imageSrc="" />
-            <SkeletonText className="w-[70%]" />
-            <SkeletonText className="w-[20%]" />
+        <div className="flex w-full justify-between">
+          <Avatar alt="SkeletonAvatar" size="sm" imageSrc="" />
+          <SkeletonText className="w-[70%]" />
+          <SkeletonText className="w-[20%]" />
         </div>
-        <div className="w-full flex justify-between">
-            <Avatar alt="SkeletonAvatar" size="sm" imageSrc="" />
-            <SkeletonText className="w-[70%]" />
-            <SkeletonText className="w-[20%]" />
+        <div className="flex w-full justify-between">
+          <Avatar alt="SkeletonAvatar" size="sm" imageSrc="" />
+          <SkeletonText className="w-[70%]" />
+          <SkeletonText className="w-[20%]" />
         </div>
-        <div className="w-full flex justify-between">
-            <Avatar alt="SkeletonAvatar" size="sm" imageSrc="" />
-            <SkeletonText className="w-[70%]" />
-            <SkeletonText className="w-[20%]" />
+        <div className="flex w-full justify-between">
+          <Avatar alt="SkeletonAvatar" size="sm" imageSrc="" />
+          <SkeletonText className="w-[70%]" />
+          <SkeletonText className="w-[20%]" />
         </div>
       </div>
     </SkeletonContainer>

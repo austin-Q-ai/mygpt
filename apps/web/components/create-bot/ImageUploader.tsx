@@ -1,42 +1,50 @@
+import type { ChangeEvent, DragEvent } from "react";
 import React, { useState, useRef, useEffect } from "react";
 import Webcam from "react-webcam";
 
-import { Button,Label } from "@calcom/ui";
+import { Button, Label } from "@calcom/ui";
 import { Edit2 } from "@calcom/ui/components/icon";
 
-function handleDragOver(e) {
+interface ImageUploaderProps {
+  setImage: (image: string) => void;
+}
+
+function handleDragOver(e: DragEvent) {
   e.preventDefault();
 }
 
-function isImageFile(file) {
+function isImageFile(file?: File) {
   return file && file["type"].split("/")[0] === "image";
 }
 
-function ImageUploader(props) {
+const ImageUploader: React.FC<ImageUploaderProps> = (props) => {
   const [image, setImage] = useState("");
   const [showSelection, setShowSelection] = useState(false);
   const [showWebcam, setShowWebcam] = useState(false);
-  const webcamRef = useRef(null);
+  const webcamRef = useRef<Webcam | null>(null);
 
-  const onImageUpload = (event) => {
-    if (isImageFile(event.target.files[0])) {
+  const onImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && isImageFile(event.target.files[0])) {
       setImage(URL.createObjectURL(event.target.files[0]));
     }
   };
 
-  const onCapture = (event) => {
+  const onCapture = (event: React.MouseEvent) => {
     event.preventDefault();
-    setImage(webcamRef.current.getScreenshot());
-    setShowWebcam(false);
-    setShowSelection(false);
+    if (webcamRef.current) {
+      setImage(webcamRef.current.getScreenshot() as string);
+      setShowWebcam(false);
+      setShowSelection(false);
+    }
   };
 
-  const onDrop = (event) => {
+  const onDrop = (event: DragEvent) => {
     event.preventDefault();
-    if (isImageFile(event.dataTransfer.files[0])) {
+    if (event.dataTransfer.files && isImageFile(event.dataTransfer.files[0])) {
       setImage(URL.createObjectURL(event.dataTransfer.files[0]));
     }
   };
+
   useEffect(() => {
     props.setImage(image);
   }, [image]);
@@ -45,7 +53,6 @@ function ImageUploader(props) {
     <div className="flex flex-col items-center p-10">
       <div
         onClick={() => setShowSelection(true)}
-        htmlFor="file-upload"
         className="show-edit relative h-[100px] w-[100px] cursor-pointer rounded-full bg-zinc-400 hover:opacity-80 sm:h-[80px] sm:w-[80px] md:h-[100px] md:w-[100px] lg:h-[110px] lg:w-[110px]">
         <img
           className="h-[100px] w-[100px] rounded-full sm:h-[80px] sm:w-[80px] md:h-[100px] md:w-[100px] lg:h-[110px] lg:w-[110px]"
@@ -60,19 +67,21 @@ function ImageUploader(props) {
         <div className="fixed left-0 top-0 flex h-full w-full items-center justify-center bg-black bg-opacity-50">
           <Label className="m-4 rounded-md bg-gray-200 p-10 shadow-xl">
             <div
-  onDrop={onDrop}
-  onDragOver={handleDragOver}
-  className="mt-5 flex h-60 w-60 items-center justify-center border-2 border-dashed border-gray-400">
+              onDrop={onDrop}
+              onDragOver={handleDragOver}
+              className="mt-5 flex h-60 w-60 items-center justify-center border-2 border-dashed border-gray-400">
+              <input
+                id="file-upload"
+                type="file"
+                accept="image/*"
+                onChange={onImageUpload}
+                className="hidden"
+              />
 
-  <input id="file-upload" type="file" accept="image/*" onChange={onImageUpload} className="hidden" />
-
-  <label htmlFor="file-upload">
-    {image ? 
-        <img src={image} alt="Image" className="h-56 w-56" /> 
-        : "Drop image or click"}
-  </label>
-
-</div>
+              <label htmlFor="file-upload">
+                {image ? <img src={image} alt="Image" className="h-56 w-56" /> : "Drop image or click"}
+              </label>
+            </div>
             <Button
               onClick={() => setShowWebcam(true)}
               className="mt-5 border-[1px] border-gray-400 hover:border-gray-500">
@@ -109,6 +118,6 @@ function ImageUploader(props) {
       )}
     </div>
   );
-}
+};
 
 export default ImageUploader;
