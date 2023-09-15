@@ -43,7 +43,7 @@ function TimeTokensWallet() {
 
   const meiliClient = new MeiliSearch({
     host: `https://${process.env.MEILISEARCH_HOST}`,
-    apiKey: process.env.SEARCH_API_KEY,
+    apiKey: process.env.NEXT_PUBLIC_SEARCH_API_KEY,
   });
 
   const columns: string[] = ["Expert", "Tokens amount(expert)", "Tokens amount(me)", "Token price", ""];

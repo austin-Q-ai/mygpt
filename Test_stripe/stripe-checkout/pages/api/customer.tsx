@@ -4,7 +4,7 @@ import Stripe from "stripe";
 
 const createCustomer = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2020-08-27" });
+    const stripe = new Stripe(process.env.STRIPE_PRIVATE_KEY!, { apiVersion: "2020-08-27" });
     const { email, name } = req.body;
     const customer = await stripe.customers.create({
       email,
