@@ -77,6 +77,7 @@ import {
   Users,
   Zap,
   Wallet,
+  Bot,
   User as UserIcon,
 } from "@calcom/ui/components/icon";
 
@@ -585,6 +586,11 @@ const navigation: NavigationItemType[] = [
     name: "insights",
     href: "/insights",
     icon: BarChart,
+  },
+  {
+    name: "Create Bot",
+    href: "/create-bot",
+    icon: Bot,
   },
 ];
 

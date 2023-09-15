@@ -64,7 +64,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = (props) => {
         </div>
       </div>
       {showSelection && (
-        <div className="fixed left-0 top-0 flex h-full w-full items-center justify-center bg-black bg-opacity-50">
+        <div className="fixed left-0 top-0 z-10 flex h-full w-full items-center justify-center bg-black bg-opacity-50">
           <Label className="m-4 rounded-md bg-gray-200 p-10 shadow-xl">
             <div
               onDrop={onDrop}
@@ -96,7 +96,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = (props) => {
         </div>
       )}
       {showWebcam && (
-        <div className="fixed left-0 top-0 flex h-full w-full items-center justify-center bg-black bg-opacity-50">
+        <div className="fixed left-0 top-0 z-20 flex h-full w-full items-center justify-center bg-black bg-opacity-50">
           <div className="rounded-md bg-gray-200 p-10 shadow-xl">
             <Webcam
               audio={false}
