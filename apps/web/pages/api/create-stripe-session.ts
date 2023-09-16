@@ -9,6 +9,8 @@ interface Item {
   price: number;
 }
 
+console.log("process.env.STRIPE_PRIVATE_KEY", process.env.STRIPE_PRIVATE_KEY);
+
 const stripe = new Stripe(process.env.STRIPE_PRIVATE_KEY!, { apiVersion: "2020-08-27" });
 export default async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
   const { item }: { item: Item } = req.body;
