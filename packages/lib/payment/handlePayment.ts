@@ -23,7 +23,8 @@ const handlePayment = async (
     startTime: { toISOString: () => string };
     uid: string;
   },
-  bookerEmail: string
+  bookerEmail: string,
+  userId: number
 ) => {
   const paymentApp = (await appStore[
     paymentAppCredentials?.app?.dirName as keyof typeof appStore
@@ -59,6 +60,7 @@ const handlePayment = async (
       },
       booking.id,
       bookerEmail,
+      userId,
       paymentOption
     );
   }

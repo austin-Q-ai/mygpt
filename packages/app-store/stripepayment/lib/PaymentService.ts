@@ -43,6 +43,7 @@ export class PaymentService implements IAbstractPaymentService {
     payment: Pick<Prisma.PaymentUncheckedCreateInput, "amount" | "currency">,
     bookingId: Booking["id"],
     bookerEmail: string,
+    userId: number,
     paymentOption: PaymentOption
   ) {
     try {
@@ -50,6 +51,61 @@ export class PaymentService implements IAbstractPaymentService {
       if (paymentOptionEnum.parse(paymentOption) !== "ON_BOOKING") {
         throw new Error("Payment option is not compatible with create method");
       }
+
+      // Check that user has enough timetokens for booking
+      const booking = await prisma?.booking.findFirst({
+        where: {
+          id: bookingId,
+        },
+        select: {
+          user: {
+            select: {
+              id: true,
+              price: true,
+            },
+          },
+          eventType: {
+            select: {
+              length: true,
+            },
+          },
+        },
+      });
+
+      console.log("==== 1 ====", booking);
+
+      const timetokens = await prisma?.timeTokensWallet.findFirst({
+        where: {
+          emitterId: booking?.user.id,
+          ownerId: userId,
+        },
+        select: {
+          id: true,
+          amount: true,
+        },
+      });
+      console.log("==== 2 ====", timetokens);
+
+      if (timetokens?.amount > booking?.eventType.length / 5) {
+        // user has enough timetokens
+        await prisma?.timeTokensWallet.update({
+          where: {
+            id: timetokens?.id,
+          },
+          data: {
+            amount: {
+              decrement: booking?.eventType.length / 5,
+            },
+          },
+        });
+
+        payment.amount = 0;
+      }
+
+      // user doesn't have enough timetokens
+      const deltaTokens = booking?.eventType.length / 5 - timetokens?.amount;
+      const price = booking?.user.price[booking?.user.price.length - 1] * deltaTokens;
+      payment.amount = price * 100;
 
       // Load stripe keys
       const stripeAppKeys = await prisma?.app.findFirst({
