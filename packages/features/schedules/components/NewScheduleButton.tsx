@@ -7,7 +7,6 @@ import { trpc } from "@calcom/trpc/react";
 import {
   Button,
   Dialog,
-  DialogClose,
   DialogContent,
   DialogFooter,
   DialogTrigger,
@@ -15,7 +14,7 @@ import {
   InputField,
   showToast,
 } from "@calcom/ui";
-import { Plus } from "@calcom/ui/components/icon";
+import { Plus, X } from "@calcom/ui/components/icon";
 
 export function NewScheduleButton({
   name = "new-schedule",
@@ -65,12 +64,11 @@ export function NewScheduleButton({
   return (
     <Dialog name={name} clearQueryParamsOnClose={["copy-schedule-id"]}>
       <DialogTrigger asChild>
-        <Button variant="fab" data-testid={name} StartIcon={Plus}>
-          {t("new")}
-        </Button>
+        <Button rounded data-testid={name} StartIcon={Plus} variant="icon" />
       </DialogTrigger>
-      <DialogContent title={t("add_new_schedule")}>
+      <DialogContent type="creation" title={t("add_new_schedule")} Icon={X} className="py-4">
         <Form
+          className="mb-2 rounded-md border border-gray-100 p-8  dark:border-neutral-800"
           form={form}
           handleSubmit={(values) => {
             createMutation.mutate(values);
@@ -84,7 +82,6 @@ export function NewScheduleButton({
             {...register("name")}
           />
           <DialogFooter>
-            <DialogClose />
             <Button type="submit" loading={createMutation.isLoading}>
               {t("continue")}
             </Button>
