@@ -302,7 +302,7 @@ model Team {
   /// @zod.custom(imports.teamMetadataSchema)
   metadata            Json?
   theme               String?
-  brandColor          String                  @default("#292929")
+  brandColor          String                  @default("#6d278e")
   darkBrandColor      String                  @default("#fafafa")
   verifiedNumbers     VerifiedNumber[]
   parentId            Int?
