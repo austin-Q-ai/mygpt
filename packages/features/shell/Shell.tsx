@@ -950,14 +950,14 @@ export function ShellMain(props: LayoutProps) {
       {(props.heading || !!props.backPath) && (
         <div
           className={classNames(
-            "flex items-center md:mb-6 md:mt-0",
+            "mx-8 flex items-center md:mb-6 md:mt-0",
             props.smallHeading ? "lg:mb-7" : "lg:mb-8",
             props.hideHeadingOnMobile ? "mb-0" : "mb-6"
           )}>
           {!!props.backPath && (
             <Button
               variant="icon"
-              size="sm"
+              size="lg"
               color="minimal"
               onClick={() =>
                 typeof props.backPath === "string" ? router.push(props.backPath as string) : router.back()

@@ -143,7 +143,7 @@ const Schedule = <
   const { i18n } = useLocale();
 
   return (
-    <div className="p-4">
+    <div className="px-8 py-6">
       {/* First iterate for each day */}
       {weekdayNames(i18n.language, weekStart, "long").map((weekday, num) => {
         const weekdayIndex = (num + weekStart) % 7;

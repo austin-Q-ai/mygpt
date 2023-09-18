@@ -34,7 +34,7 @@ import {
   ConfirmationDialogContent,
   VerticalDivider,
 } from "@calcom/ui";
-import { Info, Plus, Trash, MoreHorizontal } from "@calcom/ui/components/icon";
+import { Plus, Trash, MoreHorizontal } from "@calcom/ui/components/icon";
 
 import PageWrapper from "@components/PageWrapper";
 import { SelectSkeletonLoader } from "@components/availability/SkeletonLoader";
@@ -60,10 +60,9 @@ const DateOverride = ({ workingHours }: { workingHours: WorkingHours[] }) => {
   return (
     <div className="p-6">
       <h3 className="text-emphasis font-medium leading-6">
-        {t("date_overrides")}{" "}
         <Tooltip content={t("date_overrides_info")}>
           <span className="inline-block align-middle">
-            <Info className="h-4 w-4" />
+            {t("date_overrides")} {/* <Info className="h-4 w-4" /> */}
           </span>
         </Tooltip>
       </h3>
@@ -187,7 +186,7 @@ export default function Availability() {
         )
       }
       CTA={
-        <div className="flex items-center justify-end">
+        <div className="flex w-[70%] items-center justify-end px-6">
           <div className="sm:hover:bg-muted hidden items-center rounded-md px-2 sm:flex">
             <Skeleton
               as={Label}
@@ -206,15 +205,16 @@ export default function Availability() {
             />
           </div>
 
-          <VerticalDivider className="hidden sm:inline" />
+          <VerticalDivider className="mx-1 hidden sm:inline" />
           <Dialog>
             <DialogTrigger asChild>
               <Button
                 StartIcon={Trash}
                 variant="icon"
+                size="lg"
                 color="destructive"
                 aria-label={t("delete")}
-                className="hidden sm:inline"
+                className="p-none mr-1 hidden border-0 sm:inline"
                 disabled={schedule?.isLastSchedule}
                 tooltip={schedule?.isLastSchedule ? t("requires_at_least_one_schedule") : t("delete")}
               />
@@ -231,7 +231,7 @@ export default function Availability() {
               {t("delete_schedule_description")}
             </ConfirmationDialogContent>
           </Dialog>
-          <VerticalDivider className="hidden sm:inline" />
+          <VerticalDivider className="mx-1 hidden sm:inline" />
           <Dropdown>
             <DropdownMenuTrigger asChild>
               <Button className="sm:hidden" StartIcon={MoreHorizontal} variant="icon" color="secondary" />
@@ -283,7 +283,7 @@ export default function Availability() {
           </Button>
         </div>
       }>
-      <div className="mt-4 w-full md:mt-0">
+      <div className="mx-8 w-full pt-10 md:mt-0">
         <Form
           form={form}
           id="availability-form"
