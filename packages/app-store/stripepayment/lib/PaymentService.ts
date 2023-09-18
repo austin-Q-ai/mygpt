@@ -38,6 +38,60 @@ export class PaymentService implements IAbstractPaymentService {
     });
   }
 
+  /** This method is for creating charges at the time of buying timetokens */
+  async createBuyPayment(walletId: number) {
+    const wallet = await prisma?.timeTokensWallet.findFirst({
+      where: {
+        id: walletId,
+      },
+      select: {
+        emitter: {
+          select: {
+            price: true,
+          },
+        },
+        owner: {
+          select: {
+            email: true,
+          },
+        },
+        amount: true,
+      },
+    });
+
+    const amount = wallet?.emitter.price * wallet?.owner.amount;
+
+    // Load stripe keys
+    const stripeAppKeys = await prisma?.app.findFirst({
+      select: {
+        keys: true,
+      },
+      where: {
+        slug: "stripe",
+      },
+    });
+
+    // Parse keys with zod
+    const { payment_fee_fixed, payment_fee_percentage } = stripeAppKeysSchema.parse(stripeAppKeys?.keys);
+    const paymentFee = Math.round(amount * payment_fee_percentage + payment_fee_fixed);
+
+    const customer = await retrieveOrCreateStripeCustomerByEmail(
+      wallet?.owner.email,
+      this.credentials.stripe_user_id
+    );
+
+    const params: Stripe.PaymentIntentCreateParams = {
+      amount: amount,
+      currency: this.credentials.default_currency,
+      payment_method_types: ["card"],
+      customer: customer.id,
+    };
+
+    const paymentIntent = await this.stripe.paymentIntents.create(params, {
+      stripeAccount: this.credentials.stripe_user_id,
+    });
+  }
+
   /* This method is for creating charges at the time of booking */
   async create(
     payment: Pick<Prisma.PaymentUncheckedCreateInput, "amount" | "currency">,
@@ -126,8 +180,11 @@ export class PaymentService implements IAbstractPaymentService {
         this.credentials.stripe_user_id
       );
 
+      console.log(customer.id, paymentFee, "=======");
+
       const params: Stripe.PaymentIntentCreateParams = {
         amount: payment.amount,
+        application_fee_amount: payment.amount * 0.1,
         currency: this.credentials.default_currency,
         payment_method_types: ["card"],
         customer: customer.id,
@@ -158,7 +215,7 @@ export class PaymentService implements IAbstractPaymentService {
             stripe_publishable_key: this.credentials.stripe_publishable_key,
             stripeAccount: this.credentials.stripe_user_id,
           }) as unknown as Prisma.InputJsonValue,
-          fee: paymentFee,
+          fee: 0,
           refunded: false,
           success: false,
           paymentOption: paymentOption || "ON_BOOKING",

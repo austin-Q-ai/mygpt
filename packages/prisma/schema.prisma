@@ -464,6 +464,8 @@ model TimeTokensWallet {
   emitter   User @relation("emitter_relation", fields: [emitterId], references: [id], onDelete: Cascade)
   emitterId Int
   amount    Int
+  paid      Boolean @default(false)
+  externalId  String @default("")
 }
 
 model Availability {

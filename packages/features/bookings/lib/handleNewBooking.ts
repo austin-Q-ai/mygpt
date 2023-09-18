@@ -678,6 +678,7 @@ async function handler(
     isNotAnApiCall: false,
   }
 ) {
+  console.log(req, "========================");
   const { userId } = req;
 
   const userIp = getIP(req);
