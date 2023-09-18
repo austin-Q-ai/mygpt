@@ -54,11 +54,17 @@ const ImageUploader: React.FC<ImageUploaderProps> = (props) => {
       <div
         onClick={() => setShowSelection(true)}
         className="show-edit relative h-[100px] w-[100px] cursor-pointer rounded-full bg-zinc-400 hover:opacity-80 sm:h-[80px] sm:w-[80px] md:h-[100px] md:w-[100px] lg:h-[110px] lg:w-[110px]">
-        <img
-          className="h-[100px] w-[100px] rounded-full sm:h-[80px] sm:w-[80px] md:h-[100px] md:w-[100px] lg:h-[110px] lg:w-[110px]"
-          src={image}
-          alt="avatar"
-        />
+        {image.length ? (
+          <img
+            className="h-[100px] w-[100px] rounded-full sm:h-[80px] sm:w-[80px] md:h-[100px] md:w-[100px] lg:h-[110px] lg:w-[110px]"
+            src={image}
+            alt="avatar"
+          />
+        ) : (
+          <span className=" h-[100px] w-[100px] rounded-full sm:h-[80px] sm:w-[80px] md:h-[100px] md:w-[100px] lg:h-[110px] lg:w-[110px]">
+            <p className="flex justify-center pt-4">Avatar</p>
+          </span>
+        )}
         <div className="edit-btn absolute top-0 flex h-full w-full items-center justify-center rounded-full bg-transparent">
           <Edit2 className="m-auto" />
         </div>
@@ -69,7 +75,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = (props) => {
             <div
               onDrop={onDrop}
               onDragOver={handleDragOver}
-              className="mt-5 flex h-60 w-60 items-center justify-center border-2 border-dashed border-gray-400">
+              className="mt-5 flex h-60 w-60 cursor-pointer items-center justify-center border-2 border-dashed border-gray-400">
               <input
                 id="file-upload"
                 type="file"
@@ -77,8 +83,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = (props) => {
                 onChange={onImageUpload}
                 className="hidden"
               />
-
-              <label htmlFor="file-upload">
+              <label htmlFor="file-upload " className=" text-slate-600">
                 {image ? <img src={image} alt="Image" className="h-56 w-56" /> : "Drop image or click"}
               </label>
             </div>

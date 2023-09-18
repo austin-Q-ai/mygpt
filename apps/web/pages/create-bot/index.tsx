@@ -11,8 +11,8 @@ import { withQuery } from "@lib/QueryCell";
 import PageWrapper from "@components/PageWrapper";
 import BotDataInput from "@components/create-bot/BotDataInput";
 import ImageUploader from "@components/create-bot/ImageUploader";
+import SkeletonLoader from "@components/create-bot/SkeletonLoader";
 import VoiceUploader from "@components/create-bot/VoiceUploader";
-import SkeletonLoader from "@components/timetokens-wallet/SkeletonLoader";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const WithQuery = withQuery(trpc.viewer.timetokenswallet.getAddedExperts as any);
