@@ -868,7 +868,7 @@ const EventTypesPage = () => {
   return (
     <div>
       <HeadSeo
-        title="Event Types"
+        title="Events Dashboard"
         description="Create events to share for people to book on your calendar."
       />
       <Shell
