@@ -19,6 +19,40 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
   const ssr = await ssrInit(context);
 
   const { uid } = querySchema.parse(context.query);
+
+  const testPayment = await prisma.payment.findFirst({
+    where: {
+      uid,
+    },
+    select: {
+      data: true,
+      success: true,
+      uid: true,
+      refunded: true,
+      bookingId: true,
+      walletId: true,
+      wallet: {
+        emitter: {
+          username: true,
+          price: true,
+        },
+        amount: true,
+      },
+      appId: true,
+      amount: true,
+      currency: true,
+    },
+  });
+
+  if (testPayment && testPayment.walletId) {
+    return {
+      props: {
+        trpcState: ssr.dehydrate(),
+        payment: testPayment,
+      },
+    };
+  }
+
   const rawPayment = await prisma.payment.findFirst({
     where: {
       uid,

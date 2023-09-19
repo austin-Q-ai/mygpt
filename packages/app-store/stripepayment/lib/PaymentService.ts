@@ -40,56 +40,96 @@ export class PaymentService implements IAbstractPaymentService {
 
   /** This method is for creating charges at the time of buying timetokens */
   async createBuyPayment(walletId: number) {
-    const wallet = await prisma?.timeTokensWallet.findFirst({
-      where: {
-        id: walletId,
-      },
-      select: {
-        emitter: {
-          select: {
-            price: true,
-          },
+    try {
+      const wallet = await prisma?.timeTokensTransaction.findFirst({
+        where: {
+          id: walletId,
         },
-        owner: {
-          select: {
-            email: true,
+        select: {
+          emitter: {
+            select: {
+              price: true,
+            },
           },
+          owner: {
+            select: {
+              email: true,
+            },
+          },
+          amount: true,
         },
-        amount: true,
-      },
-    });
+      });
 
-    const amount = wallet?.emitter.price * wallet?.owner.amount;
+      if (!wallet) {
+        throw new Error("TimeTokenTransaction does not exist!");
+      }
 
-    // Load stripe keys
-    const stripeAppKeys = await prisma?.app.findFirst({
-      select: {
-        keys: true,
-      },
-      where: {
-        slug: "stripe",
-      },
-    });
+      const amount = wallet?.emitter.price * wallet?.owner.amount;
 
-    // Parse keys with zod
-    const { payment_fee_fixed, payment_fee_percentage } = stripeAppKeysSchema.parse(stripeAppKeys?.keys);
-    const paymentFee = Math.round(amount * payment_fee_percentage + payment_fee_fixed);
+      // Load stripe keys
+      const stripeAppKeys = await prisma?.app.findFirst({
+        select: {
+          keys: true,
+        },
+        where: {
+          slug: "stripe",
+        },
+      });
 
-    const customer = await retrieveOrCreateStripeCustomerByEmail(
-      wallet?.owner.email,
-      this.credentials.stripe_user_id
-    );
+      // Parse keys with zod
+      const { payment_fee_fixed, payment_fee_percentage } = stripeAppKeysSchema.parse(stripeAppKeys?.keys);
+      const paymentFee = Math.round(amount * payment_fee_percentage + payment_fee_fixed);
 
-    const params: Stripe.PaymentIntentCreateParams = {
-      amount: amount,
-      currency: this.credentials.default_currency,
-      payment_method_types: ["card"],
-      customer: customer.id,
-    };
+      const customer = await retrieveOrCreateStripeCustomerByEmail(
+        wallet?.owner.email,
+        this.credentials.stripe_user_id
+      );
 
-    const paymentIntent = await this.stripe.paymentIntents.create(params, {
-      stripeAccount: this.credentials.stripe_user_id,
-    });
+      const params: Stripe.PaymentIntentCreateParams = {
+        amount: amount,
+        currency: this.credentials.default_currency,
+        payment_method_types: ["card"],
+        customer: customer.id,
+      };
+
+      const paymentIntent = await this.stripe.paymentIntents.create(params, {
+        stripeAccount: this.credentials.stripe_user_id,
+      });
+
+      const paymentData = await prisma?.payment.create({
+        data: {
+          uid: uuidv4(),
+          app: {
+            connect: {
+              slug: "stripe",
+            },
+          },
+          wallet: {
+            connect: {
+              id: walletId,
+            },
+          },
+          amount: amount,
+          currency: this.credentials.default_currency,
+          externalId: paymentIntent.id,
+
+          data: Object.assign({}, paymentIntent, {
+            stripe_publishable_key: this.credentials.stripe_publishable_key,
+            stripeAccount: this.credentials.stripe_user_id,
+          }) as unknown as Prisma.InputJsonValue,
+          fee: 0,
+          refunded: false,
+          success: false,
+        },
+      });
+      if (!paymentData) {
+        throw new Error();
+      }
+      return paymentData;
+    } catch (error) {
+      console.error(`Payment could not be created for walletId ${walletId}`, error);
+      throw new Error("Payment could not be created");
+    }
   }
 
   /* This method is for creating charges at the time of booking */
@@ -107,59 +147,59 @@ export class PaymentService implements IAbstractPaymentService {
       }
 
       // Check that user has enough timetokens for booking
-      const booking = await prisma?.booking.findFirst({
-        where: {
-          id: bookingId,
-        },
-        select: {
-          user: {
-            select: {
-              id: true,
-              price: true,
-            },
-          },
-          eventType: {
-            select: {
-              length: true,
-            },
-          },
-        },
-      });
+      // const booking = await prisma?.booking.findFirst({
+      //   where: {
+      //     id: bookingId,
+      //   },
+      //   select: {
+      //     user: {
+      //       select: {
+      //         id: true,
+      //         price: true,
+      //       },
+      //     },
+      //     eventType: {
+      //       select: {
+      //         length: true,
+      //       },
+      //     },
+      //   },
+      // });
 
-      console.log("==== 1 ====", booking);
+      // console.log("==== 1 ====", booking);
 
-      const timetokens = await prisma?.timeTokensWallet.findFirst({
-        where: {
-          emitterId: booking?.user.id,
-          ownerId: userId,
-        },
-        select: {
-          id: true,
-          amount: true,
-        },
-      });
-      console.log("==== 2 ====", timetokens);
+      // const timetokens = await prisma?.timeTokensWallet.findFirst({
+      //   where: {
+      //     emitterId: booking?.user.id,
+      //     ownerId: userId,
+      //   },
+      //   select: {
+      //     id: true,
+      //     amount: true,
+      //   },
+      // });
+      // console.log("==== 2 ====", timetokens);
 
-      if (timetokens?.amount > booking?.eventType.length / 5) {
-        // user has enough timetokens
-        await prisma?.timeTokensWallet.update({
-          where: {
-            id: timetokens?.id,
-          },
-          data: {
-            amount: {
-              decrement: booking?.eventType.length / 5,
-            },
-          },
-        });
+      // if (timetokens?.amount > booking?.eventType.length / 5) {
+      //   // user has enough timetokens
+      //   await prisma?.timeTokensWallet.update({
+      //     where: {
+      //       id: timetokens?.id,
+      //     },
+      //     data: {
+      //       amount: {
+      //         decrement: booking?.eventType.length / 5,
+      //       },
+      //     },
+      //   });
 
-        payment.amount = 0;
-      }
+      //   payment.amount = 0;
+      // }
 
-      // user doesn't have enough timetokens
-      const deltaTokens = booking?.eventType.length / 5 - timetokens?.amount;
-      const price = booking?.user.price[booking?.user.price.length - 1] * deltaTokens;
-      payment.amount = price * 100;
+      // // user doesn't have enough timetokens
+      // const deltaTokens = booking?.eventType.length / 5 - timetokens?.amount;
+      // const price = booking?.user.price[booking?.user.price.length - 1] * deltaTokens;
+      // payment.amount = price * 100;
 
       // Load stripe keys
       const stripeAppKeys = await prisma?.app.findFirst({

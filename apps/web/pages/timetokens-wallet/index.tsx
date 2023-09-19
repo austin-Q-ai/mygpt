@@ -1,8 +1,10 @@
+import { useMutation } from "@tanstack/react-query";
 import { MeiliSearch } from "meilisearch";
 import React, { useState } from "react";
 import { components } from "react-select";
 
 import Shell from "@calcom/features/shell/Shell";
+import { buyTokens } from "@calcom/features/timetokenswallet";
 import { MEILISEARCH_HOST, MEILISEARCH_SEARCH_API_KEY } from "@calcom/lib/constants";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { trpc } from "@calcom/trpc/react";
@@ -120,9 +122,23 @@ function TimeTokensWallet() {
     },
   });
 
-  const buyTokensMutation = trpc.viewer.timetokenswallet.buyTokens.useMutation({
-    onSuccess: (data) => {
-      setAddedExpertsDataHandler(data.users);
+  // const buyTokensMutation = trpc.viewer.timetokenswallet.buyTokens.useMutation({
+  //   onSuccess: (data) => {
+  //     setAddedExpertsDataHandler(data.users);
+  //   },
+  // });
+
+  const buyTokensMutation = useMutation(buyTokens, {
+    onSuccess: async (responseData) => {
+      console.log("");
+      // const { paymentUid } = responseData;
+      // if (paymentUid) {
+      //   return await router.push(
+      //     createTokenPaymentLink({
+      //       paymentUid,
+      //     })
+      //   );
+      // }
     },
   });
 

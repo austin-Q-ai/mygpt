@@ -386,6 +386,8 @@
   "confirm_remove_event": "Yes, remove expert",
   "no_expert_data": "No experts you added",
   "no_expert_data_description": "There is no expert you added now. You can add any experts you want and buy their tokens for booking interview with them.",
+  "expert": "Expert",
+  "token_amount": "Token amount",
   "on": "on",
   "and": "and",
   "calendar_shows_busy_between": "Your calendar shows you as busy between",

@@ -17,9 +17,28 @@ const handleBuyPayment = async (
     } | null;
   }
 ) => {
+  const paymentApp = (await appStore[
+    paymentAppCredentials?.app?.dirName as keyof typeof appStore
+  ]()) as PaymentApp;
+  if (!paymentApp?.lib?.PaymentService) {
+    console.warn(`payment App service of type ${paymentApp} is not implemented`);
+    return null;
+  }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const PaymentService = paymentApp.lib.PaymentService as any;
 
   const paymentInstance = new PaymentService(paymentAppCredentials) as IAbstractPaymentService;
+
+  let paymentData = await paymentInstance.createBuyPayment(
+    walletId
+  );
+
+  if (!paymentData) {
+    console.error("Payment data is null");
+    throw new Error("Payment data is null");
+  }
+
+  return paymentData;
 };
 
 const handlePayment = async (
@@ -93,4 +112,4 @@ const handlePayment = async (
   return paymentData;
 };
 
-export { handlePayment };
+export { handlePayment, handleBuyPayment };
