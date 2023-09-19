@@ -36,13 +36,13 @@ export type ButtonProps = ButtonBaseProps &
   );
 
 const buttonClasses = cva(
-  "inline-flex items-center text-sm font-medium relative rounded-md transition-colors disabled:cursor-not-allowed ",
+  "inline-flex items-center text-sm font-medium relative transition-colors disabled:cursor-not-allowed ",
   {
     variants: {
       variant: {
         button: "",
         icon: "flex justify-center",
-        fab: "rounded-full justify-center md:rounded-md radix-state-open:rotate-45 md:radix-state-open:rotate-0 transition-transform radix-state-open:shadown-none radix-state-open:ring-0 !shadow-none",
+        fab: "rounded-full justify-center radix-state-open:rotate-45 md:radix-state-open:rotate-0 transition-transform radix-state-open:shadown-none radix-state-open:ring-0 !shadow-none",
       },
       color: {
         primary:
@@ -57,10 +57,14 @@ const buttonClasses = cva(
       size: {
         sm: "px-3 py-2 leading-4 rounded-sm" /** For backwards compatibility */,
         base: "h-9 px-4 py-2.5 ",
-        lg: "h-[36px] px-4 py-2.5 ",
+        lg: "h-[36px] px-4 py-1.5 ",
       },
       loading: {
         true: "cursor-wait",
+      },
+      rounded: {
+        true: "bordered rounded-full md:rounded-full ",
+        false: "rounded-md md:rounded-md ",
       },
     },
     compoundVariants: [
@@ -102,7 +106,7 @@ const buttonClasses = cva(
       {
         variant: "fab",
         size: "base",
-        className: "h-14 md:h-9 md:w-auto md:px-4 md:py-2.5",
+        className: "h-14 md:h-9 md:w-[36px] md:px-4 md:py-2.5",
       },
     ],
     defaultVariants: {
@@ -123,6 +127,7 @@ export const Button = forwardRef<HTMLAnchorElement | HTMLButtonElement, ButtonPr
     size,
     variant = "button",
     type = "button",
+    rounded = false,
     StartIcon,
     EndIcon,
     shallow,
@@ -141,7 +146,8 @@ export const Button = forwardRef<HTMLAnchorElement | HTMLButtonElement, ButtonPr
       disabled,
       type: !isLink ? type : undefined,
       ref: forwardedRef,
-      className: classNames(buttonClasses({ color, size, loading, variant }), props.className),
+      className: classNames(buttonClasses({ color, size, loading, variant, rounded }), props.className),
+
       // if we click a disabled button, we prevent going through the click handler
       onClick: disabled
         ? (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
@@ -161,7 +167,10 @@ export const Button = forwardRef<HTMLAnchorElement | HTMLButtonElement, ButtonPr
             <StartIcon
               className={classNames(
                 variant === "icon" && "h-4 w-4",
-                variant === "button" && "h-4 w-4 stroke-[1.5px] ltr:-ml-1 ltr:mr-2 rtl:-mr-1 rtl:ml-2"
+                variant === "button" && "h-4 w-4 stroke-[1.5px] ltr:-ml-1 ltr:mr-2 rtl:-mr-1 rtl:ml-2",
+                size === "base" && "h-4 w-4",
+                size === "sm" && "h-4 w-4",
+                size === "lg" && "m-0 h-6 w-6 p-0"
               )}
             />
           )}
