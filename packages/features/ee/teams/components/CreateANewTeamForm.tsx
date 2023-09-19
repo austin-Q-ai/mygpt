@@ -10,8 +10,7 @@ import { useLocale } from "@calcom/lib/hooks/useLocale";
 import slugify from "@calcom/lib/slugify";
 import { telemetryEventTypes, useTelemetry } from "@calcom/lib/telemetry";
 import { trpc } from "@calcom/trpc/react";
-import { Avatar, Button, Form, ImageUploader, TextField, Alert, Label } from "@calcom/ui";
-import { ArrowRight, Plus } from "@calcom/ui/components/icon";
+import { Button, Form, ImageUploader, TextField, Alert } from "@calcom/ui";
 
 import type { NewTeamFormValues } from "../lib/types";
 
@@ -26,6 +25,7 @@ export const CreateANewTeamForm = () => {
   const telemetry = useTelemetry();
   const parsedQuery = querySchema.safeParse(router.query);
   const [serverErrorMessage, setServerErrorMessage] = useState<string | null>(null);
+  const [teamName, setTeamName] = useState<string>("");
   const orgBranding = useOrgBrandingValues();
 
   const returnToParam =
@@ -55,6 +55,7 @@ export const CreateANewTeamForm = () => {
   return (
     <>
       <Form
+        className="mb-3 rounded-md border border-gray-100 p-5 dark:border-neutral-800"
         form={newTeamFormMethods}
         handleSubmit={(v) => {
           if (!createTeamMutation.isLoading) {
@@ -62,7 +63,7 @@ export const CreateANewTeamForm = () => {
             createTeamMutation.mutate(v);
           }
         }}>
-        <div className="mb-8">
+        <div className="mb-8 px-4 pt-4">
           {serverErrorMessage && (
             <div className="mb-4">
               <Alert severity="error" message={serverErrorMessage} />
@@ -86,6 +87,7 @@ export const CreateANewTeamForm = () => {
                   defaultValue={value}
                   onChange={(e) => {
                     newTeamFormMethods.setValue("name", e?.target.value);
+                    setTeamName(e?.target.value);
                     if (newTeamFormMethods.formState.touchedFields["slug"] === undefined) {
                       newTeamFormMethods.setValue("slug", slugify(e?.target.value));
                     }
@@ -97,7 +99,7 @@ export const CreateANewTeamForm = () => {
           />
         </div>
 
-        <div className="mb-8">
+        <div className="mb-8 px-4">
           <Controller
             name="slug"
             control={newTeamFormMethods.control}
@@ -124,22 +126,16 @@ export const CreateANewTeamForm = () => {
           />
         </div>
 
-        <div className="mb-8">
+        <div className="mb-8 px-4">
           <Controller
             control={newTeamFormMethods.control}
             name="logo"
             render={({ field: { value } }) => (
               <>
-                <Label>{t("team_logo")}</Label>
-                <div className="flex items-center">
-                  <Avatar
-                    alt=""
-                    imageSrc={value}
-                    fallback={<Plus className="text-subtle h-6 w-6" />}
-                    size="lg"
-                  />
-                  <div className="ms-4">
+                <div className="flew-row flex items-center">
+                  <div className=" flex-1">
                     <ImageUploader
+                      large
                       target="avatar"
                       id="avatar-upload"
                       buttonMsg={t("update")}
@@ -150,28 +146,46 @@ export const CreateANewTeamForm = () => {
                       imageSrc={value}
                     />
                   </div>
+                  <div className="flex flex-col gap-2">
+                    {/* <AddNewTeamMembers /> */}
+                    {/* <div className="flex w-full flex-row rounded-md border px-2 py-2 ">
+                      <div className="flex-col">
+                        <Avatar
+                          className="border-default h-[45px] w-[45px] border"
+                          alt=""
+                          imageSrc={value}
+                          size="lg"
+                        />
+                      </div>
+                      <div className="text-subtle m-1 flex flex-col gap-1 pl-1 text-sm font-light">
+                        <span className="flex-row">
+                          {teamName && teamName.length > 0 ? teamName : "acme"}
+                        </span>
+                        <span className="flex-row">
+                          {`${orgBranding?.fullDomain ?? `${extractDomainFromWebsiteUrl}`}`}
+                        </span>
+                      </div>
+                    </div>
+                    <div className=" text-subtle flex w-full flex-row rounded-md border px-2 py-2 ">
+                      + Add club deal member
+                    </div> */}
+                  </div>
                 </div>
               </>
             )}
           />
         </div>
 
-        <div className="flex space-x-2 rtl:space-x-reverse">
-          <Button
-            disabled={createTeamMutation.isLoading}
-            color="secondary"
-            href={returnToParam}
-            className="w-full justify-center">
-            {t("cancel")}
-          </Button>
-          <Button
-            disabled={newTeamFormMethods.formState.isSubmitting || createTeamMutation.isLoading}
-            color="primary"
-            EndIcon={ArrowRight}
-            type="submit"
-            className="w-full justify-center">
-            {t("continue")}
-          </Button>
+        <div className="px-4">
+          <div className="ms-4 flex justify-end pb-4 rtl:space-x-reverse">
+            <Button
+              disabled={newTeamFormMethods.formState.isSubmitting || createTeamMutation.isLoading}
+              color="primary"
+              type="submit"
+              className=" w-full justify-center md:w-[50%]">
+              {t("continue")}
+            </Button>
+          </div>
         </div>
       </Form>
     </>
