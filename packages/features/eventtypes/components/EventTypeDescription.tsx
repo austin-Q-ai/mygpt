@@ -55,37 +55,37 @@ export const EventTypeDescription = ({
           />
         )}
         <ul className="mt-2 flex flex-wrap gap-x-2 gap-y-1">
-          {eventType.metadata?.multipleDuration ? (
-            eventType.metadata.multipleDuration.map((dur, idx) => (
-              <li key={idx}>
-                <Badge variant="gray" startIcon={Clock}>
-                  {dur}m
-                </Badge>
-              </li>
-            ))
-          ) : (
-            <li>
-              <Badge variant="gray" startIcon={Clock}>
-                {eventType.length}m
-              </Badge>
-            </li>
-          )}
           {eventType.schedulingType && eventType.schedulingType !== SchedulingType.MANAGED && (
             <li>
-              <Badge variant="gray" startIcon={Users}>
+              <Badge variant="pink" startIcon={Users}>
                 {eventType.schedulingType === SchedulingType.ROUND_ROBIN && t("round_robin")}
                 {eventType.schedulingType === SchedulingType.COLLECTIVE && t("collective")}
               </Badge>
             </li>
           )}
           {eventType.metadata?.managedEventConfig && !isPublic && (
-            <Badge variant="gray" startIcon={Lock}>
+            <Badge variant="pink" startIcon={Lock}>
               {t("managed")}
             </Badge>
           )}
+          {eventType.metadata?.multipleDuration ? (
+            eventType.metadata.multipleDuration.map((dur, idx) => (
+              <li key={idx}>
+                <Badge variant="pink" startIcon={Clock}>
+                  {dur}m
+                </Badge>
+              </li>
+            ))
+          ) : (
+            <li>
+              <Badge variant="pink" startIcon={Clock}>
+                {eventType.length}m
+              </Badge>
+            </li>
+          )}
           {recurringEvent?.count && recurringEvent.count > 0 && (
             <li className="hidden xl:block">
-              <Badge variant="gray" startIcon={RefreshCw}>
+              <Badge variant="pink" startIcon={RefreshCw}>
                 {t("repeats_up_to", {
                   count: recurringEvent.count,
                 })}
@@ -94,7 +94,7 @@ export const EventTypeDescription = ({
           )}
           {paymentAppData.enabled && (
             <li>
-              <Badge variant="gray" startIcon={CreditCard}>
+              <Badge variant="pink" startIcon={CreditCard}>
                 {new Intl.NumberFormat(i18n.language, {
                   style: "currency",
                   currency: paymentAppData.currency,
@@ -104,7 +104,7 @@ export const EventTypeDescription = ({
           )}
           {eventType.requiresConfirmation && (
             <li className="hidden xl:block">
-              <Badge variant="gray" startIcon={Clipboard}>
+              <Badge variant="pink" startIcon={Clipboard}>
                 {eventType.metadata?.requiresConfirmationThreshold
                   ? t("may_require_confirmation")
                   : t("requires_confirmation")}
@@ -114,7 +114,7 @@ export const EventTypeDescription = ({
           {/* TODO: Maybe add a tool tip to this? */}
           {eventType.requiresConfirmation || (recurringEvent?.count && recurringEvent.count) ? (
             <li className="block xl:hidden">
-              <Badge variant="gray" startIcon={Plus}>
+              <Badge variant="pink" startIcon={Plus}>
                 <p>{[eventType.requiresConfirmation, recurringEvent?.count].filter(Boolean).length}</p>
               </Badge>
             </li>
@@ -123,7 +123,7 @@ export const EventTypeDescription = ({
           )}
           {eventType?.seatsPerTimeSlot ? (
             <li>
-              <Badge variant="gray" startIcon={User}>
+              <Badge variant="pink" startIcon={User}>
                 <p>{t("event_type_seats", { numberOfSeats: eventType.seatsPerTimeSlot })} </p>
               </Badge>
             </li>
