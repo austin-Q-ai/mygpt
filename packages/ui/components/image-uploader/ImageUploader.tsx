@@ -1,11 +1,12 @@
 import * as SliderPrimitive from "@radix-ui/react-slider";
+import { ImageIcon } from "lucide-react";
 import type { FormEvent } from "react";
 import { useCallback, useEffect, useState } from "react";
 import Cropper from "react-easy-crop";
 
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 
-import { Button, Dialog, DialogClose, DialogContent, DialogTrigger } from "../..";
+import { Avatar, Button, Dialog, DialogClose, DialogContent, DialogTrigger } from "../..";
 import { showToast } from "../toast";
 
 type ReadAsMethod = "readAsText" | "readAsDataURL" | "readAsArrayBuffer" | "readAsBinaryString";
@@ -65,6 +66,7 @@ type ImageUploaderProps = {
   handleAvatarChange: (imageSrc: string) => void;
   imageSrc?: string;
   target: string;
+  large: boolean;
 };
 
 interface FileEvent<T = Element> extends FormEvent<T> {
@@ -114,6 +116,7 @@ function CropContainer({
 
 export default function ImageUploader({
   target,
+  large,
   id,
   buttonMsg,
   handleAvatarChange,
@@ -162,16 +165,33 @@ export default function ImageUploader({
     },
     [result, handleAvatarChange]
   );
-
   return (
     <Dialog
       onOpenChange={
         (opened) => !opened && setFile(null) // unset file on close
       }>
       <DialogTrigger asChild>
-        <Button color="secondary" className="h-[64px] w-[64px] rounded-full" variant="icon">
-          {buttonMsg}
-        </Button>
+        {large ? (
+          <Button
+            color="secondary"
+            className="h-[134px] w-[180px] rounded-full border border-2 border-dashed"
+            variant="icon">
+            {imageSrc ? (
+              <Avatar
+                className="border-default h-[45px] w-[45px] border"
+                alt=""
+                imageSrc={imageSrc}
+                size="lg"
+              />
+            ) : (
+              <ImageIcon className="h-[45px] w-[50px]" />
+            )}
+          </Button>
+        ) : (
+          <Button color="secondary" className="h-[70px] w-[70px] rounded-full " variant="icon">
+            {buttonMsg}
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent>
         <div className="mb-4 sm:flex sm:items-start">
