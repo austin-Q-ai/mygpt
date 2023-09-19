@@ -17,6 +17,7 @@ module.exports = {
     extend: {
       colors: {
         emphasis: "var(--cal-bg-emphasis)",
+        navItem: "var(--cal-bg-navItem)",
         default: "var(--cal-bg, white)",
         subtle: "var(--cal-bg-subtle)",
         muted: "var(--cal-bg-muted)",
