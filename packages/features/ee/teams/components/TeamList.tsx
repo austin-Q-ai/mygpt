@@ -43,7 +43,7 @@ export default function TeamList(props: Props) {
   }
 
   return (
-    <ul className="bg-default divide-subtle border-subtle mb-2 divide-y overflow-hidden rounded-md border">
+    <ul className="bg-default  mb-2 flex flex-col gap-2  overflow-hidden rounded-md ">
       {props.teams.map((team) => (
         <TeamListItem
           key={team?.id as number}
@@ -62,7 +62,7 @@ export default function TeamList(props: Props) {
             (team, i) =>
               team.role !== "MEMBER" &&
               i === 0 && (
-                <div className="bg-subtle p-6">
+                <div className="!bg-[#d3bedd40] p-6">
                   <h3 className="text-emphasis mb-4 text-sm font-semibold">{t("recommended_next_steps")}</h3>
                   <div className="grid-col-1 grid gap-2 md:grid-cols-3">
                     <Card

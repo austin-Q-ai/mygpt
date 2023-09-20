@@ -66,7 +66,7 @@ type ImageUploaderProps = {
   handleAvatarChange: (imageSrc: string) => void;
   imageSrc?: string;
   target: string;
-  large: boolean;
+  large?: boolean;
 };
 
 interface FileEvent<T = Element> extends FormEvent<T> {
@@ -174,7 +174,7 @@ export default function ImageUploader({
         {large ? (
           <Button
             color="secondary"
-            className="h-[134px] w-[180px] rounded-full border border-2 border-dashed"
+            className="h-[134px] w-[200px] rounded-full border border-2 border-dashed"
             variant="icon">
             {imageSrc ? (
               <Avatar

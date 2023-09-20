@@ -88,7 +88,7 @@ export function TeamsListing() {
   }
 
   return (
-    <>
+    <div className="mx-8">
       {!!errorMessage && <Alert severity="error" title={errorMessage} />}
 
       {invites.length > 0 && (
@@ -119,6 +119,6 @@ export function TeamsListing() {
           />
         )}
       </UpgradeTip>
-    </>
+    </div>
   );
 }

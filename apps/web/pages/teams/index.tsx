@@ -28,7 +28,7 @@ function Teams() {
             <DialogTrigger asChild>
               <Button type="button" rounded StartIcon={Plus} variant="icon" color="primary" />
             </DialogTrigger>
-            <DialogContent type="creation" HeaderIcon={Users} Icon={X} className="py-4">
+            <DialogContent type="creation" HeaderIcon={Users} Icon={X} className="py-4" size="md">
               <CreateNewTeamPage />
             </DialogContent>
           </Dialog>
