@@ -32,11 +32,15 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
       bookingId: true,
       walletId: true,
       wallet: {
-        emitter: {
-          username: true,
-          price: true,
-        },
-        amount: true,
+        select: {
+          emitter: {
+            select: {
+              username: true,
+              price: true,
+            }
+          },
+          amount: true,
+        }
       },
       appId: true,
       amount: true,
@@ -49,6 +53,7 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
       props: {
         trpcState: ssr.dehydrate(),
         payment: testPayment,
+        buyToken: true,
       },
     };
   }

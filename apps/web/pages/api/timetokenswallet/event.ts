@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { getServerSession } from "@calcom/features/auth/lib/getServerSession";
-import { handleBuyTokens } from "@calcom/features/timetokenswallet";
+import handleBuyTokens from "@calcom/features/timetokenswallet/handleBuyTokens";
 import { defaultResponder } from "@calcom/lib/server";
 
 async function handler(req: NextApiRequest & { userId?: number }, res: NextApiResponse) {

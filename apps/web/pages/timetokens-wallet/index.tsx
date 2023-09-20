@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { MeiliSearch } from "meilisearch";
 import React, { useState } from "react";
 import { components } from "react-select";
+import { useRouter } from "next/router";
 
 import Shell from "@calcom/features/shell/Shell";
 import { buyTokens } from "@calcom/features/timetokenswallet";
@@ -12,6 +13,7 @@ import { Select, Button, Avatar, Badge, ConfirmationDialogContent, Dialog } from
 import { Plus } from "@calcom/ui/components/icon";
 
 import { withQuery } from "@lib/QueryCell";
+import { createTokenPaymentLink } from "@calcom/app-store/stripepayment/lib/client";
 
 import PageWrapper from "@components/PageWrapper";
 import CustomExpertTable from "@components/timetokens-wallet/CustomExpertTable";
@@ -30,6 +32,7 @@ type ExpertOptionType = {
 
 function TimeTokensWallet() {
   const { t } = useLocale();
+  const router = useRouter();
   const { data: user, isLoading } = trpc.viewer.me.useQuery();
 
   const [addedExpertsData, setAddedExpertsData] = useState<ExpertDataType[]>([]);
@@ -130,15 +133,14 @@ function TimeTokensWallet() {
 
   const buyTokensMutation = useMutation(buyTokens, {
     onSuccess: async (responseData) => {
-      console.log("");
-      // const { paymentUid } = responseData;
-      // if (paymentUid) {
-      //   return await router.push(
-      //     createTokenPaymentLink({
-      //       paymentUid,
-      //     })
-      //   );
-      // }
+      const { paymentUid } = responseData;
+      if (paymentUid) {
+        return await router.push(
+          createTokenPaymentLink({
+            paymentUid,
+          })
+        );
+      }
     },
   });
 

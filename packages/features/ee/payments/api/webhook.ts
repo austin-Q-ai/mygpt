@@ -134,150 +134,259 @@ async function handlePaymentSuccess(event: Stripe.Event) {
     select: {
       id: true,
       bookingId: true,
+      walletId: true,
     },
   });
-  if (!payment?.bookingId) {
-    console.log(JSON.stringify(paymentIntent), JSON.stringify(payment));
-  }
-  if (!payment?.bookingId) throw new HttpCode({ statusCode: 204, message: "Payment not found" });
+  // if (!payment?.bookingId) {
+  //   console.log(JSON.stringify(paymentIntent), JSON.stringify(payment));
+  // }
+  // if (!payment?.bookingId) throw new HttpCode({ statusCode: 204, message: "Payment not found" });
 
-  const booking = await prisma.booking.findUnique({
-    where: {
-      id: payment.bookingId,
-    },
-    select: {
-      ...bookingMinimalSelect,
-      eventType: true,
-      smsReminderNumber: true,
-      location: true,
-      eventTypeId: true,
-      userId: true,
-      uid: true,
-      paid: true,
-      destinationCalendar: true,
-      status: true,
-      responses: true,
-      user: {
-        select: {
-          id: true,
-          username: true,
-          credentials: true,
-          timeZone: true,
-          email: true,
-          name: true,
-          locale: true,
-          destinationCalendar: true,
+  if (payment?.bookingId) {
+    const booking = await prisma.booking.findUnique({
+      where: {
+        id: payment.bookingId,
+      },
+      select: {
+        ...bookingMinimalSelect,
+        eventType: true,
+        smsReminderNumber: true,
+        location: true,
+        eventTypeId: true,
+        userId: true,
+        uid: true,
+        paid: true,
+        destinationCalendar: true,
+        status: true,
+        responses: true,
+        user: {
+          select: {
+            id: true,
+            username: true,
+            credentials: true,
+            timeZone: true,
+            email: true,
+            name: true,
+            locale: true,
+            destinationCalendar: true,
+          },
         },
       },
-    },
-  });
-
-  if (!booking) throw new HttpCode({ statusCode: 204, message: "No booking found" });
-
-  type EventTypeRaw = Awaited<ReturnType<typeof getEventType>>;
-  let eventTypeRaw: EventTypeRaw | null = null;
-  if (booking.eventTypeId) {
-    eventTypeRaw = await getEventType(booking.eventTypeId);
-  }
-
-  const { user: userWithCredentials } = booking;
-
-  if (!userWithCredentials) throw new HttpCode({ statusCode: 204, message: "No user found" });
-
-  const { credentials, ...user } = userWithCredentials;
-
-  const t = await getTranslation(user.locale ?? "en", "common");
-  const attendeesListPromises = booking.attendees.map(async (attendee) => {
-    return {
-      name: attendee.name,
-      email: attendee.email,
-      timeZone: attendee.timeZone,
-      language: {
-        translate: await getTranslation(attendee.locale ?? "en", "common"),
-        locale: attendee.locale ?? "en",
-      },
-    };
-  });
-
-  const attendeesList = await Promise.all(attendeesListPromises);
-
-  const evt: CalendarEvent = {
-    type: booking.title,
-    title: booking.title,
-    description: booking.description || undefined,
-    startTime: booking.startTime.toISOString(),
-    endTime: booking.endTime.toISOString(),
-    customInputs: isPrismaObjOrUndefined(booking.customInputs),
-    ...getCalEventResponses({
-      booking: booking,
-      bookingFields: booking.eventType?.bookingFields || null,
-    }),
-    organizer: {
-      email: user.email,
-      name: user.name!,
-      timeZone: user.timeZone,
-      language: { translate: t, locale: user.locale ?? "en" },
-    },
-    attendees: attendeesList,
-    location: booking.location,
-    uid: booking.uid,
-    destinationCalendar: booking.destinationCalendar || user.destinationCalendar,
-    recurringEvent: parseRecurringEvent(eventTypeRaw?.recurringEvent),
-  };
-
-  if (booking.location) evt.location = booking.location;
-
-  const bookingData: Prisma.BookingUpdateInput = {
-    paid: true,
-    status: BookingStatus.ACCEPTED,
-  };
-
-  const isConfirmed = booking.status === BookingStatus.ACCEPTED;
-  if (isConfirmed) {
-    const eventManager = new EventManager(userWithCredentials);
-    const scheduleResult = await eventManager.create(evt);
-    bookingData.references = { create: scheduleResult.referencesToCreate };
-  }
-
-  if (eventTypeRaw?.requiresConfirmation) {
-    delete bookingData.status;
-  }
-
-  const paymentUpdate = prisma.payment.update({
-    where: {
-      id: payment.id,
-    },
-    data: {
-      success: true,
-    },
-  });
-
-  const bookingUpdate = prisma.booking.update({
-    where: {
-      id: booking.id,
-    },
-    data: bookingData,
-  });
-
-  await prisma.$transaction([paymentUpdate, bookingUpdate]);
-
-  if (!isConfirmed && !eventTypeRaw?.requiresConfirmation) {
-    await handleConfirmation({
-      user: userWithCredentials,
-      evt,
-      prisma,
-      bookingId: booking.id,
-      booking,
-      paid: true,
     });
-  } else {
-    await sendScheduledEmails({ ...evt });
-  }
 
-  throw new HttpCode({
-    statusCode: 200,
-    message: `Booking with id '${booking.id}' was paid and confirmed.`,
-  });
+    if (!booking) throw new HttpCode({ statusCode: 204, message: "No booking found" });
+
+    type EventTypeRaw = Awaited<ReturnType<typeof getEventType>>;
+    let eventTypeRaw: EventTypeRaw | null = null;
+    if (booking.eventTypeId) {
+      eventTypeRaw = await getEventType(booking.eventTypeId);
+    }
+
+    const { user: userWithCredentials } = booking;
+
+    if (!userWithCredentials) throw new HttpCode({ statusCode: 204, message: "No user found" });
+
+    const { credentials, ...user } = userWithCredentials;
+
+    // checking booker has enough timetokens
+    const length = (booking.endTime.getTime() - booking.startTime.getTime()) / 60000; // minutes
+    const amount = Math.ceil(length / 5);
+    const booker = await prisma.user.findFirst({
+      where: {
+        email: booking.responses?.email,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!booker) throw new HttpCode({ statusCode: 204, message: "No booker found" });
+
+    const wallet = await prisma.timeTokensWallet.findFirst({
+      where: {
+        emitterId: user.id,
+        ownerId: booker.id,
+      },
+      select: {
+        id: true,
+        amount: true,
+      },
+    });
+
+    if (!wallet) throw new HttpCode({ statusCode: 204, message: "No wallet found" });
+
+    if (amount > wallet.amount) {
+      const updateWallet = prisma.timeTokensWallet.update({
+        where: {
+          id: wallet.id,
+        },
+        data: {
+          amount: {
+            decrement: wallet.amount,
+          },
+        },
+      });
+
+      const updateUser = prisma.user.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          tokens: {
+            decrement: amount - wallet.amount,
+          },
+        },
+      });
+
+      await prisma.$transaction([updateWallet, updateUser]);
+    }
+
+    const t = await getTranslation(user.locale ?? "en", "common");
+    const attendeesListPromises = booking.attendees.map(async (attendee) => {
+      return {
+        name: attendee.name,
+        email: attendee.email,
+        timeZone: attendee.timeZone,
+        language: {
+          translate: await getTranslation(attendee.locale ?? "en", "common"),
+          locale: attendee.locale ?? "en",
+        },
+      };
+    });
+
+    const attendeesList = await Promise.all(attendeesListPromises);
+
+    const evt: CalendarEvent = {
+      type: booking.title,
+      title: booking.title,
+      description: booking.description || undefined,
+      startTime: booking.startTime.toISOString(),
+      endTime: booking.endTime.toISOString(),
+      customInputs: isPrismaObjOrUndefined(booking.customInputs),
+      ...getCalEventResponses({
+        booking: booking,
+        bookingFields: booking.eventType?.bookingFields || null,
+      }),
+      organizer: {
+        email: user.email,
+        name: user.name!,
+        timeZone: user.timeZone,
+        language: { translate: t, locale: user.locale ?? "en" },
+      },
+      attendees: attendeesList,
+      location: booking.location,
+      uid: booking.uid,
+      destinationCalendar: booking.destinationCalendar || user.destinationCalendar,
+      recurringEvent: parseRecurringEvent(eventTypeRaw?.recurringEvent),
+    };
+
+    if (booking.location) evt.location = booking.location;
+
+    const bookingData: Prisma.BookingUpdateInput = {
+      paid: true,
+      status: BookingStatus.ACCEPTED,
+    };
+
+    const isConfirmed = booking.status === BookingStatus.ACCEPTED;
+    if (isConfirmed) {
+      const eventManager = new EventManager(userWithCredentials);
+      const scheduleResult = await eventManager.create(evt);
+      bookingData.references = { create: scheduleResult.referencesToCreate };
+    }
+
+    if (eventTypeRaw?.requiresConfirmation) {
+      delete bookingData.status;
+    }
+
+    const paymentUpdate = prisma.payment.update({
+      where: {
+        id: payment.id,
+      },
+      data: {
+        success: true,
+      },
+    });
+
+    const bookingUpdate = prisma.booking.update({
+      where: {
+        id: booking.id,
+      },
+      data: bookingData,
+    });
+
+    await prisma.$transaction([paymentUpdate, bookingUpdate]);
+
+    if (!isConfirmed && !eventTypeRaw?.requiresConfirmation) {
+      await handleConfirmation({
+        user: userWithCredentials,
+        evt,
+        prisma,
+        bookingId: booking.id,
+        booking,
+        paid: true,
+      });
+    } else {
+      await sendScheduledEmails({ ...evt });
+    }
+
+    throw new HttpCode({
+      statusCode: 200,
+      message: `Booking with id '${booking.id}' was paid and confirmed.`,
+    });
+  } else if (payment?.walletId) {
+    const wallet = await prisma.timeTokensTransaction.update({
+      where: {
+        id: payment?.walletId,
+      },
+      data: {
+        paid: true,
+      },
+      select: {
+        emitterId: true,
+        ownerId: true,
+        amount: true,
+      },
+    });
+    console.log(wallet);
+
+    if (!wallet) throw new HttpCode({ statusCode: 204, message: "TimeTokensWallet not found" });
+
+    const tokensWallet = await prisma.timeTokensWallet.findFirst({
+      where: {
+        emitterId: wallet.emitterId,
+        ownerId: wallet.ownerId,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!tokensWallet) throw new HttpCode({ statusCode: 204, message: "TimeTokensWallet not found" });
+
+    const updateWallet = prisma.timeTokensWallet.update({
+      where: {
+        id: tokensWallet.id,
+      },
+      data: {
+        amount: {
+          increment: wallet.amount,
+        },
+      },
+    });
+
+    const updateTokens = prisma.user.update({
+      where: {
+        id: wallet.emitterId,
+      },
+      data: {
+        tokens: {
+          decrement: wallet.amount,
+        },
+      },
+    });
+
+    const transaction = await prisma.$transaction([updateWallet, updateTokens]);
+  } else throw new HttpCode({ statusCode: 204, message: "Payment and Transaction not found" });
 }
 
 const handleSetupSuccess = async (event: Stripe.Event) => {
@@ -290,76 +399,78 @@ const handleSetupSuccess = async (event: Stripe.Event) => {
 
   if (!payment?.data || !payment?.id) throw new HttpCode({ statusCode: 204, message: "Payment not found" });
 
-  const { booking, user, evt, eventType } = await getBooking(payment.bookingId);
+  if (payment?.bookingId) {
+    const { booking, user, evt, eventType } = await getBooking(payment.bookingId);
 
-  const bookingData: Prisma.BookingUpdateInput = {
-    paid: true,
-  };
+    const bookingData: Prisma.BookingUpdateInput = {
+      paid: true,
+    };
 
-  const userWithCredentials = await prisma.user.findUnique({
-    where: {
-      id: user.id,
-    },
-    select: {
-      id: true,
-      username: true,
-      timeZone: true,
-      email: true,
-      name: true,
-      locale: true,
-      destinationCalendar: true,
-      credentials: true,
-    },
-  });
-
-  if (!userWithCredentials) throw new HttpCode({ statusCode: 204, message: "No user found" });
-
-  let requiresConfirmation = eventType?.requiresConfirmation;
-  const rcThreshold = eventType?.metadata?.requiresConfirmationThreshold;
-  if (rcThreshold) {
-    if (dayjs(dayjs(booking.startTime).utc().format()).diff(dayjs(), rcThreshold.unit) > rcThreshold.time) {
-      requiresConfirmation = false;
-    }
-  }
-
-  if (!requiresConfirmation) {
-    const eventManager = new EventManager(userWithCredentials);
-    const scheduleResult = await eventManager.create(evt);
-    bookingData.references = { create: scheduleResult.referencesToCreate };
-    bookingData.status = BookingStatus.ACCEPTED;
-  }
-
-  await prisma.payment.update({
-    where: {
-      id: payment.id,
-    },
-    data: {
-      data: {
-        ...(payment.data as Prisma.JsonObject),
-        setupIntent: setupIntent as unknown as Prisma.JsonObject,
+    const userWithCredentials = await prisma.user.findUnique({
+      where: {
+        id: user.id,
       },
-      booking: {
-        update: {
-          ...bookingData,
+      select: {
+        id: true,
+        username: true,
+        timeZone: true,
+        email: true,
+        name: true,
+        locale: true,
+        destinationCalendar: true,
+        credentials: true,
+      },
+    });
+
+    if (!userWithCredentials) throw new HttpCode({ statusCode: 204, message: "No user found" });
+
+    let requiresConfirmation = eventType?.requiresConfirmation;
+    const rcThreshold = eventType?.metadata?.requiresConfirmationThreshold;
+    if (rcThreshold) {
+      if (dayjs(dayjs(booking.startTime).utc().format()).diff(dayjs(), rcThreshold.unit) > rcThreshold.time) {
+        requiresConfirmation = false;
+      }
+    }
+
+    if (!requiresConfirmation) {
+      const eventManager = new EventManager(userWithCredentials);
+      const scheduleResult = await eventManager.create(evt);
+      bookingData.references = { create: scheduleResult.referencesToCreate };
+      bookingData.status = BookingStatus.ACCEPTED;
+    }
+
+    await prisma.payment.update({
+      where: {
+        id: payment.id,
+      },
+      data: {
+        data: {
+          ...(payment.data as Prisma.JsonObject),
+          setupIntent: setupIntent as unknown as Prisma.JsonObject,
+        },
+        booking: {
+          update: {
+            ...bookingData,
+          },
         },
       },
-    },
-  });
-
-  // If the card information was already captured in the same customer. Delete the previous payment method
-
-  if (!requiresConfirmation) {
-    await handleConfirmation({
-      user: userWithCredentials,
-      evt,
-      prisma,
-      bookingId: booking.id,
-      booking,
-      paid: true,
     });
-  } else {
-    await sendOrganizerRequestEmail({ ...evt });
-    await sendAttendeeRequestEmail({ ...evt }, evt.attendees[0]);
+
+    // If the card information was already captured in the same customer. Delete the previous payment method
+
+    if (!requiresConfirmation) {
+      await handleConfirmation({
+        user: userWithCredentials,
+        evt,
+        prisma,
+        bookingId: booking.id,
+        booking,
+        paid: true,
+      });
+    } else {
+      await sendOrganizerRequestEmail({ ...evt });
+      await sendAttendeeRequestEmail({ ...evt }, evt.attendees[0]);
+    }
   }
 };
 

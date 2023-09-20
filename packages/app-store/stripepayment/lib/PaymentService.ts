@@ -8,6 +8,7 @@ import { getErrorFromUnknown } from "@calcom/lib/errors";
 import prisma from "@calcom/prisma";
 import type { CalendarEvent } from "@calcom/types/Calendar";
 import type { IAbstractPaymentService } from "@calcom/types/PaymentService";
+import { BookingStatus } from "@calcom/prisma/enums";
 
 import { paymentOptionEnum } from "../zod";
 import { createPaymentLink } from "./client";
@@ -64,7 +65,9 @@ export class PaymentService implements IAbstractPaymentService {
         throw new Error("TimeTokenTransaction does not exist!");
       }
 
-      const amount = wallet?.emitter.price * wallet?.owner.amount;
+      const amount = wallet?.emitter.price[wallet?.emitter.price.length - 1] * wallet?.amount * 100;
+
+      console.log("AMOUNT: ", amount);
 
       // Load stripe keys
       const stripeAppKeys = await prisma?.app.findFirst({
@@ -87,6 +90,7 @@ export class PaymentService implements IAbstractPaymentService {
 
       const params: Stripe.PaymentIntentCreateParams = {
         amount: amount,
+        application_fee_amount: amount * 0.1,
         currency: this.credentials.default_currency,
         payment_method_types: ["card"],
         customer: customer.id,
@@ -147,59 +151,90 @@ export class PaymentService implements IAbstractPaymentService {
       }
 
       // Check that user has enough timetokens for booking
-      // const booking = await prisma?.booking.findFirst({
-      //   where: {
-      //     id: bookingId,
-      //   },
-      //   select: {
-      //     user: {
-      //       select: {
-      //         id: true,
-      //         price: true,
-      //       },
-      //     },
-      //     eventType: {
-      //       select: {
-      //         length: true,
-      //       },
-      //     },
-      //   },
-      // });
+      const booking = await prisma.booking.findFirst({
+        where: {
+          id: bookingId,
+        },
+        select: {
+          user: {
+            select: {
+              id: true,
+              price: true,
+            },
+          },
+          startTime: true,
+          endTime: true,
+        },
+      });
 
-      // console.log("==== 1 ====", booking);
+      if (!booking) throw Error("Booking not found");
 
-      // const timetokens = await prisma?.timeTokensWallet.findFirst({
-      //   where: {
-      //     emitterId: booking?.user.id,
-      //     ownerId: userId,
-      //   },
-      //   select: {
-      //     id: true,
-      //     amount: true,
-      //   },
-      // });
-      // console.log("==== 2 ====", timetokens);
+      console.log("==== 1 ====", booking);
 
-      // if (timetokens?.amount > booking?.eventType.length / 5) {
-      //   // user has enough timetokens
-      //   await prisma?.timeTokensWallet.update({
-      //     where: {
-      //       id: timetokens?.id,
-      //     },
-      //     data: {
-      //       amount: {
-      //         decrement: booking?.eventType.length / 5,
-      //       },
-      //     },
-      //   });
+      const timetokens = await prisma.timeTokensWallet.findFirst({
+        where: {
+          emitterId: booking.user?.id,
+          ownerId: userId,
+        },
+        select: {
+          id: true,
+          amount: true,
+        },
+      });
 
-      //   payment.amount = 0;
-      // }
+      if (!timetokens) throw Error("Wallet not found");
 
-      // // user doesn't have enough timetokens
-      // const deltaTokens = booking?.eventType.length / 5 - timetokens?.amount;
-      // const price = booking?.user.price[booking?.user.price.length - 1] * deltaTokens;
-      // payment.amount = price * 100;
+      const length = (booking.endTime.getTime() - booking.startTime.getTime()) / 60000; // minutes
+
+      if (timetokens.amount > Math.ceil(length / 5)) {
+        // user has enough timetokens
+        const updateWallet = prisma.timeTokensWallet.update({
+          where: {
+            id: timetokens?.id,
+          },
+          data: {
+            amount: {
+              decrement: Math.ceil(length / 5),
+            },
+          },
+        });
+
+        const updateBooking = prisma.booking.update({
+          where: {
+            id: bookingId,
+          },
+          data: {
+            paid: true,
+            status: BookingStatus.ACCEPTED,
+          },
+        });
+
+        await prisma.$transaction([updateWallet, updateBooking]);
+
+        // payment.amount = 0;
+        return {
+          uid: "",
+        };
+      }
+
+      // user doesn't have enough timetokens
+      const deltaTokens = Math.ceil(length / 5) - timetokens.amount;
+
+      const totalTokens = await prisma.user.findUnique({
+        where: {
+          id: booking.user?.id,
+        },
+        select: {
+          tokens: true,
+        },
+      });
+
+      if (!totalTokens) throw new Error("Expert not found");
+
+      if (totalTokens.tokens < deltaTokens) throw new Error("Expert doesn't have enough timeTokens");
+
+      const price = booking.user?.price[booking.user?.price.length - 1] * deltaTokens;
+      payment.amount = price * 100;
 
       // Load stripe keys
       const stripeAppKeys = await prisma?.app.findFirst({

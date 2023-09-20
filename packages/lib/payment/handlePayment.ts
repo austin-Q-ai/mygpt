@@ -29,9 +29,7 @@ const handleBuyPayment = async (
 
   const paymentInstance = new PaymentService(paymentAppCredentials) as IAbstractPaymentService;
 
-  let paymentData = await paymentInstance.createBuyPayment(
-    walletId
-  );
+  const paymentData = await paymentInstance.createBuyPayment(walletId);
 
   if (!paymentData) {
     console.error("Payment data is null");

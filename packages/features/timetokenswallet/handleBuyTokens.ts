@@ -60,7 +60,7 @@ async function handler(req: NextApiRequest & { userId?: number | undefined }): {
 
   const paymentAppCredential = await prisma.credential.findFirst({
     where: {
-      userId: userId,
+      userId: emitterId,
       app: {
         categories: {
           hasSome: ["payment"],
@@ -88,7 +88,11 @@ async function handler(req: NextApiRequest & { userId?: number | undefined }): {
     paymentAppCredential as IEventTypePaymentCredentialType
   );
 
-  result.paymentUid = payment?.uid;
+  result = {
+    paymentUid: payment?.uid,
+  }
 
   return result;
 }
+
+export default handler

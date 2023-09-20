@@ -1677,11 +1677,7 @@ async function handler(
 
         resultBooking = { ...foundBooking };
 
-        if (payment?.uid === -1) {
-          resultBooking["message"] = "User has enough timetokens";
-        } else {
-          resultBooking["message"] = "Payment required";
-        }
+        resultBooking["message"] = "Payment required";
         resultBooking["paymentUid"] = payment?.uid;
       } else {
         resultBooking = { ...foundBooking };

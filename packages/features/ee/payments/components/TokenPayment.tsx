@@ -73,8 +73,7 @@ const PaymentForm = (props: Props) => {
           <span id="button-text">
             {state.status === "processing" ? (
               <div className="spinner" id="spinner" />
-            ) : t("pay_now")
-            )}
+            ) : t("pay_now")}
           </span>
         </Button>
       </div>
