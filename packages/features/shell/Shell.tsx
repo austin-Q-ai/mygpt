@@ -656,7 +656,7 @@ const NavigationItem: React.FC<{
           href={item.href}
           aria-label={t(item.name)}
           className={classNames(
-            "[&[aria-current='page']]:bg-navItem  text-default group flex items-center rounded-md bg-opacity-80 px-2 py-1.5 text-sm font-medium",
+            "[&[aria-current='page']]:bg-pink/80  text-default group flex items-center rounded-md bg-opacity-80 px-2 py-1.5 text-sm font-medium",
             isChild
               ? `hidden h-8 pl-16 lg:flex lg:pl-11 [&[aria-current='page']]:bg-transparent [&[aria-current='page']]:text-white ${
                   props.index === 0 ? "mt-0" : "mt-px"

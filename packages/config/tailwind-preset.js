@@ -17,7 +17,6 @@ module.exports = {
     extend: {
       colors: {
         emphasis: "var(--cal-bg-emphasis)",
-        navItem: "var(--cal-bg-navItem)",
         default: "var(--cal-bg, white)",
         subtle: "var(--cal-bg-subtle)",
         muted: "var(--cal-bg-muted)",
@@ -28,6 +27,7 @@ module.exports = {
         error: "var(--cal-bg-error)",
         darkerror: "var(--cal-bg-dark-error)",
         black: "#111111",
+        pink: "#6D278E",
         brand: {
           default: "var(--cal-brand,#111827)",
           emphasis: "var(--cal-brand-emphasis,#101010)",
