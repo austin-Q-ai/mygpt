@@ -14,12 +14,13 @@ import {
   Avatar,
   Badge,
   Button,
+  ScrollableArea,
   showToast,
   SkeletonButton,
   SkeletonContainer,
   SkeletonText,
 } from "@calcom/ui";
-import { ArrowRight, Plus, Trash2 } from "@calcom/ui/components/icon";
+import { Plus, Trash2 } from "@calcom/ui/components/icon";
 
 const querySchema = z.object({
   id: z.string().transform((val) => parseInt(val)),
@@ -30,11 +31,13 @@ type TeamMember = RouterOutputs["viewer"]["teams"]["get"]["members"][number];
 type FormValues = {
   members: TeamMember[];
 };
-
-const AddNewTeamMembers = () => {
+type PropsAddNewTeamMembers = {
+  teamId?: any;
+};
+const AddNewTeamMembers = ({ teamId }: PropsAddNewTeamMembers) => {
   const session = useSession();
   const router = useRouter();
-  const { id: teamId } = router.isReady ? querySchema.parse(router.query) : { id: -1 };
+  // const { id: teamId } = router.isReady ? querySchema.parse(router.query) : { id: -1 };
   const teamQuery = trpc.viewer.teams.get.useQuery({ teamId }, { enabled: router.isReady });
   if (session.status === "loading" || !teamQuery.data) return <AddNewTeamMemberSkeleton />;
 
@@ -73,17 +76,19 @@ export const AddNewTeamMembersForm = ({
   return (
     <>
       <div>
-        <ul className="border-subtle rounded-md border" data-testid="pending-member-list">
-          {defaultValues.members.map((member, index) => (
-            <PendingMemberItem key={member.email} member={member} index={index} teamId={teamId} />
-          ))}
-        </ul>
+        <ScrollableArea className="max-h-[140px]">
+          <ul className="border-subtle rounded-md border" data-testid="pending-member-list">
+            {defaultValues.members.map((member, index) => (
+              <PendingMemberItem key={member.email} member={member} index={index} teamId={teamId} />
+            ))}
+          </ul>
+        </ScrollableArea>
         <Button
           color="secondary"
           data-testid="new-member-button"
           StartIcon={Plus}
           onClick={() => setMemberInviteModal(true)}
-          className="mt-6 w-full justify-center">
+          className="text-muted mt-6 w-full justify-center">
           {t("add_team_member")}
         </Button>
       </div>
@@ -155,9 +160,7 @@ export const AddNewTeamMembersForm = ({
           )}
         </>
       )}
-      <hr className="border-subtle my-6" />
       <Button
-        EndIcon={ArrowRight}
         color="primary"
         className="mt-6 w-full justify-center"
         disabled={publishTeamMutation.isLoading}
