@@ -191,9 +191,20 @@ async function handlePaymentSuccess(event: Stripe.Event) {
     // checking booker has enough timetokens
     const length = (booking.endTime.getTime() - booking.startTime.getTime()) / 60000; // minutes
     const amount = Math.ceil(length / 5);
+
+    // let email;
+    // if (booking.responses && booking.responses.hasOwnProperty('email')) {
+    //   email = booking.responses.email;
+    // } else throw new Error("No booker found");
+
+    const { email } = booking.responses as {
+      email?: string,
+      name?: string,
+    }
+
     const booker = await prisma.user.findFirst({
       where: {
-        email: booking.responses?.email,
+        email: email,
       },
       select: {
         id: true,

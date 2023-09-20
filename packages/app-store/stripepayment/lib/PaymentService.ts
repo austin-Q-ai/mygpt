@@ -6,9 +6,9 @@ import z from "zod";
 import { sendAwaitingPaymentEmail } from "@calcom/emails";
 import { getErrorFromUnknown } from "@calcom/lib/errors";
 import prisma from "@calcom/prisma";
+import { BookingStatus } from "@calcom/prisma/enums";
 import type { CalendarEvent } from "@calcom/types/Calendar";
 import type { IAbstractPaymentService } from "@calcom/types/PaymentService";
-import { BookingStatus } from "@calcom/prisma/enums";
 
 import { paymentOptionEnum } from "../zod";
 import { createPaymentLink } from "./client";
@@ -212,9 +212,23 @@ export class PaymentService implements IAbstractPaymentService {
         await prisma.$transaction([updateWallet, updateBooking]);
 
         // payment.amount = 0;
-        return {
+        const tmpPaymentData = {
+          id: -1,
           uid: "",
+          appId: null,
+          bookingId: null,
+          walletId: null,
+          amount: 0,
+          fee: 0,
+          currency: "",
+          success: false,
+          refunded: false,
+          data: {},
+          externalId: "",
+          paymentOption: null,
         };
+
+        return tmpPaymentData;
       }
 
       // user doesn't have enough timetokens
@@ -233,7 +247,8 @@ export class PaymentService implements IAbstractPaymentService {
 
       if (totalTokens.tokens < deltaTokens) throw new Error("Expert doesn't have enough timeTokens");
 
-      const price = booking.user?.price[booking.user?.price.length - 1] * deltaTokens;
+      const price =
+        (booking.user?.price ? booking.user?.price[booking.user?.price.length - 1] : 0) * deltaTokens;
       payment.amount = price * 100;
 
       // Load stripe keys

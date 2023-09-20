@@ -28,15 +28,9 @@ interface IEventTypePaymentCredentialType {
   key: Prisma.JsonValue;
 }
 
-async function handler(req: NextApiRequest & { userId?: number | undefined }): {
-  paymentUid: string;
-} {
+async function handler(req: NextApiRequest & { userId?: number | undefined }) {
   const { userId } = req;
   const { emitterId, amount } = req.body;
-
-  let result: {
-    paymentUid: string;
-  };
 
   if (!emitterId || !amount || !userId) throw new Error("Missing parameter!");
 
@@ -88,11 +82,9 @@ async function handler(req: NextApiRequest & { userId?: number | undefined }): {
     paymentAppCredential as IEventTypePaymentCredentialType
   );
 
-  result = {
-    paymentUid: payment?.uid,
-  }
+  const result: { paymentUid: string } = { paymentUid: payment?.uid || "" };
 
   return result;
 }
 
-export default handler
+export default handler;

@@ -108,7 +108,10 @@ body  {
   -webkit-font-smoothing: antialiased;
 }
 
-
+.bg-global {
+  background-image: url('../public/background.png');
+  background-size: cover;
+}
 
 /*
   Desktop App specific CSS

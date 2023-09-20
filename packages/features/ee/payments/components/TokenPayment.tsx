@@ -12,8 +12,6 @@ import { CAL_URL } from "@calcom/lib/constants";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { Button } from "@calcom/ui";
 
-import type { EventType } from ".prisma/client";
-
 type Props = {
   payment: Omit<Payment, "id" | "fee" | "success" | "refunded" | "externalId" | "data"> & {
     data: StripePaymentData | StripeSetupIntentData;
@@ -71,9 +69,7 @@ const PaymentForm = (props: Props) => {
           id="submit"
           color="secondary">
           <span id="button-text">
-            {state.status === "processing" ? (
-              <div className="spinner" id="spinner" />
-            ) : t("pay_now")}
+            {state.status === "processing" ? <div className="spinner" id="spinner" /> : t("pay_now")}
           </span>
         </Button>
       </div>
@@ -109,7 +105,7 @@ export default function TokenPaymentComponent(props: Props) {
     setDarkMode(window.matchMedia("(prefers-color-scheme: dark)").matches);
   }, []);
 
-  const clientSecret: string | null = props.payment.data.client_secret;
+  const clientSecret: string | null = (props.payment.data as StripePaymentData).client_secret;
 
   return (
     <Elements

@@ -37,22 +37,78 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
             select: {
               username: true,
               price: true,
-            }
+            },
           },
           amount: true,
-        }
+        },
       },
       appId: true,
       amount: true,
       currency: true,
+      paymentOption: true,
+      booking: {
+        select: {
+          id: true,
+          uid: true,
+          description: true,
+          title: true,
+          startTime: true,
+          attendees: {
+            select: {
+              email: true,
+              name: true,
+            },
+          },
+          eventTypeId: true,
+          location: true,
+          status: true,
+          rejectionReason: true,
+          cancellationReason: true,
+          eventType: {
+            select: {
+              id: true,
+              title: true,
+              description: true,
+              length: true,
+              eventName: true,
+              requiresConfirmation: true,
+              userId: true,
+              metadata: true,
+              users: {
+                select: {
+                  name: true,
+                  username: true,
+                  hideBranding: true,
+                  theme: true,
+                },
+              },
+              team: {
+                select: {
+                  name: true,
+                  hideBranding: true,
+                },
+              },
+              price: true,
+              currency: true,
+              successRedirectUrl: true,
+            },
+          },
+        },
+      },
     },
   });
 
   if (testPayment && testPayment.walletId) {
+    const { data, booking, ...restPayment } = testPayment;
+    const payment = {
+      ...restPayment,
+      data: data as unknown as StripePaymentData | StripeSetupIntentData,
+    };
+
     return {
       props: {
         trpcState: ssr.dehydrate(),
-        payment: testPayment,
+        payment: payment,
         buyToken: true,
       },
     };
@@ -68,6 +124,18 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
       uid: true,
       refunded: true,
       bookingId: true,
+      walletId: true,
+      wallet: {
+        select: {
+          emitter: {
+            select: {
+              username: true,
+              price: true,
+            },
+          },
+          amount: true,
+        },
+      },
       appId: true,
       amount: true,
       currency: true,

@@ -70,13 +70,13 @@ const PaymentPage: FC<PaymentPageProps> = (props) => {
                     </h3>
                     <div className="text-default mt-4 grid grid-cols-3 border-b border-t py-4 text-left dark:border-gray-900 dark:text-gray-300">
                       <div className="font-medium">{t("expert")}</div>
-                      <div className="col-span-2 mb-6">{props.payment.wallet.emitter?.username}</div>
+                      <div className="col-span-2 mb-6">{props.payment.wallet?.emitter?.username}</div>
                       <div className="font-medium">{t("token_price")}</div>
                       <div className="col-span-2 mb-6">
-                        {props.payment.wallet.emitter.price[props.payment.wallet.emitter.price.length - 1]}
+                        {props.payment.wallet?.emitter.price[props.payment.wallet?.emitter.price.length - 1]}
                       </div>
                       <div className="font-medium">{t("token_amount")}</div>
-                      <div className="col-span-2 mb-6 font-semibold">{props.payment.wallet.amount}</div>
+                      <div className="col-span-2 mb-6 font-semibold">{props.payment.wallet?.amount}</div>
                     </div>
                   </div>
                 </div>

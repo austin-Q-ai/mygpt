@@ -19,11 +19,11 @@ type Props = {
   payment: Omit<Payment, "id" | "fee" | "success" | "refunded" | "externalId" | "data"> & {
     data: StripePaymentData | StripeSetupIntentData;
   };
-  eventType: { id: number; successRedirectUrl: EventType["successRedirectUrl"] };
-  user: { username: string | null };
+  eventType?: { id: number; successRedirectUrl: EventType["successRedirectUrl"] };
+  user?: { username: string | null };
   location?: string | null;
-  bookingId: number;
-  bookingUid: string;
+  bookingId?: number;
+  bookingUid?: string;
 };
 
 type States =
@@ -56,18 +56,18 @@ const PaymentForm = (props: Props) => {
       uid: props.bookingUid,
       email: router.query.email,
     };
-    if (paymentOption === "HOLD" && "setupIntent" in props.payment.data) {
+    if (paymentOption === "HOLD" && "setupIntent" in (props.payment.data as StripeSetupIntentData)) {
       payload = await stripe.confirmSetup({
         elements,
         confirmParams: {
-          return_url: props.eventType.successRedirectUrl || `${CAL_URL}/booking/${props.bookingUid}`,
+          return_url: props.eventType?.successRedirectUrl || `${CAL_URL}/booking/${props.bookingUid}`,
         },
       });
     } else if (paymentOption === "ON_BOOKING") {
       payload = await stripe.confirmPayment({
         elements,
         confirmParams: {
-          return_url: props.eventType.successRedirectUrl || `${CAL_URL}/booking/${props.bookingUid}`,
+          return_url: props.eventType?.successRedirectUrl || `${CAL_URL}/booking/${props.bookingUid}`,
         },
       });
     }
@@ -88,7 +88,7 @@ const PaymentForm = (props: Props) => {
 
       return bookingSuccessRedirect({
         router,
-        successRedirectUrl: props.eventType.successRedirectUrl,
+        successRedirectUrl: props.eventType?.successRedirectUrl || "",
         query: params,
         bookingUid: props.bookingUid,
       });
@@ -171,10 +171,10 @@ export default function PaymentComponent(props: Props) {
     setDarkMode(window.matchMedia("(prefers-color-scheme: dark)").matches);
   }, []);
 
-  if (paymentOption === "HOLD" && "setupIntent" in props.payment.data) {
-    clientSecret = props.payment.data.setupIntent.client_secret;
-  } else if (!("setupIntent" in props.payment.data)) {
-    clientSecret = props.payment.data.client_secret;
+  if (paymentOption === "HOLD" && "setupIntent" in (props.payment.data as StripeSetupIntentData)) {
+    clientSecret = (props.payment.data as StripeSetupIntentData).setupIntent.client_secret;
+  } else if (!("setupIntent" in (props.payment.data as StripeSetupIntentData))) {
+    clientSecret = (props.payment.data as StripePaymentData).client_secret;
   }
 
   return (

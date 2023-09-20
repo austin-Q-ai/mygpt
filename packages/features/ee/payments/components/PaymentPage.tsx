@@ -20,11 +20,11 @@ import PaymentComponent from "./Payment";
 const PaymentPage: FC<PaymentPageProps> = (props) => {
   const { t, i18n } = useLocale();
   const [is24h, setIs24h] = useState(isBrowserLocale24h());
-  const [date, setDate] = useState(dayjs.utc(props.booking.startTime));
+  const [date, setDate] = useState(dayjs.utc(props.booking?.startTime));
   const [timezone, setTimezone] = useState<string | null>(null);
-  useTheme(props.profile.theme);
+  useTheme(props.profile?.theme);
   const isEmbed = useIsEmbed();
-  const paymentAppData = getPaymentAppData(props.eventType);
+  const paymentAppData = getPaymentAppData(props.eventType!);
   useEffect(() => {
     let embedIframeWidth = 0;
     const _timezone = localStorage.getItem("timeOption.preferredTimeZone") || dayjs.tz.guess();
@@ -50,7 +50,7 @@ const PaymentPage: FC<PaymentPageProps> = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEmbed]);
 
-  const eventName = props.booking.title;
+  const eventName = props.booking?.title;
 
   return (
     <div className="h-screen">
@@ -82,7 +82,7 @@ const PaymentPage: FC<PaymentPageProps> = (props) => {
 
                   <div className="mt-3 text-center sm:mt-5">
                     <h3 className="text-emphasis text-2xl font-semibold leading-6" id="modal-headline">
-                      {paymentAppData.paymentOption === "HOLD" ? t("complete_your_booking") : t("payment")}
+                      {t("payment")}
                     </h3>
                     <div className="text-default mt-4 grid grid-cols-3 border-b border-t py-4 text-left dark:border-gray-900 dark:text-gray-300">
                       <div className="font-medium">{t("what")}</div>
@@ -91,19 +91,19 @@ const PaymentPage: FC<PaymentPageProps> = (props) => {
                       <div className="col-span-2 mb-6">
                         {date.format("dddd, DD MMMM YYYY")}
                         <br />
-                        {date.format(is24h ? "H:mm" : "h:mma")} - {props.eventType.length} mins{" "}
+                        {date.format(is24h ? "H:mm" : "h:mma")} - {props.eventType?.length} mins{" "}
                         <span className="text-subtle">({timezone})</span>
                       </div>
-                      {props.booking.location && (
+                      {props.booking?.location && (
                         <>
                           <div className="font-medium">{t("where")}</div>
                           <div className="col-span-2 mb-6">
-                            {getSuccessPageLocationMessage(props.booking.location, t)}
+                            {getSuccessPageLocationMessage(props.booking?.location, t)}
                           </div>
                         </>
                       )}
                       <div className="font-medium">
-                        {props.payment.paymentOption === "HOLD" ? t("no_show_fee") : t("price")}
+                        {t("price")}
                       </div>
                       <div className="col-span-2 mb-6 font-semibold">
                         {new Intl.NumberFormat(i18n.language, {
@@ -115,24 +115,24 @@ const PaymentPage: FC<PaymentPageProps> = (props) => {
                   </div>
                 </div>
                 <div>
-                  {props.payment.success && !props.payment.refunded && (
+                  {props.payment?.success && !props.payment?.refunded && (
                     <div className="text-default mt-4 text-center dark:text-gray-300">{t("paid")}</div>
                   )}
-                  {props.payment.appId === "stripe" && !props.payment.success && (
+                  {props.payment?.appId === "stripe" && !props.payment?.success && (
                     <PaymentComponent
                       payment={props.payment}
                       eventType={props.eventType}
                       user={props.user}
-                      location={props.booking.location}
-                      bookingId={props.booking.id}
-                      bookingUid={props.booking.uid}
+                      location={props.booking?.location}
+                      bookingId={props.booking?.id}
+                      bookingUid={props.booking?.uid}
                     />
                   )}
-                  {props.payment.refunded && (
+                  {props.payment?.refunded && (
                     <div className="text-default mt-4 text-center dark:text-gray-300">{t("refunded")}</div>
                   )}
                 </div>
-                {!props.profile.hideBranding && (
+                {!props.profile?.hideBranding && (
                   <div className="text-muted dark:text-inverted mt-4 border-t pt-4 text-center text-xs dark:border-gray-900">
                     <a href={`${WEBSITE_URL}/signup`}>
                       {t("create_booking_link_with_calcom", { appName: APP_NAME })}

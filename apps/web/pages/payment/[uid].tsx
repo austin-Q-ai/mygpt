@@ -6,7 +6,7 @@ import type { inferSSRProps } from "@calcom/types/inferSSRProps";
 import PageWrapper from "@components/PageWrapper";
 
 export default function Payment(props: inferSSRProps<typeof getServerSideProps>) {
-  return props.buyToken ? <TokenPaymentPage {...props} /> : <PaymentPage {...props} /> ;
+  return props.buyToken ? <TokenPaymentPage {...props} /> : <PaymentPage {...props} />;
 }
 Payment.PageWrapper = PageWrapper;
 export { getServerSideProps };
