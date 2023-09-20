@@ -15,6 +15,7 @@ const badgeStyles = cva("font-medium inline-flex items-center justify-center rou
       success: "bg-success text-success",
       green: "bg-success text-success",
       gray: "bg-subtle text-emphasis",
+      pink: "bg-[#6D278E1A] bg-opacity-10 text-emphasis",
       blue: "bg-info text-info",
       red: "bg-error text-error",
       error: "bg-error text-error",
