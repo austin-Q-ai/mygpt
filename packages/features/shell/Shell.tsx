@@ -67,6 +67,7 @@ import {
   LogOut,
   Map,
   Moon,
+  MoreHorizontal,
   ChevronDown,
   Copy,
   Settings,
@@ -559,11 +560,11 @@ const navigation: NavigationItemType[] = [
   //     },
   //   ],
   // },
-  // {
-  //   name: MORE_SEPARATOR_NAME,
-  //   href: "/more",
-  //   icon: MoreHorizontal,
-  // },
+  {
+    name: MORE_SEPARATOR_NAME,
+    href: "/more",
+    icon: MoreHorizontal,
+  },
   // {
   //   name: "Routing Forms",
   //   href: "/apps/routing-forms/forms",
