@@ -66,7 +66,7 @@ type ImageUploaderProps = {
   handleAvatarChange: (imageSrc: string) => void;
   imageSrc?: string;
   target: string;
-  large: boolean;
+  large?: boolean;
 };
 
 interface FileEvent<T = Element> extends FormEvent<T> {
