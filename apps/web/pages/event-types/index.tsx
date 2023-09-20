@@ -12,7 +12,6 @@ import useIntercom from "@calcom/features/ee/support/lib/intercom/useIntercom";
 import { EventTypeDescriptionLazy as EventTypeDescription } from "@calcom/features/eventtypes/components";
 import CreateEventTypeDialog from "@calcom/features/eventtypes/components/CreateEventTypeDialog";
 import { DuplicateDialog } from "@calcom/features/eventtypes/components/DuplicateDialog";
-import { TeamsFilter } from "@calcom/features/filters/components/TeamsFilter";
 import { getTeamsFiltersFromQuery } from "@calcom/features/filters/lib/getTeamsFiltersFromQuery";
 import Shell from "@calcom/features/shell/Shell";
 import { APP_NAME, CAL_URL, WEBAPP_URL } from "@calcom/lib/constants";
@@ -23,6 +22,7 @@ import { HttpError } from "@calcom/lib/http-error";
 import { SchedulingType } from "@calcom/prisma/enums";
 import type { RouterOutputs } from "@calcom/trpc/react";
 import { trpc, TRPCClientError } from "@calcom/trpc/react";
+import type { SVGComponent } from "@calcom/types/SVGComponent";
 import {
   Avatar,
   AvatarGroup,
@@ -64,6 +64,10 @@ import {
   Upload,
   Users,
   User as UserIcon,
+  Video,
+  Laptop2,
+  Phone,
+  UserPlus,
 } from "@calcom/ui/components/icon";
 
 import { withQuery } from "@lib/QueryCell";
@@ -95,6 +99,11 @@ interface EventTypeListProps {
 
 interface MobileTeamsTabProps {
   eventTypeGroups: EventTypeGroups;
+}
+
+interface topItemProps {
+  StartIcon: SVGComponent | React.ElementType;
+  label: string;
 }
 
 const querySchema = z.object({
@@ -791,6 +800,7 @@ const CTA = () => {
 
   return (
     <CreateButton
+      rounded
       data-testid="new-event-type"
       subtitle={t("create_event_on").toUpperCase()}
       options={profileOptions}
@@ -799,10 +809,35 @@ const CTA = () => {
   );
 };
 
+const TopItem = (props: topItemProps) => {
+  const { t } = useLocale();
+  const { StartIcon, label } = props;
+  console.log(`ok ${t(label)}`);
+  return (
+    <div className="flex items-center">
+      <div className="m-1 flex h-8 w-8 items-center justify-center rounded-full bg-[#6D278E] bg-opacity-10">
+        <StartIcon className="text-[8px] leading-4" />
+      </div>
+      <p className="mr-6 text-sm">{t(label)}</p>
+    </div>
+  );
+};
+
 const Actions = () => {
   return (
     <div className="hidden items-center md:flex">
-      <TeamsFilter popoverTriggerClassNames="mb-0" showVerticalDivider={true} />
+      <div className="text-navItem mr-2 flex rounded bg-[#6D278E] bg-opacity-5">
+        <TopItem StartIcon={Video} label="video_conference" />
+        <TopItem StartIcon={Laptop2} label="webinar" />
+        <TopItem StartIcon={Phone} label="phone_call" />
+        <TopItem StartIcon={UserPlus} label="meeting" />
+        <div className="flex flex-col justify-end">
+          <div className="mr-2">
+            <MoreHorizontal className="text-[8px] leading-4" />
+          </div>
+        </div>
+      </div>
+      {/* <TeamsFilter popoverTriggerClassNames="mb-0" showVerticalDivider={true} /> */}
     </div>
   );
 };

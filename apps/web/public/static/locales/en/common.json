@@ -2034,5 +2034,9 @@
   "exp": "Experience",
   "edu": "Education",
   "skill": "Skills",
-  "position": "Position"
+  "position": "Position",
+  "meeting": "Meeting",
+  "video_conference": "VideoConference",
+  "webinar": "Webinar",
+  "phone_call": "Phone Call"
 }
