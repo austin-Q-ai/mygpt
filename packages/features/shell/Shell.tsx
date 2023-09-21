@@ -62,8 +62,6 @@ import {
   Clock,
   Download,
   ExternalLink,
-  FileText,
-  Grid,
   HelpCircle,
   Link as LinkIcon,
   LogOut,
@@ -75,7 +73,6 @@ import {
   Settings,
   Slack,
   Users,
-  Zap,
   Wallet,
   User as UserIcon,
 } from "@calcom/ui/components/icon";
@@ -528,59 +525,59 @@ const navigation: NavigationItemType[] = [
     onlyDesktop: true,
     badge: <TeamInviteBadge />,
   },
-  {
-    name: "apps",
-    href: "/apps",
-    icon: Grid,
-    isCurrent: ({ router, item }) => {
-      const path = router.asPath.split("?")[0];
-      // During Server rendering path is /v2/apps but on client it becomes /apps(weird..)
-      return (
-        (path.startsWith(item.href) || path.startsWith("/v2" + item.href)) && !path.includes("routing-forms/")
-      );
-    },
-    child: [
-      {
-        name: "app_store",
-        href: "/apps",
-        isCurrent: ({ router, item }) => {
-          const path = router.asPath.split("?")[0];
-          // During Server rendering path is /v2/apps but on client it becomes /apps(weird..)
-          return (
-            (path.startsWith(item.href) || path.startsWith("/v2" + item.href)) &&
-            !path.includes("routing-forms/") &&
-            !path.includes("/installed")
-          );
-        },
-      },
-      {
-        name: "installed_apps",
-        href: "/apps/installed/calendar",
-        isCurrent: ({ router }) => {
-          const path = router.asPath;
-          return path.startsWith("/apps/installed/") || path.startsWith("/v2/apps/installed/");
-        },
-      },
-    ],
-  },
+  // {
+  //   name: "apps",
+  //   href: "/apps",
+  //   icon: Grid,
+  //   isCurrent: ({ router, item }) => {
+  //     const path = router.asPath.split("?")[0];
+  //     // During Server rendering path is /v2/apps but on client it becomes /apps(weird..)
+  //     return (
+  //       (path.startsWith(item.href) || path.startsWith("/v2" + item.href)) && !path.includes("routing-forms/")
+  //     );
+  //   },
+  //   child: [
+  //     {
+  //       name: "app_store",
+  //       href: "/apps",
+  //       isCurrent: ({ router, item }) => {
+  //         const path = router.asPath.split("?")[0];
+  //         // During Server rendering path is /v2/apps but on client it becomes /apps(weird..)
+  //         return (
+  //           (path.startsWith(item.href) || path.startsWith("/v2" + item.href)) &&
+  //           !path.includes("routing-forms/") &&
+  //           !path.includes("/installed")
+  //         );
+  //       },
+  //     },
+  //     {
+  //       name: "installed_apps",
+  //       href: "/apps/installed/calendar",
+  //       isCurrent: ({ router }) => {
+  //         const path = router.asPath;
+  //         return path.startsWith("/apps/installed/") || path.startsWith("/v2/apps/installed/");
+  //       },
+  //     },
+  //   ],
+  // },
   {
     name: MORE_SEPARATOR_NAME,
     href: "/more",
     icon: MoreHorizontal,
   },
-  {
-    name: "Routing Forms",
-    href: "/apps/routing-forms/forms",
-    icon: FileText,
-    isCurrent: ({ router }) => {
-      return router.asPath.startsWith("/apps/routing-forms/");
-    },
-  },
-  {
-    name: "workflows",
-    href: "/workflows",
-    icon: Zap,
-  },
+  // {
+  //   name: "Routing Forms",
+  //   href: "/apps/routing-forms/forms",
+  //   icon: FileText,
+  //   isCurrent: ({ router }) => {
+  //     return router.asPath.startsWith("/apps/routing-forms/");
+  //   },
+  // },
+  // {
+  //   name: "workflows",
+  //   href: "/workflows",
+  //   icon: Zap,
+  // },
   {
     name: "insights",
     href: "/insights",
@@ -660,12 +657,12 @@ const NavigationItem: React.FC<{
           href={item.href}
           aria-label={t(item.name)}
           className={classNames(
-            "[&[aria-current='page']]:bg-emphasis  text-default group flex items-center rounded-md px-2 py-1.5 text-sm font-medium",
+            "[&[aria-current='page']]:bg-pink/80  text-default group flex items-center rounded-md bg-opacity-80 px-2 py-1.5 text-sm font-medium",
             isChild
-              ? `[&[aria-current='page']]:text-emphasis hidden h-8 pl-16 lg:flex lg:pl-11 [&[aria-current='page']]:bg-transparent ${
+              ? `hidden h-8 pl-16 lg:flex lg:pl-11 [&[aria-current='page']]:bg-transparent [&[aria-current='page']]:text-white ${
                   props.index === 0 ? "mt-0" : "mt-px"
                 }`
-              : "[&[aria-current='page']]:text-emphasis mt-0.5 text-sm",
+              : "mt-0.5 text-sm [&[aria-current='page']]:text-white",
             isLocaleReady ? "hover:bg-emphasis hover:text-emphasis" : ""
           )}
           aria-current={current ? "page" : undefined}>
@@ -950,14 +947,14 @@ export function ShellMain(props: LayoutProps) {
       {(props.heading || !!props.backPath) && (
         <div
           className={classNames(
-            "flex items-center md:mb-6 md:mt-0",
+            "mx-8 flex items-center md:mb-6 md:mt-0",
             props.smallHeading ? "lg:mb-7" : "lg:mb-8",
             props.hideHeadingOnMobile ? "mb-0" : "mb-6"
           )}>
           {!!props.backPath && (
             <Button
               variant="icon"
-              size="sm"
+              size="lg"
               color="minimal"
               onClick={() =>
                 typeof props.backPath === "string" ? router.push(props.backPath as string) : router.back()

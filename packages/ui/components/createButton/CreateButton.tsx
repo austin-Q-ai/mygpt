@@ -30,6 +30,7 @@ export type CreateBtnProps = {
   isLoading?: boolean;
   disableMobileButton?: boolean;
   "data-testid"?: string;
+  rounded?: boolean;
 };
 
 /**
@@ -46,6 +47,7 @@ export function CreateButton(props: CreateBtnProps) {
     buttonText,
     disableMobileButton,
     subtitle,
+    rounded,
     ...restProps
   } = props;
   const CreateDialog = createDialog ? createDialog() : null;
@@ -77,6 +79,7 @@ export function CreateButton(props: CreateBtnProps) {
     <>
       {!hasTeams ? (
         <Button
+          rounded={rounded}
           onClick={() =>
             !!CreateDialog
               ? openModal(options[0])
@@ -86,19 +89,20 @@ export function CreateButton(props: CreateBtnProps) {
           }
           StartIcon={Plus}
           loading={isLoading}
-          variant={disableMobileButton ? "button" : "fab"}
+          variant={rounded ? "icon" : disableMobileButton ? "button" : "fab"}
           {...restProps}>
-          {buttonText ? buttonText : t("new")}
+          {rounded ? "icon" : buttonText ? buttonText : t("new")}
         </Button>
       ) : (
         <Dropdown>
           <DropdownMenuTrigger asChild>
             <Button
-              variant={disableMobileButton ? "button" : "fab"}
+              rounded={rounded}
+              variant={rounded ? "icon" : disableMobileButton ? "button" : "fab"}
               StartIcon={Plus}
               loading={isLoading}
               {...restProps}>
-              {buttonText ? buttonText : t("new")}
+              {rounded ? "" : buttonText ? buttonText : t("new")}
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent sideOffset={14} align="end">
