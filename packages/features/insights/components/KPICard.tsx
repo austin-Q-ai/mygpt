@@ -1,9 +1,8 @@
-import { Flex, Text, Metric, BadgeDelta } from "@tremor/react";
+import { Flex, Text, Metric } from "@tremor/react";
 
 import { useLocale } from "@calcom/lib/hooks/useLocale";
-import { Tooltip } from "@calcom/ui";
 
-import { calculateDeltaType, colors, valueFormatter } from "../lib";
+import { valueFormatter } from "../lib";
 import { CardInsights } from "./Card";
 
 export const KPICard = ({
@@ -26,7 +25,7 @@ export const KPICard = ({
       <Flex className="items-baseline justify-start space-x-3 truncate">
         <Metric className="text-emphasis">{valueFormatter(previousMetricData.count)}</Metric>
       </Flex>
-      <Flex className="mt-4 justify-start space-x-2">
+      {/* <Flex className="mt-4 justify-start space-x-2">
         <BadgeDelta
           deltaType={calculateDeltaType(previousMetricData.deltaPrevious - previousMetricData.count)}
         />
@@ -46,7 +45,7 @@ export const KPICard = ({
             </small>
           </Tooltip>
         </Flex>
-      </Flex>
+      </Flex> */}
     </CardInsights>
   );
 };
