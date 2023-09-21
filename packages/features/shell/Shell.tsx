@@ -74,6 +74,7 @@ import {
   Slack,
   Users,
   Wallet,
+  Grid,
   User as UserIcon,
 } from "@calcom/ui/components/icon";
 
@@ -525,41 +526,41 @@ const navigation: NavigationItemType[] = [
     onlyDesktop: true,
     badge: <TeamInviteBadge />,
   },
-  // {
-  //   name: "apps",
-  //   href: "/apps",
-  //   icon: Grid,
-  //   isCurrent: ({ router, item }) => {
-  //     const path = router.asPath.split("?")[0];
-  //     // During Server rendering path is /v2/apps but on client it becomes /apps(weird..)
-  //     return (
-  //       (path.startsWith(item.href) || path.startsWith("/v2" + item.href)) && !path.includes("routing-forms/")
-  //     );
-  //   },
-  //   child: [
-  //     {
-  //       name: "app_store",
-  //       href: "/apps",
-  //       isCurrent: ({ router, item }) => {
-  //         const path = router.asPath.split("?")[0];
-  //         // During Server rendering path is /v2/apps but on client it becomes /apps(weird..)
-  //         return (
-  //           (path.startsWith(item.href) || path.startsWith("/v2" + item.href)) &&
-  //           !path.includes("routing-forms/") &&
-  //           !path.includes("/installed")
-  //         );
-  //       },
-  //     },
-  //     {
-  //       name: "installed_apps",
-  //       href: "/apps/installed/calendar",
-  //       isCurrent: ({ router }) => {
-  //         const path = router.asPath;
-  //         return path.startsWith("/apps/installed/") || path.startsWith("/v2/apps/installed/");
-  //       },
-  //     },
-  //   ],
-  // },
+  {
+    name: "apps",
+    href: "/apps",
+    icon: Grid,
+    isCurrent: ({ router, item }) => {
+      const path = router.asPath.split("?")[0];
+      // During Server rendering path is /v2/apps but on client it becomes /apps(weird..)
+      return (
+        (path.startsWith(item.href) || path.startsWith("/v2" + item.href)) && !path.includes("routing-forms/")
+      );
+    },
+    child: [
+      {
+        name: "app_store",
+        href: "/apps",
+        isCurrent: ({ router, item }) => {
+          const path = router.asPath.split("?")[0];
+          // During Server rendering path is /v2/apps but on client it becomes /apps(weird..)
+          return (
+            (path.startsWith(item.href) || path.startsWith("/v2" + item.href)) &&
+            !path.includes("routing-forms/") &&
+            !path.includes("/installed")
+          );
+        },
+      },
+      {
+        name: "installed_apps",
+        href: "/apps/installed/calendar",
+        isCurrent: ({ router }) => {
+          const path = router.asPath;
+          return path.startsWith("/apps/installed/") || path.startsWith("/v2/apps/installed/");
+        },
+      },
+    ],
+  },
   {
     name: MORE_SEPARATOR_NAME,
     href: "/more",

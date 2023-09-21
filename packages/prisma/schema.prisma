@@ -217,30 +217,30 @@ model User {
   startTime                    Int                     @default(0)
   endTime                      Int                     @default(1440)
   // </DEPRECATED>
-  bufferTime            Int                     @default(0)
-  hideBranding          Boolean                 @default(false)
-  theme                 String?
-  createdDate           DateTime                @default(now()) @map(name: "created")
-  trialEndsAt           DateTime?
-  eventTypes            EventType[]             @relation("user_eventtype")
-  credentials           Credential[]
-  teams                 Membership[]
-  bookings              Booking[]
-  schedules             Schedule[]
-  defaultScheduleId     Int?
-  selectedCalendars     SelectedCalendar[]
-  completedOnboarding   Boolean                 @default(false)
-  locale                String?
-  timeFormat            Int?                    @default(12)
-  twoFactorSecret       String?
-  twoFactorEnabled      Boolean                 @default(false)
-  identityProvider      IdentityProvider        @default(CAL)
-  identityProviderId    String?
-  availability          Availability[]
-  invitedTo             Int?
-  webhooks              Webhook[]
-  brandColor            String                  @default("#6d278e")
-  darkBrandColor        String                  @default("#fafafa")
+  bufferTime                   Int                     @default(0)
+  hideBranding                 Boolean                 @default(false)
+  theme                        String?
+  createdDate                  DateTime                @default(now()) @map(name: "created")
+  trialEndsAt                  DateTime?
+  eventTypes                   EventType[]             @relation("user_eventtype")
+  credentials                  Credential[]
+  teams                        Membership[]
+  bookings                     Booking[]
+  schedules                    Schedule[]
+  defaultScheduleId            Int?
+  selectedCalendars            SelectedCalendar[]
+  completedOnboarding          Boolean                 @default(false)
+  locale                       String?
+  timeFormat                   Int?                    @default(12)
+  twoFactorSecret              String?
+  twoFactorEnabled             Boolean                 @default(false)
+  identityProvider             IdentityProvider        @default(CAL)
+  identityProviderId           String?
+  availability                 Availability[]
+  invitedTo                    Int?
+  webhooks                     Webhook[]
+  brandColor                   String                  @default("#6d278e")
+  darkBrandColor               String                  @default("#fafafa")
   // the location where the events will end up
   destinationCalendar          DestinationCalendar?
   away                         Boolean                 @default(false)
