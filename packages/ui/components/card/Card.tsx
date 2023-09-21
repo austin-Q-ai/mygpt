@@ -58,7 +58,7 @@ const cvaCardTypeByVariant = cva("", {
     {
       variant: "ProfileCard",
       structure: "card",
-      className: "w-80 p-4 hover:bg-subtle",
+      className: "w-80 p-4 hover:bg-pink/10",
     },
     {
       variant: "ProfileCard",
@@ -136,7 +136,7 @@ export function Card({
       className={classNames(
         containerProps?.className,
         cvaCardTypeByVariant({ variant, structure: "card" }),
-        "bg-default border-subtle text-default flex flex-col justify-between rounded-md border"
+        "bg-pink/5 border-subtle text-default flex flex-col justify-between rounded-md border"
       )}
       {...containerProps}>
       <div>
@@ -166,20 +166,12 @@ export function Card({
             {typeof description === "string" ? (
               <p
                 title={description}
-                className={classNames(
-                  cvaCardTypeByVariant({ variant, structure: "description" }),
-                  "pt-1"
-                )}
-              >
+                className={classNames(cvaCardTypeByVariant({ variant, structure: "description" }), "pt-1")}>
                 {description}
               </p>
             ) : (
               <div
-                className={classNames(
-                  cvaCardTypeByVariant({ variant, structure: "description" }),
-                  "pt-1"
-                )}
-              >
+                className={classNames(cvaCardTypeByVariant({ variant, structure: "description" }), "pt-1")}>
                 {description}
               </div>
             )}

@@ -812,7 +812,6 @@ const CTA = () => {
 const TopItem = (props: topItemProps) => {
   const { t } = useLocale();
   const { StartIcon, label } = props;
-  console.log(`ok ${t(label)}`);
   return (
     <div className="flex items-center">
       <div className="bg-pink/10 m-1 flex h-8 w-8 items-center justify-center rounded-full">
