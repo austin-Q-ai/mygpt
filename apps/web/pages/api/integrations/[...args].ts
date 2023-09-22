@@ -58,6 +58,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const handlers = await handlerMap[handlerKey as keyof typeof handlerMap];
     const handler = handlers[apiEndpoint as keyof typeof handlers] as AppHandler;
     let redirectUrl = "/apps/installed";
+
     if (typeof handler === "undefined")
       throw new HttpError({ statusCode: 404, message: `API handler not found` });
 
@@ -71,7 +72,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(200);
   } catch (error) {
     console.error(error);
-
     if (error instanceof HttpError) {
       return res.status(error.statusCode).json({ message: error.message });
     }

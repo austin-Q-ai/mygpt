@@ -210,8 +210,8 @@ export default function Availability() {
             <DialogTrigger asChild>
               <Button
                 StartIcon={Trash}
-                variant="icon"
                 size="lg"
+                variant="icon"
                 color="destructive"
                 aria-label={t("delete")}
                 className="p-none mr-1 hidden border-0 sm:inline"

@@ -9,7 +9,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import type { EventLocationType } from "@calcom/app-store/locations";
-import { createPaymentLink } from "@calcom/app-store/stripepayment/lib/client";
 import dayjs from "@calcom/dayjs";
 import {
   useTimePreferences,
@@ -35,11 +34,21 @@ import { useEvent } from "../../utils/event";
 import { BookingFields } from "./BookingFields";
 import { FormSkeleton } from "./Skeleton";
 
-type BookEventFormProps = {
-  onCancel?: () => void;
+export type BookEventModalProps = {
+  expertId: number;
+  username: string;
+  name: string;
+  amount: number;
+  price: number[];
 };
 
-export const BookEventForm = ({ onCancel }: BookEventFormProps) => {
+type BookEventFormProps = {
+  onCancel?: () => void;
+  onCallPayment?: (value: boolean) => void;
+  onSetModalData?: (data: BookEventModalProps) => void;
+};
+
+export const BookEventForm = ({ onCancel, onCallPayment, onSetModalData }: BookEventFormProps) => {
   const reserveSlotMutation = trpc.viewer.public.slots.reserveSlot.useMutation({
     trpc: { context: { skipBatch: true } },
   });
@@ -192,17 +201,23 @@ export const BookEventForm = ({ onCancel }: BookEventFormProps) => {
 
   const createBookingMutation = useMutation(createBooking, {
     onSuccess: async (responseData) => {
-      const { uid, paymentUid } = responseData;
-      if (paymentUid) {
-        return await router.push(
-          createPaymentLink({
-            paymentUid,
-            date: timeslot,
-            name: bookingForm.getValues("responses.name"),
-            email: bookingForm.getValues("responses.email"),
-            absolute: false,
-          })
-        );
+      const { uid, paymentUid, error, data } = responseData;
+      // if (paymentUid) {
+      //   return await router.push(
+      //     createPaymentLink({
+      //       paymentUid,
+      //       date: timeslot,
+      //       name: bookingForm.getValues("responses.name"),
+      //       email: bookingForm.getValues("responses.email"),
+      //       absolute: false,
+      //     })
+      //   );
+      // }
+      if (error) {
+        console.log("Error: ", data);
+        if (onSetModalData && data) onSetModalData(data);
+        if (onCallPayment) onCallPayment(true);
+        return;
       }
 
       if (!uid) {

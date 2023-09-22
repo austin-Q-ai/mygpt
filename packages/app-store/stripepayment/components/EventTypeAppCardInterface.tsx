@@ -61,7 +61,7 @@ const EventTypeAppCard: EventTypeAppCardComponent = function EventTypeAppCard({ 
         {recurringEventDefined && (
           <Alert className="mt-2" severity="warning" title={t("warning_recurring_event_payment")} />
         )}
-        {!recurringEventDefined && requirePayment && (
+        {/* {!recurringEventDefined && requirePayment && (
           <>
             <div className="mt-2 block items-center justify-start sm:flex sm:space-x-2">
               <TextField
@@ -100,7 +100,7 @@ const EventTypeAppCard: EventTypeAppCardComponent = function EventTypeAppCard({ 
               <Alert className="mt-2" severity="warning" title={t("seats_and_no_show_fee_error")} />
             )}
           </>
-        )}
+        )} */}
       </>
     </AppCard>
   );

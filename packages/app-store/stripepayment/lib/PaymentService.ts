@@ -11,7 +11,6 @@ import type { CalendarEvent } from "@calcom/types/Calendar";
 import type { IAbstractPaymentService } from "@calcom/types/PaymentService";
 
 import { paymentOptionEnum } from "../zod";
-import { createPaymentLink } from "./client";
 import { retrieveOrCreateStripeCustomerByEmail } from "./customer";
 import type { StripeSetupIntentData, StripePaymentData } from "./server";
 
@@ -33,6 +32,7 @@ export class PaymentService implements IAbstractPaymentService {
 
   constructor(credentials: { key: Prisma.JsonValue }) {
     // parse credentials key
+    console.log("process.env.STRIPE_PRIVATE_KEY", process.env.STRIPE_PRIVATE_KEY);
     this.credentials = stripeCredentialKeysSchema.parse(credentials.key);
     this.stripe = new Stripe(process.env.STRIPE_PRIVATE_KEY || "", {
       apiVersion: "2020-08-27",
@@ -533,12 +533,12 @@ export class PaymentService implements IAbstractPaymentService {
     await sendAwaitingPaymentEmail({
       ...event,
       paymentInfo: {
-        link: createPaymentLink({
-          paymentUid: paymentData.uid,
-          name: booking.user?.name,
-          email: booking.user?.email,
-          date: booking.startTime.toISOString(),
-        }),
+        // link: createPaymentLink({
+        //   paymentUid: paymentData.uid,
+        //   name: booking.user?.name,
+        //   email: booking.user?.email,
+        //   date: booking.startTime.toISOString(),
+        // }),
         paymentOption: paymentData.paymentOption || "ON_BOOKING",
         amount: paymentData.amount,
         currency: paymentData.currency,

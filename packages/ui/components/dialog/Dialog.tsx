@@ -103,7 +103,6 @@ export const DialogContent = React.forwardRef<HTMLDivElement, DialogContentProps
                   </div>
                 )}
               </div>
-
               <div className="flex flex-col">{children}</div>
             </div>
           )}

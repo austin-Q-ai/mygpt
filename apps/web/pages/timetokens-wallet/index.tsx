@@ -1,9 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
 import { MeiliSearch } from "meilisearch";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { components } from "react-select";
-import { useRouter } from "next/router";
 
+import { createPaymentLink } from "@calcom/app-store/stripepayment/lib/client";
+import { createTokenPaymentLink } from "@calcom/app-store/stripepayment/lib/client";
 import Shell from "@calcom/features/shell/Shell";
 import { buyTokens } from "@calcom/features/timetokenswallet";
 import { MEILISEARCH_HOST, MEILISEARCH_SEARCH_API_KEY } from "@calcom/lib/constants";
@@ -13,7 +15,6 @@ import { Select, Button, Avatar, Badge, ConfirmationDialogContent, Dialog } from
 import { Plus } from "@calcom/ui/components/icon";
 
 import { withQuery } from "@lib/QueryCell";
-import { createTokenPaymentLink } from "@calcom/app-store/stripepayment/lib/client";
 
 import PageWrapper from "@components/PageWrapper";
 import CustomExpertTable from "@components/timetokens-wallet/CustomExpertTable";
@@ -34,7 +35,6 @@ function TimeTokensWallet() {
   const { t } = useLocale();
   const router = useRouter();
   const { data: user, isLoading } = trpc.viewer.me.useQuery();
-
   const [addedExpertsData, setAddedExpertsData] = useState<ExpertDataType[]>([]);
   const [buyConfirmOpen, setBuyConfirmOpen] = useState<boolean>(false);
   const [removeConfirmOpen, setRemoveConfirmOpen] = useState<boolean>(false);
@@ -52,9 +52,9 @@ function TimeTokensWallet() {
 
   const columns: string[] = ["Expert", "Tokens amount(expert)", "Tokens amount(me)", "Token price", ""];
 
-  const handleBuyEvent = (emitterId: number, tokens: number) => {
+  const handleBuyEvent = (userId: number, tokens: number) => {
     setBuyConfirmOpen(true);
-    setBuyExpertID(emitterId);
+    setBuyExpertID(userId);
     setBuyTokensAmount(tokens);
   };
 
@@ -273,7 +273,13 @@ function TimeTokensWallet() {
                   loadingText={t(`confirm_buy_event`)}
                   onConfirm={(e) => {
                     e.preventDefault();
-                    buyTokensMutation.mutate({ emitterId: buyExpertID, amount: buyTokensAmount });
+                    router.push(
+                      createPaymentLink({
+                        expertid: buyExpertID.toString(),
+                        amount: buyTokensAmount,
+                        absolute: false,
+                      })
+                    );
                     setBuyConfirmOpen(false);
                   }}>
                   <p className="mt-5">{t(`confirm_buy_question`)}</p>

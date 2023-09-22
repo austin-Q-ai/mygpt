@@ -5,6 +5,8 @@ declare global {
   var stripe: Stripe | undefined;
 }
 
+console.log("process.env.STRIPE_PRIVATE_KEY", process.env.STRIPE_PRIVATE_KEY);
+
 const stripe =
   globalThis.stripe ||
   new Stripe(process.env.STRIPE_PRIVATE_KEY!, {

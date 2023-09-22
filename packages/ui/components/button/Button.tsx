@@ -147,7 +147,6 @@ export const Button = forwardRef<HTMLAnchorElement | HTMLButtonElement, ButtonPr
       type: !isLink ? type : undefined,
       ref: forwardedRef,
       className: classNames(buttonClasses({ color, size, loading, variant, rounded }), props.className),
-
       // if we click a disabled button, we prevent going through the click handler
       onClick: disabled
         ? (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
