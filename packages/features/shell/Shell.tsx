@@ -888,7 +888,7 @@ function SideBar({ bannersHeight, user }: SideBarProps) {
         </div>
 
         <div>
-          <Tips />
+          {/* <Tips /> */}
           {bottomNavItems.map(({ icon: Icon, ...item }, index) => (
             <Tooltip side="right" content={t(item.name)} className="lg:hidden" key={item.name}>
               <ButtonOrLink
