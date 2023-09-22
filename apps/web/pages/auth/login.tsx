@@ -3,7 +3,6 @@ import classNames from "classnames";
 import { jwtVerify } from "jose";
 import type { GetServerSidePropsContext } from "next";
 import { getCsrfToken, signIn } from "next-auth/react";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import type { CSSProperties } from "react";
 import { useState } from "react";
@@ -165,44 +164,63 @@ export default function Login({
               <input defaultValue={csrfToken || undefined} type="hidden" hidden {...register("csrfToken")} />
             </div>
             <div className="space-y-6">
-              <div className={classNames("space-y-6", { hidden: twoFactorRequired })}>
-                <EmailField
-                  id="email"
-                  label={t("email_address")}
-                  defaultValue={totpEmail || (router.query.email as string)}
-                  placeholder="john.doe@example.com"
-                  required
-                  {...register("email")}
-                />
-                <div className="relative">
+              <div className={classNames("space-x-4", { hidden: twoFactorRequired }, "flex flex-row")}>
+                <div className="w-full  flex-col">
+                  <EmailField
+                    floatingLabel
+                    id="email"
+                    label={t("email_address")}
+                    defaultValue={totpEmail || (router.query.email as string)}
+                    placeholder="john.doe@example.com"
+                    required
+                    {...register("email")}
+                    size="lg"
+                  />
+                </div>
+                <div className=" w-full flex-col">
                   <PasswordField
+                    floatingLabel
                     id="password"
                     autoComplete="off"
                     required={!totpEmail}
                     className="mb-0"
                     {...register("password")}
+                    size="lg"
                   />
-                  <div className="absolute -top-[2px] ltr:right-0 rtl:left-0">
+                  {/* <div className="absolute -top-[2px] ltr:right-0 rtl:left-0">
                     <Link
                       href="/auth/forgot-password"
                       tabIndex={-1}
                       className="text-default text-sm font-medium">
                       {t("forgot")}
                     </Link>
-                  </div>
+                  </div> */}
                 </div>
               </div>
 
               {twoFactorRequired && <TwoFactor center />}
 
               {errorMessage && <Alert severity="error" title={errorMessage} />}
-              <Button
-                type="submit"
-                color="primary"
-                disabled={formState.isSubmitting}
-                className="w-full justify-center">
-                {twoFactorRequired ? t("submit") : t("sign_in")}
-              </Button>
+              <div className="flex flex-row space-x-4">
+                <div className="w-full flex-col">
+                  <Button
+                    type="submit"
+                    color="primary"
+                    disabled={formState.isSubmitting}
+                    className="w-full justify-center p-2 text-lg">
+                    {twoFactorRequired ? t("submit") : t("sign_in")}
+                  </Button>
+                </div>
+                <div className="w-full flex-col">
+                  <Button
+                    type="submit"
+                    color="secondary"
+                    disabled={formState.isSubmitting}
+                    className="w-full justify-center p-2 text-lg">
+                    {t("got_it_for_free")}
+                  </Button>
+                </div>
+              </div>
             </div>
           </form>
           {!twoFactorRequired && (
