@@ -175,8 +175,8 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                       Prices
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="bg-pink/30" size="xl" Icon={X} title={t("")}>
-                    <div className="mt-5 flex flex-row gap-5">
+                  <DialogContent className="bg-emphasis" size="xl" Icon={X} title={t("")}>
+                    <div className=" mt-5 flex flex-row gap-5">
                       {pricesList.map((priceItem, index) => {
                         return <PriceListItem key={index} priceItem={priceItem} />;
                       })}

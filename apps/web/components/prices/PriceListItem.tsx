@@ -1,8 +1,8 @@
-import { ArrowRight, CheckCircle } from "lucide-react";
 import type { FormValues } from "pages/event-types/[type]";
 import { useForm } from "react-hook-form";
 
 import { Button, TextField } from "@calcom/ui";
+import { ArrowRight, CheckCircle2 } from "@calcom/ui/components/icon";
 
 type PriceListItemProps = {
   priceItem: { name: string; features: string[]; ipDevice: string; password: string };
@@ -24,7 +24,7 @@ export default function PriceListItem({ priceItem: props }: PriceListItemProps) 
           {props.features.map((feature) => {
             return (
               <div className="my-2 flex flex-row gap-2 " key={feature}>
-                <CheckCircle className="text-pink h-5 w-5" />
+                <CheckCircle2 className="bg-pink h-5 w-5 rounded-full text-white" />
                 <span className=" w-full text-xs">{feature}</span>
               </div>
             );
@@ -41,7 +41,7 @@ export default function PriceListItem({ priceItem: props }: PriceListItemProps) 
               Read and accept the terms and conditions
             </div>
             <div className="flex-row text-right">
-              <Button class color="primary" EndIcon={ArrowRight}>
+              <Button className="!bg-emphasis !hover:bg-emphasis !text-white" EndIcon={ArrowRight}>
                 I Accept
               </Button>
             </div>
