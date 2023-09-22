@@ -1,3 +1,4 @@
+import PageWrapper from "@components/PageWrapper";
 import { CoordonneesPage, AIPage, TimeTokenPage, ServicesPage } from "@components/microcard";
 
 const MicroCardTestPage = () => {
@@ -10,5 +11,7 @@ const MicroCardTestPage = () => {
     </div>
   );
 };
+
+MicroCardTestPage.PageWrapper = PageWrapper;
 
 export default MicroCardTestPage;
