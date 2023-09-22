@@ -10,7 +10,7 @@ const signJwt = async (payload: { email: string }) => {
     .setIssuedAt()
     .setIssuer(WEBSITE_URL)
     .setAudience(`${WEBSITE_URL}/auth/login`)
-    .setExpirationTime("2m")
+    .setExpirationTime("15m")
     .sign(secret);
 };
 

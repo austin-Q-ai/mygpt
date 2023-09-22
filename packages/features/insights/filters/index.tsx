@@ -39,13 +39,9 @@ export const Filters = () => {
     <div className="mb-4 ml-auto mt-6 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:justify-between">
       <div className="flex flex-col gap-2 sm:flex-row sm:flex-nowrap sm:justify-start">
         <TeamAndSelfList />
-
         <UserListInTeam />
-
         <EventTypeList />
-
         <FilterType />
-
         <ClearFilters />
       </div>
 

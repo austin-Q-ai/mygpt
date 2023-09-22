@@ -22,7 +22,7 @@ import TimezoneChangeDialog from "@calcom/features/settings/TimezoneChangeDialog
 import AdminPasswordBanner from "@calcom/features/users/components/AdminPasswordBanner";
 import VerifyEmailBanner from "@calcom/features/users/components/VerifyEmailBanner";
 import classNames from "@calcom/lib/classNames";
-import { APP_NAME, DESKTOP_APP_LINK, JOIN_DISCORD, ROADMAP, WEBAPP_URL } from "@calcom/lib/constants";
+import { APP_NAME, WEBAPP_URL } from "@calcom/lib/constants";
 import { getPlaceholderAvatar } from "@calcom/lib/defaultAvatarImage";
 import getBrandColours from "@calcom/lib/getBrandColours";
 import { useIsomorphicLayoutEffect } from "@calcom/lib/hooks/useIsomorphicLayoutEffect";
@@ -60,24 +60,18 @@ import {
   BarChart,
   Calendar,
   Clock,
-  Download,
   ExternalLink,
-  FileText,
-  Grid,
   HelpCircle,
   Link as LinkIcon,
   LogOut,
-  Map,
   Moon,
   MoreHorizontal,
   ChevronDown,
   Copy,
   Settings,
-  Slack,
   Users,
-  Zap,
   Wallet,
-  Bot,
+  Grid,
   User as UserIcon,
 } from "@calcom/ui/components/icon";
 
@@ -423,8 +417,8 @@ function UserDropdown({ small }: UserDropdownProps) {
                     {user.away ? t("set_as_free") : t("set_as_away")}
                   </DropdownItem>
                 </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
+                {/* <DropdownMenuSeparator /> */}
+                {/* <DropdownMenuItem>
                   <DropdownItem
                     StartIcon={(props) => <Slack strokeWidth={1.5} {...props} />}
                     target="_blank"
@@ -437,7 +431,7 @@ function UserDropdown({ small }: UserDropdownProps) {
                   <DropdownItem StartIcon={Map} target="_blank" href={ROADMAP}>
                     {t("visit_roadmap")}
                   </DropdownItem>
-                </DropdownMenuItem>
+                </DropdownMenuItem> */}
                 <DropdownMenuItem>
                   <DropdownItem
                     type="button"
@@ -446,13 +440,13 @@ function UserDropdown({ small }: UserDropdownProps) {
                     {t("help")}
                   </DropdownItem>
                 </DropdownMenuItem>
-                <DropdownMenuItem className="desktop-hidden hidden lg:flex">
+                {/* <DropdownMenuItem className="desktop-hidden hidden lg:flex">
                   <DropdownItem StartIcon={Download} target="_blank" rel="noreferrer" href={DESKTOP_APP_LINK}>
                     {t("download_desktop_app")}
                   </DropdownItem>
-                </DropdownMenuItem>
+                </DropdownMenuItem> */}
 
-                <DropdownMenuSeparator />
+                <DropdownMenuSeparator className="mx-2" />
 
                 <DropdownMenuItem>
                   <DropdownItem
@@ -569,19 +563,19 @@ const navigation: NavigationItemType[] = [
     href: "/more",
     icon: MoreHorizontal,
   },
-  {
-    name: "Routing Forms",
-    href: "/apps/routing-forms/forms",
-    icon: FileText,
-    isCurrent: ({ router }) => {
-      return router.asPath.startsWith("/apps/routing-forms/");
-    },
-  },
-  {
-    name: "workflows",
-    href: "/workflows",
-    icon: Zap,
-  },
+  // {
+  //   name: "Routing Forms",
+  //   href: "/apps/routing-forms/forms",
+  //   icon: FileText,
+  //   isCurrent: ({ router }) => {
+  //     return router.asPath.startsWith("/apps/routing-forms/");
+  //   },
+  // },
+  // {
+  //   name: "workflows",
+  //   href: "/workflows",
+  //   icon: Zap,
+  // },
   {
     name: "insights",
     href: "/insights",
@@ -666,12 +660,12 @@ const NavigationItem: React.FC<{
           href={item.href}
           aria-label={t(item.name)}
           className={classNames(
-            "[&[aria-current='page']]:bg-emphasis  text-default group flex items-center rounded-md px-2 py-1.5 text-sm font-medium",
+            "[&[aria-current='page']]:bg-pink/80  text-default group flex items-center rounded-md bg-opacity-80 px-2 py-1.5 text-sm font-medium",
             isChild
-              ? `[&[aria-current='page']]:text-emphasis hidden h-8 pl-16 lg:flex lg:pl-11 [&[aria-current='page']]:bg-transparent ${
+              ? `hidden h-8 pl-16 lg:flex lg:pl-11 [&[aria-current='page']]:bg-transparent [&[aria-current='page']]:text-white ${
                   props.index === 0 ? "mt-0" : "mt-px"
                 }`
-              : "[&[aria-current='page']]:text-emphasis mt-0.5 text-sm",
+              : "mt-0.5 text-sm [&[aria-current='page']]:text-white",
             isLocaleReady ? "hover:bg-emphasis hover:text-emphasis" : ""
           )}
           aria-current={current ? "page" : undefined}>
@@ -896,7 +890,7 @@ function SideBar({ bannersHeight, user }: SideBarProps) {
         </div>
 
         <div>
-          <Tips />
+          {/* <Tips /> */}
           {bottomNavItems.map(({ icon: Icon, ...item }, index) => (
             <Tooltip side="right" content={t(item.name)} className="lg:hidden" key={item.name}>
               <ButtonOrLink
@@ -1026,7 +1020,7 @@ function MainContainer({
   ...props
 }: LayoutProps) {
   return (
-    <main className="bg-default relative z-0 flex-1 focus:outline-none">
+    <main className="bg-default bg-global relative z-0 flex-1 focus:outline-none">
       {/* show top navigation for md and smaller (tablet and phones) */}
       {TopNavContainerProp}
       <div className="max-w-full px-4 py-4 md:py-8 lg:px-12">

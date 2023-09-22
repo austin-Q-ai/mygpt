@@ -678,6 +678,7 @@ async function handler(
     isNotAnApiCall: false,
   }
 ) {
+  console.log(req, "========================");
   const { userId } = req;
 
   const userIp = getIP(req);
@@ -1118,6 +1119,8 @@ async function handler(
         }
       }
 
+      console.log("===== 1 =====");
+
       await Promise.all(integrationsToDelete).then(async () => {
         await prisma.booking.update({
           where: {
@@ -1459,6 +1462,8 @@ async function handler(
             cancellationReason: "$RCH$" + (rescheduleReason ? rescheduleReason : ""), // Removable code prefix to differentiate cancellation from rescheduling for email
           });
 
+          console.log("===== 2 =====");
+
           // Update the old booking with the cancelled status
           await prisma.booking.update({
             where: {
@@ -1724,15 +1729,19 @@ async function handler(
           throw new HttpError({ statusCode: 400, message: "Missing payment app id" });
         }
 
+        console.log(eventTypePaymentAppCredential);
+
         const payment = await handlePayment(
           evt,
           eventType,
           eventTypePaymentAppCredential as IEventTypePaymentCredentialType,
           booking,
-          bookerEmail
+          bookerEmail,
+          userId
         );
 
         resultBooking = { ...foundBooking };
+
         resultBooking["message"] = "Payment required";
         resultBooking["paymentUid"] = payment?.uid;
       } else {
@@ -2048,6 +2057,8 @@ async function handler(
     addVideoCallDataToEvt(originalRescheduledBooking.references);
     const updateManager = await eventManager.reschedule(evt, originalRescheduledBooking.uid);
 
+    console.log("===== 3 =====");
+
     //update original rescheduled booking (no seats event)
     if (!eventType.seatsPerTimeSlot) {
       await prisma.booking.update({
@@ -2318,12 +2329,14 @@ async function handler(
 
     // Convert type of eventTypePaymentAppCredential to appId: EventTypeAppList
     if (!booking.user) booking.user = organizerUser;
+    console.log(eventTypePaymentAppCredential);
     const payment = await handlePayment(
       evt,
       eventType,
       eventTypePaymentAppCredential as IEventTypePaymentCredentialType,
       booking,
-      bookerEmail
+      bookerEmail,
+      userId
     );
 
     req.statusCode = 201;

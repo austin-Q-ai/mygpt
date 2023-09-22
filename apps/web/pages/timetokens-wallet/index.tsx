@@ -1,16 +1,21 @@
+import { useMutation } from "@tanstack/react-query";
 import { MeiliSearch } from "meilisearch";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { components } from "react-select";
+import { useRouter } from "next/router";
 
 import { createPaymentLink } from "@calcom/app-store/stripepayment/lib/client";
 import Shell from "@calcom/features/shell/Shell";
+import { buyTokens } from "@calcom/features/timetokenswallet";
+import { MEILISEARCH_HOST, MEILISEARCH_SEARCH_API_KEY } from "@calcom/lib/constants";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { trpc } from "@calcom/trpc/react";
 import { Select, Button, Avatar, Badge, ConfirmationDialogContent, Dialog } from "@calcom/ui";
 import { Plus } from "@calcom/ui/components/icon";
 
 import { withQuery } from "@lib/QueryCell";
+import { createTokenPaymentLink } from "@calcom/app-store/stripepayment/lib/client";
 
 import PageWrapper from "@components/PageWrapper";
 import CustomExpertTable from "@components/timetokens-wallet/CustomExpertTable";
@@ -29,6 +34,7 @@ type ExpertOptionType = {
 
 function TimeTokensWallet() {
   const { t } = useLocale();
+  const router = useRouter();
   const { data: user, isLoading } = trpc.viewer.me.useQuery();
   const router = useRouter();
   const [addedExpertsData, setAddedExpertsData] = useState<ExpertDataType[]>([]);
@@ -42,8 +48,8 @@ function TimeTokensWallet() {
   // const [user, setUser] = useState<any>(null);
 
   const meiliClient = new MeiliSearch({
-    host: `https://${process.env.MEILISEARCH_HOST}`,
-    apiKey: process.env.NEXT_PUBLIC_SEARCH_API_KEY,
+    host: `https://${MEILISEARCH_HOST}`,
+    apiKey: MEILISEARCH_SEARCH_API_KEY,
   });
 
   const columns: string[] = ["Expert", "Tokens amount(expert)", "Tokens amount(me)", "Token price", ""];
@@ -59,7 +65,17 @@ function TimeTokensWallet() {
     setRemoveExpertID(emitterId);
   };
 
-  const CustomOption = ({ icon, label, added }: { icon: string; label: string; added: boolean }) => {
+  const CustomOption = ({
+    icon,
+    value,
+    label,
+    added,
+  }: {
+    icon: string;
+    value: number;
+    label: string;
+    added: boolean;
+  }) => {
     return (
       <div className="flex items-center">
         <Avatar className="mr-2" alt="Nameless" size="sm" imageSrc={icon} />
@@ -95,6 +111,11 @@ function TimeTokensWallet() {
   const addExpertMutation = trpc.viewer.timetokenswallet.addExpert.useMutation({
     onSuccess: (data) => {
       console.log("=== add expert ====");
+      if (data?.env) {
+        console.log("=== env ===");
+        console.log(data.env);
+        console.log("=== env ===");
+      }
       setAddedExpertsDataHandler(data.users);
     },
   });
@@ -106,9 +127,22 @@ function TimeTokensWallet() {
     },
   });
 
-  const buyTokensMutation = trpc.viewer.timetokenswallet.buyTokens.useMutation({
-    onSuccess: (data) => {
-      setAddedExpertsDataHandler(data.users);
+  // const buyTokensMutation = trpc.viewer.timetokenswallet.buyTokens.useMutation({
+  //   onSuccess: (data) => {
+  //     setAddedExpertsDataHandler(data.users);
+  //   },
+  // });
+
+  const buyTokensMutation = useMutation(buyTokens, {
+    onSuccess: async (responseData) => {
+      const { paymentUid } = responseData;
+      if (paymentUid) {
+        return await router.push(
+          createTokenPaymentLink({
+            paymentUid,
+          })
+        );
+      }
     },
   });
 
@@ -197,6 +231,7 @@ function TimeTokensWallet() {
                         <components.Option {...props}>
                           <CustomOption
                             icon={props.data.avatar}
+                            value={props.data.value}
                             label={props.data.label}
                             added={props.data.added}
                           />
@@ -208,6 +243,7 @@ function TimeTokensWallet() {
                   filterOption={customFilter}
                   className="w-full rounded-md text-[.5rem] sm:text-sm"
                   onChange={(event) => {
+                    console.log(event);
                     setAddExpertId(event?.added ? -1 : event?.value || -1);
                   }}
                   onInputChange={(value) => {

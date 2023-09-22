@@ -1,4 +1,5 @@
 import { MeiliSearch } from "meilisearch";
+
 import { deleteStripeCustomer } from "@calcom/app-store/stripepayment/lib/customer";
 import { ErrorCode } from "@calcom/features/auth/lib/ErrorCode";
 import { deleteWebUser as syncServicesDeleteWebUser } from "@calcom/lib/sync/SyncServiceManager";

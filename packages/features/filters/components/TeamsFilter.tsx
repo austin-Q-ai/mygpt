@@ -9,8 +9,8 @@ import { useTypedQuery } from "@calcom/lib/hooks/useTypedQuery";
 import { teamMetadataSchema } from "@calcom/prisma/zod-utils";
 import { trpc } from "@calcom/trpc/react";
 import type { RouterOutputs } from "@calcom/trpc/react";
-import { AnimatedPopover, Avatar, Divider, Tooltip, VerticalDivider } from "@calcom/ui";
-import { Layers, User } from "@calcom/ui/components/icon";
+import { AnimatedPopover, Avatar, Tooltip, VerticalDivider } from "@calcom/ui";
+import { Check, Layers, User } from "@calcom/ui/components/icon";
 
 import { filterQuerySchema } from "../lib/getTeamsFiltersFromQuery";
 
@@ -85,7 +85,7 @@ export const TeamsFilter = ({
             }}
             label={t("yours")}
           />
-          <Divider />
+          {/* <Divider /> */}
           {teams
             ?.filter((team) => !teamMetadataSchema.parse(team.metadata)?.isOrganization)
             .map((team) => (
@@ -139,7 +139,10 @@ type Props = InputHTMLAttributes<HTMLInputElement> & {
 
 export const FilterCheckboxField = forwardRef<HTMLInputElement, Props>(({ label, icon, ...rest }, ref) => {
   return (
-    <div className="hover:bg-muted flex items-center py-2 pl-3 pr-2.5 hover:cursor-pointer">
+    <div
+      className={`mx-2 flex items-center rounded-md py-2 pl-3 pr-2.5 hover:cursor-pointer ${
+        rest.checked ? "bg-gray-200" : "hover:bg-muted "
+      }`}>
       <label className="flex w-full max-w-full items-center justify-between hover:cursor-pointer">
         <div className="flex items-center truncate">
           <div className="text-default flex h-4 w-4 items-center justify-center ltr:mr-2 rtl:ml-2">
@@ -154,13 +157,15 @@ export const FilterCheckboxField = forwardRef<HTMLInputElement, Props>(({ label,
           </Tooltip>
         </div>
         <div className="flex h-5 items-center">
-          <input
-            {...rest}
-            ref={ref}
-            type="checkbox"
-            className="text-primary-600 focus:ring-primary-500 border-default bg-default h-4 w-4 rounded hover:cursor-pointer"
-          />
+          {rest.checked ? (
+            <div {...rest}>
+              <Check />
+            </div>
+          ) : (
+            <div {...rest}>{null}</div>
+          )}
         </div>
+        <input {...rest} ref={ref} type="checkbox" className="hidden" />
       </label>
     </div>
   );

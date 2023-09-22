@@ -1,8 +1,7 @@
 import { getFeatureFlagMap } from "@calcom/features/flags/server/utils";
 import {
-  AverageEventDurationChart,
-  BookingKPICards,
-  BookingStatusLineChart,
+  // AverageEventDurationChart,
+  BookingKPICards, // BookingStatusLineChart,
   LeastBookedTeamMembersTable,
   MostBookedTeamMembersTable,
   PopularEventsTable,
@@ -10,11 +9,8 @@ import {
 import { FiltersProvider } from "@calcom/features/insights/context/FiltersProvider";
 import { Filters } from "@calcom/features/insights/filters";
 import Shell from "@calcom/features/shell/Shell";
-import { UpgradeTip } from "@calcom/features/tips";
-import { WEBAPP_URL } from "@calcom/lib/constants";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { trpc } from "@calcom/trpc";
-import { Button, ButtonGroup } from "@calcom/ui";
 import { RefreshCcw, UserPlus, Users } from "@calcom/ui/components/icon";
 
 import PageWrapper from "@components/PageWrapper";
@@ -35,7 +31,7 @@ const Heading = () => {
 export default function InsightsPage() {
   const { t } = useLocale();
   const { data: user } = trpc.viewer.me.useQuery();
-
+  console.log("userData", user);
   const features = [
     {
       icon: <Users className="h-5 w-5" />,
@@ -57,7 +53,7 @@ export default function InsightsPage() {
   return (
     <div>
       <Shell hideHeadingOnMobile>
-        <UpgradeTip
+        {/* <UpgradeTip
           title={t("make_informed_decisions")}
           description={t("make_informed_decisions_description")}
           features={features}
@@ -73,44 +69,47 @@ export default function InsightsPage() {
                 </Button>
               </ButtonGroup>
             </div>
-          }>
-          {!user ? (
-            <></>
-          ) : (
-            <FiltersProvider>
-              <div className="ml-auto mt-0">
-                <Heading />
-              </div>
+          }
+        /> */}
+        {!user ? (
+          <></>
+        ) : (
+          <FiltersProvider>
+            <div className="ml-auto mt-0">
+              <Heading />
+            </div>
 
-              <Filters />
+            <Filters />
 
-              <div className="mb-4 space-y-6">
-                <BookingKPICards />
+            <div className="mb-4 space-y-6">
+              <BookingKPICards />
 
-                <BookingStatusLineChart />
+              {/* <BookingStatusLineChart /> */}
 
-                <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-                  <PopularEventsTable />
-
-                  <AverageEventDurationChart />
-                </div>
-                <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+              <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+                <PopularEventsTable />
+                {/* <AverageEventDurationChart /> */}
+                <div className="grid grid-cols-1 gap-5">
                   <MostBookedTeamMembersTable />
                   <LeastBookedTeamMembersTable />
                 </div>
-                <small className="text-default block text-center">
-                  {t("looking_for_more_insights")}{" "}
-                  <a
-                    className="text-blue-500 hover:underline"
-                    href="mailto:updates@cal.com?subject=Feature%20Request%3A%20More%20Analytics&body=Hey%20Cal.com%20Team%2C%20I%20love%20the%20analytics%20page%20but%20I%20am%20looking%20for%20...">
-                    {" "}
-                    {t("contact_support")}
-                  </a>
-                </small>
               </div>
-            </FiltersProvider>
-          )}
-        </UpgradeTip>
+              <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+                {/* most <MostBookedTeamMembersTable />
+                least <LeastBookedTeamMembersTable /> */}
+              </div>
+              {/* <small className="text-default block text-center">
+                {t("looking_for_more_insights")}{" "}
+                <a
+                  className="text-blue-500 hover:underline"
+                  href="mailto:updates@cal.com?subject=Feature%20Request%3A%20More%20Analytics&body=Hey%20Cal.com%20Team%2C%20I%20love%20the%20analytics%20page%20but%20I%20am%20looking%20for%20...">
+                  {" "}
+                  {t("contact_support")}
+                </a>
+              </small> */}
+            </div>
+          </FiltersProvider>
+        )}
       </Shell>
     </div>
   );
@@ -122,7 +121,6 @@ InsightsPage.PageWrapper = PageWrapper;
 export const getServerSideProps = async () => {
   const prisma = await import("@calcom/prisma").then((mod) => mod.default);
   const flags = await getFeatureFlagMap(prisma);
-
   if (flags.insights === false) {
     return {
       notFound: true,

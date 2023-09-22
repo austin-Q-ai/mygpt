@@ -144,15 +144,15 @@ function CustomExpertTable(props: CustomExpertTableProps) {
                             className="md:hidden"
                             childrenClassName="text-[.5rem] sm:text-sm"
                             data-testid="buy-tokens-of-expert"
-                            disabled={data.token_amount !== 0}
+                            disabled={data.expert_token_amount === 0}
                             StartIcon={ShoppingCart}
                             onClick={() => {
                               handleBuyEvent(data.userId, data.buy_amount);
                             }}>
                             {t("buy")}
                           </DropdownItem>
-                        <DropdownMenuItem>
                         </DropdownMenuItem>
+                        <DropdownMenuItem>
                           <DropdownItem
                             type="button"
                             childrenClassName="text-[.5rem] sm:text-sm"

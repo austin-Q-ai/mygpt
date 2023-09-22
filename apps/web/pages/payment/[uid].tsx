@@ -1,20 +1,12 @@
-import type { GetServerSidePropsContext } from "next";
-import { z } from "zod";
-
+import PaymentPage from "@calcom/features/ee/payments/components/PaymentPage";
 import TokenPaymentPage from "@calcom/features/ee/payments/components/TokenPaymentPage";
-import type { PaymentPageProps } from "@calcom/features/ee/payments/components/TokenPaymentPage";
-import prisma from "@calcom/prisma";
+import { getServerSideProps } from "@calcom/features/ee/payments/pages/payment";
+import type { inferSSRProps } from "@calcom/types/inferSSRProps";
 
 import PageWrapper from "@components/PageWrapper";
 
-// type PaymentProps = {
-//   expertid: string;
-//   amount: number; // if amount should be number, replace with number
-// };
-
-export default function Payment(props: PaymentPageProps) {
-  // const { expertid, amount } = props;
-  return <TokenPaymentPage {...props} />;
+export default function Payment(props: inferSSRProps<typeof getServerSideProps>) {
+  return props.buyToken ? <TokenPaymentPage {...props} /> : <PaymentPage {...props} />;
 }
 
 Payment.PageWrapper = PageWrapper;

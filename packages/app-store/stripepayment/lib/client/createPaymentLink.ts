@@ -15,3 +15,9 @@ export function createPaymentLink(opts: {
   const query = stringify({ amount });
   return link + `/payment/${expertid}?${query}`;
 }
+
+export function createTokenPaymentLink(opts: { paymentUid: string }): string {
+  const { paymentUid } = opts;
+  const link = WEBSITE_URL;
+  return link + `/payment/${paymentUid}`;
+}

@@ -6,6 +6,7 @@ import { slotsRouter } from "../viewer/slots/_router";
 import { ZEventInputSchema } from "./event.schema";
 import { ZSamlTenantProductInputSchema } from "./samlTenantProduct.schema";
 import { ZStripeCheckoutSessionInputSchema } from "./stripeCheckoutSession.schema";
+import { ZUploadProfileInputSchema } from "./uploadProfile.schema";
 
 type PublicViewerRouterHandlerCache = {
   session?: typeof import("./session.handler").sessionHandler;
@@ -14,6 +15,7 @@ type PublicViewerRouterHandlerCache = {
   samlTenantProduct?: typeof import("./samlTenantProduct.handler").samlTenantProductHandler;
   stripeCheckoutSession?: typeof import("./stripeCheckoutSession.handler").stripeCheckoutSessionHandler;
   cityTimezones?: typeof import("./cityTimezones.handler").cityTimezonesHandler;
+  uploadProfile?: typeof import("./uploadProfile.handler").uploadProfileHandler;
   event?: typeof import("./event.handler").eventHandler;
 };
 
@@ -114,6 +116,23 @@ export const publicViewerRouter = router({
     }
 
     return UNSTABLE_HANDLER_CACHE.cityTimezones();
+  }),
+
+  uploadProfile: publicProcedure.input(ZUploadProfileInputSchema).mutation(async ({ input }) => {
+    if (!UNSTABLE_HANDLER_CACHE.uploadProfile) {
+      UNSTABLE_HANDLER_CACHE.uploadProfile = await import("./uploadProfile.handler").then(
+        (mod) => mod.uploadProfileHandler
+      );
+    }
+
+    // Unreachable code but required for type safety
+    if (!UNSTABLE_HANDLER_CACHE.uploadProfile) {
+      throw new Error("Failed to load handler");
+    }
+
+    return UNSTABLE_HANDLER_CACHE.uploadProfile({
+      input,
+    });
   }),
 
   // REVIEW: This router is part of both the public and private viewer router?

@@ -3,7 +3,7 @@ import classNames from "classnames";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { MembershipRole } from "@calcom/prisma/enums";
 
-type PillColor = "blue" | "green" | "red" | "orange";
+type PillColor = "pink" | "green" | "red" | "orange";
 
 interface Props {
   text: string;
@@ -15,7 +15,7 @@ export default function TeamPill(props: Props) {
     <div
       className={classNames("text-medium self-center rounded-md px-1 py-0.5 text-xs ltr:mr-1 rtl:ml-1", {
         " bg-subtle text-emphasis": !props.color,
-        " bg-info text-blue-800": props.color === "blue",
+        " bg-badge text-emphasis": props.color === "pink",
         " bg-error text-red-800 ": props.color === "red",
         " bg-attention text-orange-800": props.color === "orange",
       })}>
@@ -27,7 +27,7 @@ export default function TeamPill(props: Props) {
 export function TeamRole(props: { role: MembershipRole }) {
   const { t } = useLocale();
   const keys: Record<MembershipRole, PillColor | undefined> = {
-    [MembershipRole.OWNER]: "blue",
+    [MembershipRole.OWNER]: "pink",
     [MembershipRole.ADMIN]: "red",
     [MembershipRole.MEMBER]: undefined,
   };

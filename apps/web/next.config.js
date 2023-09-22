@@ -472,10 +472,4 @@ const nextConfig = {
   },
 };
 
-module.exports = () => {
-  const conf = plugins.reduce((acc, next) => next(acc), nextConfig);
-  conf.env = {};
-  conf.env.MEILISEARCH_HOST = process.env.MEILISEARCH_HOST;
-  conf.env.SEARCH_API_KEY = process.env.SEARCH_API_KEY;
-  return conf;
-};
+module.exports = () => plugins.reduce((acc, next) => next(acc), nextConfig);

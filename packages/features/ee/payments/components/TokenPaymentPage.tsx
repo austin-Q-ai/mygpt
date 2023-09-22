@@ -1,43 +1,48 @@
 import classNames from "classnames";
 import Head from "next/head";
+import type { FC } from "react";
+import { useEffect } from "react";
 
-import { useIsEmbed } from "@calcom/embed-core/embed-iframe";
+import { sdkActionManager, useIsEmbed } from "@calcom/embed-core/embed-iframe";
 import { APP_NAME } from "@calcom/lib/constants";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { CreditCard } from "@calcom/ui/components/icon";
 
+import type { PaymentPageProps } from "../pages/payment";
 import TokenPaymentComponent from "./TokenPayment";
 
-const user_example = {
-  name: "linPhill",
-  username: "globalstar",
-  hideBranding: false,
-  theme: null,
-};
-
-export type PaymentPageProps = {
-  expertId: number;
-  username: string;
-  name: string;
-  price: number[];
-  amount: number;
-  renderUrl?: string;
-  setModalVisible: (value: boolean) => void;
-};
-
-const TokenPaymentPage = (props: PaymentPageProps) => {
-  console.log("paragon there---", props);
+const PaymentPage: FC<PaymentPageProps> = (props) => {
   const { t, i18n } = useLocale();
+
   const isEmbed = useIsEmbed();
-  const eventName = "Token Purchase";
+  useEffect(() => {
+    let embedIframeWidth = 0;
+    if (isEmbed) {
+      requestAnimationFrame(function fixStripeIframe() {
+        // HACK: Look for stripe iframe and center position it just above the embed content
+        const stripeIframeWrapper = document.querySelector(
+          'iframe[src*="https://js.stripe.com/v3/authorize-with-url-inner"]'
+        )?.parentElement;
+        if (stripeIframeWrapper) {
+          stripeIframeWrapper.style.margin = "0 auto";
+          stripeIframeWrapper.style.width = embedIframeWidth + "px";
+        }
+        requestAnimationFrame(fixStripeIframe);
+      });
+      sdkActionManager?.on("__dimensionChanged", (e) => {
+        embedIframeWidth = e.detail.data.iframeWidth as number;
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isEmbed]);
 
   return (
     <div className="h-screen">
       <Head>
         <title>
-          {t("payment")} | {eventName} | {APP_NAME}
+          {t("payment")} | {APP_NAME}
         </title>
-        <link rel="iy" href="/favicon.ico" />
+        <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="mx-auto max-w-3xl py-24">
         <div className="fixed inset-0 z-50 overflow-y-auto scroll-auto">
@@ -61,24 +66,25 @@ const TokenPaymentPage = (props: PaymentPageProps) => {
 
                   <div className="mt-3 text-center sm:mt-5">
                     <h3 className="text-emphasis text-2xl font-semibold leading-6" id="modal-headline">
-                      {t("token_purchase")}
+                      {t("payment")}
                     </h3>
                     <div className="text-default mt-4 grid grid-cols-3 border-b border-t py-4 text-left dark:border-gray-900 dark:text-gray-300">
-                      <div className="font-medium">{t("from")}</div>
-                      <div className="col-span-2 mb-6">{props.name}</div>
-                      <div className="font-medium">{t("amount")}</div>
-                      <div className="col-span-2 mb-6">{props.amount}</div>
-                      <div className="font-medium">{t("price")}</div>
-                      <div className="col-span-2 mb-6">{props.price[props.price.length - 1]}</div>
+                      <div className="font-medium">{t("expert")}</div>
+                      <div className="col-span-2 mb-6">{props.payment.wallet?.emitter?.username}</div>
+                      <div className="font-medium">{t("token_price")}</div>
+                      <div className="col-span-2 mb-6">
+                        {props.payment.wallet?.emitter.price[props.payment.wallet?.emitter.price.length - 1]}
+                      </div>
+                      <div className="font-medium">{t("token_amount")}</div>
+                      <div className="col-span-2 mb-6 font-semibold">{props.payment.wallet?.amount}</div>
                     </div>
                   </div>
                 </div>
-                <TokenPaymentComponent
-                  amount={props.amount}
-                  expertId={props.expertId}
-                  renderUrl={props?.renderUrl}
-                  setModalVisible={props.setModalVisible}
-                />
+                <div>
+                  {props.payment.appId === "stripe" && !props.payment.success && (
+                    <TokenPaymentComponent payment={props.payment} />
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -88,4 +94,4 @@ const TokenPaymentPage = (props: PaymentPageProps) => {
   );
 };
 
-export default TokenPaymentPage;
+export default PaymentPage;

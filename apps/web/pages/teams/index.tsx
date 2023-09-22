@@ -1,12 +1,12 @@
 import type { GetServerSidePropsContext } from "next";
+import CreateNewTeamPage from "pages/settings/teams/new";
 
 import { TeamsListing } from "@calcom/features/ee/teams/components";
 import Shell from "@calcom/features/shell/Shell";
-import { WEBAPP_URL } from "@calcom/lib/constants";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { trpc } from "@calcom/trpc/react";
-import { Button } from "@calcom/ui";
-import { Plus } from "@calcom/ui/components/icon";
+import { Button, Dialog, DialogContent, DialogTrigger } from "@calcom/ui";
+import { Plus, X, Users } from "@calcom/ui/components/icon";
 
 import PageWrapper from "@components/PageWrapper";
 
@@ -17,19 +17,21 @@ function Teams() {
   const [user] = trpc.viewer.me.useSuspenseQuery();
 
   return (
+    // Add Modal here for adding new team
     <Shell
       heading={t("teams")}
       hideHeadingOnMobile
       subtitle={t("create_manage_teams_collaborative")}
       CTA={
         (!user.organizationId || user.organization.isOrgAdmin) && (
-          <Button
-            variant="fab"
-            StartIcon={Plus}
-            type="button"
-            href={`${WEBAPP_URL}/settings/teams/new?returnTo=${WEBAPP_URL}/teams`}>
-            {t("new")}
-          </Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button type="button" rounded StartIcon={Plus} variant="icon" color="primary" />
+            </DialogTrigger>
+            <DialogContent type="creation" HeaderIcon={Users} Icon={X} className="py-4" size="md">
+              <CreateNewTeamPage />
+            </DialogContent>
+          </Dialog>
         )
       }>
       <TeamsListing />

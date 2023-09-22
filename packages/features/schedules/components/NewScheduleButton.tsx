@@ -64,7 +64,7 @@ export function NewScheduleButton({
   return (
     <Dialog name={name} clearQueryParamsOnClose={["copy-schedule-id"]}>
       <DialogTrigger asChild>
-        <Button rounded data-testid={name} StartIcon={Plus} variant="icon" />
+        <Button rounded data-testid={name} StartIcon={Plus} variant="icon" color="primary" />
       </DialogTrigger>
       <DialogContent type="creation" title={t("add_new_schedule")} Icon={X} className="py-4">
         <Form

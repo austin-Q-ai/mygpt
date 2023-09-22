@@ -329,7 +329,7 @@ function BookingListItem(booking: BookingItemProps) {
         </DialogContent>
       </Dialog>
 
-      <tr className="hover:bg-muted group flex flex-col sm:flex-row">
+      <tr className="hover:bg-pink/10 group flex flex-col sm:flex-row">
         <td
           className="hidden align-top ltr:pl-6 rtl:pr-6 sm:table-cell sm:min-w-[12rem]"
           onClick={onClickTableData}>
@@ -356,13 +356,14 @@ function BookingListItem(booking: BookingItemProps) {
                 {booking.eventType.team.name}
               </Badge>
             )}
-            {booking.paid && !booking.payment[0] ? (
+            {booking.paid && !booking.payment[0] && false ? (
               <Badge className="ltr:mr-2 rtl:ml-2" variant="orange">
                 {t("error_collecting_card")}
               </Badge>
             ) : booking.paid ? (
               <Badge className="ltr:mr-2 rtl:ml-2" variant="green">
-                {booking.payment[0].paymentOption === "HOLD" ? t("card_held") : t("paid")}
+                {/* {booking.payment[0].paymentOption === "HOLD" ? t("card_held") : t("paid")} */}
+                {t("paid")}
               </Badge>
             ) : null}
             {recurringDates !== undefined && (

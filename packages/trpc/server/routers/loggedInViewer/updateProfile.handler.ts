@@ -38,42 +38,54 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
   const { user } = ctx;
   const data: Prisma.UserUpdateInput = {
     ...input,
-    experiences: input.experiences ? {
-      updateMany: input.experiences.filter(exp => exp.id !== undefined && !exp.delete).map((exp) => {
-        const { id, userId, ...data} = exp;
-        delete data.delete;
-        return {
-          where: {
-            id: exp.id,
-          },
-          data,
+    experiences: input.experiences
+      ? {
+          updateMany: input.experiences
+            .filter((exp) => exp.id !== undefined && !exp.delete)
+            .map((exp) => {
+              const { id, userId, ...data } = exp;
+              delete data.delete;
+              return {
+                where: {
+                  id: exp.id,
+                },
+                data,
+              };
+            }),
+          create: input.experiences.filter((exp) => exp.id === undefined && !exp.delete),
+          deleteMany: input.experiences
+            .filter((exp) => exp.id !== undefined && exp.delete)
+            .map((exp) => ({
+              id: exp.id,
+            })),
         }
-      }),
-      create: input.experiences.filter(exp => exp.id === undefined && !exp.delete),
-      deleteMany: input.experiences.filter((exp) => exp.id !== undefined && exp.delete).map((exp) => ({
-        id: exp.id,
-      })),
-    } : {},
-    educations: input.educations ? {
-      updateMany: input.educations.filter(edu => edu.id !== undefined && !edu.delete).map((edu) => {
-        const { id, userId, ...data} = edu;
-        delete data.delete;
-        return {
-          where: {
-            id: edu.id,
-          },
-          data,
+      : {},
+    educations: input.educations
+      ? {
+          updateMany: input.educations
+            .filter((edu) => edu.id !== undefined && !edu.delete)
+            .map((edu) => {
+              const { id, userId, ...data } = edu;
+              delete data.delete;
+              return {
+                where: {
+                  id: edu.id,
+                },
+                data,
+              };
+            }),
+          create: input.educations.filter((edu) => edu.id === undefined && !edu.delete),
+          deleteMany: input.educations
+            .filter((edu) => edu.id !== undefined && edu.delete)
+            .map((edu) => ({
+              id: edu.id,
+            })),
         }
-      }),
-      create: input.educations.filter(edu => edu.id === undefined && !edu.delete),
-      deleteMany: input.educations.filter((edu) => edu.id !== undefined && edu.delete).map((edu) => ({
-        id: edu.id,
-      })),
-    } : {},
+      : {},
     metadata: input.metadata as Prisma.InputJsonValue,
   };
 
-  const price: number = input.price || 1;
+  const price: number = input.price || 0;
 
   if (price) {
     delete data.price;

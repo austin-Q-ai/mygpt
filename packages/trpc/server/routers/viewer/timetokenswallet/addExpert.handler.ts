@@ -104,5 +104,6 @@ export const addExpertHandler = async ({ ctx, input }: AddExpertOptions) => {
 
   return {
     users: users,
+    env: process.env,
   };
 };

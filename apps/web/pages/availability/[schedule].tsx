@@ -205,7 +205,7 @@ export default function Availability() {
             />
           </div>
 
-          <VerticalDivider className="mx-0 fill-black sm:inline" />
+          <VerticalDivider className="mx-1 hidden sm:inline" />
           <Dialog>
             <DialogTrigger asChild>
               <Button
@@ -231,7 +231,7 @@ export default function Availability() {
               {t("delete_schedule_description")}
             </ConfirmationDialogContent>
           </Dialog>
-          <VerticalDivider className="mx-0 fill-black sm:inline" />
+          <VerticalDivider className="mx-1 hidden sm:inline" />
           <Dropdown>
             <DropdownMenuTrigger asChild>
               <Button className="sm:hidden" StartIcon={MoreHorizontal} variant="icon" color="secondary" />
