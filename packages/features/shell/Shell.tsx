@@ -524,6 +524,29 @@ const navigation: NavigationItemType[] = [
     badge: <TeamInviteBadge />,
   },
   {
+    name: MORE_SEPARATOR_NAME,
+    href: "/more",
+    icon: MoreHorizontal,
+  },
+  // {
+  //   name: "Routing Forms",
+  //   href: "/apps/routing-forms/forms",
+  //   icon: FileText,
+  //   isCurrent: ({ router }) => {
+  //     return router.asPath.startsWith("/apps/routing-forms/");
+  //   },
+  // },
+  // {
+  //   name: "workflows",
+  //   href: "/workflows",
+  //   icon: Zap,
+  // },
+  {
+    name: "insights",
+    href: "/insights",
+    icon: BarChart,
+  },
+  {
     name: "apps",
     href: "/apps",
     icon: Grid,
@@ -557,29 +580,6 @@ const navigation: NavigationItemType[] = [
         },
       },
     ],
-  },
-  {
-    name: MORE_SEPARATOR_NAME,
-    href: "/more",
-    icon: MoreHorizontal,
-  },
-  // {
-  //   name: "Routing Forms",
-  //   href: "/apps/routing-forms/forms",
-  //   icon: FileText,
-  //   isCurrent: ({ router }) => {
-  //     return router.asPath.startsWith("/apps/routing-forms/");
-  //   },
-  // },
-  // {
-  //   name: "workflows",
-  //   href: "/workflows",
-  //   icon: Zap,
-  // },
-  {
-    name: "insights",
-    href: "/insights",
-    icon: BarChart,
   },
 ];
 
