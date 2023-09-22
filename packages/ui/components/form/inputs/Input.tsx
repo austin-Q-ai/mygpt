@@ -51,6 +51,8 @@ type InputFieldProps = {
   addOnClassname?: string;
   error?: string;
   labelSrOnly?: boolean;
+  floatingLabel?: boolean;
+  size?: string | "lg" | "md" | "sm" | undefined;
   containerClassName?: string;
   t?: (key: string) => string;
 } & React.ComponentProps<typeof Input> & {
@@ -106,6 +108,8 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(function
     labelSrOnly,
     containerClassName,
     readOnly,
+    floatingLabel,
+    size,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     t: __t,
     ...passThrough
@@ -115,7 +119,7 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(function
 
   return (
     <div className={classNames(containerClassName)}>
-      {!!name && (
+      {!!name && !floatingLabel ? (
         <Skeleton
           as={Label}
           htmlFor={id}
@@ -125,16 +129,16 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(function
           {label}
           {LockedIcon}
         </Skeleton>
-      )}
+      ) : null}
       {addOnLeading || addOnSuffix ? (
         <div
           dir="ltr"
           className="focus-within:ring-brand-default group relative mb-1 flex items-center rounded-md focus-within:outline-none focus-within:ring-2">
-          {addOnLeading && (
+          {/* {addOnLeading && (
             <Addon isFilled={addOnFilled} className={classNames("rounded-l-md border-r-0", addOnClassname)}>
               {addOnLeading}
             </Addon>
-          )}
+          )} */}
           <Input
             id={id}
             type={type}
@@ -144,8 +148,9 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(function
             className={classNames(
               className,
               "disabled:bg-subtle disabled:hover:border-subtle disabled:cursor-not-allowed",
-              addOnLeading && "rounded-l-none border-l-0",
-              addOnSuffix && "rounded-r-none border-r-0",
+              size === "lg" && "text-md block w-full  px-8 py-8 sm:p-5",
+              // addOnLeading && "rounded-l-none border-l-0",
+              // addOnSuffix && "rounded-r-none border-r-0",
               type === "search" && "pr-8",
               "!my-0 !ring-0"
             )}
@@ -160,13 +165,13 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(function
             disabled={readOnly || disabled}
             ref={ref}
           />
-          {addOnSuffix && (
+          {/* {addOnSuffix && (
             <Addon
               isFilled={addOnFilled}
               className={classNames("ltr:rounded-r-md rtl:rounded-l-md", addOnClassname)}>
               {addOnSuffix}
             </Addon>
-          )}
+          )} */}
           {type === "search" && inputValue?.toString().length > 0 && (
             <X
               className="text-subtle absolute top-2.5 h-4 w-4 cursor-pointer ltr:right-2 rtl:left-2"
@@ -176,22 +181,43 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(function
               }}
             />
           )}
+          {floatingLabel ? (
+            <label
+              htmlFor={id}
+              className="text-pink absolute left-1 top-2 z-10 origin-[0] -translate-y-4 scale-75 transform bg-gray-100 px-2 text-sm text-gray-500 duration-300 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:scale-100 peer-focus:top-2 peer-focus:-translate-y-4 peer-focus:scale-75 peer-focus:px-2 peer-focus:text-blue-600 dark:bg-gray-900 dark:text-gray-400 peer-focus:dark:text-blue-500">
+              {label}
+            </label>
+          ) : (
+            <></>
+          )}
         </div>
       ) : (
-        <Input
-          id={id}
-          type={type}
-          placeholder={placeholder}
-          className={classNames(
-            className,
-            "disabled:bg-subtle disabled:hover:border-subtle disabled:cursor-not-allowed"
+        <div className="relative">
+          <Input
+            id={id}
+            type={type}
+            placeholder={placeholder}
+            className={classNames(
+              className,
+              "disabled:bg-subtle disabled:hover:border-subtle disabled:cursor-not-allowed",
+              size === "lg" && "text-md block w-full px-8 py-8 sm:p-5"
+            )}
+            {...passThrough}
+            readOnly={readOnly}
+            ref={ref}
+            isFullWidth={inputIsFullWidth}
+            disabled={readOnly || disabled}
+          />
+          {floatingLabel ? (
+            <label
+              htmlFor={id}
+              className="text-pink absolute left-1 top-2 z-10 origin-[0] -translate-y-4 scale-75 transform bg-gray-100 px-2 text-sm text-gray-500 duration-300 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:scale-100 peer-focus:top-2 peer-focus:-translate-y-4 peer-focus:scale-75 peer-focus:px-2 peer-focus:text-blue-600 dark:bg-gray-900 dark:text-gray-400 peer-focus:dark:text-blue-500">
+              {label}
+            </label>
+          ) : (
+            <></>
           )}
-          {...passThrough}
-          readOnly={readOnly}
-          ref={ref}
-          isFullWidth={inputIsFullWidth}
-          disabled={readOnly || disabled}
-        />
+        </div>
       )}
       <HintsOrErrors hintErrors={hintErrors} fieldName={name} t={t} />
       {hint && <div className="text-default mt-2 flex items-center text-sm">{hint}</div>}
@@ -222,10 +248,7 @@ export const PasswordField = forwardRef<HTMLInputElement, InputFieldProps>(funct
         placeholder={props.placeholder || "•••••••••••••"}
         ref={ref}
         {...props}
-        className={classNames(
-          "addon-wrapper mb-0 ltr:border-r-0 ltr:pr-10 rtl:border-l-0 rtl:pl-10",
-          props.className
-        )}
+        className={classNames("addon-wrapper mb-0 ltr:pr-10 rtl:pl-10", props.className)}
         addOnFilled={false}
         addOnSuffix={
           <Tooltip content={textLabel}>
