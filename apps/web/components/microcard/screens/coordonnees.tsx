@@ -2,9 +2,9 @@ import { default as Header } from "../header";
 
 export const CoordonneesPage = () => {
   return (
-    <div className="flex w-full flex-col">
+    <div className="flex w-full flex-col bg-white">
       <Header title="Hugo Libes" description="hugo.myGPT.fi" hasCalendar />
-      <div className="max-h-[75vh] px-8 py-5">
+      <div className="px-8 py-2">
         <div className="text-gray flex flex-col gap-4 text-sm text-black/50">
           <div className="flex flex-col gap-3">
             <p className="font-bold text-black">Contact Information</p>
@@ -38,7 +38,6 @@ export const CoordonneesPage = () => {
             />
           </div>
         </div>
-        <div className="pt-5" />
       </div>
     </div>
   );

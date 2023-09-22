@@ -2,7 +2,7 @@ import { CoordonneesPage, AIPage, TimeTokenPage, ServicesPage } from "@component
 
 const MicroCardTestPage = () => {
   return (
-    <div className="grid grid-cols-4 gap-40">
+    <div className="grid grid-cols-4 gap-12">
       <CoordonneesPage />
       <AIPage />
       <TimeTokenPage />
