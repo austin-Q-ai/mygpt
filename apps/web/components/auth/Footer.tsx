@@ -15,7 +15,7 @@ type FooterPropsTypes = {
   items: LinkProps[];
 };
 
-type IconContentProps = {
+type IconContentProps = React.ComponentProps<any> & {
   Icon?: string;
 };
 export function IconContent(props: IconContentProps) {
