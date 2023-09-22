@@ -18,6 +18,7 @@
   --cal-bg-info: #dee9fc;
   --cal-bg-success: #e2fbe8;
   --cal-bg-attention: #fceed8;
+  --cal-bg-badge: #E7DDED;
   --cal-bg-error: #f9e3e2;
   --cal-bg-dark-error: #752522;
 
@@ -38,6 +39,7 @@
 
   /* Content/Text -> components */
   --cal-text-info: #253985;
+  --cal-text-badge: #6D278E;
   --cal-text-success: #285231;
   --cal-text-attention: #73321b;
   --cal-text-error: #752522;
