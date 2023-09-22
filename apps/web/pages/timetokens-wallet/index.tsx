@@ -3,9 +3,9 @@ import { MeiliSearch } from "meilisearch";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { components } from "react-select";
-import { useRouter } from "next/router";
 
 import { createPaymentLink } from "@calcom/app-store/stripepayment/lib/client";
+import { createTokenPaymentLink } from "@calcom/app-store/stripepayment/lib/client";
 import Shell from "@calcom/features/shell/Shell";
 import { buyTokens } from "@calcom/features/timetokenswallet";
 import { MEILISEARCH_HOST, MEILISEARCH_SEARCH_API_KEY } from "@calcom/lib/constants";
@@ -15,7 +15,6 @@ import { Select, Button, Avatar, Badge, ConfirmationDialogContent, Dialog } from
 import { Plus } from "@calcom/ui/components/icon";
 
 import { withQuery } from "@lib/QueryCell";
-import { createTokenPaymentLink } from "@calcom/app-store/stripepayment/lib/client";
 
 import PageWrapper from "@components/PageWrapper";
 import CustomExpertTable from "@components/timetokens-wallet/CustomExpertTable";
@@ -36,7 +35,6 @@ function TimeTokensWallet() {
   const { t } = useLocale();
   const router = useRouter();
   const { data: user, isLoading } = trpc.viewer.me.useQuery();
-  const router = useRouter();
   const [addedExpertsData, setAddedExpertsData] = useState<ExpertDataType[]>([]);
   const [buyConfirmOpen, setBuyConfirmOpen] = useState<boolean>(false);
   const [removeConfirmOpen, setRemoveConfirmOpen] = useState<boolean>(false);

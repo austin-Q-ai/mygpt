@@ -1,20 +1,17 @@
 import { LazyMotion, domAnimation, m, AnimatePresence } from "framer-motion";
 import dynamic from "next/dynamic";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import StickyBox from "react-sticky-box";
 import { shallow } from "zustand/shallow";
 
 import BookingPageTagManager from "@calcom/app-store/BookingPageTagManager";
 import { useEmbedType, useEmbedUiConfig, useIsEmbed } from "@calcom/embed-core/embed-iframe";
-import TokenPaymentPage from "@calcom/features/ee/payments/components/TokenPaymentPage";
 import classNames from "@calcom/lib/classNames";
 import useMediaQuery from "@calcom/lib/hooks/useMediaQuery";
 import { BookerLayouts, defaultBookerLayoutSettings } from "@calcom/prisma/zod-utils";
-import { Dialog, DialogContent } from "@calcom/ui";
 
 import { AvailableTimeSlots } from "./components/AvailableTimeSlots";
 import { BookEventForm } from "./components/BookEventForm";
-import type { BookEventModalProps } from "./components/BookEventForm";
 import { BookFormAsModal } from "./components/BookEventForm/BookFormAsModal";
 import { EventMeta } from "./components/EventMeta";
 import { Header } from "./components/Header";
@@ -57,14 +54,7 @@ const BookerComponent = ({
   // Floating Button and Element Click both are modal and thus have dark background
   const hasDarkBackground = isEmbed && embedType !== "inline";
   const embedUiConfig = useEmbedUiConfig();
-  const [visible, setVisible] = useState(false);
-  const [modalProps, setModalProps] = useState<BookEventModalProps>({
-    expertId: -1,
-    username: "user",
-    name: "name",
-    amount: 0,
-    price: [1],
-  });
+
   // In Embed we give preference to embed configuration for the layout.If that's not set, we use the App configuration for the event layout
   // But if it's mobile view, there is only one layout supported which is 'mobile'
   const layout = isEmbed ? (isMobile ? "mobile" : validateLayout(embedUiConfig.layout) || _layout) : _layout;
@@ -221,8 +211,6 @@ const BookerComponent = ({
                     setSeatedEventData({ ...seatedEventData, bookingUid: undefined, attendees: undefined });
                   }
                 }}
-                onCallPayment={(value: boolean) => setVisible(value)}
-                onSetModalData={(data: BookEventModalProps) => setModalProps(data)}
               />
             </BookerSection>
 
@@ -284,14 +272,6 @@ const BookerComponent = ({
         visible={bookerState === "booking" && shouldShowFormInDialog}
         onCancel={() => setSelectedTimeslot(null)}
       />
-      <Dialog open={visible}>
-        <DialogContent
-          type={undefined}
-          // enableOverflow
-          className="[&_.modalsticky]:border-t-subtle [&_.modalsticky]:bg-default max-h-[80vh] pb-0 [&_.modalsticky]:sticky [&_.modalsticky]:bottom-0 [&_.modalsticky]:left-0 [&_.modalsticky]:right-0 [&_.modalsticky]:-mx-8 [&_.modalsticky]:border-t [&_.modalsticky]:px-8 [&_.modalsticky]:py-4">
-          <TokenPaymentPage setModalVisible={(value: boolean) => setVisible(value)} {...modalProps} />
-        </DialogContent>
-      </Dialog>
     </>
   );
 };

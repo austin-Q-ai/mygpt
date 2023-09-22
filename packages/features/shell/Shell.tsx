@@ -581,11 +581,6 @@ const navigation: NavigationItemType[] = [
     href: "/insights",
     icon: BarChart,
   },
-  {
-    name: "Create Bot",
-    href: "/create-bot",
-    icon: Bot,
-  },
 ];
 
 const moreSeparatorIndex = navigation.findIndex((item) => item.name === MORE_SEPARATOR_NAME);
