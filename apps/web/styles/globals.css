@@ -9,6 +9,7 @@
 
   --cal-bg-emphasis: #6D278E33;
   --cal-bg: white;
+  --cal-bg-menu: #F6EBFB;
   --cal-bg-subtle: #f3f4f6;
   --cal-bg-muted: #f9fafb;
   --cal-bg-inverted: #111827;
@@ -108,9 +109,18 @@ body  {
   -webkit-font-smoothing: antialiased;
 }
 
-.bg-global {
+.bg-global::before {
+  content: "";
+  z-index: -1;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   background-image: url('../public/background.png');
   background-size: cover;
+  background-repeat: no-repeat;
+  opacity: 0.8;
 }
 
 /*

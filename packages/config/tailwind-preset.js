@@ -20,6 +20,7 @@ module.exports = {
         default: "var(--cal-bg, white)",
         subtle: "var(--cal-bg-subtle)",
         muted: "var(--cal-bg-muted)",
+        menu: "var(--cal-bg-menu)",
         inverted: "var(--cal-bg-inverted)",
         info: "var(--cal-bg-info)",
         success: "var(--cal-bg-success)",
