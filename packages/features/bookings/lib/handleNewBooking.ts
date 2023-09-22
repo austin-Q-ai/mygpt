@@ -1119,6 +1119,8 @@ async function handler(
         }
       }
 
+      console.log("===== 1 =====");
+
       await Promise.all(integrationsToDelete).then(async () => {
         await prisma.booking.update({
           where: {
@@ -1451,6 +1453,8 @@ async function handler(
             additionalNotes, // Resets back to the additionalNote input and not the override value
             cancellationReason: "$RCH$" + (rescheduleReason ? rescheduleReason : ""), // Removable code prefix to differentiate cancellation from rescheduling for email
           });
+
+          console.log("===== 2 =====");
 
           // Update the old booking with the cancelled status
           await prisma.booking.update({
@@ -1991,6 +1995,8 @@ async function handler(
     // Use EventManager to conditionally use all needed integrations.
     addVideoCallDataToEvt(originalRescheduledBooking.references);
     const updateManager = await eventManager.reschedule(evt, originalRescheduledBooking.uid);
+
+    console.log("===== 3 =====");
 
     //update original rescheduled booking (no seats event)
     if (!eventType.seatsPerTimeSlot) {

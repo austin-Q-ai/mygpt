@@ -9,6 +9,7 @@
 
   --cal-bg-emphasis: #6D278E33;
   --cal-bg: white;
+  --cal-bg-menu: #F6EBFB;
   --cal-bg-subtle: #f3f4f6;
   --cal-bg-muted: #f9fafb;
   --cal-bg-inverted: #111827;
@@ -17,11 +18,12 @@
   --cal-bg-info: #dee9fc;
   --cal-bg-success: #e2fbe8;
   --cal-bg-attention: #fceed8;
+  --cal-bg-badge: #E7DDED;
   --cal-bg-error: #f9e3e2;
   --cal-bg-dark-error: #752522;
 
   /* Borders */
-  --cal-border-emphasis: #9ca3af;
+  --cal-border-emphasis: #6D278E33;
   --cal-border: #d1d5db;
   --cal-border-subtle: #e5e7eb;
   --cal-border-booker: #e5e7eb;
@@ -37,6 +39,7 @@
 
   /* Content/Text -> components */
   --cal-text-info: #253985;
+  --cal-text-badge: #6D278E;
   --cal-text-success: #285231;
   --cal-text-attention: #73321b;
   --cal-text-error: #752522;
@@ -108,9 +111,18 @@ body  {
   -webkit-font-smoothing: antialiased;
 }
 
-.bg-global {
+.bg-global::before {
+  content: "";
+  z-index: -1;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   background-image: url('../public/background.png');
   background-size: cover;
+  background-repeat: no-repeat;
+  opacity: 0.8;
 }
 
 /*

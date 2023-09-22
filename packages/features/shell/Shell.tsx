@@ -22,7 +22,7 @@ import TimezoneChangeDialog from "@calcom/features/settings/TimezoneChangeDialog
 import AdminPasswordBanner from "@calcom/features/users/components/AdminPasswordBanner";
 import VerifyEmailBanner from "@calcom/features/users/components/VerifyEmailBanner";
 import classNames from "@calcom/lib/classNames";
-import { APP_NAME, DESKTOP_APP_LINK, JOIN_DISCORD, ROADMAP, WEBAPP_URL } from "@calcom/lib/constants";
+import { APP_NAME, WEBAPP_URL } from "@calcom/lib/constants";
 import { getPlaceholderAvatar } from "@calcom/lib/defaultAvatarImage";
 import getBrandColours from "@calcom/lib/getBrandColours";
 import { useIsomorphicLayoutEffect } from "@calcom/lib/hooks/useIsomorphicLayoutEffect";
@@ -60,18 +60,15 @@ import {
   BarChart,
   Calendar,
   Clock,
-  Download,
   ExternalLink,
   HelpCircle,
   Link as LinkIcon,
   LogOut,
-  Map,
   Moon,
   MoreHorizontal,
   ChevronDown,
   Copy,
   Settings,
-  Slack,
   Users,
   Wallet,
   Grid,
@@ -420,8 +417,8 @@ function UserDropdown({ small }: UserDropdownProps) {
                     {user.away ? t("set_as_free") : t("set_as_away")}
                   </DropdownItem>
                 </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
+                {/* <DropdownMenuSeparator /> */}
+                {/* <DropdownMenuItem>
                   <DropdownItem
                     StartIcon={(props) => <Slack strokeWidth={1.5} {...props} />}
                     target="_blank"
@@ -434,7 +431,7 @@ function UserDropdown({ small }: UserDropdownProps) {
                   <DropdownItem StartIcon={Map} target="_blank" href={ROADMAP}>
                     {t("visit_roadmap")}
                   </DropdownItem>
-                </DropdownMenuItem>
+                </DropdownMenuItem> */}
                 <DropdownMenuItem>
                   <DropdownItem
                     type="button"
@@ -443,13 +440,13 @@ function UserDropdown({ small }: UserDropdownProps) {
                     {t("help")}
                   </DropdownItem>
                 </DropdownMenuItem>
-                <DropdownMenuItem className="desktop-hidden hidden lg:flex">
+                {/* <DropdownMenuItem className="desktop-hidden hidden lg:flex">
                   <DropdownItem StartIcon={Download} target="_blank" rel="noreferrer" href={DESKTOP_APP_LINK}>
                     {t("download_desktop_app")}
                   </DropdownItem>
-                </DropdownMenuItem>
+                </DropdownMenuItem> */}
 
-                <DropdownMenuSeparator />
+                <DropdownMenuSeparator className="mx-2" />
 
                 <DropdownMenuItem>
                   <DropdownItem
@@ -888,7 +885,7 @@ function SideBar({ bannersHeight, user }: SideBarProps) {
         </div>
 
         <div>
-          <Tips />
+          {/* <Tips /> */}
           {bottomNavItems.map(({ icon: Icon, ...item }, index) => (
             <Tooltip side="right" content={t(item.name)} className="lg:hidden" key={item.name}>
               <ButtonOrLink

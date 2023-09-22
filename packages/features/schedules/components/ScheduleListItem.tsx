@@ -50,7 +50,7 @@ export function ScheduleListItem({
             <div className="space-x-2 rtl:space-x-reverse">
               <span className="text-emphasis truncate font-medium">{schedule.name}</span>
               {schedule.isDefault && (
-                <Badge variant="success" className="text-xs">
+                <Badge variant="success" className="bg-badge text-badge text-xs">
                   {t("default")}
                 </Badge>
               )}

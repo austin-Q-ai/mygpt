@@ -43,7 +43,7 @@ export default function TeamList(props: Props) {
   }
 
   return (
-    <ul className="bg-default  mb-2 flex flex-col gap-2  overflow-hidden rounded-md ">
+    <ul className="mb-2 flex flex-col gap-2  overflow-hidden rounded-md">
       {props.teams.map((team) => (
         <TeamListItem
           key={team?.id as number}
