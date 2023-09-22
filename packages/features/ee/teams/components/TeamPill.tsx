@@ -3,7 +3,7 @@ import classNames from "classnames";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { MembershipRole } from "@calcom/prisma/enums";
 
-type PillColor = "blue" | "green" | "red" | "orange";
+type PillColor = "pink" | "green" | "red" | "orange";
 
 interface Props {
   text: string;
