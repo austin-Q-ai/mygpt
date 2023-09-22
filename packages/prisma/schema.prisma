@@ -219,7 +219,7 @@ model User {
   // </DEPRECATED>
   bufferTime                   Int                     @default(0)
   hideBranding                 Boolean                 @default(false)
-  theme                        String?
+  theme                        String?                 @default("light")
   createdDate                  DateTime                @default(now()) @map(name: "created")
   trialEndsAt                  DateTime?
   eventTypes                   EventType[]             @relation("user_eventtype")
