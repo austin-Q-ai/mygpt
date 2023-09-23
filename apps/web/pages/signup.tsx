@@ -104,7 +104,7 @@ export default function Signup({ prepopulateFormValues, token, orgSlug }: Signup
                   <div className="w-full  flex-col">
                     <TextField
                       floatingLabel
-                      size="lg"
+                      inputSize="lg"
                       addOnLeading={
                         orgSlug
                           ? getOrgFullDomain(orgSlug, { protocol: false })
@@ -117,7 +117,7 @@ export default function Signup({ prepopulateFormValues, token, orgSlug }: Signup
                   <div className="w-full  flex-col">
                     <EmailField
                       floatingLabel
-                      size="lg"
+                      inputSize="lg"
                       {...register("email")}
                       disabled={prepopulateFormValues?.email}
                       className="disabled:bg-emphasis disabled:hover:cursor-not-allowed"
@@ -127,7 +127,7 @@ export default function Signup({ prepopulateFormValues, token, orgSlug }: Signup
                 <div className="w-full  flex-col">
                   <PasswordField
                     floatingLabel
-                    size="lg"
+                    inputSize="lg"
                     labelProps={{
                       className: "block text-sm font-medium text-default",
                     }}

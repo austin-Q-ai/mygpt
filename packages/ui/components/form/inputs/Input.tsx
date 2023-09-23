@@ -12,7 +12,11 @@ import { Eye, EyeOff, X, Search } from "../../icon";
 import { HintsOrErrors } from "./HintOrErrors";
 import { Label } from "./Label";
 
-type InputProps = JSX.IntrinsicElements["input"] & { isFullWidth?: boolean; isStandaloneField?: boolean };
+type InputProps = JSX.IntrinsicElements["input"] & {
+  isFullWidth?: boolean;
+  isStandaloneField?: boolean;
+  inputSize: "lg" | "md" | "sm";
+};
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   { isFullWidth = true, ...props },
@@ -24,6 +28,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
       ref={ref}
       className={classNames(
         "hover:border-emphasis dark:focus:border-emphasis border-default bg-default placeholder:text-muted text-emphasis disabled:hover:border-default disabled:bg-subtle focus:ring-brand-default mb-2 block h-9 rounded-md border px-3 py-2 text-sm leading-4 focus:border-neutral-300 focus:outline-none focus:ring-2 disabled:cursor-not-allowed",
+        props.inputSize === "lg" && "text-md block w-full !px-4 !py-6",
+        props.inputSize === "md" && "text-md block w-full !px-2 !py-4",
         isFullWidth && "w-full",
         props.className
       )}
@@ -52,7 +58,7 @@ type InputFieldProps = {
   error?: string;
   labelSrOnly?: boolean;
   floatingLabel?: boolean;
-  size?: string | "lg" | "md" | "sm" | undefined;
+  inputSize?: string;
   containerClassName?: string;
   t?: (key: string) => string;
 } & React.ComponentProps<typeof Input> & {
@@ -109,7 +115,7 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(function
     containerClassName,
     readOnly,
     floatingLabel,
-    size,
+    inputSize,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     t: __t,
     ...passThrough
@@ -148,7 +154,6 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(function
             className={classNames(
               className,
               "disabled:bg-subtle disabled:hover:border-subtle disabled:cursor-not-allowed",
-              size === "lg" && "text-md block w-full  px-8 py-8 sm:p-5",
               // addOnLeading && "rounded-l-none border-l-0",
               // addOnSuffix && "rounded-r-none border-r-0",
               type === "search" && "pr-8",
@@ -164,6 +169,7 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(function
             })}
             disabled={readOnly || disabled}
             ref={ref}
+            inputSize={inputSize}
           />
           {/* {addOnSuffix && (
             <Addon
@@ -199,14 +205,14 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(function
             placeholder={placeholder}
             className={classNames(
               className,
-              "disabled:bg-subtle disabled:hover:border-subtle disabled:cursor-not-allowed",
-              size === "lg" && "text-md block w-full px-8 py-8 sm:p-5"
+              "disabled:bg-subtle disabled:hover:border-subtle disabled:cursor-not-allowed"
             )}
             {...passThrough}
             readOnly={readOnly}
             ref={ref}
             isFullWidth={inputIsFullWidth}
             disabled={readOnly || disabled}
+            inputSize={inputSize}
           />
           {floatingLabel ? (
             <label
@@ -226,7 +232,7 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(function
 });
 
 export const TextField = forwardRef<HTMLInputElement, InputFieldProps>(function TextField(props, ref) {
-  return <InputField ref={ref} {...props} />;
+  return <InputField ref={ref} {...props} inputSize={props.inputSize} />;
 });
 
 export const PasswordField = forwardRef<HTMLInputElement, InputFieldProps>(function PasswordField(
