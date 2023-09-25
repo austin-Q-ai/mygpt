@@ -39,6 +39,9 @@ export const EventTypeDescription = ({
   );
 
   const paymentAppData = getPaymentAppData(eventType);
+  const tokenPrice = eventType.owner.price[eventType.owner.price.length - 1];
+
+  console.log(eventType, "===");
 
   return (
     <>
@@ -98,7 +101,8 @@ export const EventTypeDescription = ({
                 {new Intl.NumberFormat(i18n.language, {
                   style: "currency",
                   currency: paymentAppData.currency,
-                }).format(paymentAppData.price / 100)}
+                }).format(tokenPrice)}
+                (1 TimeToken)
               </Badge>
             </li>
           )}

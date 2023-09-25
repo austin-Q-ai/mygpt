@@ -182,11 +182,11 @@ export class PaymentService implements IAbstractPaymentService {
         },
       });
 
-      if (!timetokens) throw Error("Wallet not found");
+      // if (!timetokens) throw Error("Wallet not found");
 
       const length = (booking.endTime.getTime() - booking.startTime.getTime()) / 60000; // minutes
 
-      if (timetokens.amount > Math.ceil(length / 5)) {
+      if (timetokens?.amount || 0 > Math.ceil(length / 5)) {
         // user has enough timetokens
         const updateWallet = prisma.timeTokensWallet.update({
           where: {
@@ -232,7 +232,7 @@ export class PaymentService implements IAbstractPaymentService {
       }
 
       // user doesn't have enough timetokens
-      const deltaTokens = Math.ceil(length / 5) - timetokens.amount;
+      const deltaTokens = Math.ceil(length / 5) - (timetokens?.amount || 0);
 
       const totalTokens = await prisma.user.findUnique({
         where: {

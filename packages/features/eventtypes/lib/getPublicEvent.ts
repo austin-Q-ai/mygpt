@@ -59,6 +59,7 @@ const publicEventSelect = Prisma.validator<Prisma.EventTypeSelect>()({
           darkBrandColor: true,
           theme: true,
           metadata: true,
+          price: true,
         },
       },
     },
@@ -72,6 +73,7 @@ const publicEventSelect = Prisma.validator<Prisma.EventTypeSelect>()({
       metadata: true,
       brandColor: true,
       darkBrandColor: true,
+      price: true,
     },
   },
   hidden: true,
@@ -101,6 +103,7 @@ export const getPublicEvent = async (
         brandColor: true,
         darkBrandColor: true,
         theme: true,
+        price: true,
       },
     });
 
@@ -136,6 +139,7 @@ export const getPublicEvent = async (
         username: users[0].username,
         name: users[0].name,
         weekStart: users[0].weekStart,
+        price: users[0].price,
         image: `/${users[0].username}/avatar.png`,
         brandColor: users[0].brandColor,
         darkBrandColor: users[0].darkBrandColor,
@@ -233,6 +237,7 @@ function getProfileFromEvent(event: Event) {
     image: team ? undefined : `${basePath}/avatar.png`,
     logo: !team ? undefined : team.logo,
     brandColor: profile.brandColor,
+    price: profile.price,
     darkBrandColor: profile.darkBrandColor,
     theme: profile.theme,
     bookerLayouts: bookerLayoutsSchema.parse(
@@ -250,23 +255,24 @@ function getUsersFromEvent(event: Event) {
   if (!owner) {
     return null;
   }
-  const { username, name, weekStart } = owner;
-  return [{ username, name, weekStart }];
+  const { username, name, weekStart, price } = owner;
+  return [{ username, name, weekStart, price }];
 }
 
 async function getOwnerFromUsersArray(prisma: PrismaClient, eventTypeId: number) {
   const { users } = await prisma.eventType.findUniqueOrThrow({
     where: { id: eventTypeId },
-    select: { users: { select: { username: true, name: true, weekStart: true } } },
+    select: { users: { select: { username: true, name: true, weekStart: true, price: true } } },
   });
   if (!users.length) return null;
   return [users[0]];
 }
 
-function mapHostsToUsers(host: { user: Pick<User, "username" | "name" | "weekStart"> }) {
+function mapHostsToUsers(host: { user: Pick<User, "username" | "name" | "weekStart" | "price"> }) {
   return {
     username: host.user.username,
     name: host.user.name,
     weekStart: host.user.weekStart,
+    price: host.user.price,
   };
 }
