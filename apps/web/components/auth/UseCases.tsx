@@ -163,7 +163,9 @@ export default function UseCases() {
             boulevard Saint <br />
             Germain 75007 Paris <br />
             France <br />
-            +33 6 72 94 12 82
+            <Link className="hover:underline" href="tel:+33672941282" target="_blank">
+              +33 6 72 94 12 82
+            </Link>
           </p>
         </div>
         <div className="flex flex-col gap-5">
