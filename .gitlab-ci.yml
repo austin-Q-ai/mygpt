@@ -1,0 +1,21 @@
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push"
+    - if: $CI_PIPELINE_SOURSE == "merge_request_event"
+
+stages:          # List of stages for jobs, and their order of execution
+  - push_into_walcaldeploy
+
+push_into_walcaldeploy:
+  image: ubuntu:latest
+  stage: push_into_walcaldeploy
+  script:
+    - apt update -y && apt install git -y
+    - git config --global user.email "cawsonoliver33@gmail.com"
+    - git config --global user.name "Oliver Cawson"
+    - git clone https://cawsonoliver33:$ACCESS_TOKEN@gitlab.com/i2xo/walcaldeploy
+    - cd walcaldeploy/
+    - git submodule update --remote --init
+    - git add .
+    - git commit -m "update submodule on main"
+    - git push
