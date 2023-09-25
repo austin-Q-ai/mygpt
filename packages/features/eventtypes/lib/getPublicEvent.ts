@@ -237,7 +237,6 @@ function getProfileFromEvent(event: Event) {
     image: team ? undefined : `${basePath}/avatar.png`,
     logo: !team ? undefined : team.logo,
     brandColor: profile.brandColor,
-    price: profile.price,
     darkBrandColor: profile.darkBrandColor,
     theme: profile.theme,
     bookerLayouts: bookerLayoutsSchema.parse(

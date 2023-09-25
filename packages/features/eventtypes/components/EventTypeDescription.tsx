@@ -19,6 +19,7 @@ export type EventTypeDescriptionProps = {
     descriptionAsSafeHTML?: string | null;
     recurringEvent: Prisma.JsonValue;
     seatsPerTimeSlot?: number;
+    owner?: any;
   };
   className?: string;
   shortenDescription?: boolean;
@@ -39,7 +40,7 @@ export const EventTypeDescription = ({
   );
 
   const paymentAppData = getPaymentAppData(eventType);
-  const tokenPrice = eventType.owner.price[eventType.owner.price.length - 1];
+  const tokenPrice = eventType.owner?.price[eventType.owner?.price.length - 1];
 
   console.log(eventType, "===");
 

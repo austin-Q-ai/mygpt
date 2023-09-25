@@ -52,9 +52,8 @@ const PaymentPage: FC<PaymentPageProps> = (props) => {
 
   const eventName = props.booking?.title;
 
-  const tokens = Math.ceil(props.booking?.length / 5);
-  const price = props.profile?.price * tokens;
-  console.log(props.profile, "===", props.user);
+  const tokens = Math.ceil((props.booking?.length || 0) / 5);
+  const price = (props.profile?.price || 0) * tokens;
 
   return (
     <div className="h-screen">

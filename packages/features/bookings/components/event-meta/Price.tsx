@@ -16,7 +16,7 @@ export const EventPrice = ({ event }: { event: PublicEvent }) => {
       {Intl.NumberFormat("en", {
         style: "currency",
         currency: stripeAppData.currency.toUpperCase(),
-      }).format(Math.ceil(selectedDuration / 5) * price)}
+      }).format(Math.ceil(selectedDuration || event.length / 5) * price)}
     </>
   );
 };
