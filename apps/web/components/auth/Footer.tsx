@@ -1,13 +1,14 @@
+import type { LucideIcon as IconType } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
 import type { SVGComponent } from "@calcom/types/SVGComponent";
 
-type LinkProps = {
+export type LinkProps = {
   name: string;
   url: string;
-  Icon?: SVGComponent | React.ElementType | undefined;
+  Icon?: SVGComponent | IconType;
   picture?: string | undefined;
   sideLabel?: string;
 };
