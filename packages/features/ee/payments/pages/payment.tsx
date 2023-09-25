@@ -53,6 +53,7 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
           description: true,
           title: true,
           startTime: true,
+          endTime: true,
           attendees: {
             select: {
               email: true,
@@ -80,6 +81,7 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
                   username: true,
                   hideBranding: true,
                   theme: true,
+                  price: true,
                 },
               },
               team: {
@@ -147,6 +149,7 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
           description: true,
           title: true,
           startTime: true,
+          endTime: true,
           attendees: {
             select: {
               email: true,
@@ -174,6 +177,7 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
                   username: true,
                   hideBranding: true,
                   theme: true,
+                  price: true,
                 },
               },
               team: {
@@ -202,9 +206,10 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
 
   if (!_booking) return { notFound: true };
 
-  const { startTime, eventType, ...restBooking } = _booking;
+  const { startTime, endTime, eventType, ...restBooking } = _booking;
   const booking = {
     ...restBooking,
+    length: (endTime.getTime() - startTime.getTime()) / 60000,
     startTime: startTime.toString(),
   };
 
@@ -215,6 +220,7 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
 
   const profile = {
     name: eventType.team?.name || user?.name || null,
+    price: user?.price ? user?.price[user?.price.length - 1] : 0,
     theme: (!eventType.team?.name && user?.theme) || null,
     hideBranding: eventType.team?.hideBranding || user?.hideBranding || null,
   };
