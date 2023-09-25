@@ -1,27 +1,20 @@
+import type { LucideIcon as IconType } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
 import type { SVGComponent } from "@calcom/types/SVGComponent";
 
-type LinkProps = {
+export type LinkProps = {
   name: string;
   url: string;
-  Icon?: SVGComponent | React.ElementType | undefined;
+  Icon?: SVGComponent | IconType;
   picture?: string | undefined;
   sideLabel?: string;
 };
 type FooterPropsTypes = {
   items: LinkProps[];
 };
-
-type IconContentProps = React.ComponentProps<any> & {
-  Icon?: string;
-};
-export function IconContent(props: IconContentProps) {
-  const { Icon } = props;
-  return Icon;
-}
 
 export default function Footer(props: FooterPropsTypes) {
   return (
@@ -36,7 +29,7 @@ export default function Footer(props: FooterPropsTypes) {
                   {link.picture ? (
                     <Image src={link.picture} alt={link.name} width={125} height={55} />
                   ) : Icon && Icon !== undefined ? (
-                    <IconContent Icon={Icon} />
+                    <Icon />
                   ) : (
                     <span className="opacity-80">{link.name}</span>
                   )}

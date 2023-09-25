@@ -8,6 +8,7 @@ import { ArrowLeft, ArrowRight, LogOut, MessageSquare, Share2, X } from "@calcom
 
 import Loader from "@components/Loader";
 import Footer from "@components/auth/Footer";
+import type { LinkProps } from "@components/auth/Footer";
 import PriceListItem from "@components/prices/PriceListItem";
 
 interface Props {
@@ -19,7 +20,7 @@ interface Props {
   loading?: boolean;
 }
 
-const footerLinks = [
+const footerLinks: LinkProps[] = [
   {
     name: "Benfits",
     url: "/",
@@ -48,12 +49,12 @@ const footerLinks = [
   {
     name: "Share",
     url: "/",
-    Icon: <Share2 />,
+    Icon: Share2,
   },
   {
     name: "Comments",
     url: "/",
-    Icon: <MessageSquare />,
+    Icon: MessageSquare,
     sideLabel: "9 comments",
   },
 ];

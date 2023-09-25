@@ -174,7 +174,7 @@ export default function Login({
                     placeholder="john.doe@example.com"
                     required
                     {...register("email")}
-                    size="lg"
+                    inputSize="lg"
                   />
                 </div>
                 <div className=" w-full flex-col">
@@ -185,7 +185,7 @@ export default function Login({
                     required={!totpEmail}
                     className="mb-0"
                     {...register("password")}
-                    size="lg"
+                    inputSize="lg"
                   />
                   {/* <div className="absolute -top-[2px] ltr:right-0 rtl:left-0">
                     <Link
