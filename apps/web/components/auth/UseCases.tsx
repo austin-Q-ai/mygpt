@@ -117,14 +117,14 @@ export default function UseCases() {
         {useCases.map((item, index) => {
           return (
             <div
-              className="bg-emphasis col-span-1 grid grid-cols-5 rounded-md border p-3 text-sm"
+              className="bg-emphasis col-span-1 grid grid-cols-6 rounded-md border p-2 text-sm"
               key={index}>
               <div className="col-span-1">
                 <Image src="/app-use-cases/sheild.svg" width={18} height={18} alt="" />
               </div>
-              <div className="text-pink col-span-4 text-xs">
+              <div className="text-pink col-span-5 text-xs">
                 <div className="font-bold">{item.title}</div>
-                <div className="overflow-hidden font-light">{item.description}</div>
+                <div className="overflow-hidden pt-1 font-light">{item.description}</div>
               </div>
             </div>
           );
