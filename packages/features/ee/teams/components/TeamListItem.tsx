@@ -93,14 +93,14 @@ export default function TeamListItem(props: Props) {
   const teamInfo = (
     <div className="item-center flex px-5 py-5">
       <Avatar
-        size="md"
+        size="lg"
         imageSrc={getPlaceholderAvatar(team?.logo, team?.name as string)}
         alt="Team Logo"
         className="inline-flex justify-center"
       />
-      <div className="ms-3 inline-block truncate">
-        <span className="text-default text-sm font-bold">{team.name}</span>
-        <span className="text-muted block text-xs">
+      <div className="grid grid-cols-1 content-center gap-2 truncate px-6">
+        <span className="text-default  flex-row  content-center text-base font-bold">{team.name}</span>
+        <span className="text-muted block  flex-row  content-center text-sm">
           {team.slug
             ? orgBranding
               ? `${orgBranding.fullDomain}${team.slug}`
@@ -112,7 +112,7 @@ export default function TeamListItem(props: Props) {
   );
 
   return (
-    <li className="">
+    <li className="flex-row !bg-[#d3bedd40]">
       <MemberInvitationModal
         isOpen={openMemberInvitationModal}
         teamId={team.id}
@@ -233,6 +233,22 @@ export default function TeamListItem(props: Props) {
                   <Tooltip content={t("copy_link_team")}>
                     <Button
                       color="secondary"
+                      type="button"
+                      variant="icon"
+                      target="_blank"
+                      href={`${
+                        orgBranding
+                          ? `${orgBranding.fullDomain}`
+                          : `${process.env.NEXT_PUBLIC_WEBSITE_URL}/team/`
+                      }${team.slug}`}
+                      StartIcon={ExternalLink}
+                    />
+                  </Tooltip>
+                )}
+                {team.slug && (
+                  <Tooltip content={t("copy_link_team")}>
+                    <Button
+                      color="secondary"
                       onClick={() => {
                         navigator.clipboard.writeText(
                           `${
@@ -248,6 +264,7 @@ export default function TeamListItem(props: Props) {
                     />
                   </Tooltip>
                 )}
+
                 <Dropdown>
                   <DropdownMenuTrigger asChild>
                     <Button

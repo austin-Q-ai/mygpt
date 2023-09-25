@@ -39,7 +39,7 @@ export const DropdownMenuContent = forwardRef<HTMLDivElement, DropdownMenuConten
         {...props}
         sideOffset={sideOffset}
         className={classNames(
-          "shadow-dropdown w-50 bg-default border-subtle relative z-10 ml-1.5 origin-top-right rounded-md border text-sm",
+          "shadow-dropdown w-50 bg-menu border-emphasis relative z-10 ml-1.5 origin-top-right rounded-md border text-sm",
           "[&>*:first-child]:mt-1 [&>*:last-child]:mb-1",
           props.className
         )}
@@ -109,6 +109,7 @@ type DropdownItemProps = {
   EndIcon?: SVGComponent;
   href?: string;
   disabled?: boolean;
+  className?: string;
   childrenClassName?: string;
 } & ButtonOrLinkProps;
 
@@ -131,13 +132,14 @@ export function ButtonOrLink({ href, ...props }: ButtonOrLinkProps) {
 }
 
 export const DropdownItem = (props: DropdownItemProps) => {
-  const { StartIcon, EndIcon, children, color, childrenClassName, ...rest } = props;
+  const { StartIcon, EndIcon, children, color, className, childrenClassName, ...rest } = props;
 
   return (
     <ButtonOrLink
       {...rest}
       className={classNames(
         "hover:text-emphasis text-default inline-flex w-full items-center space-x-2 px-3 py-2 disabled:cursor-not-allowed",
+        className,
         color === "destructive" ? "hover:bg-error hover:text-red-700" : "hover:bg-subtle"
       )}>
       <>

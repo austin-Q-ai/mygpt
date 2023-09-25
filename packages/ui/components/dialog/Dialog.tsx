@@ -65,6 +65,7 @@ type DialogContentProps = React.ComponentProps<(typeof DialogPrimitive)["Content
   closeText?: string;
   actionDisabled?: boolean;
   Icon?: SVGComponent;
+  HeaderIcon?: SVGComponent | React.ElementType;
   enableOverflow?: boolean;
 };
 
@@ -92,7 +93,16 @@ export const DialogContent = React.forwardRef<HTMLDivElement, DialogContentProps
           ref={forwardedRef}>
           {type === "creation" && (
             <div>
-              <DialogHeader title={title} subtitle={props.description} />
+              <div className="flex justify-between">
+                <DialogHeader title={title} subtitle={props.description} HeaderIcon={props.HeaderIcon} />
+                {Icon && (
+                  <div className="mr-4 inline-flex h-5 w-5 items-center justify-center rounded-full">
+                    <DialogClose className="p-0">
+                      <Icon className="text-emphasis  h-8 w-8" color="gray" />
+                    </DialogClose>
+                  </div>
+                )}
+              </div>
               <div className="flex flex-col">{children}</div>
             </div>
           )}
@@ -119,19 +129,25 @@ export const DialogContent = React.forwardRef<HTMLDivElement, DialogContentProps
 type DialogHeaderProps = {
   title: React.ReactNode;
   subtitle?: React.ReactNode;
+  HeaderIcon?: SVGComponent | React.ElementType;
 };
 
 export function DialogHeader(props: DialogHeaderProps) {
-  if (!props.title) return null;
-
-  return (
+  const { HeaderIcon } = props;
+  // if (!props.title ) return null;
+  const content = HeaderIcon ? (
+    <div className="mb-4 flex  min-w-[100%]  justify-center ">
+      <HeaderIcon className="h-[36px] w-[36px]" />
+    </div>
+  ) : (
     <div className="mb-4">
-      <h3 className="leading-20 text-semibold font-cal text-emphasis pb-1 text-xl" id="modal-title">
+      <h3 className="leading-20 text-semibold font-cal text-emphasis pb-1 pt-2 text-xl" id="modal-title">
         {props.title}
       </h3>
       {props.subtitle && <div className="text-subtle text-sm">{props.subtitle}</div>}
     </div>
   );
+  return content;
 }
 
 export function DialogFooter(props: {

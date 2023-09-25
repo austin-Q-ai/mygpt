@@ -1,7 +1,6 @@
 import type { GetServerSidePropsContext } from "next";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
-import type { CSSProperties } from "react";
 import type { SubmitHandler } from "react-hook-form";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -19,6 +18,7 @@ import type { inferSSRProps } from "@calcom/types/inferSSRProps";
 import { Alert, Button, EmailField, HeadSeo, PasswordField, TextField } from "@calcom/ui";
 
 import PageWrapper from "@components/PageWrapper";
+import AuthContainer from "@components/ui/AuthContainer";
 
 import { IS_GOOGLE_LOGIN_ENABLED } from "../server/lib/constants";
 import { ssrInit } from "../server/lib/ssr";
@@ -83,27 +83,10 @@ export default function Signup({ prepopulateFormValues, token, orgSlug }: Signup
 
   return (
     <>
-      <div
-        className="bg-muted flex min-h-screen flex-col justify-center "
-        style={
-          {
-            "--cal-brand": "#111827",
-            "--cal-brand-emphasis": "#101010",
-            "--cal-brand-text": "white",
-            "--cal-brand-subtle": "#9CA3AF",
-          } as CSSProperties
-        }
-        aria-labelledby="modal-title"
-        role="dialog"
-        aria-modal="true">
+      <div>
         <HeadSeo title={t("sign_up")} description={t("sign_up")} />
-        <div className="sm:mx-auto sm:w-full sm:max-w-md">
-          <h2 className="font-cal text-emphasis text-center text-3xl font-extrabold">
-            {t("create_your_account")}
-          </h2>
-        </div>
-        <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-          <div className="bg-default mx-2 p-6 shadow sm:rounded-lg lg:p-8">
+        <div className="">
+          <AuthContainer title={t("login")} description={t("login")} showLogo>
             <FormProvider {...methods}>
               <form
                 onSubmit={(event) => {
@@ -115,24 +98,36 @@ export default function Signup({ prepopulateFormValues, token, orgSlug }: Signup
                   }
                   methods.handleSubmit(signUp)(event);
                 }}
-                className="bg-default space-y-6">
+                className=" mt-6 space-y-6">
                 {errors.apiError && <Alert severity="error" message={errors.apiError?.message} />}
-                <div className="space-y-4">
-                  <TextField
-                    addOnLeading={
-                      orgSlug
-                        ? getOrgFullDomain(orgSlug, { protocol: false })
-                        : `${process.env.NEXT_PUBLIC_WEBSITE_URL}/`
-                    }
-                    {...register("username")}
-                    required
-                  />
-                  <EmailField
-                    {...register("email")}
-                    disabled={prepopulateFormValues?.email}
-                    className="disabled:bg-emphasis disabled:hover:cursor-not-allowed"
-                  />
+                <div className="flex flex-row gap-4">
+                  <div className="w-full  flex-col">
+                    <TextField
+                      floatingLabel
+                      inputSize="lg"
+                      addOnLeading={
+                        orgSlug
+                          ? getOrgFullDomain(orgSlug, { protocol: false })
+                          : `${process.env.NEXT_PUBLIC_WEBSITE_URL}/`
+                      }
+                      {...register("username")}
+                      required
+                    />
+                  </div>
+                  <div className="w-full  flex-col">
+                    <EmailField
+                      floatingLabel
+                      inputSize="lg"
+                      {...register("email")}
+                      disabled={prepopulateFormValues?.email}
+                      className="disabled:bg-emphasis disabled:hover:cursor-not-allowed"
+                    />
+                  </div>
+                </div>
+                <div className="w-full  flex-col">
                   <PasswordField
+                    floatingLabel
+                    inputSize="lg"
                     labelProps={{
                       className: "block text-sm font-medium text-default",
                     }}
@@ -162,7 +157,7 @@ export default function Signup({ prepopulateFormValues, token, orgSlug }: Signup
                 </div>
               </form>
             </FormProvider>
-          </div>
+          </AuthContainer>
         </div>
       </div>
     </>

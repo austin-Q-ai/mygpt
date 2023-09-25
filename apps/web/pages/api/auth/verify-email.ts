@@ -1,3 +1,4 @@
+import { MeiliSearch } from "meilisearch";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
 
@@ -8,6 +9,13 @@ import { prisma } from "@calcom/prisma";
 const verifySchema = z.object({
   token: z.string(),
 });
+
+const client = new MeiliSearch({
+  host: `https://${process.env.MEILISEARCH_HOST}`,
+  apiKey: process.env.ADMIN_API_KEY, // admin apiKey
+});
+
+const index = client.index("users");
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { token } = verifySchema.parse(req.query);
@@ -31,9 +39,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       email: foundToken?.identifier,
     },
     data: {
+      tokens: parseInt(process.env.AMOUNT_MINTED_DEFAULT || "0"), // amount of tokens minted for 6 months default
       emailVerified: new Date(),
     },
   });
+
+  // add new user to meilisearch and generate a tokenprice record after email verified
+  if (user.emailVerified) {
+    const newUserInfo = {
+      objectID: user.id,
+      name: user.name,
+      bio: user.bio,
+      avatar: user.avatar,
+      added: [],
+    };
+    await index.addDocuments([newUserInfo], { primaryKey: "objectID" });
+  }
 
   // Delete token from DB after it has been used
   await prisma.verificationToken.delete({

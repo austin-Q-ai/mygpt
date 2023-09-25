@@ -17,3 +17,9 @@ export function createPaymentLink(opts: {
   const query = stringify({ date, name, email });
   return link + `/payment/${paymentUid}?${query}`;
 }
+
+export function createTokenPaymentLink(opts: { paymentUid: string }): string {
+  const { paymentUid } = opts;
+  const link = WEBSITE_URL;
+  return link + `/payment/${paymentUid}`;
+}

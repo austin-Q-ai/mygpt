@@ -212,6 +212,11 @@ export const bookingCreateBodySchema = z.object({
   seatReferenceUid: z.string().optional(),
 });
 
+export const buyTokensBodySchema = z.object({
+  emitterId: z.number(),
+  amount: z.number(),
+});
+
 export const requiredCustomInputSchema = z.union([
   // string must be given & nonempty
   z.string().trim().min(1),
@@ -220,6 +225,8 @@ export const requiredCustomInputSchema = z.union([
 ]);
 
 export type BookingCreateBody = z.input<typeof bookingCreateBodySchema>;
+
+export type BuyTokensBody = z.input<typeof buyTokensBodySchema>;
 
 export const bookingConfirmPatchBodySchema = z.object({
   bookingId: z.number(),

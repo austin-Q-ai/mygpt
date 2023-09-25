@@ -10,10 +10,12 @@ export interface PaymentApp {
 
 export interface IAbstractPaymentService {
   /* This method is for creating charges at the time of booking */
+  createBuyPayment(walletId: number): Promise<Payment>;
   create(
     payment: Pick<Prisma.PaymentUncheckedCreateInput, "amount" | "currency">,
     bookingId: Booking["id"],
     bookerEmail: string,
+    userId: number,
     paymentOption: PaymentOption
   ): Promise<Payment>;
   /* This method is to collect card details to charge at a later date ex. no-show fees */

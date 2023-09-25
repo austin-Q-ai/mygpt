@@ -30,6 +30,7 @@ const UserSettings = (props: IUserSettingsProps) => {
       .max(FULL_NAME_LENGTH_MAX_LIMIT, {
         message: t("max_limit_allowed_hint", { limit: FULL_NAME_LENGTH_MAX_LIMIT }),
       }),
+    price: z.string(),
   });
   const {
     register,
@@ -38,6 +39,7 @@ const UserSettings = (props: IUserSettingsProps) => {
   } = useForm<z.infer<typeof userSettingsSchema>>({
     defaultValues: {
       name: user?.name || "",
+      price: "1",
     },
     reValidateMode: "onChange",
     resolver: zodResolver(userSettingsSchema),
@@ -57,8 +59,10 @@ const UserSettings = (props: IUserSettingsProps) => {
   });
 
   const onSubmit = handleSubmit((data) => {
+    console.log(data);
     mutation.mutate({
       name: data.name,
+      price: parseInt(data.price),
       timeZone: selectedTimeZone,
     });
   });
@@ -88,6 +92,30 @@ const UserSettings = (props: IUserSettingsProps) => {
           {errors.name && (
             <p data-testid="required" className="py-2 text-xs text-red-500">
               {errors.name.message}
+            </p>
+          )}
+        </div>
+
+        {/* Token price textfield */}
+        <div className="w-full">
+          <label htmlFor="price" className="text-default mb-2 block text-sm font-medium">
+            {t("token_price")}
+          </label>
+          <input
+            {...register("price", {
+              required: true,
+            })}
+            id="price"
+            name="price"
+            type="number"
+            autoComplete="off"
+            autoCorrect="off"
+            min="0"
+            className="border-default w-full rounded-md border text-sm"
+          />
+          {errors.price && (
+            <p data-testid="required" className="py-2 text-xs text-red-500">
+              {errors.price.message}
             </p>
           )}
         </div>

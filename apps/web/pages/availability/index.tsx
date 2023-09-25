@@ -99,7 +99,7 @@ export function AvailabilityList({ schedules }: RouterOutputs["viewer"]["availab
           />
         </div>
       ) : (
-        <div className="border-subtle bg-default mb-16 overflow-hidden rounded-md border">
+        <div className="border-subtle bg-default mx-8 mb-16 overflow-hidden rounded-md border">
           <ul className="divide-subtle divide-y" data-testid="schedules" ref={animationParentRef}>
             {schedules.map((schedule) => (
               <ScheduleListItem

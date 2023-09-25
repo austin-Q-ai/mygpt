@@ -42,7 +42,6 @@ import { deleteScheduledEmailReminder } from "@calcom/features/ee/workflows/lib/
 import { scheduleWorkflowReminders } from "@calcom/features/ee/workflows/lib/reminders/reminderScheduler";
 import { deleteScheduledSMSReminder } from "@calcom/features/ee/workflows/lib/reminders/smsReminderManager";
 import { deleteScheduledWhatsappReminder } from "@calcom/features/ee/workflows/lib/reminders/whatsappReminderManager";
-
 import type { GetSubscriberOptions } from "@calcom/features/webhooks/lib/getWebhooks";
 import getWebhooks from "@calcom/features/webhooks/lib/getWebhooks";
 import { isPrismaObjOrUndefined, parseRecurringEvent } from "@calcom/lib";
@@ -679,6 +678,7 @@ async function handler(
     isNotAnApiCall: false,
   }
 ) {
+  console.log(req, "========================");
   const { userId } = req;
 
   const userIp = getIP(req);
@@ -1664,15 +1664,19 @@ async function handler(
           throw new HttpError({ statusCode: 400, message: "Missing payment app id" });
         }
 
+        console.log(eventTypePaymentAppCredential);
+
         const payment = await handlePayment(
           evt,
           eventType,
           eventTypePaymentAppCredential as IEventTypePaymentCredentialType,
           booking,
-          bookerEmail
+          bookerEmail,
+          userId
         );
 
         resultBooking = { ...foundBooking };
+
         resultBooking["message"] = "Payment required";
         resultBooking["paymentUid"] = payment?.uid;
       } else {
@@ -2206,12 +2210,14 @@ async function handler(
 
     // Convert type of eventTypePaymentAppCredential to appId: EventTypeAppList
     if (!booking.user) booking.user = organizerUser;
+    console.log(eventTypePaymentAppCredential);
     const payment = await handlePayment(
       evt,
       eventType,
       eventTypePaymentAppCredential as IEventTypePaymentCredentialType,
       booking,
-      bookerEmail
+      bookerEmail,
+      userId
     );
 
     req.statusCode = 201;
