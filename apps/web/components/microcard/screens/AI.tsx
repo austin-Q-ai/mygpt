@@ -17,9 +17,9 @@ export const AIPage = () => {
   return (
     <div className="flex w-full flex-col bg-white ">
       <Header title="Hugo AI" description="hugo.myGPT.fi" isAI />
-      <div className="px-5 pb-28 pt-7">
-        <div className="bg-pink/10 flex h-full flex-col gap-5 rounded-[25.9px] px-6 pb-9 pt-12 ">
-          <div className="text-center text-xl">Hugo AI</div>
+      <div className="h-[75vh] px-5 py-8">
+        <div className="bg-pink/10 flex h-full flex-col gap-4 rounded-[25.9px] px-8 pb-16 pt-20">
+          <div className="text-center text-xl font-bold">Hugo AI</div>
           {myList.map((item, key) => (
             <div className="flex" key={key}>
               <Check className="bg-pink rounded-full p-1 text-white" />
