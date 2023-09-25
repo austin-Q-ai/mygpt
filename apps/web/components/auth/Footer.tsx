@@ -8,6 +8,7 @@ import type { SVGComponent } from "@calcom/types/SVGComponent";
 import { Button, Dialog, DialogContent, DialogTrigger } from "@calcom/ui";
 
 import Benifits from "@components/auth/Benifits";
+import Features from "@components/auth/Features";
 
 export type LinkProps = {
   name: string;
@@ -27,6 +28,7 @@ interface ModalsMapType {
 
 const ModalsMap: ModalsMapType = {
   benifits: <Benifits />,
+  features: <Features />,
 } as const;
 export default function Footer(props: FooterPropsTypes) {
   const { t } = useLocale();
@@ -51,8 +53,8 @@ export default function Footer(props: FooterPropsTypes) {
                 </DialogTrigger>
                 <DialogContent
                   className={`${
-                    ["benifits", "features", "use cases"].includes(nameKey)
-                      ? "to-bg-pink from-bg-white bg-gradient-to-b"
+                    ["benifits", "use cases"].includes(nameKey)
+                      ? "from-bg-emphasis to-bg-white bg-gradient-to-t"
                       : "bg-emphasis"
                   }`}
                   size="lg"
