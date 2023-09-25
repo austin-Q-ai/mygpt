@@ -184,7 +184,7 @@ export default function UseCases() {
                   <Image
                     alt={item.image}
                     src={"/app-social/" + item.image + ".svg"}
-                    className="text-pink border-pink round !fill-pink  rounded-full border p-2"
+                    className="text-pink border-pink round !fill-pink  rounded-full border p-2 hover:bg-gray-100"
                     width={35}
                     height={35}
                   />
