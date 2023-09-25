@@ -4,6 +4,11 @@ import { useEffect, useState } from "react";
 
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 
+type benifitType = {
+  id: number;
+  name: string;
+  subBenifits: string[];
+};
 const mainBenifits = [
   {
     id: 1,
@@ -75,20 +80,16 @@ export default function Benifits() {
   const [benifitSelected, setBenifit] = useState<number>(2);
   const [subBenifit, setSubBenifits] = useState<string[] | null>(null);
 
-  const handleSetBenifit = (item: any) => {
+  const handleSetBenifit = (item: benifitType) => {
     if (benifitSelected === item.id) {
       return;
     }
     setBenifit(item.id);
-    setSubBenifits(item.subBenifit);
-  };
-
-  const handleScrollEvent = (e: any) => {
-    console.log(e);
+    setSubBenifits(item.subBenifits);
   };
 
   useEffect(() => {
-    const selectedBenifit: any = mainBenifits.filter((item) => item.id === benifitSelected);
+    const selectedBenifit: benifitType[] = mainBenifits.filter((item) => item.id === benifitSelected);
     const valueToBeSet =
       selectedBenifit[0].subBenifits !== undefined && selectedBenifit[0].subBenifits.length > 0
         ? selectedBenifit[0].subBenifits
@@ -102,7 +103,7 @@ export default function Benifits() {
           <div className="flex-row">
             <span className="font-sans text-3xl font-bold ">{t("what_benifit_will_you_get")}</span>
           </div>
-          <div className=" my-4 flex flex-row" onScroll={(e) => handleScrollEvent(e)}>
+          <div className=" my-4 flex flex-row">
             <div className="flex-col">
               {mainBenifits.map((benifit) => {
                 return (
