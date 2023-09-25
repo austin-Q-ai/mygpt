@@ -9,6 +9,7 @@ import { Button, Dialog, DialogContent, DialogTrigger } from "@calcom/ui";
 
 import Benifits from "@components/auth/Benifits";
 import Features from "@components/auth/Features";
+import UseCases from "@components/auth/UseCases";
 
 export type LinkProps = {
   name: string;
@@ -29,6 +30,7 @@ interface ModalsMapType {
 const ModalsMap: ModalsMapType = {
   benifits: <Benifits />,
   features: <Features />,
+  "use cases": <UseCases />,
 } as const;
 export default function Footer(props: FooterPropsTypes) {
   const { t } = useLocale();
