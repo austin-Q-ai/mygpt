@@ -7,7 +7,7 @@ type PriceListItemProps = {
 export default function PriceListItem({ priceItem: props }: PriceListItemProps) {
   return (
     <>
-      <div className="container flex flex-col rounded-md border bg-white p-3">
+      <div className="container flex flex-col rounded-md border bg-white p-3 shadow">
         <div className="my-3 h-3/4 flex-row">
           {props.features.map((feature) => {
             return (

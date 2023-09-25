@@ -137,13 +137,17 @@ export default function Signup({ prepopulateFormValues, token, orgSlug }: Signup
                   />
                 </div>
                 <div className="flex space-x-2 rtl:space-x-reverse">
-                  <Button type="submit" loading={isSubmitting} className="w-full justify-center">
+                  <Button
+                    type="submit"
+                    loading={isSubmitting}
+                    color="secondary"
+                    className="!bg-pink w-full justify-center !text-white">
                     {t("create_account")}
                   </Button>
                   {!token && (
                     <Button
                       color="secondary"
-                      className="w-full justify-center"
+                      className="text-pink border-pink w-full justify-center"
                       onClick={() =>
                         signIn("Cal.com", {
                           callbackUrl: router.query.callbackUrl

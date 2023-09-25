@@ -22,12 +22,14 @@ interface Props {
 
 const footerLinks: LinkProps[] = [
   {
-    name: "Benfits",
+    name: "Benifits",
     url: "/",
+    type: "modal",
   },
   {
     name: "Features",
     url: "/",
+    type: "modal",
   },
   {
     name: "How does it work",
@@ -36,6 +38,7 @@ const footerLinks: LinkProps[] = [
   {
     name: "Use Cases",
     url: "/",
+    type: "modal",
   },
   {
     name: "Terms and conditions",
@@ -176,7 +179,11 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                       Prices
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="bg-emphasis" size="xl" Icon={X} title={t("")}>
+                  <DialogContent
+                    className="to-emphasis bg-gradient-to-b from-gray-100"
+                    size="xl"
+                    Icon={X}
+                    title={t("")}>
                     <div className=" mt-5 flex flex-row gap-5">
                       {pricesList.map((priceItem, index) => {
                         return <PriceListItem key={index} priceItem={priceItem} />;

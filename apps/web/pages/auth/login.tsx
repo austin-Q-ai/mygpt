@@ -205,9 +205,9 @@ export default function Login({
                 <div className="w-full flex-col">
                   <Button
                     type="submit"
-                    color="primary"
+                    color="secondary"
                     disabled={formState.isSubmitting}
-                    className="w-full justify-center p-2 text-lg">
+                    className="!bg-pink w-full  justify-center p-2 text-lg !text-white">
                     {twoFactorRequired ? t("submit") : t("sign_in")}
                   </Button>
                 </div>
@@ -216,7 +216,7 @@ export default function Login({
                     type="submit"
                     color="secondary"
                     disabled={formState.isSubmitting}
-                    className="w-full justify-center p-2 text-lg">
+                    className="text-pink border-pink w-full justify-center p-2 text-lg">
                     {t("got_it_for_free")}
                   </Button>
                 </div>
