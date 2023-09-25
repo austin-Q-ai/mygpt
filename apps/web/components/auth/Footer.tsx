@@ -16,14 +16,6 @@ type FooterPropsTypes = {
   items: LinkProps[];
 };
 
-type IconContentProps = React.ComponentProps<any> & {
-  Icon?: string;
-};
-export function IconContent(props: IconContentProps) {
-  const { Icon } = props;
-  return Icon;
-}
-
 export default function Footer(props: FooterPropsTypes) {
   return (
     <div className="text-pink absolute  mt-6  flex w-full flex-row justify-center pb-2 md:gap-6 lg:gap-10 xl:gap-20">
@@ -37,7 +29,7 @@ export default function Footer(props: FooterPropsTypes) {
                   {link.picture ? (
                     <Image src={link.picture} alt={link.name} width={125} height={55} />
                   ) : Icon && Icon !== undefined ? (
-                    <IconContent Icon={Icon} />
+                    <Icon />
                   ) : (
                     <span className="opacity-80">{link.name}</span>
                   )}
