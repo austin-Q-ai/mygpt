@@ -102,9 +102,7 @@ const PaymentPage: FC<PaymentPageProps> = (props) => {
                           </div>
                         </>
                       )}
-                      <div className="font-medium">
-                        {t("price")}
-                      </div>
+                      <div className="font-medium">{t("price")}</div>
                       <div className="col-span-2 mb-6 font-semibold">
                         {new Intl.NumberFormat(i18n.language, {
                           style: "currency",

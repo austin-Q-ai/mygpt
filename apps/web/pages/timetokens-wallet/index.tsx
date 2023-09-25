@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { components } from "react-select";
 
-import { createPaymentLink } from "@calcom/app-store/stripepayment/lib/client";
 import { createTokenPaymentLink } from "@calcom/app-store/stripepayment/lib/client";
 import Shell from "@calcom/features/shell/Shell";
 import { buyTokens } from "@calcom/features/timetokenswallet";
@@ -35,6 +34,7 @@ function TimeTokensWallet() {
   const { t } = useLocale();
   const router = useRouter();
   const { data: user, isLoading } = trpc.viewer.me.useQuery();
+
   const [addedExpertsData, setAddedExpertsData] = useState<ExpertDataType[]>([]);
   const [buyConfirmOpen, setBuyConfirmOpen] = useState<boolean>(false);
   const [removeConfirmOpen, setRemoveConfirmOpen] = useState<boolean>(false);
@@ -52,9 +52,9 @@ function TimeTokensWallet() {
 
   const columns: string[] = ["Expert", "Tokens amount(expert)", "Tokens amount(me)", "Token price", ""];
 
-  const handleBuyEvent = (userId: number, tokens: number) => {
+  const handleBuyEvent = (emitterId: number, tokens: number) => {
     setBuyConfirmOpen(true);
-    setBuyExpertID(userId);
+    setBuyExpertID(emitterId);
     setBuyTokensAmount(tokens);
   };
 
@@ -273,13 +273,7 @@ function TimeTokensWallet() {
                   loadingText={t(`confirm_buy_event`)}
                   onConfirm={(e) => {
                     e.preventDefault();
-                    router.push(
-                      createPaymentLink({
-                        expertid: buyExpertID.toString(),
-                        amount: buyTokensAmount,
-                        absolute: false,
-                      })
-                    );
+                    buyTokensMutation.mutate({ emitterId: buyExpertID, amount: buyTokensAmount });
                     setBuyConfirmOpen(false);
                   }}>
                   <p className="mt-5">{t(`confirm_buy_question`)}</p>

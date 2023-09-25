@@ -11,7 +11,7 @@ import { CreditCard } from "@calcom/ui/components/icon";
 import type { PaymentPageProps } from "../pages/payment";
 import TokenPaymentComponent from "./TokenPayment";
 
-const PaymentPage: FC<PaymentPageProps> = (props) => {
+const TokenPaymentPage: FC<PaymentPageProps> = (props) => {
   const { t, i18n } = useLocale();
 
   const isEmbed = useIsEmbed();
@@ -94,4 +94,4 @@ const PaymentPage: FC<PaymentPageProps> = (props) => {
   );
 };
 
-export default PaymentPage;
+export default TokenPaymentPage;

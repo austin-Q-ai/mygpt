@@ -41,6 +41,8 @@ const PaymentForm = (props: Props) => {
     if (!stripe || !elements || !router.isReady) return;
     setState({ status: "processing" });
 
+    console.log(`${CAL_URL}/timetokens-wallet`, "==================");
+
     const payload = await stripe.confirmPayment({
       elements,
       confirmParams: {

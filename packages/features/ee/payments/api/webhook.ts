@@ -198,9 +198,9 @@ async function handlePaymentSuccess(event: Stripe.Event) {
     // } else throw new Error("No booker found");
 
     const { email } = booking.responses as {
-      email?: string,
-      name?: string,
-    }
+      email?: string;
+      name?: string;
+    };
 
     const booker = await prisma.user.findFirst({
       where: {

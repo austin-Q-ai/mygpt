@@ -329,7 +329,7 @@ function BookingListItem(booking: BookingItemProps) {
         </DialogContent>
       </Dialog>
 
-      <tr className="hover:bg-pink/10 group flex flex-col sm:flex-row">
+      <tr className="hover:bg-muted group flex flex-col sm:flex-row">
         <td
           className="hidden align-top ltr:pl-6 rtl:pr-6 sm:table-cell sm:min-w-[12rem]"
           onClick={onClickTableData}>
@@ -401,11 +401,11 @@ function BookingListItem(booking: BookingItemProps) {
                 {booking.eventType.team.name}
               </Badge>
             )}
-            {/* {!!booking?.eventType?.price && !booking.paid && (
+            {!!booking?.eventType?.price && !booking.paid && (
               <Badge className="ltr:mr-2 rtl:ml-2 sm:hidden" variant="orange">
                 {t("pending_payment")}
               </Badge>
-            )} */}
+            )}
             {recurringDates !== undefined && (
               <div className="text-muted text-sm sm:hidden">
                 <RecurringBookingsTooltip booking={booking} recurringDates={recurringDates} />
@@ -423,11 +423,11 @@ function BookingListItem(booking: BookingItemProps) {
               {title}
               <span> </span>
 
-              {/* {paymentAppData.enabled && !booking.paid && booking.payment.length && (
+              {paymentAppData.enabled && !booking.paid && booking.payment.length && (
                 <Badge className="me-2 ms-2 hidden sm:inline-flex" variant="orange">
                   {t("pending_payment")}
                 </Badge>
-              )} */}
+              )}
             </div>
             {booking.description && (
               <div

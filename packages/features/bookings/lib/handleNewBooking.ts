@@ -1119,8 +1119,6 @@ async function handler(
         }
       }
 
-      console.log("===== 1 =====");
-
       await Promise.all(integrationsToDelete).then(async () => {
         await prisma.booking.update({
           where: {
@@ -1143,14 +1141,6 @@ async function handler(
           seatReferenceUid?: string;
           paymentUid?: string;
           message?: string;
-          error?: string;
-          data?: {
-            amount: number;
-            expertId: number;
-            username: string;
-            name: string;
-            price: number[];
-          };
         })
       | null = null;
 
@@ -1462,8 +1452,6 @@ async function handler(
             cancellationReason: "$RCH$" + (rescheduleReason ? rescheduleReason : ""), // Removable code prefix to differentiate cancellation from rescheduling for email
           });
 
-          console.log("===== 2 =====");
-
           // Update the old booking with the cancelled status
           await prisma.booking.update({
             where: {
@@ -1642,59 +1630,6 @@ async function handler(
       const foundBooking = await findBookingQuery(booking.id);
 
       if (!Number.isNaN(paymentAppData.price) && paymentAppData.price > 0 && !!booking) {
-        const timeTokens = await prisma.timeTokensWallet.findFirst({
-          where: {
-            ownerId: userId,
-            emitterId: eventType.userId ? eventType.userId : undefined,
-          },
-          select: {
-            id: true,
-            amount: true,
-          },
-        });
-
-        const expert: {
-          id: number;
-          username: string | null;
-          name: string | null;
-          price: number[];
-        } | null = await prisma.user.findUnique({
-          where: {
-            id: eventType.userId ? eventType.userId : undefined,
-          },
-          select: {
-            id: true,
-            username: true,
-            name: true,
-            price: true,
-          },
-        });
-        if (!timeTokens || timeTokens?.amount < eventType.length / 5) {
-          resultBooking = {
-            error: "Not enough tokens",
-            data: {
-              amount: eventType.length / 5 - (timeTokens?.amount || 0),
-              expertId: expert?.id || -1,
-              username: expert?.username || "",
-              name: expert?.name || "",
-              price: expert?.price || [1],
-            },
-          };
-
-          return resultBooking;
-        } else {
-          await prisma.timeTokensWallet.update({
-            where: {
-              id: timeTokens.id,
-            },
-            data: {
-              amount: {
-                decrement: eventType.length / 5,
-              },
-            },
-          });
-        }
-
         const credentialPaymentAppCategories = await prisma.credential.findMany({
           where: {
             ...(paymentAppData.credentialId
@@ -2057,8 +1992,6 @@ async function handler(
     addVideoCallDataToEvt(originalRescheduledBooking.references);
     const updateManager = await eventManager.reschedule(evt, originalRescheduledBooking.uid);
 
-    console.log("===== 3 =====");
-
     //update original rescheduled booking (no seats event)
     if (!eventType.seatsPerTimeSlot) {
       await prisma.booking.update({
@@ -2247,58 +2180,6 @@ async function handler(
 
   if (bookingRequiresPayment) {
     // Load credentials.app.categories
-    // const timeTokens = await prisma.timeTokensWallet.findFirst({
-    //   where: {
-    //     ownerId: userId,
-    //     emitterId: eventType.userId ? eventType.userId : undefined,
-    //   },
-    //   select: {
-    //     id: true,
-    //     amount: true,
-    //   },
-    // });
-
-    // const expert: {
-    //   id: number;
-    //   username: string | null;
-    //   name: string | null;
-    //   price: number[];
-    // } | null = await prisma.user.findUnique({
-    //   where: {
-    //     id: eventType.userId ? eventType.userId : undefined,
-    //   },
-    //   select: {
-    //     id: true,
-    //     username: true,
-    //     name: true,
-    //     price: true,
-    //   },
-    // });
-    // if (!timeTokens || timeTokens?.amount < eventType.length / 5) {
-    //   return {
-    //     ...booking,
-    //     error: "Not enough tokens",
-    //     data: {
-    //       amount: eventType.length / 5 - (timeTokens?.amount || 0),
-    //       expertId: expert?.id || -1,
-    //       username: expert?.username || "",
-    //       name: expert?.name || "",
-    //       price: expert?.price || [1],
-    //     },
-    //   };
-    // } else {
-    //   await prisma.timeTokensWallet.update({
-    //     where: {
-    //       id: timeTokens.id,
-    //     },
-    //     data: {
-    //       amount: {
-    //         decrement: eventType.length / 5,
-    //       },
-    //     },
-    //   });
-    // }
-
     const credentialPaymentAppCategories = await prisma.credential.findMany({
       where: {
         ...(paymentAppData.credentialId ? { id: paymentAppData.credentialId } : { userId: organizerUser.id }),

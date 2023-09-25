@@ -215,7 +215,7 @@ export const bookingCreateBodySchema = z.object({
 export const buyTokensBodySchema = z.object({
   emitterId: z.number(),
   amount: z.number(),
-})
+});
 
 export const requiredCustomInputSchema = z.union([
   // string must be given & nonempty
