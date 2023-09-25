@@ -22,12 +22,14 @@ interface Props {
 
 const footerLinks: LinkProps[] = [
   {
-    name: "Benfits",
+    name: "Benifits",
     url: "/",
+    type: "modal",
   },
   {
     name: "Features",
     url: "/",
+    type: "modal",
   },
   {
     name: "How does it work",
@@ -36,6 +38,7 @@ const footerLinks: LinkProps[] = [
   {
     name: "Use Cases",
     url: "/",
+    type: "modal",
   },
   {
     name: "Terms and conditions",
