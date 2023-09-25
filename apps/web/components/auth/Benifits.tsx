@@ -111,7 +111,7 @@ export default function Benifits() {
                     key={benifit.id}
                     className={classNames(
                       benifit.id === benifitSelected && "text-pink font-bold",
-                      "text-muted cursor-pointer py-3"
+                      "cursor-pointer py-3 text-gray-400"
                     )}
                     onClick={() => handleSetBenifit(benifit)}>
                     {benifit.name}
@@ -143,10 +143,10 @@ export default function Benifits() {
                 <Image
                   key={member.id}
                   src={"/app-members/" + member.id + ".svg"}
-                  width={100}
-                  height={100}
+                  width={90}
+                  height={90}
                   alt={member.alt}
-                  className="inline-block h-full w-full !overflow-hidden rounded-full ring-8 ring-white"
+                  className="inline-block h-full w-full !overflow-hidden rounded-full ring-8 ring-gray-100"
                 />
               );
             })}

@@ -54,11 +54,7 @@ export default function Footer(props: FooterPropsTypes) {
                   </Button>
                 </DialogTrigger>
                 <DialogContent
-                  className={`${
-                    ["benifits", "use cases"].includes(nameKey)
-                      ? "from-bg-emphasis to-bg-white bg-gradient-to-t"
-                      : "bg-emphasis"
-                  }`}
+                  className="to-emphasis bg-gradient-to-b from-gray-100"
                   size="lg"
                   Icon={X}
                   title={t("")}>

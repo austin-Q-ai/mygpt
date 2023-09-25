@@ -171,7 +171,7 @@ export default function UseCases() {
         <div className="flex flex-col gap-5">
           <div className="flex flex-row gap-2">
             <span className="font-medium">MyGPT</span> <CircleDotIcon fill="#6D278E" width={10} />{" "}
-            <Heart fill="#6D278E" /> <Star fill="#00B67A" color="#fff" />{" "}
+            <Heart fill="#6D278E" /> <Star fill="#00B67A" color="#ffffff100" />{" "}
             <span className="font-medium">Trustpilot</span>
           </div>
           <Link href="/" className="text-md flex-row font-bold hover:underline">
