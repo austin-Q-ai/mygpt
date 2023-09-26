@@ -19,7 +19,7 @@ export default function PriceListItem({ priceItem: props }: PriceListItemProps) 
           );
         })}
       </div>
-      <div className="text-pink my-3 flex-row text-center font-sans text-xl font-bold">{props.name}</div>
+      <div className="text-pink my-10 flex-row text-center font-sans text-xl font-bold">{props.name}</div>
 
       <div className=" my-3 flex  flex-row justify-center">
         <div className="flex flex-col">

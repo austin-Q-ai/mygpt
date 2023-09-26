@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { ScrollableArea } from "@calcom/ui";
@@ -88,6 +88,28 @@ export default function Benifits() {
     setBenifit(item.id);
     setSubBenifits(item.subBenifits);
   };
+  const scrollableArea = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const handelScrollEvent = (e: any) => {
+      if (e.deltaY < 0) {
+        if (benifitSelected <= 3 && benifitSelected !== 1) {
+          setBenifit(benifitSelected - 1);
+        } else {
+          setBenifit(3);
+        }
+      } else if (e.deltaY > 0) {
+        if (benifitSelected >= 1 && benifitSelected !== 3) {
+          setBenifit(benifitSelected + 1);
+        } else {
+          setBenifit(1);
+        }
+      }
+    };
+    scrollableArea.current?.addEventListener("wheel", handelScrollEvent);
+    return () => {
+      scrollableArea.current?.removeEventListener("wheel", handelScrollEvent);
+    };
+  });
 
   useEffect(() => {
     const selectedBenifit: benifitType[] = mainBenifits.filter((item) => item.id === benifitSelected);
@@ -104,7 +126,7 @@ export default function Benifits() {
           <div className="flex-row">
             <span className="font-sans text-2xl font-bold md:text-3xl">{t("what_benifit_will_you_get")}</span>
           </div>
-          <div className=" my-4 flex flex-row">
+          <div className=" my-4 flex flex-row" ref={scrollableArea}>
             <div className="flex-col">
               {mainBenifits.map((benifit) => {
                 return (
