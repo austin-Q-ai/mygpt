@@ -1812,5 +1812,50 @@
   "exp": "工作经验",
   "edu": "教育经历",
   "skill": "技能",
-  "position": "职位"
+  "position": "职位",
+
+
+
+
+
+
+
+
+  "freemium": "免费",
+  "access_to_basic_features": "基础功能访问",
+  "limit_of_500_messages/month": "每月500条信息限制",
+  "email_support_with_a_response_within_48_hours": "邮件支持，48小时内回复",
+  "data_storage_limited_to_1_gb": "数据存储限制为1 GB",
+  "one_active_user_online": "1个在线活跃用户",
+
+  "$34/month": "¥225/月",
+  "access_to_advanced_features": "访问高级功能",
+  "limit_of_5,000_messages/month": "每月5,000条信息限制",
+  "email_support_with_a_response_within_24_hours": "邮件支持，24小时内回复",
+  "data_storage_up_to_10_gb": "数据存储高达10 GB",
+  "two_active_users_online": "2个在线活跃用户",
+
+  "$70/month": "¥460/月",
+  "access_to_all_premium_features": "访问所有高级功能",
+  "limit_of_20,000_messages/month": "每月20,000条信息限制",
+  "priority_support_by_email_and_chat": "邮件和聊天优先支持",
+  "data_storage_up_to_50_gb": "数据存储高达50 GB",
+  "ten_active_users_online": "10个在线活跃用户",
+  "access_to_detailed_analyses_and_reports": "访问详细的分析和报告",
+
+
+  "$117/month": "¥770/月",
+  "unlimited_access_to_all_features": "无限制访问所有功能",
+  "limit_of_100,000_messages/month": "每月100,000条信息限制",
+  "24/7_priority_support": "24/7优先支持",
+  "unlimited_data_storage": "无限制的数据存储",
+  "twenty_five_active_users_online":"25个在线活跃用户",
+
+  "contact_us": "联系我们",
+  "customizable_message_volume": "定制消息量",
+  "customizable_data_storage": "定制数据存储",
+  "customizable_number_of_active_bots": "定制活跃机器人数量",
+  "specific_integrations_or_custom_developments": "特定集成或定制开发",
+  "access_to_customizable_detailed_analyses_and_reports": "访问定制的详细分析和报告",
+  "read_and_accept_the_terms_and_conditions": "阅读并接受条款和条件"
 }

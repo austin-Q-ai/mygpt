@@ -14,17 +14,17 @@ export default function PriceListItem({ priceItem: props }: PriceListItemProps) 
           return (
             <div className="my-2 flex flex-row gap-2 " key={feature}>
               <CheckCircle2 className="h-5 w-5 text-white " fill="#5d2782" />
-              <span className=" w-full text-xs">{feature}</span>
+              <span className=" w-full text-xs">{t(feature)}</span>
             </div>
           );
         })}
       </div>
-      <div className="text-pink my-10 flex-row text-center font-sans text-xl font-bold">{props.name}</div>
+      <div className="text-pink my-10 flex-row text-center font-sans text-xl font-bold">{t(props.name)}</div>
 
       <div className=" my-3 flex  flex-row justify-center">
         <div className="flex flex-col">
           <div className="mb-4 flex-row text-center text-[0.5rem]">
-            Read and accept the terms and conditions
+            {t("read_and_accept_the_terms_and_conditions")}
           </div>
           <div className="flex-row text-center">
             <Button className="!hover:bg-[#5d278270] !bg-[#5d2782] !text-white" EndIcon={ArrowRight}>

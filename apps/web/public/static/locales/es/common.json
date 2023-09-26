@@ -1788,5 +1788,47 @@
   "exp": "Experiencia",
   "edu": "Educación",
   "skill": "Habilidades",
-  "position": "Posición"
+  "position": "Posición",
+
+
+
+
+
+  "freemium": "Freemium",
+  "access_to_basic_features": "Acceso a funciones básicas",
+  "limit_of_500_messages/month": "Límite de 500 mensajes/mes",
+  "email_support_with_a_response_within_48_hours": "Soporte por correo electrónico con respuesta en 48h",
+  "data_storage_limited_to_1_gb": "Almacenamiento de datos limitado a 1 GB",
+  "one_active_user_online": "1 usuario activo en línea",
+
+  "$34/month": "29 €/mes",
+  "access_to_advanced_features": "Acceso a funciones avanzadas",
+  "limit_of_5,000_messages/month": "Límite de 5.000 mensajes/mes",
+  "email_support_with_a_response_within_24_hours": "Soporte por correo electrónico con respuesta en 24h",
+  "data_storage_up_to_10_gb": "Almacenamiento de datos hasta 10 GB",
+  "two_active_users_online": "2 usuarios activos en línea",
+
+  "$70/month": "59 €/mes",
+  "access_to_all_premium_features": "Acceso a todas las funciones premium",
+  "limit_of_20,000_messages/month": "Límite de 20.000 mensajes/mes",
+  "priority_support_by_email_and_chat": "Soporte prioritario por correo electrónico y chat",
+  "data_storage_up_to_50_gb": "Almacenamiento de datos hasta 50 GB",
+  "ten_active_users_online": "10 usuarios activos en línea",
+  "access_to_detailed_analyses_and_reports": "Acceso a análisis e informes detallados",
+
+
+  "$117/month": "99 €/mes",
+  "unlimited_access_to_all_features": "Acceso ilimitado a todas las funciones",
+  "limit_of_100,000_messages/month": "Límite de 100.000 mensajes/mes",
+  "24/7_priority_support": "Soporte prioritario 24/7",
+  "unlimited_data_storage": "Almacenamiento de datos ilimitado",
+  "twenty_five_active_users_online":"25 usuarios activos en línea",
+
+  "contact_us": "Contáctenos",
+  "customizable_message_volume": "Volumen de mensajes personalizado",
+  "customizable_data_storage": "Almacenamiento de datos personalizado",
+  "customizable_number_of_active_bots": "Número de bots activos personalizado",
+  "specific_integrations_or_custom_developments": "Integraciones específicas o desarrollos a medida",
+  "access_to_customizable_detailed_analyses_and_reports": "Acceso a análisis e informes detallados personalizados",
+  "read_and_accept_the_terms_and_conditions": "Leer y aceptar los términos y condiciones"
 }

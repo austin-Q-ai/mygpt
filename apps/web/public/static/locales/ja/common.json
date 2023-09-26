@@ -1788,5 +1788,48 @@
   "exp": "経験",
   "edu": "学歴",
   "skill": "スキル",
-  "position": "職位"
+  "position": "職位",
+
+
+
+
+
+
+  "freemium": "フリーミアム",
+  "access_to_basic_features": "基本機能へのアクセス",
+  "limit_of_500_messages/month": "月500メッセージの制限",
+  "email_support_with_a_response_within_48_hours": "48時間以内のメールサポート",
+  "data_storage_limited_to_1_gb": "データストレージは1GBに制限",
+  "one_active_user_online": "オンラインで1ユーザーがアクティブ",
+
+  "$34/month": "¥3,400/月",
+  "access_to_advanced_features": "高度な機能へのアクセス",
+  "limit_of_5,000_messages/month": "月5,000メッセージの制限",
+  "email_support_with_a_response_within_24_hours": "24時間以内のメールサポート",
+  "data_storage_up_to_10_gb": "データストレージは10GBまで",
+  "two_active_users_online": "オンラインで2ユーザーがアクティブ",
+
+  "$70/month": "¥6,900/月",
+  "access_to_all_premium_features": "プレミアム機能へのフルアクセス",
+  "limit_of_20,000_messages/month": "月20,000メッセージの制限",
+  "priority_support_by_email_and_chat": "メールとチャットでの優先サポート",
+  "data_storage_up_to_50_gb": "データストレージは50GBまで",
+  "ten_active_users_online": "オンラインで10ユーザーがアクティブ",
+  "access_to_detailed_analyses_and_reports": "詳細な分析とレポートへのアクセス",
+
+
+  "$117/month": "¥11,600/月",
+  "unlimited_access_to_all_features": "すべての機能への無制限アクセス",
+  "limit_of_100,000_messages/month": "月100,000メッセージの制限",
+  "24/7_priority_support": "24/7優先サポート",
+  "unlimited_data_storage": "データストレージ無制限",
+  "twenty_five_active_users_online":"オンラインで25ユーザーがアクティブ",
+
+  "contact_us": "い合わせ",
+  "customizable_message_volume": "カスタマイズ可能なメッセージ量",
+  "customizable_data_storage": "カスタマイズ可能なデータストレージ",
+  "customizable_number_of_active_bots": "カスタマイズ可能なアクティブボット数",
+  "specific_integrations_or_custom_developments": "特定のインテグレーションやカスタム開発",
+  "access_to_customizable_detailed_analyses_and_reports": "カスタマイズ可能な詳細な分析とレポートへのアクセス",
+  "read_and_accept_the_terms_and_conditions": "利用規約を読んで承諾する"
 }
