@@ -1,6 +1,8 @@
 import type { FieldValues } from "react-hook-form";
 import { useFormContext } from "react-hook-form";
 
+import { classNames } from "@calcom/lib";
+
 import { Check, Circle, Info, X } from "../../icon";
 
 export function HintsOrErrors<T extends FieldValues = FieldValues>(props: {
@@ -13,7 +15,29 @@ export function HintsOrErrors<T extends FieldValues = FieldValues>(props: {
   if (!methods) return null;
   const { formState } = methods;
   const { hintErrors, fieldName, t } = props;
+  const upperCaseCheck = (item: any) => {
+    const pattern = new RegExp("(?=.*[a-z])(?=.*[A-Z])");
+    if (item && item.length > 0 && item !== undefined) {
+      return pattern.test(item);
+    }
+    return false;
+  };
 
+  const atLeastOneDigit = (item: any) => {
+    const pattern = new RegExp(/\d/);
+    if (item && item.length > 0 && item !== undefined) {
+      return pattern.test(item);
+    }
+    return false;
+  };
+
+  const minimumLength = (item: any) => {
+    const pattern = new RegExp(`[A-Za-z0-9#,.\-_]{7,}`);
+    if (item && item.length > 0 && item !== undefined) {
+      return pattern.test(item);
+    }
+    return false;
+  };
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const fieldErrors: FieldErrors<T> | undefined = formState.errors[fieldName];
@@ -85,15 +109,40 @@ export function HintsOrErrors<T extends FieldValues = FieldValues>(props: {
       <ul className="ml-2">
         {hintErrors.map((key: string) => {
           // if field was changed, as no error exist, show checked status and color
-          const dirty = formState.dirtyFields[fieldName];
+          const value = methods.watch(fieldName);
+          const upperCaseFlag = upperCaseCheck(value);
+          const atLeastOneDigitFlag = atLeastOneDigit(value);
+          const minimumLengthFalg = minimumLength(value);
           return (
-            <li key={key} className={!!dirty ? "text-green-600" : ""}>
-              {!!dirty ? (
+            <li
+              key={key}
+              className={classNames(
+                upperCaseFlag && key === "caplow" && "text-green-600",
+                atLeastOneDigitFlag && key === "num" && "text-green-600",
+                minimumLengthFalg && key === "min" && "text-green-600"
+              )}>
+              {upperCaseFlag && key === "caplow" ? (
                 <Check size="12" strokeWidth="3" className="-ml-1 inline-block ltr:mr-2 rtl:ml-2" />
               ) : (
-                <Circle fill="currentColor" size="5" className="inline-block ltr:mr-2 rtl:ml-2" />
+                key === "caplow" && (
+                  <Circle fill="currentColor" size="5" className="inline-block ltr:mr-2 rtl:ml-2" />
+                )
               )}
-              {t(`${fieldName}_hint_${key}`)}
+              {atLeastOneDigitFlag && key === "num" ? (
+                <Check size="12" strokeWidth="3" className="-ml-1 inline-block ltr:mr-2 rtl:ml-2" />
+              ) : (
+                key === "num" && (
+                  <Circle fill="currentColor" size="5" className="inline-block ltr:mr-2 rtl:ml-2" />
+                )
+              )}
+              {minimumLengthFalg && key === "min" ? (
+                <Check size="12" strokeWidth="3" className="-ml-1 inline-block ltr:mr-2 rtl:ml-2" />
+              ) : (
+                key === "min" && (
+                  <Circle fill="currentColor" size="5" className="inline-block ltr:mr-2 rtl:ml-2" />
+                )
+              )}
+              {t(`${fieldName}_hint_${key}`)} {key}
             </li>
           );
         })}

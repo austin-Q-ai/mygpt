@@ -44,8 +44,8 @@ export default function Signup({ prepopulateFormValues, token, orgSlug }: Signup
   const {
     register,
     formState: { errors, isSubmitting },
+    watch,
   } = methods;
-
   const handleErrors = async (resp: Response) => {
     if (!resp.ok) {
       const err = await resp.json();
