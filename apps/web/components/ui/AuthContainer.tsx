@@ -232,7 +232,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                 <Loader />
               </div>
             )}
-            <div className="mb-auto mt-8  sm:mx-1 sm:w-full sm:max-w-md xl:w-[90%]">
+            <div className="mb-auto mt-8  sm:mx-1 sm:w-[100%] sm:max-w-lg xl:w-[95%]">
               <div className="mx-2 px-2 py-10 sm:px-2">{props.children}</div>
               {/* <div className="text-default mt-8 text-center text-sm">{props.footerText}</div> */}
             </div>
