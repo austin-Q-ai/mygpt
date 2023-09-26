@@ -92,6 +92,7 @@
   },
   "dependencies": {
     "@meilisearch/instant-meilisearch": "^0.13.5",
+    "@types/three": "^0.156.0",
     "city-timezones": "^1.2.1",
     "eslint": "^8.34.0",
     "lucide-react": "^0.171.0",
