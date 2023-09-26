@@ -89,6 +89,7 @@ export const addExpertHandler = async ({ ctx, input }: AddExpertOptions) => {
       emitter: {
         select: {
           id: true,
+          username: true,
           avatar: true,
           name: true,
           tokens: true,

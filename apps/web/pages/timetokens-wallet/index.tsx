@@ -200,6 +200,7 @@ function TimeTokensWallet() {
     for (const item of users) {
       data.push({
         userId: item.emitter.id,
+        username: item.emitter.username,
         fullname: item.emitter.name,
         avatar: item.emitter.avatar,
         expert_token_amount: item.emitter.tokens,
