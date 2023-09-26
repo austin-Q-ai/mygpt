@@ -1,7 +1,6 @@
 import classNames from "classnames";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { Button, Dialog, HeadSeo, DialogContent, DialogTrigger } from "@calcom/ui";
@@ -163,19 +162,7 @@ const pricesList = [
 
 export default function AuthContainer(props: React.PropsWithChildren<Props>) {
   const { t } = useLocale();
-  const [windowWidth, setWindowWidth] = useState(0);
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
 
-    window.addEventListener("resize", handleResize);
-
-    // Clean up the event listener when the component unmounts
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
   return (
     <>
       <div className="flex flex-row">
@@ -291,7 +278,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
         </div>
       </div>
       <div className="bottom-0 flex flex-row">
-        <Footer items={footerLinks} windowWidth={windowWidth} />
+        <Footer items={footerLinks} />
       </div>
     </>
   );

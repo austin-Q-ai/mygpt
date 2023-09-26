@@ -1,7 +1,7 @@
 import { X, type LucideIcon as IconType } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import type { SVGComponent } from "@calcom/types/SVGComponent";
@@ -22,7 +22,6 @@ export type LinkProps = {
 };
 type FooterPropsTypes = {
   items: LinkProps[];
-  windowWidth: any;
 };
 type nameKey = "benifits" | "features" | "use cases";
 interface ModalsMapType {
@@ -34,9 +33,23 @@ const ModalsMap: ModalsMapType = {
   features: <Features />,
   "use cases": <UseCases />,
 } as const;
+useState;
 export default function Footer(props: FooterPropsTypes) {
+  const [windowWidth, setWindowWidth] = useState(0);
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+    setWindowWidth(window.innerWidth);
+
+    window.addEventListener("resize", handleResize);
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
   const { t } = useLocale();
-  const { windowWidth } = props;
   return windowWidth >= 1024 ? (
     <div className="text-pink absolute  mt-6 flex w-full flex-row justify-evenly pb-2 font-medium">
       {props.items.map((item) => {

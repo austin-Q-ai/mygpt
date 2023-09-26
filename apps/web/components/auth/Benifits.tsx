@@ -98,9 +98,9 @@ export default function Benifits() {
     setSubBenifits(valueToBeSet);
   }, [benifitSelected]);
   return (
-    <div className="!md:h-[600px] grid grid-cols-1 md:grid-cols-3">
+    <div className="grid grid-cols-1 md:h-[600px] md:grid-cols-3">
       <div className="col-span-1 mx-4 flex">
-        <div className="flex h-full flex-col justify-center px-2 md:mr-4 ">
+        <div className="flex h-full flex-col justify-center md:mr-4 md:px-2 ">
           <div className="flex-row">
             <span className="font-sans text-2xl font-bold md:text-3xl">{t("what_benifit_will_you_get")}</span>
           </div>
@@ -111,8 +111,8 @@ export default function Benifits() {
                   <div
                     key={benifit.id}
                     className={classNames(
-                      benifit.id === benifitSelected && "text-pink py-1 font-bold md:py-3",
-                      "cursor-pointer py-1 text-gray-400 md:py-3"
+                      benifit.id === benifitSelected && "text-pink font-medium",
+                      "cursor-pointer py-3 text-gray-400 "
                     )}
                     onClick={() => handleSetBenifit(benifit)}>
                     {benifit.name}
@@ -153,9 +153,9 @@ export default function Benifits() {
             })}
           </div>
         </div>
-        <div className="mt-6 flex h-5/6 flex-row">
+        <div className="mt-6 flex !h-5/6 flex-row">
           <div className="flex flex-col">
-            <ScrollableArea className="h-[200px]">
+            <ScrollableArea className="h-[200px] md:h-full">
               {subBenifit && subBenifit !== undefined && subBenifit.length > 0
                 ? subBenifit.map((item, index) => {
                     return (
