@@ -155,7 +155,7 @@ export default function Benifits() {
         </div>
         <div className="mt-6 flex !h-5/6 flex-row">
           <div className="flex flex-col">
-            <ScrollableArea className="h-[200px] md:h-full">
+            <ScrollableArea className="h-[200px] bg-transparent md:h-full">
               {subBenifit && subBenifit !== undefined && subBenifit.length > 0
                 ? subBenifit.map((item, index) => {
                     return (

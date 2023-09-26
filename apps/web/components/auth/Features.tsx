@@ -35,7 +35,7 @@ export default function Features() {
         {t("our_features_you_can_get")}
       </span>
       <div>
-        <ScrollableArea className="grid h-[500px] flex-row gap-4 md:m-5 md:h-full md:grid-cols-3">
+        <ScrollableArea className="grid h-[500px] flex-row gap-4 bg-transparent md:m-5 md:h-full md:grid-cols-3">
           {features.map((item) => {
             return (
               <div className="col-span-1 rounded-md border bg-white py-2 shadow" key={item.id}>

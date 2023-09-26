@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { useLocale } from "@calcom/lib/hooks/useLocale";
+import { ScrollableArea } from "@calcom/ui";
 
 const useCases = [
   {
@@ -111,9 +112,9 @@ export default function UseCases() {
   }, []);
   const { t } = useLocale();
   return (
-    <div className="flex !h-[650px] flex-col justify-center">
+    <div className="!md:h-[650px] flex flex-col justify-center">
       <div className="flex-row justify-center text-center font-sans text-2xl font-bold">{t("use_cases")}</div>
-      <div className="mx-10 my-12 grid grid-cols-6 gap-2">
+      <ScrollableArea className="mx-0 my-3 grid h-[90px] gap-3 bg-transparent md:mx-10 md:my-12 md:h-full md:grid-cols-6 md:gap-2">
         {useCases.map((item, index) => {
           return (
             <div
@@ -129,12 +130,12 @@ export default function UseCases() {
             </div>
           );
         })}
-      </div>
-      <div className="text-pink mx-10 mt-8 grid grid-cols-5 flex-row">
-        <div>
+      </ScrollableArea>
+      <div className="text-pink grid grid-cols-2 flex-row  justify-items-center text-sm md:mx-10 md:mt-8 md:grid-cols-5 md:justify-items-start md:text-base">
+        <div className="col-span-2 md:col-span-1">
           <Image src="/my-gpt-logo.svg" width={100} height={50} alt="logo" />
         </div>
-        <div className="flex flex-col gap-2">
+        <div className=" my-2 flex flex-col gap-2">
           <span className="font-bold">Jobs</span>
           {jobsFirst.map((job, index) => {
             return (
@@ -154,7 +155,7 @@ export default function UseCases() {
             );
           })}
         </div>
-        <div className="flex flex-col gap-2">
+        <div className="col-span-2 flex flex-col gap-2 md:col-span-1 ">
           <span className="font-bold">Contact</span>
           <p className="flex-row">
             C-Kapital sas <br />
@@ -168,7 +169,7 @@ export default function UseCases() {
             </Link>
           </p>
         </div>
-        <div className="flex flex-col gap-5">
+        <div className="col-span-2 flex  flex-col gap-2 pt-2 md:col-span-1 md:mt-0 md:gap-5">
           <div className="flex flex-row gap-2">
             <span className="font-medium">MyGPT</span> <CircleDotIcon fill="#6D278E" width={10} />{" "}
             <Heart fill="#6D278E" /> <Star fill="#00B67A" color="#ffffff100" />{" "}
