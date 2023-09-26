@@ -17,10 +17,12 @@ export type LinkProps = {
   Icon?: SVGComponent | IconType;
   picture?: string | undefined;
   sideLabel?: string;
+  col?: number;
   type?: "modal";
 };
 type FooterPropsTypes = {
   items: LinkProps[];
+  windowWidth: any;
 };
 type nameKey = "benifits" | "features" | "use cases";
 interface ModalsMapType {
@@ -34,8 +36,9 @@ const ModalsMap: ModalsMapType = {
 } as const;
 export default function Footer(props: FooterPropsTypes) {
   const { t } = useLocale();
-  return (
-    <div className="text-pink absolute  mt-6  flex w-full flex-row justify-evenly pb-2">
+  const { windowWidth } = props;
+  return windowWidth >= 1024 ? (
+    <div className="text-pink absolute  mt-6 flex w-full flex-row justify-evenly pb-2 font-medium">
       {props.items.map((item) => {
         const { Icon, name } = item;
         const nameKey: nameKey = name.toLocaleLowerCase() as nameKey;
@@ -69,6 +72,50 @@ export default function Footer(props: FooterPropsTypes) {
                       <Image src={item.picture} alt={item.name} width={125} height={55} />
                     ) : Icon && Icon !== undefined ? (
                       <Icon />
+                    ) : (
+                      <span className="opacity-80">{item.name}</span>
+                    )}
+                  </div>
+                  <div className="flex-col">{item.sideLabel ? item.sideLabel : ""}</div>
+                </div>
+              </Link>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  ) : (
+    <div className="text-pink align-center absolute my-6 grid w-full grid-cols-12 gap-4  pb-2 text-sm font-medium">
+      {props.items.map((item) => {
+        const { Icon, name } = item;
+        const nameKey: nameKey = name.toLocaleLowerCase() as nameKey;
+        return (
+          <div className={`col-span-${item.col} mx-auto my-auto w-full text-center`} key={item.name}>
+            {item.type === "modal" ? (
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Link href="" aria-label={item.name}>
+                    {item.name}
+                  </Link>
+                </DialogTrigger>
+                <DialogContent
+                  className="to-emphasis bg-gradient-to-b from-gray-100"
+                  size="lg"
+                  Icon={X}
+                  title={t("")}>
+                  {ModalsMap[nameKey]}
+                </DialogContent>
+              </Dialog>
+            ) : (
+              <Link className="col-span-1  mx-auto my-auto w-full text-center" href={item.url}>
+                <div className="flex w-full flex-row justify-center">
+                  <div className="flex-col px-2">
+                    {item.picture ? (
+                      <Image src={item.picture} alt={item.name} width={180} height={55} />
+                    ) : Icon && Icon !== undefined ? (
+                      <>
+                        <Icon />
+                      </>
                     ) : (
                       <span className="opacity-80">{item.name}</span>
                     )}

@@ -1,6 +1,7 @@
 import classNames from "classnames";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { Button, Dialog, HeadSeo, DialogContent, DialogTrigger } from "@calcom/ui";
@@ -25,40 +26,48 @@ const footerLinks: LinkProps[] = [
     name: "Benifits",
     url: "/",
     type: "modal",
+    col: 3,
   },
   {
     name: "Features",
     url: "/",
     type: "modal",
+    col: 3,
   },
   {
     name: "How does it work",
     url: "/",
+    col: 6,
   },
   {
     name: "Use Cases",
     url: "/",
     type: "modal",
+    col: 6,
   },
   {
     name: "Terms and conditions",
     url: "/",
+    col: 6,
   },
   {
     name: "France AI",
     url: "/",
     picture: "/france-ai.svg",
+    col: 12,
   },
   {
     name: "Share",
     url: "/",
     Icon: Share2,
+    col: 6,
   },
   {
     name: "Comments",
     url: "/",
     Icon: MessageSquare,
     sideLabel: "9 comments",
+    col: 6,
   },
 ];
 
@@ -154,7 +163,19 @@ const pricesList = [
 
 export default function AuthContainer(props: React.PropsWithChildren<Props>) {
   const { t } = useLocale();
+  const [windowWidth, setWindowWidth] = useState(0);
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
 
+    window.addEventListener("resize", handleResize);
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
   return (
     <>
       <div className="flex flex-row">
@@ -209,12 +230,12 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
           </div>
         </div>
       </div>
-      <div className="flex max-h-screen flex-row  flex-wrap">
+      <div className="flex flex-row  flex-wrap">
         <div className=" mt-12 flex flex-col justify-center  bg-[#f3f4f8] py-1 pt-4 sm:mx-2  md:mx-4 lg:mx-8 lg:flex-1 lg:px-4">
           <div className="">
             <div className={classNames(props.showLogo ? "" : "", "flex-row sm:mx-2 sm:w-full sm:max-w-md")}>
               {props.heading && (
-                <h2 className="text-emphasis line-height-2  font-sans text-4xl font-medium leading-normal">
+                <h2 className="text-emphasis line-height-2  text-center font-sans text-3xl font-medium leading-normal md:text-left md:text-4xl">
                   {t("empower_with_ai_reveal")}
                 </h2>
               )}
@@ -224,7 +245,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                 <Loader />
               </div>
             )}
-            <div className="mb-auto mt-8 sm:mx-1 sm:w-full sm:max-w-md lg:w-[70%] lg:max-w-[70%]">
+            <div className="mb-auto mt-8  sm:mx-1 sm:w-full sm:max-w-md xl:w-[90%]">
               <div className="mx-2 px-2 py-10 sm:px-2">{props.children}</div>
               {/* <div className="text-default mt-8 text-center text-sm">{props.footerText}</div> */}
             </div>
@@ -264,13 +285,13 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
               <ArrowRight />
             </div>
           </div>
-          <div className="flew-row text-muted mt-2 text-center font-sans">
+          <div className="flew-row text-muted mt-2 text-center font-sans font-medium">
             {t("more_than_25k_experts_use_myqpt")}
           </div>
         </div>
       </div>
       <div className="bottom-0 flex flex-row">
-        <Footer items={footerLinks} />
+        <Footer items={footerLinks} windowWidth={windowWidth} />
       </div>
     </>
   );
