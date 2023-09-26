@@ -15,7 +15,7 @@ import { Label } from "./Label";
 type InputProps = JSX.IntrinsicElements["input"] & {
   isFullWidth?: boolean;
   isStandaloneField?: boolean;
-  inputSize?: "lg" | "md" | "sm";
+  inputwidth?: "lg" | "md" | "sm";
 };
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
@@ -28,8 +28,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
       ref={ref}
       className={classNames(
         "hover:border-emphasis dark:focus:border-emphasis !border-pink border-default bg-default placeholder:text-muted text-emphasis disabled:hover:border-default disabled:bg-subtle focus:ring-brand-default mb-2 block h-9 rounded-md border px-3 py-2 text-sm leading-4 focus:border-neutral-300 focus:outline-none focus:ring-2 disabled:cursor-not-allowed",
-        props.inputSize === "lg" && "text-md block w-full !px-4 !py-6",
-        props.inputSize === "md" && "text-md block w-full !px-2 !py-4",
+        props.inputwidth === "lg" && "text-md block w-full !px-4 !py-6",
+        props.inputwidth === "md" && "text-md block w-full !px-2 !py-4",
         isFullWidth && "w-full",
         props.className
       )}
@@ -58,7 +58,7 @@ type InputFieldProps = {
   error?: string;
   labelSrOnly?: boolean;
   floatingLabel?: boolean;
-  inputSize?: string;
+  inputwidth?: string | null;
   containerClassName?: string;
   t?: (key: string) => string;
 } & React.ComponentProps<typeof Input> & {
@@ -115,7 +115,7 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(function
     containerClassName,
     readOnly,
     floatingLabel,
-    inputSize,
+    inputwidth,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     t: __t,
     ...passThrough
@@ -169,7 +169,7 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(function
             })}
             disabled={readOnly || disabled}
             ref={ref}
-            inputSize={inputSize}
+            inputwidth={inputwidth}
           />
           {/* {addOnSuffix && (
             <Addon
@@ -212,7 +212,7 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(function
             ref={ref}
             isFullWidth={inputIsFullWidth}
             disabled={readOnly || disabled}
-            inputSize={inputSize}
+            inputwidth={inputwidth}
           />
           {floatingLabel ? (
             <label
@@ -232,7 +232,7 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(function
 });
 
 export const TextField = forwardRef<HTMLInputElement, InputFieldProps>(function TextField(props, ref) {
-  return <InputField ref={ref} {...props} inputSize={props.inputSize} />;
+  return <InputField ref={ref} {...props} inputwidth={props.inputwidth} />;
 });
 
 export const PasswordField = forwardRef<HTMLInputElement, InputFieldProps>(function PasswordField(
