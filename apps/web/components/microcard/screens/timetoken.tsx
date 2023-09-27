@@ -1,3 +1,5 @@
+import React from "react";
+
 import { Check } from "@calcom/ui/components/icon";
 
 import Header from "../header";
@@ -13,9 +15,10 @@ const myList: string[] = [
   "Transferability and Interoperability",
   "User Engagement and Loyalty",
 ];
-export const TimeTokenPage = () => {
+
+export const TimeTokenPage = React.forwardRef<HTMLDivElement>((props, ref) => {
   return (
-    <div className="flex w-full flex-col bg-white">
+    <div className="flex w-full flex-col bg-white" ref={ref}>
       <Header title="Timetoken" description="hugo.myGPT.fi" />
       <div className=" px-5 pb-28 pt-7">
         <div className="bg-pink/10 flex h-full flex-col gap-5 rounded-[25.9px] px-6 pb-9 pt-12 ">
@@ -31,4 +34,6 @@ export const TimeTokenPage = () => {
       </div>
     </div>
   );
-};
+});
+
+TimeTokenPage.displayName = "TimeTokenPage";

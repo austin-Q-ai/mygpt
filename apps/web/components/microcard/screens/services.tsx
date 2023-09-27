@@ -1,12 +1,13 @@
 import Image from "next/image";
+import React from "react";
 
 import { Clock2, CalendarDays } from "@calcom/ui/components/icon";
 
 import { default as Header } from "../header";
 
-export const ServicesPage = () => {
+export const ServicesPage = React.forwardRef<HTMLDivElement>((props, ref) => {
   return (
-    <div className="flex w-full flex-col bg-white">
+    <div className="flex w-full flex-col bg-white" ref={ref}>
       <Header title="Events" description="hugo.myGPT.fi" />
       <p className="m-4 text-center text-lg font-bold">Book Meeting</p>
       <div className="bg-pink/20 mx-4 rounded">
@@ -35,4 +36,6 @@ export const ServicesPage = () => {
       </button>
     </div>
   );
-};
+});
+
+ServicesPage.displayName = "ServicesPage";
