@@ -22,7 +22,7 @@ interface Props {
   loading?: boolean;
 }
 
-const footerLinks: LinkProps[] = [
+export const footerLinks: LinkProps[] = [
   {
     name: "Benifits",
     url: "/",
@@ -237,10 +237,10 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                     <LogOut className="h-12 w-10 flex-col" />
                     <div className="flex flex-col">
                       <Link onClick={() => handleToggleNav()} href="/auth/login" className="text-md flex-row">
-                        Sign in
+                        {t("sign_in")}
                       </Link>
                       <Link onClick={() => handleToggleNav()} href="/signup" className="text-md flex-row">
-                        Sign up
+                        {t("sign_up")}
                       </Link>
                     </div>
                   </div>
@@ -292,10 +292,10 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                         <LogOut className="h-8 w-6 flex-col" />
                         <div className="flex flex-col">
                           <Link href="/auth/login" className="flex-row text-xs">
-                            Sign in
+                            {t("sign_in")}
                           </Link>
                           <Link href="/signup" className="flex-row text-xs">
-                            Sign up
+                            {t("sign_up")}
                           </Link>
                         </div>
                       </div>
@@ -315,7 +315,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
               </div>
             </div>
           </div>
-          <div className="flex flex-row  flex-wrap">
+          <div className="flex flex-row  flex-wrap ">
             <div className=" mt-12 flex flex-col justify-center  bg-[#f3f4f8] py-1 pt-4 sm:mx-2  md:mx-4 lg:mx-8 lg:flex-1 lg:px-4">
               <div className="">
                 <div
@@ -331,7 +331,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                     <Loader />
                   </div>
                 )}
-                <div className="mb-auto mt-8  sm:mx-1 sm:w-[100%] sm:max-w-lg xl:w-[95%]">
+                <div className="mb-auto mt-8  sm:mx-1 sm:w-[100%] sm:max-w-lg md:max-w-[75%] xl:w-[95%]">
                   <div className="mx-2 px-2 py-10 sm:px-2">{props.children}</div>
                   {/* <div className="text-default mt-8 text-center text-sm">{props.footerText}</div> */}
                 </div>
