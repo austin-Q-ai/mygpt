@@ -4711,7 +4711,6 @@ __metadata:
     tailwindcss-animate: ^1.0.6
     tailwindcss-radix: ^2.6.0
     three: ^0.156.1
-    three-orbitcontrols: ^2.110.3
     ts-node: ^10.9.1
     turndown: ^7.1.1
     typescript: ^4.9.4
@@ -32369,15 +32368,6 @@ __metadata:
   version: 1.0.2
   resolution: "thirty-two@npm:1.0.2"
   checksum: f6700b31d16ef942fdc0d14daed8a2f69ea8b60b0e85db8b83adf58d84bbeafe95a17d343ab55efaae571bb5148b62fc0ee12b04781323bf7af7d7e9693eec76
-  languageName: node
-  linkType: hard
-
-"three-orbitcontrols@npm:^2.110.3":
-  version: 2.110.3
-  resolution: "three-orbitcontrols@npm:2.110.3"
-  peerDependencies:
-    three: ">= 0.110.0"
-  checksum: da11e0a155a4b775810885f030fe576e4da80859c52268892b33e6d33d2645e9dc7abd1bfdc89c61e0dc18289ccaba8db7afc728ef754b2119579e9dd0175d68
   languageName: node
   linkType: hard
 
