@@ -12,7 +12,8 @@ export default function CarouselDemo() {
       showIndicators={false}
       showArrows={false}
       showStatus={false}
-      transitionTime={2500}
+      interval={5000}
+      transitionTime={900}
       infiniteLoop
       renderArrowPrev={(clickHandler, hasPrev) => {
         return (

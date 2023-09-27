@@ -205,7 +205,7 @@ export default function Benifits() {
 
       <div className="col-span-2 flex flex-col justify-center px-3">
         <div className="flex flex-row justify-center">
-          <div className="flex !overflow-hidden md:-space-x-6 ">
+          <div className="flex  md:-space-x-6 ">
             {members.map((member) => {
               return (
                 <Image

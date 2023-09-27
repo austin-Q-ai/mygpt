@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import { X, type LucideIcon as IconType } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -22,6 +23,7 @@ export type LinkProps = {
 };
 type FooterPropsTypes = {
   items: LinkProps[];
+  className?: string;
 };
 type nameKey = "benifits" | "features" | "use cases";
 interface ModalsMapType {
@@ -51,7 +53,11 @@ export default function Footer(props: FooterPropsTypes) {
   }, []);
   const { t } = useLocale();
   return windowWidth >= 1024 ? (
-    <div className="text-pink absolute  mt-6 flex w-full flex-row justify-evenly pb-2 font-medium">
+    <div
+      className={classNames(
+        "text-pink absolute mt-6 flex w-full flex-row justify-evenly pb-2 font-medium",
+        props.className
+      )}>
       {props.items.map((item) => {
         const { Icon, name } = item;
         const nameKey: nameKey = name.toLocaleLowerCase() as nameKey;
@@ -98,7 +104,11 @@ export default function Footer(props: FooterPropsTypes) {
       })}
     </div>
   ) : (
-    <div className="text-pink align-center absolute my-6 grid w-full grid-cols-12 gap-4  pb-2 text-sm font-medium">
+    <div
+      className={classNames(
+        "text-pink align-center absolute my-6 grid w-full grid-cols-12 gap-4  pb-2 text-sm font-medium",
+        props.className
+      )}>
       {props.items.map((item) => {
         const { Icon, name } = item;
         const nameKey: nameKey = name.toLocaleLowerCase() as nameKey;
