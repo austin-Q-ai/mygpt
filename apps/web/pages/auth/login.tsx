@@ -3,6 +3,7 @@ import classNames from "classnames";
 import { jwtVerify } from "jose";
 import type { GetServerSidePropsContext } from "next";
 import { getCsrfToken, signIn } from "next-auth/react";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import type { CSSProperties } from "react";
 import { useState } from "react";
@@ -159,7 +160,11 @@ export default function Login({
             : null
         }>
         <FormProvider {...methods}>
-          <form onSubmit={methods.handleSubmit(onSubmit)} noValidate data-testid="login-form">
+          <form
+            onSubmit={methods.handleSubmit(onSubmit)}
+            noValidate
+            data-testid="login-form"
+            className="w-full">
             <div>
               <input defaultValue={csrfToken || undefined} type="hidden" hidden {...register("csrfToken")} />
             </div>
@@ -212,14 +217,23 @@ export default function Login({
                   </Button>
                 </div>
                 <div className="w-full flex-col">
-                  <Button
+                  <Link
+                    href="/signup"
                     type="submit"
-                    color="secondary"
-                    disabled={formState.isSubmitting}
-                    className="text-pink border-pink w-full justify-center p-2 text-lg">
+                    className="text-pink border-pink hover:bg-muted w-full justify-center rounded-md border p-2 text-center text-lg">
                     {t("got_it_for_free")}
-                  </Button>
+                  </Link>
                 </div>
+              </div>
+            </div>
+            <div className="flex flex-row">
+              <div className="flex flex-col">
+                <Link href="/auth/forgot-password" className="text-muted flex flex-row px-1 py-2 underline">
+                  {t("forgot_your_password")}
+                </Link>
+              </div>
+              <div className="flex flex-col">
+                <></>
               </div>
             </div>
           </form>

@@ -7,8 +7,8 @@ import classNames from "@calcom/lib/classNames";
 import { getErrorFromUnknown } from "@calcom/lib/errors";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 
-import { Alert, showToast, Skeleton, Tooltip, UnstyledSelect } from "../../..";
-import { Eye, EyeOff, X, Search } from "../../icon";
+import { Alert, showToast, Skeleton, UnstyledSelect } from "../../..";
+import { X, Search } from "../../icon";
 import { HintsOrErrors } from "./HintOrErrors";
 import { Label } from "./Label";
 
@@ -140,11 +140,11 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(function
         <div
           dir="ltr"
           className="focus-within:ring-brand-default group relative mb-1 flex items-center rounded-md focus-within:outline-none focus-within:ring-2">
-          {/* {addOnLeading && (
-            <Addon isFilled={addOnFilled} className={classNames("rounded-l-md border-r-0", addOnClassname)}>
+          {addOnLeading && (
+            <Addon isFilled={addOnFilled} className={classNames("rounded-l-md border-r-0 ", addOnClassname)}>
               {addOnLeading}
             </Addon>
-          )} */}
+          )}
           <Input
             id={id}
             type={type}
@@ -154,8 +154,8 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(function
             className={classNames(
               className,
               "disabled:bg-subtle disabled:hover:border-subtle disabled:cursor-not-allowed",
-              // addOnLeading && "rounded-l-none border-l-0",
-              // addOnSuffix && "rounded-r-none border-r-0",
+              addOnLeading && "rounded-l-none border-l-0",
+              addOnSuffix && "rounded-r-none border-r-0",
               type === "search" && "pr-8",
               "!my-0 !ring-0"
             )}
@@ -171,13 +171,13 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(function
             ref={ref}
             inputwidth={inputwidth}
           />
-          {/* {addOnSuffix && (
+          {addOnSuffix && (
             <Addon
               isFilled={addOnFilled}
               className={classNames("ltr:rounded-r-md rtl:rounded-l-md", addOnClassname)}>
               {addOnSuffix}
             </Addon>
-          )} */}
+          )}
           {type === "search" && inputValue?.toString().length > 0 && (
             <X
               className="text-subtle absolute top-2.5 h-4 w-4 cursor-pointer ltr:right-2 rtl:left-2"
@@ -256,18 +256,18 @@ export const PasswordField = forwardRef<HTMLInputElement, InputFieldProps>(funct
         {...props}
         className={classNames("addon-wrapper mb-0 ltr:pr-10 rtl:pl-10", props.className)}
         addOnFilled={false}
-        addOnSuffix={
-          <Tooltip content={textLabel}>
-            <button className="text-emphasis h-9" type="button" onClick={() => toggleIsPasswordVisible()}>
-              {isPasswordVisible ? (
-                <EyeOff className="h-4 stroke-[2.5px]" />
-              ) : (
-                <Eye className="h-4 stroke-[2.5px]" />
-              )}
-              <span className="sr-only">{textLabel}</span>
-            </button>
-          </Tooltip>
-        }
+        // addOnSuffix={
+        //   <Tooltip content={textLabel}>
+        //     <button className="text-emphasis h-9" type="button" onClick={() => toggleIsPasswordVisible()}>
+        //       {isPasswordVisible ? (
+        //         <EyeOff className="h-4 stroke-[2.5px]" />
+        //       ) : (
+        //         <Eye className="h-4 stroke-[2.5px]" />
+        //       )}
+        //       <span className="sr-only">{textLabel}</span>
+        //     </button>
+        //   </Tooltip>
+        // }
       />
     </div>
   );

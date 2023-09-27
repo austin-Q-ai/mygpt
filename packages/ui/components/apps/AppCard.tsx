@@ -47,7 +47,7 @@ export function AppCard({ app, credentials, searchText, userAdminTeams }: AppCar
   }, [app.name, searchText]);
 
   return (
-    <div className="border-subtle relative flex h-64 flex-col rounded-md border p-5">
+    <div className="relative flex h-64 flex-col rounded-md border border-gray-300 bg-white p-5">
       <div className="flex">
         <img
           src={app.logo}
@@ -89,7 +89,7 @@ export function AppCard({ app, credentials, searchText, userAdminTeams }: AppCar
         {app.description}
       </p>
 
-      <div className="mt-5 flex max-w-full flex-row justify-between gap-2">
+      <div className="mt-5 flex max-w-full flex-row justify-between">
         <Button
           color="secondary"
           className="flex w-32 flex-grow justify-center"
