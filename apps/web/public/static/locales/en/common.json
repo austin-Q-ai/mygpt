@@ -388,6 +388,8 @@
   "no_expert_data_description": "There is no expert you added now. You can add any experts you want and buy their tokens for booking interview with them.",
   "expert": "Expert",
   "token_amount": "Token amount",
+  "navigate_between_menu_using_cube": "Navigate between menus using the cube",
+  "rotate_cube": "Rotate the cube and explore the navigation menus",
   "on": "on",
   "and": "and",
   "calendar_shows_busy_between": "Your calendar shows you as busy between",

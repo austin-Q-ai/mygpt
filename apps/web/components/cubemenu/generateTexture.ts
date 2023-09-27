@@ -2,7 +2,7 @@ import * as THREE from "three";
 
 export default function generateTexture(texts: string[]) {
   const canvases = [];
-  const bgColors: string[] = ["#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF"];
+  const bgColors: string[] = ["#F5F5F5", "#F5F5F5", "#F5F5F5", "#F5F5F5", "#F5F5F5", "#F5F5F5"];
   const textColor = "#6D278E";
 
   for (let i = 0; i < texts.length; i++) {

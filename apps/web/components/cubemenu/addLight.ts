@@ -22,12 +22,12 @@ export default function addLight(scene: any) {
   light5.position.x = 0;
   light5.position.y = -50;
   scene.add(light5);
-  const light6 = new THREE.DirectionalLight(0xffffff, 4);
+  const light6 = new THREE.DirectionalLight(0xffffff, 3.5);
   light6.position.z = 50;
   light6.position.x = 0;
   light6.position.y = 0;
   scene.add(light6);
-  const light7 = new THREE.DirectionalLight(0xffffff, 4);
+  const light7 = new THREE.DirectionalLight(0xffffff, 3.5);
   light7.position.z = -50;
   light7.position.x = 0;
   light7.position.y = 0;
