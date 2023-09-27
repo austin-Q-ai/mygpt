@@ -1,8 +1,9 @@
 import classNames from "classnames";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useLocale } from "@calcom/lib/hooks/useLocale";
+import { ScrollableArea } from "@calcom/ui";
 
 type benifitType = {
   id: number;
@@ -87,6 +88,28 @@ export default function Benifits() {
     setBenifit(item.id);
     setSubBenifits(item.subBenifits);
   };
+  const scrollableArea = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const handelScrollEvent = (e: any) => {
+      if (e.deltaY < 0) {
+        if (benifitSelected <= 3 && benifitSelected !== 1) {
+          setBenifit(benifitSelected - 1);
+        } else {
+          setBenifit(3);
+        }
+      } else if (e.deltaY > 0) {
+        if (benifitSelected >= 1 && benifitSelected !== 3) {
+          setBenifit(benifitSelected + 1);
+        } else {
+          setBenifit(1);
+        }
+      }
+    };
+    scrollableArea.current?.addEventListener("wheel", handelScrollEvent);
+    return () => {
+      scrollableArea.current?.removeEventListener("wheel", handelScrollEvent);
+    };
+  });
 
   useEffect(() => {
     const selectedBenifit: benifitType[] = mainBenifits.filter((item) => item.id === benifitSelected);
@@ -97,21 +120,21 @@ export default function Benifits() {
     setSubBenifits(valueToBeSet);
   }, [benifitSelected]);
   return (
-    <div className="grid !h-[600px] grid-cols-3">
+    <div className="grid grid-cols-1 md:h-[600px] md:grid-cols-3">
       <div className="col-span-1 mx-4 flex">
-        <div className="mr-4 flex h-full flex-col justify-center px-2 ">
+        <div className="flex h-full flex-col justify-center md:mr-4 md:px-2 ">
           <div className="flex-row">
-            <span className="font-sans text-3xl font-bold ">{t("what_benifit_will_you_get")}</span>
+            <span className="font-sans text-2xl font-bold md:text-3xl">{t("what_benifit_will_you_get")}</span>
           </div>
-          <div className=" my-4 flex flex-row">
+          <div className=" my-4 flex flex-row" ref={scrollableArea}>
             <div className="flex-col">
               {mainBenifits.map((benifit) => {
                 return (
                   <div
                     key={benifit.id}
                     className={classNames(
-                      benifit.id === benifitSelected && "text-pink font-bold",
-                      "cursor-pointer py-3 text-gray-400"
+                      benifit.id === benifitSelected && "text-pink font-medium",
+                      "cursor-pointer py-3 text-gray-400 "
                     )}
                     onClick={() => handleSetBenifit(benifit)}>
                     {benifit.name}
@@ -137,7 +160,7 @@ export default function Benifits() {
 
       <div className="col-span-2 flex flex-col justify-center px-3">
         <div className="flex flex-row justify-center">
-          <div className="flex -space-x-6 !overflow-hidden ">
+          <div className="flex !overflow-hidden md:-space-x-6 ">
             {members.map((member) => {
               return (
                 <Image
@@ -146,23 +169,25 @@ export default function Benifits() {
                   width={90}
                   height={90}
                   alt={member.alt}
-                  className="inline-block h-full w-full !overflow-hidden rounded-full ring-8 ring-gray-100"
+                  className="inline-block !h-full !w-full !overflow-hidden rounded-full ring-8 ring-[#E9E2EF] md:ring-gray-100"
                 />
               );
             })}
           </div>
         </div>
-        <div className="mt-6 flex h-5/6 flex-row">
+        <div className="mt-6 flex !h-5/6 flex-row">
           <div className="flex flex-col">
-            {subBenifit && subBenifit !== undefined && subBenifit.length > 0
-              ? subBenifit.map((item, index) => {
-                  return (
-                    <li key={index} className="text-pink flex-row py-2">
-                      {item}
-                    </li>
-                  );
-                })
-              : null}
+            <ScrollableArea className="h-[200px] bg-transparent md:h-full">
+              {subBenifit && subBenifit !== undefined && subBenifit.length > 0
+                ? subBenifit.map((item, index) => {
+                    return (
+                      <li key={index} className="text-pink flex-row py-2">
+                        {item}
+                      </li>
+                    );
+                  })
+                : null}
+            </ScrollableArea>
           </div>
         </div>
       </div>

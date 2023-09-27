@@ -15,7 +15,7 @@ import { Label } from "./Label";
 type InputProps = JSX.IntrinsicElements["input"] & {
   isFullWidth?: boolean;
   isStandaloneField?: boolean;
-  inputSize?: "lg" | "md" | "sm";
+  inputwidth?: "lg" | "md" | "sm";
 };
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
@@ -27,9 +27,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
       {...props}
       ref={ref}
       className={classNames(
-        "hover:border-emphasis dark:focus:border-emphasis border-default bg-default placeholder:text-muted text-emphasis disabled:hover:border-default disabled:bg-subtle focus:ring-brand-default mb-2 block h-9 rounded-md border px-3 py-2 text-sm leading-4 focus:border-neutral-300 focus:outline-none focus:ring-2 disabled:cursor-not-allowed",
-        props.inputSize === "lg" && "text-md block w-full !px-4 !py-6",
-        props.inputSize === "md" && "text-md block w-full !px-2 !py-4",
+        "hover:border-emphasis dark:focus:border-emphasis !border-pink border-default bg-default placeholder:text-muted text-emphasis disabled:hover:border-default disabled:bg-subtle focus:ring-brand-default mb-2 block h-9 rounded-md border px-3 py-2 text-sm leading-4 focus:border-neutral-300 focus:outline-none focus:ring-2 disabled:cursor-not-allowed",
+        props.inputwidth === "lg" && "text-md block w-full !px-4 !py-6",
+        props.inputwidth === "md" && "text-md block w-full !px-2 !py-4",
         isFullWidth && "w-full",
         props.className
       )}
@@ -58,7 +58,7 @@ type InputFieldProps = {
   error?: string;
   labelSrOnly?: boolean;
   floatingLabel?: boolean;
-  inputSize?: string;
+  inputwidth?: string | null;
   containerClassName?: string;
   t?: (key: string) => string;
 } & React.ComponentProps<typeof Input> & {
@@ -115,7 +115,7 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(function
     containerClassName,
     readOnly,
     floatingLabel,
-    inputSize,
+    inputwidth,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     t: __t,
     ...passThrough
@@ -169,7 +169,7 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(function
             })}
             disabled={readOnly || disabled}
             ref={ref}
-            inputSize={inputSize}
+            inputwidth={inputwidth}
           />
           {/* {addOnSuffix && (
             <Addon
@@ -190,7 +190,7 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(function
           {floatingLabel ? (
             <label
               htmlFor={id}
-              className="text-pink absolute left-1 top-2 z-10 origin-[0] -translate-y-4 scale-75 transform bg-gray-100 px-2 text-sm text-gray-500 duration-300 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:scale-100 peer-focus:top-2 peer-focus:-translate-y-4 peer-focus:scale-75 peer-focus:px-2 peer-focus:text-blue-600 dark:bg-gray-900 dark:text-gray-400 peer-focus:dark:text-blue-500">
+              className="text-pink absolute left-1 top-2 z-10 origin-[0] -translate-y-4 scale-75 transform rounded-sm !bg-[#f3e7f8] px-2 text-sm text-gray-500 duration-300 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:scale-100 peer-focus:top-2 peer-focus:-translate-y-4 peer-focus:scale-75 peer-focus:px-2 peer-focus:text-blue-600 dark:bg-gray-900 dark:text-gray-400 peer-focus:dark:text-blue-500">
               {label}
             </label>
           ) : (
@@ -212,12 +212,12 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(function
             ref={ref}
             isFullWidth={inputIsFullWidth}
             disabled={readOnly || disabled}
-            inputSize={inputSize}
+            inputwidth={inputwidth}
           />
           {floatingLabel ? (
             <label
               htmlFor={id}
-              className="text-pink absolute left-1 top-2 z-10 origin-[0] -translate-y-4 scale-75 transform bg-gray-100 px-2 text-sm text-gray-500 duration-300 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:scale-100 peer-focus:top-2 peer-focus:-translate-y-4 peer-focus:scale-75 peer-focus:px-2 peer-focus:text-blue-600 dark:bg-gray-900 dark:text-gray-400 peer-focus:dark:text-blue-500">
+              className="text-pink absolute left-1 top-2 z-10 origin-[0] -translate-y-4 scale-75 transform rounded-sm !bg-[#f3e7f8] px-2 text-sm text-gray-500 duration-300 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:scale-100 peer-focus:top-2 peer-focus:-translate-y-4 peer-focus:scale-75 peer-focus:px-2 peer-focus:text-blue-600 dark:bg-gray-900 dark:text-gray-400 peer-focus:dark:text-blue-500">
               {label}
             </label>
           ) : (
@@ -232,7 +232,7 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(function
 });
 
 export const TextField = forwardRef<HTMLInputElement, InputFieldProps>(function TextField(props, ref) {
-  return <InputField ref={ref} {...props} inputSize={props.inputSize} />;
+  return <InputField ref={ref} {...props} inputwidth={props.inputwidth} />;
 });
 
 export const PasswordField = forwardRef<HTMLInputElement, InputFieldProps>(function PasswordField(

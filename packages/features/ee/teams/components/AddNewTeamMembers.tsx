@@ -76,7 +76,7 @@ export const AddNewTeamMembersForm = ({
   return (
     <>
       <div>
-        <ScrollableArea className="max-h-[140px]">
+        <ScrollableArea className="max-h-[140px] bg-transparent">
           <ul className="border-subtle rounded-md border" data-testid="pending-member-list">
             {defaultValues.members.map((member, index) => (
               <PendingMemberItem key={member.email} member={member} index={index} teamId={teamId} />
