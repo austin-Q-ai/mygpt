@@ -71,19 +71,23 @@ type AddonProps = {
   isFilled?: boolean;
   className?: string;
   error?: boolean;
+  inputwidth?: string;
+  type?: string;
 };
 
-const Addon = ({ isFilled, children, className, error }: AddonProps) => (
+const Addon = ({ isFilled, children, className, error, inputwidth, type }: AddonProps) => (
   <div
     className={classNames(
       "addon-wrapper border-default [input:hover_+_&]:border-emphasis [input:hover_+_&]:border-l-default [&:has(+_input:hover)]:border-emphasis [&:has(+_input:hover)]:border-r-default h-9 border px-3",
       isFilled && "bg-subtle",
+      inputwidth === "lg" && type === "addOnSuffix" && "border-l-0",
       className
     )}>
     <div
       className={classNames(
         "min-h-9 flex flex-col justify-center text-sm leading-7",
-        error ? "text-error" : "text-default"
+        error ? "text-error" : "text-default",
+        inputwidth === "lg" ? "!min-h-[50px] border-0" : ""
       )}>
       <span className="flex whitespace-nowrap">{children}</span>
     </div>
@@ -141,7 +145,11 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(function
           dir="ltr"
           className="focus-within:ring-brand-default group relative mb-1 flex items-center rounded-md focus-within:outline-none focus-within:ring-2">
           {addOnLeading && (
-            <Addon isFilled={addOnFilled} className={classNames("rounded-l-md border-r-0 ", addOnClassname)}>
+            <Addon
+              inputwidth={inputwidth}
+              isFilled={addOnFilled}
+              type="addOnLeading"
+              className={classNames("rounded-l-md border-r-0 ", addOnClassname)}>
               {addOnLeading}
             </Addon>
           )}
@@ -173,7 +181,9 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(function
           />
           {addOnSuffix && (
             <Addon
+              inputwidth={inputwidth}
               isFilled={addOnFilled}
+              type="addOnSuffix"
               className={classNames("ltr:rounded-r-md rtl:rounded-l-md", addOnClassname)}>
               {addOnSuffix}
             </Addon>
