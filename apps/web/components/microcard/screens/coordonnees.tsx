@@ -1,8 +1,10 @@
+import React from "react";
+
 import { default as Header } from "../header";
 
-export const CoordonneesPage = () => {
+export const CoordonneesPage = React.forwardRef<HTMLDivElement>((props, ref) => {
   return (
-    <div className="flex w-full flex-col bg-white">
+    <div className="flex w-full flex-col bg-white" ref={ref}>
       <Header title="Hugo Libes" description="hugo.myGPT.fi" hasCalendar />
       <div className="px-8 py-2">
         <div className="text-gray flex flex-col gap-4 text-sm text-black/50">
@@ -41,4 +43,6 @@ export const CoordonneesPage = () => {
       </div>
     </div>
   );
-};
+});
+
+CoordonneesPage.displayName = "CoordonneesPage";
