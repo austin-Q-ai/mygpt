@@ -28,6 +28,14 @@ export async function getUserFromSession(ctx: TRPCContextInner, session: Maybe<S
       email: true,
       position: true,
       address: true,
+      price: true,
+      TokenPrice: {
+        select: {
+          price: true,
+          createdDate: true,
+        },
+      },
+      currency: true,
       experiences: true,
       educations: true,
       skills: true,
