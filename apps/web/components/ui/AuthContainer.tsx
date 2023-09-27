@@ -11,6 +11,7 @@ import Loader from "@components/Loader";
 import Footer from "@components/auth/Footer";
 import type { LinkProps } from "@components/auth/Footer";
 import PriceListItem from "@components/prices/PriceListItem";
+import CarouselDemo from "@components/ui/CarouselDemo";
 
 interface Props {
   title: string;
@@ -335,8 +336,11 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                   {/* <div className="text-default mt-8 text-center text-sm">{props.footerText}</div> */}
                 </div>
                 <div className="mt-5">
-                  <Image src="/standing-auth.svg" width={423} height={175} alt="standing_auth" />
-                  <p className="text-muted mx-3 mt-5 break-words sm:w-full sm:max-w-md lg:w-[80%] lg:max-w-[80%]">
+                  {/* <Image src="/standing-auth.svg" width={423} height={175} alt="standing_auth" /> */}
+                  <div className="h-[175px] sm:w-[375px] md:w-[423px]">
+                    <CarouselDemo />
+                  </div>
+                  <p className="text-muted mx-3 mt-8 break-words sm:w-full sm:max-w-md md:mt-5 lg:w-[80%] lg:max-w-[80%]">
                     {t("your_artifitial_footer")}
                   </p>
                 </div>
