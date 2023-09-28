@@ -31,8 +31,8 @@ const MicroCards: React.FC = () => {
       width: number;
       height: number;
     } = {
-      width: sceneElement.clientWidth,
-      height: sceneElement.clientHeight,
+      width: sceneElement?.clientWidth || 0,
+      height: sceneElement?.clientHeight || 0,
     };
 
     console.log(sizes);
