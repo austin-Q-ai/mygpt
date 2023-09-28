@@ -27,7 +27,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
       {...props}
       ref={ref}
       className={classNames(
-        "hover:border-emphasis dark:focus:border-emphasis !border-pink border-default bg-default placeholder:text-muted text-emphasis disabled:hover:border-default disabled:bg-subtle focus:ring-brand-default mb-2 block h-9 rounded-md border px-3 py-2 text-sm leading-4 focus:border-neutral-300 focus:outline-none focus:ring-2 disabled:cursor-not-allowed",
+        "hover:border-emphasis dark:focus:border-emphasis border-default bg-default placeholder:text-muted text-emphasis disabled:hover:border-default disabled:bg-subtle focus:ring-brand-default mb-2 block h-9 rounded-md border px-3 py-2 text-sm leading-4 focus:border-neutral-300 focus:outline-none focus:ring-2 disabled:cursor-not-allowed",
         props.inputwidth === "lg" && "text-md block w-full !px-4 !py-6",
         props.inputwidth === "md" && "text-md block w-full !px-2 !py-4",
         isFullWidth && "w-full",
@@ -140,11 +140,11 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(function
         <div
           dir="ltr"
           className="focus-within:ring-brand-default group relative mb-1 flex items-center rounded-md focus-within:outline-none focus-within:ring-2">
-          {/* {addOnLeading && (
+          {addOnLeading && (
             <Addon isFilled={addOnFilled} className={classNames("rounded-l-md border-r-0", addOnClassname)}>
               {addOnLeading}
             </Addon>
-          )} */}
+          )}
           <Input
             id={id}
             type={type}
@@ -154,8 +154,8 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(function
             className={classNames(
               className,
               "disabled:bg-subtle disabled:hover:border-subtle disabled:cursor-not-allowed",
-              // addOnLeading && "rounded-l-none border-l-0",
-              // addOnSuffix && "rounded-r-none border-r-0",
+              addOnLeading && "rounded-l-none border-l-0",
+              addOnSuffix && "rounded-r-none border-r-0",
               type === "search" && "pr-8",
               "!my-0 !ring-0"
             )}

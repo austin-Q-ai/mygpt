@@ -96,6 +96,7 @@ export const CubeMenu: React.FC = () => {
     controls.enableZoom = false;
     controls.enablePan = false;
     controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
     controls.update();
 
     // Add raycaster
