@@ -89,23 +89,62 @@ export default function Benifits() {
     setSubBenifits(item.subBenifits);
   };
   const scrollableArea = useRef<HTMLDivElement>(null);
+  let reachedBottom = false;
+  let reachedTop = false;
   useEffect(() => {
+    const observeBottomHandler = (ob: any) => {
+      reachedBottom = false;
+      ob.forEach((el: any) => {
+        if (el?.isIntersecting) {
+          reachedBottom = true;
+        } else {
+          reachedBottom = false;
+        }
+      });
+    };
+    const observeTopHandler = (ob: any) => {
+      reachedTop = false;
+      ob.forEach((el: any) => {
+        if (el?.isIntersecting) {
+          reachedTop = true;
+        } else {
+          reachedTop = false;
+        }
+      });
+    };
+    const buttomObserver = new IntersectionObserver(observeBottomHandler);
+    const topObserver = new IntersectionObserver(observeTopHandler);
+
+    const bottomEl = document.querySelectorAll("[data-observe-bottom]");
+
+    bottomEl.forEach((el: any) => {
+      buttomObserver.observe(el);
+    });
+
+    const topEl = document.querySelectorAll("[data-observe-top]");
+
+    topEl.forEach((el: any) => {
+      topObserver.observe(el);
+    });
+
     const handelScrollEvent = (e: any) => {
       if (e.deltaY < 0) {
-        if (benifitSelected <= 3 && benifitSelected !== 1) {
+        if (benifitSelected <= 3 && benifitSelected !== 1 && reachedTop) {
           setBenifit(benifitSelected - 1);
         } else {
           setBenifit(3);
         }
       } else if (e.deltaY > 0) {
-        if (benifitSelected >= 1 && benifitSelected !== 3) {
+        if (benifitSelected >= 1 && benifitSelected !== 3 && reachedBottom) {
           setBenifit(benifitSelected + 1);
+        } else if (benifitSelected >= 1 && !reachedBottom) {
         } else {
           setBenifit(1);
         }
       }
     };
     scrollableArea.current?.addEventListener("wheel", handelScrollEvent);
+
     return () => {
       scrollableArea.current?.removeEventListener("wheel", handelScrollEvent);
     };
@@ -118,6 +157,12 @@ export default function Benifits() {
         ? selectedBenifit[0].subBenifits
         : null;
     setSubBenifits(valueToBeSet);
+    if (scrollableArea.current) {
+      console.log(scrollableArea.current.children[0].scrollTop);
+      scrollableArea.current.children[0].scrollTop = 0;
+      reachedBottom = false;
+      reachedTop = false;
+    }
   }, [benifitSelected]);
   return (
     <div className="grid grid-cols-1 md:h-[600px] md:grid-cols-3">
@@ -126,7 +171,7 @@ export default function Benifits() {
           <div className="flex-row">
             <span className="font-sans text-2xl font-bold md:text-3xl">{t("what_benifit_will_you_get")}</span>
           </div>
-          <div className=" my-4 flex flex-row" ref={scrollableArea}>
+          <div className=" my-4 flex flex-row">
             <div className="flex-col">
               {mainBenifits.map((benifit) => {
                 return (
@@ -160,7 +205,7 @@ export default function Benifits() {
 
       <div className="col-span-2 flex flex-col justify-center px-3">
         <div className="flex flex-row justify-center">
-          <div className="flex !overflow-hidden md:-space-x-6 ">
+          <div className="flex  md:-space-x-6 ">
             {members.map((member) => {
               return (
                 <Image
@@ -176,8 +221,11 @@ export default function Benifits() {
           </div>
         </div>
         <div className="mt-6 flex !h-5/6 flex-row">
-          <div className="flex flex-col">
+          <div className="flex flex-col" ref={scrollableArea}>
             <ScrollableArea className="h-[200px] bg-transparent md:h-full">
+              <div data-observe-top>
+                <></>
+              </div>
               {subBenifit && subBenifit !== undefined && subBenifit.length > 0
                 ? subBenifit.map((item, index) => {
                     return (
@@ -187,6 +235,9 @@ export default function Benifits() {
                     );
                   })
                 : null}
+              <div data-observe-bottom>
+                <></>
+              </div>
             </ScrollableArea>
           </div>
         </div>

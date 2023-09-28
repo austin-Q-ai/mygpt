@@ -105,10 +105,13 @@ export default function Signup({ prepopulateFormValues, token, orgSlug }: Signup
                     <TextField
                       floatingLabel
                       inputwidth="lg"
-                      addOnLeading={
-                        orgSlug
-                          ? getOrgFullDomain(orgSlug, { protocol: false })
-                          : `${process.env.NEXT_PUBLIC_WEBSITE_URL}/`
+                      addOnClassname="border-pink !border-pink !text-pink !h-[50px] !bg-white "
+                      addOnSuffix={
+                        orgSlug ? (
+                          getOrgFullDomain(orgSlug, { protocol: false })
+                        ) : (
+                          <div className="text-pink font-sans font-bold">.myGPT.fi</div>
+                        )
                       }
                       {...register("username")}
                       required

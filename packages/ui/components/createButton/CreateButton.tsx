@@ -91,7 +91,7 @@ export function CreateButton(props: CreateBtnProps) {
           loading={isLoading}
           variant={rounded ? "icon" : disableMobileButton ? "button" : "fab"}
           {...restProps}>
-          {rounded ? "icon" : buttonText ? buttonText : t("new")}
+          {rounded ? "" : buttonText ? buttonText : t("new")}
         </Button>
       ) : (
         <Dropdown>
