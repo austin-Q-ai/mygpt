@@ -118,7 +118,7 @@ export default function Signup({ prepopulateFormValues, token, orgSlug }: Signup
                         orgSlug ? (
                           getOrgFullDomain(orgSlug, { protocol: false })
                         ) : (
-                          <div className="text-pink font-sans font-bold">.myGPT.fi</div>
+                          <div className="text-secondary font-sans font-bold">.myGPT.fi</div>
                         )
                       }
                       {...register("username")}

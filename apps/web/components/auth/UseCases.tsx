@@ -123,7 +123,7 @@ export default function UseCases() {
               <div className="col-span-1">
                 <Image src="/app-use-cases/sheild.svg" width={18} height={18} alt="" />
               </div>
-              <div className="text-pink col-span-5 text-xs">
+              <div className="text-secondary col-span-5 text-xs">
                 <div className="font-bold">{item.title}</div>
                 <div className="overflow-hidden pt-1 font-light">{item.description}</div>
               </div>
@@ -131,7 +131,7 @@ export default function UseCases() {
           );
         })}
       </ScrollableArea>
-      <div className="text-pink grid grid-cols-2 flex-row  justify-items-center text-sm md:mx-10 md:mt-8 md:grid-cols-5 md:justify-items-start md:text-base">
+      <div className="text-secondary grid grid-cols-2 flex-row  justify-items-center text-sm md:mx-10 md:mt-8 md:grid-cols-5 md:justify-items-start md:text-base">
         <div className="col-span-2 md:col-span-1">
           <Image src="/my-gpt-logo.svg" width={100} height={50} alt="logo" />
         </div>
@@ -185,7 +185,7 @@ export default function UseCases() {
                   <Image
                     alt={item.image}
                     src={"/app-social/" + item.image + ".svg"}
-                    className="text-pink border-pink round !fill-pink  rounded-full border p-2 hover:bg-gray-100"
+                    className="text-secondary border-pink round !fill-pink  rounded-full border p-2 hover:bg-gray-100"
                     width={35}
                     height={35}
                   />
@@ -201,7 +201,7 @@ export default function UseCases() {
           </div>
         </div>
       </div>
-      <div className="text-pink mt-3 flex-row text-center text-sm font-bold">
+      <div className="text-secondary mt-3 flex-row text-center text-sm font-bold">
         <sup> &copy;</sup>
         <span className="pr-2">{year}</span>
         {t("all_rights_reserved_by_mygpt")}

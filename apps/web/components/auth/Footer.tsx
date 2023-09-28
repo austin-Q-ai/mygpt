@@ -55,7 +55,7 @@ export default function Footer(props: FooterPropsTypes) {
   return windowWidth >= 1024 ? (
     <div
       className={classNames(
-        "text-pink absolute mt-6 flex w-full flex-row justify-evenly pb-2 font-medium",
+        "text-secondary absolute mt-6 flex w-full flex-row justify-evenly pb-2 font-medium",
         props.className
       )}>
       {props.items.map((item) => {
@@ -71,7 +71,7 @@ export default function Footer(props: FooterPropsTypes) {
                     size="lg"
                     color="secondary"
                     aria-label={item.name}
-                    className="p-none text-pink mr-1 hidden border-0 bg-transparent sm:inline">
+                    className="p-none text-secondary mr-1 hidden border-0 bg-transparent sm:inline">
                     {item.name}
                   </Button>
                 </DialogTrigger>
@@ -106,7 +106,7 @@ export default function Footer(props: FooterPropsTypes) {
   ) : (
     <div
       className={classNames(
-        "text-pink align-center absolute my-6 grid w-full grid-cols-12 gap-4  pb-2 text-sm font-medium",
+        "text-secondary align-center absolute my-6 grid w-full grid-cols-12 gap-4  pb-2 text-sm font-medium",
         props.className
       )}>
       {props.items.map((item) => {

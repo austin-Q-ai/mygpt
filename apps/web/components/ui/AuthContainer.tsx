@@ -5,7 +5,15 @@ import { useEffect, useState } from "react";
 
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { Button, Dialog, HeadSeo, DialogContent, DialogTrigger, ScrollableArea } from "@calcom/ui";
-import { ArrowLeft, ArrowRight, LogOut, Menu, MessageSquare, Share2, X } from "@calcom/ui/components/icon";
+import {
+  ChevronLeft,
+  ChevronRight,
+  LogOut,
+  Menu,
+  MessageSquare,
+  Share2,
+  X,
+} from "@calcom/ui/components/icon";
 
 import Loader from "@components/Loader";
 import Footer from "@components/auth/Footer";
@@ -188,7 +196,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                 <Image src="/my-gpt-logo.svg" width={130} height={20} className="left-0" alt="logo" />
               )}
             </div>
-            <div className="text-pink flex-col">
+            <div className="text-secondary flex-col">
               <div className="flex flex-row gap-8">
                 <div className="  flex-col">
                   <div className="flex flex-row gap-1">
@@ -198,7 +206,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                       variant="icon"
                       size="lg"
                       color="minimal"
-                      className="!p-none text-pink  border-0"
+                      className="!p-none text-secondary  border-0"
                     />
                   </div>
                 </div>
@@ -207,14 +215,14 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
           </div>
           <div className="align-center flex h-full flex-row justify-center ">
             <div className="flex flex-col self-center">
-              <div className="text-pink flex flex-col gap-8">
+              <div className="text-secondary flex flex-col gap-8">
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button
                       variant="icon"
                       size="lg"
                       color="secondary"
-                      className="p-none text-pink mr-1  h-10 w-12 self-center border-0 bg-transparent text-xl">
+                      className="p-none text-secondary mr-1  h-10 w-12 self-center border-0 bg-transparent text-xl">
                       Prices
                     </Button>
                   </DialogTrigger>
@@ -260,7 +268,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                     <Image src="/my-gpt-logo.svg" width={178} height={30} className="left-0" alt="logo" />
                   )}
                 </div>
-                <div className="text-pink flex-col">
+                <div className="text-secondary flex-col">
                   <div className="flex flex-row gap-8">
                     <Dialog>
                       <DialogTrigger asChild>
@@ -269,7 +277,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                           size="lg"
                           color="secondary"
                           aria-label={t("delete")}
-                          className="p-none text-pink mr-1 hidden border-0 bg-transparent sm:inline">
+                          className="p-none text-secondary mr-1 hidden border-0 bg-transparent sm:inline">
                           Prices
                         </Button>
                       </DialogTrigger>
@@ -307,7 +315,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                         variant="icon"
                         size="lg"
                         color="minimal"
-                        className="!p-none text-pink  border-0"
+                        className="!p-none text-secondary  border-0"
                       />
                     </div>
                   </div>
@@ -352,7 +360,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
               </div>
               <div className="mx-auto mt-5 flex flex-row gap-4">
                 <div className="my-auto cursor-pointer flex-col">
-                  <ArrowLeft />
+                  <ChevronLeft />
                 </div>
                 {members.map((member) => {
                   return (
@@ -371,7 +379,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                   );
                 })}
                 <div className="my-auto cursor-pointer flex-col">
-                  <ArrowRight />
+                  <ChevronRight />
                 </div>
               </div>
               <div className="flew-row text-muted mt-2 text-center font-sans font-medium">

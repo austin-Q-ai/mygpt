@@ -14,7 +14,7 @@ export default function ExpertClone() {
   return (
     <div className="  h-[100vh] flex-1">
       <HeadSeo title="Experts Clone" description="Experts Clone." />
-      <div className="text-pink flex flex-row justify-between px-6 py-4">
+      <div className="text-secondary flex flex-row justify-between px-6 py-4">
         <div className="flex flex-col">
           <Menu width={30} height={30} />
         </div>
@@ -41,15 +41,15 @@ export default function ExpertClone() {
             <TextField
               // addOnLeading={<Search color="#6D278E" />}
               addOnSuffix={
-                <div className="text-pink flex justify-items-center gap-4 border-l-0">
+                <div className="text-secondary flex justify-items-center gap-4 border-l-0">
                   <Mic /> <SendIcon fill="#6D278E" className="rotate-45" />
                 </div>
               }
               placeholder="Ask me anything ..."
               inputwidth="lg"
-              addOnClassname="border-pink !border-pink !text-pink !h-[50px] !bg-transparent"
+              addOnClassname="border-pink !border-pink !text-secondary !h-[50px] !bg-transparent"
               inputMode="search"
-              className="!border-pink text-pink selection:border-pink placeholder:text-pink/60 !bg-transparent py-2 text-2xl"
+              className="!border-pink text-secondary selection:border-pink placeholder:text-secondary/60 !bg-transparent py-2 text-2xl"
             />
             <InfoIcon
               color="#6D278E"
