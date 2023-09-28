@@ -24,7 +24,7 @@ const Steps = (props: ISteps) => {
               key={`step-${index}`}
               onClick={() => navigateToStep(index)}
               className={classNames(
-                "bg-inverted h-1 w-full rounded-[1px]",
+                "bg-brand-default h-1 w-full rounded-[1px]",
                 index < currentStep - 1 ? "cursor-pointer" : ""
               )}
             />
