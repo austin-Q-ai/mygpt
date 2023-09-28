@@ -690,7 +690,7 @@ const ProfileForm = ({
                         StartIcon={!editableHeader ? Edit2 : Cross}
                         className={
                           !editableHeader
-                            ? "text-pink rounded-full bg-transparent md:rounded-full"
+                            ? "text-secondary rounded-full bg-transparent md:rounded-full"
                             : "rotate-45 transform rounded-full"
                         }
                         variant="icon"
@@ -729,7 +729,7 @@ const ProfileForm = ({
                     StartIcon={!editableAbout ? Edit2 : Cross}
                     className={
                       !editableAbout
-                        ? "text-pink rounded-full bg-transparent md:rounded-full"
+                        ? "text-secondary rounded-full bg-transparent md:rounded-full"
                         : "rotate-45 transform rounded-full"
                     }
                     variant="icon"
@@ -795,7 +795,7 @@ const ProfileForm = ({
                       StartIcon={!editableSkill ? Edit2 : Cross}
                       className={
                         !editableSkill
-                          ? "text-pink rounded-full bg-transparent  md:rounded-full"
+                          ? "text-secondary rounded-full bg-transparent  md:rounded-full"
                           : "rotate-45 transform rounded-full"
                       }
                       variant="icon"
@@ -891,7 +891,7 @@ const ProfileForm = ({
                       StartIcon={!editableExp ? Edit2 : Cross}
                       className={
                         !editableExp
-                          ? "text-pink rounded-full bg-transparent md:rounded-full"
+                          ? "text-secondary rounded-full bg-transparent md:rounded-full"
                           : "rotate-45 transform rounded-full"
                       }
                       variant="icon"
@@ -1026,7 +1026,7 @@ const ProfileForm = ({
                       StartIcon={!editableEdu ? Edit2 : Cross}
                       className={
                         !editableEdu
-                          ? "text-pink rounded-full bg-transparent  md:rounded-full"
+                          ? "text-secondary rounded-full bg-transparent  md:rounded-full"
                           : "rotate-45 transform rounded-full"
                       }
                       variant="icon"

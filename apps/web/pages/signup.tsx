@@ -11,11 +11,12 @@ import { isSAMLLoginEnabled } from "@calcom/features/ee/sso/lib/saml";
 import { useFlagMap } from "@calcom/features/flags/context/provider";
 import { getFeatureFlagMap } from "@calcom/features/flags/server/utils";
 import { IS_SELF_HOSTED, WEBAPP_URL } from "@calcom/lib/constants";
+import getBrandColours from "@calcom/lib/getBrandColours";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { collectPageParameters, telemetryEventTypes, useTelemetry } from "@calcom/lib/telemetry";
 import { teamMetadataSchema } from "@calcom/prisma/zod-utils";
 import type { inferSSRProps } from "@calcom/types/inferSSRProps";
-import { Alert, Button, EmailField, HeadSeo, PasswordField, TextField } from "@calcom/ui";
+import { Alert, Button, EmailField, HeadSeo, PasswordField, TextField, useCalcomTheme } from "@calcom/ui";
 
 import PageWrapper from "@components/PageWrapper";
 import AuthContainer from "@components/ui/AuthContainer";
@@ -35,6 +36,13 @@ type SignupProps = inferSSRProps<typeof getServerSideProps>;
 
 export default function Signup({ prepopulateFormValues, token, orgSlug }: SignupProps) {
   const { t, i18n } = useLocale();
+
+  const brandTheme = getBrandColours({
+    lightVal: "#6d278e",
+    darkVal: "#fafafa",
+  });
+  useCalcomTheme(brandTheme);
+
   const router = useRouter();
   const flags = useFlagMap();
   const telemetry = useTelemetry();
@@ -105,12 +113,12 @@ export default function Signup({ prepopulateFormValues, token, orgSlug }: Signup
                     <TextField
                       floatingLabel
                       inputwidth="lg"
-                      addOnClassname="border-pink !border-pink !text-pink !h-[50px] !bg-white "
+                      addOnClassname="!h-[50px] !bg-white"
                       addOnSuffix={
                         orgSlug ? (
                           getOrgFullDomain(orgSlug, { protocol: false })
                         ) : (
-                          <div className="text-pink font-sans font-bold">.myGPT.fi</div>
+                          <div className="text-secondary font-sans font-bold">.myGPT.fi</div>
                         )
                       }
                       {...register("username")}
@@ -136,21 +144,17 @@ export default function Signup({ prepopulateFormValues, token, orgSlug }: Signup
                     }}
                     {...register("password")}
                     hintErrors={["caplow", "min", "num"]}
-                    className="border-default mt-1 block w-full rounded-md border px-3 py-2 shadow-sm focus:border-black focus:outline-none focus:ring-black sm:text-sm"
+                    className="border-default mt-1 block w-full rounded-md border px-3 py-2 shadow-sm sm:text-sm"
                   />
                 </div>
                 <div className="flex space-x-2 rtl:space-x-reverse">
-                  <Button
-                    type="submit"
-                    loading={isSubmitting}
-                    color="secondary"
-                    className="!bg-pink w-full justify-center !text-white">
+                  <Button type="submit" loading={isSubmitting} className="w-full justify-center">
                     {t("create_account")}
                   </Button>
                   {!token && (
                     <Button
                       color="secondary"
-                      className="text-pink border-pink w-full justify-center"
+                      className="w-full justify-center"
                       onClick={() =>
                         signIn("Cal.com", {
                           callbackUrl: router.query.callbackUrl

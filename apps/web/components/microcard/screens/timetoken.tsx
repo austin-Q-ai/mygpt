@@ -29,7 +29,7 @@ export const TimeTokenPage = React.forwardRef<HTMLDivElement>((props, ref) => {
               <p className="pl-2 text-sm">{item}</p>
             </div>
           ))}
-          <div className="text-pink pt-4 text-center text-xl">15 Timetokens = 5min</div>
+          <div className="text-secondary pt-4 text-center text-xl">15 Timetokens = 5min</div>
         </div>
       </div>
     </div>

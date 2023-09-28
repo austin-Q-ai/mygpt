@@ -1,8 +1,9 @@
-import { ArrowLeft, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
+
+import { ChevronLeft, ChevronRight } from "@calcom/ui/components/icon";
 
 export default function CarouselDemo() {
   return (
@@ -12,6 +13,7 @@ export default function CarouselDemo() {
       showIndicators={false}
       showArrows={false}
       showStatus={false}
+      showThumbs={false}
       interval={5000}
       transitionTime={900}
       infiniteLoop
@@ -22,7 +24,7 @@ export default function CarouselDemo() {
               hasPrev ? "absolute" : "hidden"
             } bottom-0 left-0 top-0 z-20 flex cursor-pointer items-center justify-center p-3 opacity-30 hover:opacity-100`}
             onClick={clickHandler}>
-            <ArrowLeft className="text-emphasis h-9 w-9" />
+            <ChevronLeft className="text-emphasis h-9 w-9" />
           </div>
         );
       }}
@@ -33,7 +35,7 @@ export default function CarouselDemo() {
               hasNext ? "absolute" : "hidden"
             } bottom-0 right-0 top-0 z-20 flex cursor-pointer items-center justify-center p-3 opacity-30 hover:opacity-100`}
             onClick={clickHandler}>
-            <ArrowRight className="text-emphasis h-9 w-9" />
+            <ChevronRight className="text-emphasis h-9 w-9" />
           </div>
         );
       }}>

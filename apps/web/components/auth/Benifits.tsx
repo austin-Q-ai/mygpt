@@ -178,7 +178,7 @@ export default function Benifits() {
                   <div
                     key={benifit.id}
                     className={classNames(
-                      benifit.id === benifitSelected && "text-pink font-medium",
+                      benifit.id === benifitSelected && "text-secondary font-medium",
                       "cursor-pointer py-3 text-gray-400 "
                     )}
                     onClick={() => handleSetBenifit(benifit)}>
@@ -229,7 +229,7 @@ export default function Benifits() {
               {subBenifit && subBenifit !== undefined && subBenifit.length > 0
                 ? subBenifit.map((item, index) => {
                     return (
-                      <li key={index} className="text-pink flex-row py-2">
+                      <li key={index} className="text-secondary flex-row py-2">
                         {item}
                       </li>
                     );
