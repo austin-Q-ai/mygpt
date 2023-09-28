@@ -2096,5 +2096,10 @@
   "read_and_accept_the_terms_and_conditions": "Read and accept the terms and conditions",
 
 
-  "forgot_your_password": "Forgot your password ?"
+  "forgot_your_password": "Forgot your password ?",
+  "sorry_you_cannot_engage_in_discussions": "Sorry, you cannot engage in discussions with walletGPT because you are not signed in.",
+  "sign_in_your_account_for_free": "Sign in your account for free",
+  "create_for_free_your_account": "Create for free your account",
+  "or_login_with": "or login with",
+  "create_my_free_account": "Create my free account"
 }
