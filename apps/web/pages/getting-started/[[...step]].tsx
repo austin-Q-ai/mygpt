@@ -2,16 +2,16 @@ import type { GetServerSidePropsContext } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import type { CSSProperties } from "react";
 import { Suspense } from "react";
 import { z } from "zod";
 
 import { getServerSession } from "@calcom/features/auth/lib/getServerSession";
 import { APP_NAME } from "@calcom/lib/constants";
+import getBrandColours from "@calcom/lib/getBrandColours";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import prisma from "@calcom/prisma";
 import { trpc } from "@calcom/trpc";
-import { Button, StepCard, Steps } from "@calcom/ui";
+import { Button, StepCard, Steps, useCalcomTheme } from "@calcom/ui";
 import { Loader } from "@calcom/ui/components/icon";
 
 import PageWrapper from "@components/PageWrapper";
@@ -49,6 +49,12 @@ const OnboardingPage = () => {
   const router = useRouter();
   const [user] = trpc.viewer.me.useSuspenseQuery();
   const { t } = useLocale();
+
+  const brandTheme = getBrandColours({
+    lightVal: user?.brandColor,
+    darkVal: user?.darkBrandColor,
+  });
+  useCalcomTheme(brandTheme);
 
   const result = stepRouteSchema.safeParse(router.query);
   const currentStep = result.success ? result.data.step[0] : INITIAL_STEP;
@@ -108,14 +114,14 @@ const OnboardingPage = () => {
     <div
       className="dark:bg-brand dark:text-brand-contrast text-emphasis min-h-screen"
       data-testid="onboarding"
-      style={
-        {
-          "--cal-brand": "#111827",
-          "--cal-brand-emphasis": "#101010",
-          "--cal-brand-text": "white",
-          "--cal-brand-subtle": "#9CA3AF",
-        } as CSSProperties
-      }
+      // style={
+      //   {
+      //     "--cal-brand": "#111827",
+      //     "--cal-brand-emphasis": "#101010",
+      //     "--cal-brand-text": "white",
+      //     "--cal-brand-subtle": "#9CA3AF",
+      //   } as CSSProperties
+      // }
       key={router.asPath}>
       <Head>
         <title>{`${APP_NAME} - ${t("getting_started")}`}</title>
@@ -228,7 +234,7 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
   };
 };
 
-OnboardingPage.isThemeSupported = false;
+// OnboardingPage.isThemeSupported = false;
 OnboardingPage.PageWrapper = PageWrapper;
 
 export default OnboardingPage;

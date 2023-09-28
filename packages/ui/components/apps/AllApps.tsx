@@ -69,65 +69,67 @@ function CategoryTab({ selectedCategory, categories, searchText }: CategoryTabPr
   };
   return (
     <div className="relative mb-4 flex flex-col justify-between lg:flex-row lg:items-center">
-      <h2 className="text-emphasis hidden text-base font-semibold leading-none sm:block">
-        {searchText
-          ? t("search")
-          : t("category_apps", {
-              category:
-                (selectedCategory && selectedCategory[0].toUpperCase() + selectedCategory.slice(1)) ||
-                t("all"),
-            })}
-      </h2>
-      {leftVisible && (
-        <button onClick={handleLeft} className="absolute bottom-0 flex md:-top-1 md:left-1/2">
-          <div className="bg-default flex h-12 w-5 items-center justify-end">
-            <ChevronLeft className="text-subtle h-4 w-4" />
-          </div>
-          <div className="to-default flex h-12 w-5 bg-gradient-to-l from-transparent" />
-        </button>
-      )}
-      <ul
-        className="no-scrollbar mt-3 flex max-w-full space-x-1 overflow-x-auto lg:mt-0 lg:max-w-[50%]"
-        onScroll={(e) => calculateScroll(e)}
-        ref={ref}>
-        <li
-          onClick={() => {
-            router.replace(router.asPath.split("?")[0], undefined, { shallow: true });
-          }}
-          className={classNames(
-            selectedCategory === null ? "bg-emphasis text-default" : "bg-muted text-emphasis",
-            "hover:bg-emphasis min-w-max rounded-md px-4 py-2.5 text-sm font-medium hover:cursor-pointer"
-          )}>
-          {t("all")}
-        </li>
-        {categories.map((cat, pos) => (
+      <div>
+        <h2 className="text-emphasis hidden text-base font-semibold leading-none sm:block">
+          {searchText
+            ? t("search")
+            : t("category_apps", {
+                category:
+                  (selectedCategory && selectedCategory[0].toUpperCase() + selectedCategory.slice(1)) ||
+                  t("all"),
+              })}
+        </h2>
+      </div>
+      <div className="mt-3 flex flex-row items-center lg:mt-0">
+        {leftVisible && (
+          <button onClick={handleLeft} className="mx-2 flex">
+            <div className="flex h-12 w-5 items-center justify-end rounded-md bg-white">
+              <ChevronLeft className="text-subtle h-5 w-5" />
+            </div>
+          </button>
+        )}
+        <ul
+          className="no-scrollbar  flex max-w-full space-x-1 overflow-x-auto  lg:max-w-[90%]"
+          onScroll={(e) => calculateScroll(e)}
+          ref={ref}>
           <li
-            key={pos}
             onClick={() => {
-              if (selectedCategory === cat) {
-                router.replace(router.asPath.split("?")[0], undefined, { shallow: true });
-              } else {
-                router.replace(router.asPath.split("?")[0] + `?category=${cat}`, undefined, {
-                  shallow: true,
-                });
-              }
+              router.replace(router.asPath.split("?")[0], undefined, { shallow: true });
             }}
             className={classNames(
-              selectedCategory === cat ? "bg-emphasis text-default" : "bg-muted text-emphasis",
-              "hover:bg-emphasis rounded-md px-4 py-2.5 text-sm font-medium hover:cursor-pointer"
+              selectedCategory === null ? "bg-emphasis text-default" : "text-emphasis bg-transparent",
+              "hover:bg-emphasis justify min-w-max rounded-md px-4 py-2.5 text-sm font-medium hover:cursor-pointer md:py-3.5"
             )}>
-            {cat[0].toUpperCase() + cat.slice(1)}
+            {t("all")}
           </li>
-        ))}
-      </ul>
-      {rightVisible && (
-        <button onClick={handleRight} className="absolute bottom-0 right-0 flex md:-top-1">
-          <div className="to-default flex h-12 w-5 bg-gradient-to-r from-transparent" />
-          <div className="bg-default flex h-12 w-5 items-center justify-end">
-            <ChevronRight className="text-subtle h-4 w-4" />
-          </div>
-        </button>
-      )}
+          {categories.map((cat, pos) => (
+            <li
+              key={pos}
+              onClick={() => {
+                if (selectedCategory === cat) {
+                  router.replace(router.asPath.split("?")[0], undefined, { shallow: true });
+                } else {
+                  router.replace(router.asPath.split("?")[0] + `?category=${cat}`, undefined, {
+                    shallow: true,
+                  });
+                }
+              }}
+              className={classNames(
+                selectedCategory === cat ? "bg-emphasis text-default" : "text-emphasis bg-transparent",
+                "hover:bg-emphasis rounded-md px-4 py-2.5 text-sm font-medium hover:cursor-pointer md:py-3.5"
+              )}>
+              {cat[0].toUpperCase() + cat.slice(1)}
+            </li>
+          ))}
+        </ul>
+        {rightVisible && (
+          <button onClick={handleRight} className="mx-2 flex">
+            <div className="flex h-12 w-5 items-center justify-end rounded-md bg-white">
+              <ChevronRight className="text-subtle h-5 w-5 " />
+            </div>
+          </button>
+        )}
+      </div>
     </div>
   );
 }

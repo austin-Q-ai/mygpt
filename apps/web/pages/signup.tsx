@@ -11,11 +11,12 @@ import { isSAMLLoginEnabled } from "@calcom/features/ee/sso/lib/saml";
 import { useFlagMap } from "@calcom/features/flags/context/provider";
 import { getFeatureFlagMap } from "@calcom/features/flags/server/utils";
 import { IS_SELF_HOSTED, WEBAPP_URL } from "@calcom/lib/constants";
+import getBrandColours from "@calcom/lib/getBrandColours";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { collectPageParameters, telemetryEventTypes, useTelemetry } from "@calcom/lib/telemetry";
 import { teamMetadataSchema } from "@calcom/prisma/zod-utils";
 import type { inferSSRProps } from "@calcom/types/inferSSRProps";
-import { Alert, Button, EmailField, HeadSeo, PasswordField, TextField } from "@calcom/ui";
+import { Alert, Button, EmailField, HeadSeo, PasswordField, TextField, useCalcomTheme } from "@calcom/ui";
 
 import PageWrapper from "@components/PageWrapper";
 import AuthContainer from "@components/ui/AuthContainer";
@@ -35,6 +36,13 @@ type SignupProps = inferSSRProps<typeof getServerSideProps>;
 
 export default function Signup({ prepopulateFormValues, token, orgSlug }: SignupProps) {
   const { t, i18n } = useLocale();
+
+  const brandTheme = getBrandColours({
+    lightVal: "#6d278e",
+    darkVal: "#fafafa",
+  });
+  useCalcomTheme(brandTheme);
+
   const router = useRouter();
   const flags = useFlagMap();
   const telemetry = useTelemetry();
@@ -44,8 +52,8 @@ export default function Signup({ prepopulateFormValues, token, orgSlug }: Signup
   const {
     register,
     formState: { errors, isSubmitting },
+    watch,
   } = methods;
-
   const handleErrors = async (resp: Response) => {
     if (!resp.ok) {
       const err = await resp.json();
@@ -104,11 +112,14 @@ export default function Signup({ prepopulateFormValues, token, orgSlug }: Signup
                   <div className="w-full  flex-col">
                     <TextField
                       floatingLabel
-                      inputSize="lg"
-                      addOnLeading={
-                        orgSlug
-                          ? getOrgFullDomain(orgSlug, { protocol: false })
-                          : `${process.env.NEXT_PUBLIC_WEBSITE_URL}/`
+                      inputwidth="lg"
+                      addOnClassname="!h-[50px] !bg-white"
+                      addOnSuffix={
+                        orgSlug ? (
+                          getOrgFullDomain(orgSlug, { protocol: false })
+                        ) : (
+                          <div className="text-secondary font-sans font-bold">.myGPT.fi</div>
+                        )
                       }
                       {...register("username")}
                       required
@@ -117,7 +128,7 @@ export default function Signup({ prepopulateFormValues, token, orgSlug }: Signup
                   <div className="w-full  flex-col">
                     <EmailField
                       floatingLabel
-                      inputSize="lg"
+                      inputwidth="lg"
                       {...register("email")}
                       disabled={prepopulateFormValues?.email}
                       className="disabled:bg-emphasis disabled:hover:cursor-not-allowed"
@@ -127,13 +138,13 @@ export default function Signup({ prepopulateFormValues, token, orgSlug }: Signup
                 <div className="w-full  flex-col">
                   <PasswordField
                     floatingLabel
-                    inputSize="lg"
+                    inputwidth="lg"
                     labelProps={{
                       className: "block text-sm font-medium text-default",
                     }}
                     {...register("password")}
                     hintErrors={["caplow", "min", "num"]}
-                    className="border-default mt-1 block w-full rounded-md border px-3 py-2 shadow-sm focus:border-black focus:outline-none focus:ring-black sm:text-sm"
+                    className="border-default mt-1 block w-full rounded-md border px-3 py-2 shadow-sm sm:text-sm"
                   />
                 </div>
                 <div className="flex space-x-2 rtl:space-x-reverse">

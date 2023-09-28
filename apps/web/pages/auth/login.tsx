@@ -3,8 +3,8 @@ import classNames from "classnames";
 import { jwtVerify } from "jose";
 import type { GetServerSidePropsContext } from "next";
 import { getCsrfToken, signIn } from "next-auth/react";
+import Link from "next/link";
 import { useRouter } from "next/router";
-import type { CSSProperties } from "react";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { FaGoogle } from "react-icons/fa";
@@ -15,11 +15,12 @@ import { ErrorCode } from "@calcom/features/auth/lib/ErrorCode";
 import { getServerSession } from "@calcom/features/auth/lib/getServerSession";
 import { isSAMLLoginEnabled, samlProductID, samlTenantID } from "@calcom/features/ee/sso/lib/saml";
 import { WEBAPP_URL, WEBSITE_URL } from "@calcom/lib/constants";
+import getBrandColours from "@calcom/lib/getBrandColours";
 import { getSafeRedirectUrl } from "@calcom/lib/getSafeRedirectUrl";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { collectPageParameters, telemetryEventTypes, useTelemetry } from "@calcom/lib/telemetry";
 import prisma from "@calcom/prisma";
-import { Alert, Button, EmailField, PasswordField } from "@calcom/ui";
+import { Alert, Button, EmailField, PasswordField, useCalcomTheme } from "@calcom/ui";
 import { ArrowLeft } from "@calcom/ui/components/icon";
 
 import type { inferSSRProps } from "@lib/types/inferSSRProps";
@@ -49,6 +50,13 @@ export default function Login({
   totpEmail,
 }: inferSSRProps<typeof _getServerSideProps> & WithNonceProps) {
   const { t } = useLocale();
+
+  const brandTheme = getBrandColours({
+    lightVal: "#6d278e",
+    darkVal: "#fafafa",
+  });
+  useCalcomTheme(brandTheme);
+
   const router = useRouter();
   const formSchema = z
     .object({
@@ -136,14 +144,15 @@ export default function Login({
 
   return (
     <div
-      style={
-        {
-          "--cal-brand": "#111827",
-          "--cal-brand-emphasis": "#101010",
-          "--cal-brand-text": "white",
-          "--cal-brand-subtle": "#9CA3AF",
-        } as CSSProperties
-      }>
+    // style={
+    //   {
+    //     "--cal-brand": "#111827",
+    //     "--cal-brand-emphasis": "#101010",
+    //     "--cal-brand-text": "white",
+    //     "--cal-brand-subtle": "#9CA3AF",
+    //   } as CSSProperties
+    // }
+    >
       <AuthContainer
         title={t("login")}
         description={t("login")}
@@ -159,7 +168,11 @@ export default function Login({
             : null
         }>
         <FormProvider {...methods}>
-          <form onSubmit={methods.handleSubmit(onSubmit)} noValidate data-testid="login-form">
+          <form
+            onSubmit={methods.handleSubmit(onSubmit)}
+            noValidate
+            data-testid="login-form"
+            className="w-full">
             <div>
               <input defaultValue={csrfToken || undefined} type="hidden" hidden {...register("csrfToken")} />
             </div>
@@ -174,7 +187,7 @@ export default function Login({
                     placeholder="john.doe@example.com"
                     required
                     {...register("email")}
-                    inputSize="lg"
+                    inputwidth="lg"
                   />
                 </div>
                 <div className=" w-full flex-col">
@@ -185,7 +198,7 @@ export default function Login({
                     required={!totpEmail}
                     className="mb-0"
                     {...register("password")}
-                    inputSize="lg"
+                    inputwidth="lg"
                   />
                   {/* <div className="absolute -top-[2px] ltr:right-0 rtl:left-0">
                     <Link
@@ -207,19 +220,29 @@ export default function Login({
                     type="submit"
                     color="primary"
                     disabled={formState.isSubmitting}
-                    className="w-full justify-center p-2 text-lg">
+                    className="w-full  justify-center p-2 text-lg">
                     {twoFactorRequired ? t("submit") : t("sign_in")}
                   </Button>
                 </div>
                 <div className="w-full flex-col">
-                  <Button
+                  <Link
+                    href="/signup"
                     type="submit"
                     color="secondary"
-                    disabled={formState.isSubmitting}
-                    className="w-full justify-center p-2 text-lg">
+                    className="hover:bg-muted w-full justify-center rounded-md border p-2 text-center text-lg">
                     {t("got_it_for_free")}
-                  </Button>
+                  </Link>
                 </div>
+              </div>
+            </div>
+            <div className="flex flex-row">
+              <div className="flex flex-col">
+                <Link href="/auth/forgot-password" className="text-muted flex flex-row px-1 py-2 underline">
+                  {t("forgot_your_password")}
+                </Link>
+              </div>
+              <div className="flex flex-col">
+                <></>
               </div>
             </div>
           </form>

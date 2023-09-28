@@ -122,6 +122,8 @@ export default function ForgotPassword({ csrfToken }: { csrfToken: string }) {
             <EmailField
               onChange={handleChange}
               id="email"
+              floatingLabel
+              inputwidth="lg"
               name="email"
               label={t("email_address")}
               placeholder="john.doe@example.com"
@@ -129,7 +131,8 @@ export default function ForgotPassword({ csrfToken }: { csrfToken: string }) {
             />
             <div className="space-y-2">
               <Button
-                className="w-full justify-center"
+                className="!bg-pink w-full  justify-center p-2 text-lg !text-white"
+                color="secondary"
                 type="submit"
                 disabled={loading}
                 aria-label={t("request_password_reset")}

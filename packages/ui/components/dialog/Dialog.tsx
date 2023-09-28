@@ -98,7 +98,10 @@ export const DialogContent = React.forwardRef<HTMLDivElement, DialogContentProps
                 {Icon && (
                   <div className="mr-4 inline-flex h-5 w-5 items-center justify-center rounded-full">
                     <DialogClose className="p-0">
-                      <Icon className="text-emphasis  h-8 w-8" color="gray" />
+                      <Icon
+                        className="text-emphasis  hover:border-pink h-8 w-8 hover:rounded-md hover:border"
+                        color="#5d2782"
+                      />
                     </DialogClose>
                   </div>
                 )}
@@ -110,7 +113,10 @@ export const DialogContent = React.forwardRef<HTMLDivElement, DialogContentProps
             <div className="flex">
               {Icon && (
                 <div className="bg-emphasis mr-4 inline-flex h-10 w-10 items-center justify-center rounded-full">
-                  <Icon className="text-emphasis h-4 w-4" />
+                  <Icon
+                    className="text-emphasis hover:border-pink h-4 w-4 hover:rounded-md hover:border"
+                    color="#5d2782"
+                  />
                 </div>
               )}
               <div className="w-full">

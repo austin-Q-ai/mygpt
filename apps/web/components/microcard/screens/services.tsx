@@ -1,13 +1,14 @@
 import Image from "next/image";
+import React from "react";
 
 import { Badge } from "@calcom/ui";
 import { CalendarPlus, Clock } from "@calcom/ui/components/icon";
 
 import { default as Header } from "../header";
 
-export const ServicesPage = () => {
+export const ServicesPage = React.forwardRef<HTMLDivElement>((props, ref) => {
   return (
-    <div className="flex w-full flex-col bg-white">
+    <div className="flex w-full flex-col bg-white" ref={ref}>
       <Header title="Events" description="hugo.myGPT.fi" />
       <div className="h-[75vh] px-5 py-5">
         <p className="pb-4 text-center text-lg font-bold">Book Meeting</p>
@@ -39,4 +40,6 @@ export const ServicesPage = () => {
       </div>
     </div>
   );
-};
+});
+
+ServicesPage.displayName = "ServicesPage";

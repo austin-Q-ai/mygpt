@@ -148,31 +148,39 @@ export function UserPage(props: UserPageProps) {
                 prefetch={false}
                 href={{
                   pathname: `/${user.username}/profile`,
-                }}
-              >
+                }}>
                 <Card
                   title=""
-                  containerProps={{ style: { width: "60%", minWidth: "410px", marginBottom: "32px", borderRadius: "20px", padding: "1px" } }}
+                  containerProps={{
+                    style: {
+                      width: "60%",
+                      minWidth: "410px",
+                      marginBottom: "32px",
+                      borderRadius: "20px",
+                      padding: "1px",
+                    },
+                  }}
                   variant="ProfileCard"
                   description={
-                    <div className="flex items-center p-4 group relative">
+                    <div className="group relative flex items-center p-4">
                       <ArrowRight className="text-emphasis  absolute right-4 top-4 h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100" />
                       <div className="flex-grow">
                         <Avatar imageSrc={user.avatar} size="xl" alt={nameOrUsername} />
                       </div>
-                      <div className="items-left ms-4 flex flex-col flex-grow">
+                      <div className="items-left ms-4 flex flex-grow flex-col">
                         <div className="text-xl">
                           {nameOrUsername ? nameOrUsername : t("nameless")}
                           {user.verified && (
                             <Verified className=" mx-1 -mt-1 inline h-6 w-6 fill-blue-500 text-white dark:text-black" />
                           )}
                         </div>
-                        {user.position && <div className="mt-4">
-                          {user.position}
-                        </div>}
-                        {user.address && <div className="flex mt-2">
-                          <MousePointer2 className="rotate-90 transform w-4 h-4" />{user.address}
-                        </div>}
+                        {user.position && <div className="mt-4">{user.position}</div>}
+                        {user.address && (
+                          <div className="mt-2 flex">
+                            <MousePointer2 className="h-4 w-4 rotate-90 transform" />
+                            {user.address}
+                          </div>
+                        )}
                         <div className="mt-2 flex items-center gap-2">
                           <div>
                             <Button color="secondary" className="rounded-full text-gray-500" variant="icon">
@@ -320,6 +328,11 @@ const getEventTypesWithHiddenFromDB = async (userId: number) => {
       select: {
         ...baseEventTypeSelect,
         metadata: true,
+        owner: {
+          select: {
+            price: true,
+          },
+        },
       },
     })
   ).map((eventType) => ({

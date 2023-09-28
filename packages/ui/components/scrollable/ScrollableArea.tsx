@@ -22,7 +22,6 @@ const ScrollableArea = ({ children, className }: PropsWithChildren<{ className?:
     top: 0,
     width: "100%",
     height: "30px",
-    background: "linear-gradient(to bottom, transparent, gray 40px)",
     zIndex: 10,
   } as CSSProperties;
 

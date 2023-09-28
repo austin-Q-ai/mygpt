@@ -52,6 +52,9 @@ const PaymentPage: FC<PaymentPageProps> = (props) => {
 
   const eventName = props.booking?.title;
 
+  const tokens = Math.ceil((props.booking?.length || 0) / 5);
+  const price = (props.profile?.price || 0) * tokens;
+
   return (
     <div className="h-screen">
       <Head>
@@ -91,9 +94,11 @@ const PaymentPage: FC<PaymentPageProps> = (props) => {
                       <div className="col-span-2 mb-6">
                         {date.format("dddd, DD MMMM YYYY")}
                         <br />
-                        {date.format(is24h ? "H:mm" : "h:mma")} - {props.eventType?.length} mins{" "}
+                        {date.format(is24h ? "H:mm" : "h:mma")} - {props.booking?.length} mins{" "}
                         <span className="text-subtle">({timezone})</span>
                       </div>
+                      <div className="font-medium">{t("timetokens")}</div>
+                      <div className="col-span-2 mb-6">{tokens}</div>
                       {props.booking?.location && (
                         <>
                           <div className="font-medium">{t("where")}</div>
@@ -107,7 +112,7 @@ const PaymentPage: FC<PaymentPageProps> = (props) => {
                         {new Intl.NumberFormat(i18n.language, {
                           style: "currency",
                           currency: paymentAppData.currency,
-                        }).format(paymentAppData.price / 100.0)}
+                        }).format(price)}
                       </div>
                     </div>
                   </div>

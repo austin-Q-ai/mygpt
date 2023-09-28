@@ -31,7 +31,7 @@ const AppCategoryNavigation = ({
   const appCategories = useMemo(() => getAppCategories(baseURL, useQueryParam), [baseURL, useQueryParam]);
 
   return (
-    <div className={cs("flex flex-col gap-x-6 md:p-0 xl:flex-row", classNames?.root ?? className)}>
+    <div className={cs("mx-8 flex flex-col gap-x-6 md:p-0 xl:flex-row", classNames?.root ?? className)}>
       <div className="hidden xl:block">
         <VerticalTabs
           tabs={appCategories}

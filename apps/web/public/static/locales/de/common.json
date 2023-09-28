@@ -1788,5 +1788,46 @@
   "exp": "Erfahrung",
   "edu": "Bildung",
   "skill": "Fähigkeiten",
-  "position": "Position"
+  "position": "Position",
+
+
+
+
+  "freemium": "Freemium",
+  "access_to_basic_features": "Zugang zu Grundfunktionen",
+  "limit_of_500_messages/month": "Limit von 500 Nachrichten/Monat",
+  "email_support_with_a_response_within_48_hours": "E-Mail-Support mit Antwort innerhalb von 48h",
+  "data_storage_limited_to_1_gb": "Datenspeicherung begrenzt auf 1 GB",
+  "one_active_user_online": "1 aktiver Online-Benutzer",
+
+  "$34/month": "29 €/Monat",
+  "access_to_advanced_features": "Zugang zu erweiterten Funktionen",
+  "limit_of_5,000_messages/month": "Limit von 5.000 Nachrichten/Monat",
+  "email_support_with_a_response_within_24_hours": "E-Mail-Support mit Antwort innerhalb von 24h",
+  "data_storage_up_to_10_gb": "Datenspeicherung bis zu 10 GB",
+  "two_active_users_online": "2 aktive Online-Benutzer",
+
+  "$70/month": "59 €/Monat",
+  "access_to_all_premium_features": "Zugang zu allen Premiumfunktionen",
+  "limit_of_20,000_messages/month": "Limit von 20.000 Nachrichten/Monat",
+  "priority_support_by_email_and_chat": "Priorisierter Support per E-Mail und Chat",
+  "data_storage_up_to_50_gb": "Datenspeicherung bis zu 50 GB",
+  "ten_active_users_online": "10 aktive Online-Benutzer",
+  "access_to_detailed_analyses_and_reports": "Zugang zu detaillierten Analysen und Berichten",
+
+
+  "$117/month": "99 €/Monat",
+  "unlimited_access_to_all_features": "Uneingeschränkter Zugang zu allen Funktionen",
+  "limit_of_100,000_messages/month": "Limit von 100.000 Nachrichten/Monat",
+  "24/7_priority_support": "Priorisierter Support 24/7",
+  "unlimited_data_storage": "Uneingeschränkte Datenspeicherung",
+  "twenty_five_active_users_online":"25 aktive Online-Benutzer",
+
+  "contact_us": "Kontaktieren Sie uns",
+  "customizable_message_volume": "Personalisierte Nachrichtenmenge",
+  "customizable_data_storage": "Personalisierter Datenspeicher",
+  "customizable_number_of_active_bots": "Personalisierte Anzahl aktiver Bots",
+  "specific_integrations_or_custom_developments": "Spezifische Integrationen oder maßgeschneiderte Entwicklungen",
+  "access_to_customizable_detailed_analyses_and_reports": "Zugang zu personalisierten detaillierten Analysen und Berichten",
+  "read_and_accept_the_terms_and_conditions": "Die Geschäftsbedingungen lesen und akzeptieren"
 }
