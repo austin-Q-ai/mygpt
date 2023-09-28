@@ -201,6 +201,7 @@ export const buildUser = <T extends Partial<UserPayload>>(user?: T): UserPayload
     completedOnboarding: false,
     createdDate: new Date(),
     credentials: [],
+    currency: "usd",
     darkBrandColor: "#fafafa",
     defaultScheduleId: null,
     destinationCalendar: null,

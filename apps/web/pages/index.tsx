@@ -1,19 +1,8 @@
-// import type { GetServerSidePropsContext } from "next";
-// import { getServerSession } from "@calcom/features/auth/lib/getServerSession";
-// function RedirectPage() {
-//   return;
-// }
-// export async function getServerSideProps({ req, res }: GetServerSidePropsContext) {
-//   const session = await getServerSession({ req, res });
-//   if (!session?.user?.id) {
-//     return { redirect: { permanent: false, destination: "/auth/login" } };
-//   }
-//   return { redirect: { permanent: false, destination: "/event-types" } };
-// }
-// export default RedirectPage;
+import type { GetServerSidePropsContext } from "next";
 import { useRouter } from "next/router";
 import React from "react";
 
+import { getServerSession } from "@calcom/features/auth/lib/getServerSession";
 import Shell from "@calcom/features/shell/Shell";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { trpc } from "@calcom/trpc/react";
@@ -38,6 +27,14 @@ const HomePage = () => {
     </Shell>
   );
 };
+
+export async function getServerSideProps({ req, res }: GetServerSidePropsContext) {
+  const session = await getServerSession({ req, res });
+  if (!session?.user?.id) {
+    return { redirect: { permanent: false, destination: "/auth/login" } };
+  }
+  return { props: {} };
+}
 
 HomePage.PageWrapper = PageWrapper;
 
