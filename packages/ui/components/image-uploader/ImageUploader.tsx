@@ -188,7 +188,7 @@ export default function ImageUploader({
             )}
           </Button>
         ) : (
-          <Button color="secondary" className="h-[70px] w-[70px] rounded-full " variant="icon">
+          <Button color="secondary" className="rounded-full " variant="icon">
             {buttonMsg}
           </Button>
         )}

@@ -19,13 +19,12 @@ import { trpc } from "@calcom/trpc/react";
 import {
   Select,
   Button,
-  ButtonGroup,
   Avatar,
   Badge,
   ConfirmationDialogContent,
   Dialog,
   Form,
-  Input,
+  InputField,
   showToast,
 } from "@calcom/ui";
 import { Plus } from "@calcom/ui/components/icon";
@@ -322,14 +321,14 @@ function TimeTokensWallet() {
                 </div>
                 {/* Time Token Price update Graph  */}
                 <Form form={formMethods} handleSubmit={onSubmit}>
-                  <div className="bg-pink/10 mx-2 mb-4 flex min-w-[250px] flex-col gap-1 rounded-md p-4 lg:absolute lg:right-14 lg:top-10 lg:w-1/5">
+                  <div className="bg-pink/10 mx-4 mb-2 flex min-w-[250px] flex-col gap-1 rounded-md p-4 lg:absolute lg:right-14 lg:top-10 lg:w-1/5">
                     {/* need to be fixed */}
                     <p className="text-center font-bold">TimeToken Price</p>
                     {!isLoading && user && (
                       <>
                         {user.TokenPrice.length > 0 && (
                           <LineChart
-                            className="-ml-5 h-40"
+                            className="h-24 bg-white p-1"
                             data={user.TokenPrice.map((v) => ({
                               price: v.price,
                               createdDate: v.createdDate.toLocaleDateString("en-US", {
@@ -344,22 +343,18 @@ function TimeTokensWallet() {
                             showLegend={false}
                           />
                         )}
-                        <ButtonGroup combined>
-                          <Input {...formMethods.register("price")} type="number" />
-                          <Button
-                            className="text-[.5rem] sm:text-sm"
-                            color="secondary"
-                            variant="icon"
-                            disabled>
-                            {user.currency.toUpperCase() || "EUR"}
-                          </Button>
-                        </ButtonGroup>
+                        <InputField
+                          label=""
+                          addOnLeading={user.currency.toUpperCase() || "EUR"}
+                          {...formMethods.register("price")}
+                          type="number"
+                        />
                       </>
                     )}
                     <Button
                       loading={mutation.isLoading}
                       disabled={isDisabled}
-                      className="bg-pink/20 hover:bg-pink/10 text-pink w-full rounded-full text-center"
+                      className="bg-pink/20 hover:bg-pink/10 text-secondary flex w-full items-center justify-center !rounded-full"
                       type="submit">
                       {t("update")} {t("token_price")}
                     </Button>

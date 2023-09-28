@@ -56,7 +56,7 @@ function CustomExpertTable(props: CustomExpertTableProps) {
   return (
     <div>
       {expertsData.length === 0 && (
-        <div className="w-full px-1 sm:px-4 2xl:w-2/3">
+        <div className="w-full px-1 sm:px-4">
           <EmptyScreen
             Icon={Newspaper}
             headline={t("no_expert_data")}
