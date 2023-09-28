@@ -18,6 +18,7 @@ import {
 import Loader from "@components/Loader";
 import Footer from "@components/auth/Footer";
 import type { LinkProps } from "@components/auth/Footer";
+import MicroCards from "@components/microcard";
 import PriceListItem from "@components/prices/PriceListItem";
 import CarouselDemo from "@components/ui/CarouselDemo";
 
@@ -355,8 +356,10 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
               </div>
             </div>
             <div className="flex flex-1 flex-col  justify-start sm:px-6 lg:px-8">
-              <div className="mx-auto flex-row">
-                <Image src="/qube-side-pic.svg" width={320} height={575} alt="standing_auth" />
+              <div className="mx-auto h-[60vh] flex-row">
+                <div className="h-full w-full">
+                  <MicroCards />
+                </div>
               </div>
               <div className="mx-auto mt-5 flex flex-row gap-4">
                 <div className="my-auto cursor-pointer flex-col">

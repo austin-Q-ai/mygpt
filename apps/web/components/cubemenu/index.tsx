@@ -108,6 +108,9 @@ export const CubeMenu: React.FC = () => {
       // Render scene with camera
       renderer.render(scene, camera);
 
+      // Update orbitcontrols
+      controls.update();
+
       // Call animate() again on the next frame
       requestRef.current = requestAnimationFrame(animate);
     };
