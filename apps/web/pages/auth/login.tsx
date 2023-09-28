@@ -5,7 +5,6 @@ import type { GetServerSidePropsContext } from "next";
 import { getCsrfToken, signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import type { CSSProperties } from "react";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { FaGoogle } from "react-icons/fa";
@@ -16,11 +15,12 @@ import { ErrorCode } from "@calcom/features/auth/lib/ErrorCode";
 import { getServerSession } from "@calcom/features/auth/lib/getServerSession";
 import { isSAMLLoginEnabled, samlProductID, samlTenantID } from "@calcom/features/ee/sso/lib/saml";
 import { WEBAPP_URL, WEBSITE_URL } from "@calcom/lib/constants";
+import getBrandColours from "@calcom/lib/getBrandColours";
 import { getSafeRedirectUrl } from "@calcom/lib/getSafeRedirectUrl";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { collectPageParameters, telemetryEventTypes, useTelemetry } from "@calcom/lib/telemetry";
 import prisma from "@calcom/prisma";
-import { Alert, Button, EmailField, PasswordField } from "@calcom/ui";
+import { Alert, Button, EmailField, PasswordField, useCalcomTheme } from "@calcom/ui";
 import { ArrowLeft } from "@calcom/ui/components/icon";
 
 import type { inferSSRProps } from "@lib/types/inferSSRProps";
@@ -50,6 +50,13 @@ export default function Login({
   totpEmail,
 }: inferSSRProps<typeof _getServerSideProps> & WithNonceProps) {
   const { t } = useLocale();
+
+  const brandTheme = getBrandColours({
+    lightVal: "#6d278e",
+    darkVal: "#fafafa",
+  });
+  useCalcomTheme(brandTheme);
+
   const router = useRouter();
   const formSchema = z
     .object({
@@ -137,14 +144,15 @@ export default function Login({
 
   return (
     <div
-      style={
-        {
-          "--cal-brand": "#111827",
-          "--cal-brand-emphasis": "#101010",
-          "--cal-brand-text": "white",
-          "--cal-brand-subtle": "#9CA3AF",
-        } as CSSProperties
-      }>
+    // style={
+    //   {
+    //     "--cal-brand": "#111827",
+    //     "--cal-brand-emphasis": "#101010",
+    //     "--cal-brand-text": "white",
+    //     "--cal-brand-subtle": "#9CA3AF",
+    //   } as CSSProperties
+    // }
+    >
       <AuthContainer
         title={t("login")}
         description={t("login")}
@@ -210,9 +218,9 @@ export default function Login({
                 <div className="w-full flex-col">
                   <Button
                     type="submit"
-                    color="secondary"
+                    color="primary"
                     disabled={formState.isSubmitting}
-                    className="!bg-pink w-full  justify-center p-2 text-lg !text-white">
+                    className="w-full  justify-center p-2 text-lg">
                     {twoFactorRequired ? t("submit") : t("sign_in")}
                   </Button>
                 </div>
@@ -220,7 +228,8 @@ export default function Login({
                   <Link
                     href="/signup"
                     type="submit"
-                    className="text-pink border-pink hover:bg-muted w-full justify-center rounded-md border p-2 text-center text-lg">
+                    color="secondary"
+                    className="hover:bg-muted w-full justify-center rounded-md border p-2 text-center text-lg">
                     {t("got_it_for_free")}
                   </Link>
                 </div>
