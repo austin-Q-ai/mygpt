@@ -17,7 +17,7 @@ import MicroCards from "@components/microcard";
 
 const MicroCardTestPage = () => {
   return (
-    <div className="w-1/2">
+    <div className="h-screen w-1/2">
       <MicroCards />
     </div>
   );
