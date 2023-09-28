@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { Prisma } from "@prisma/client";
 import { MeiliSearch } from "meilisearch";
 import type { NextApiResponse, GetServerSidePropsContext } from "next";
@@ -197,6 +198,11 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
         data: {
           price: {
             push: price,
+          },
+          TokenPrice: {
+            create: {
+              price: price,
+            },
           },
         },
       });

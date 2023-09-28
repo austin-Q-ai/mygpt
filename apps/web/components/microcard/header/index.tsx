@@ -14,7 +14,7 @@ interface headerProps {
 const Header = (props: headerProps) => {
   const { title, description, hasCalendar, isAI } = props;
   return (
-    <div className="bg-pink/50 flex min-h-[25vh] flex-col gap-3 py-4">
+    <div className="bg-pink/50 flex h-[25vh] flex-col gap-3 py-4">
       <div className={classNames("flex items-center justify-center", hasCalendar && "relative")}>
         <div className="relative flex rounded-full border-2 border-dashed border-white p-2">
           <Avatar

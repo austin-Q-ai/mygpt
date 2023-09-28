@@ -814,7 +814,7 @@ const TopItem = (props: topItemProps) => {
   const { StartIcon, label } = props;
   return (
     <div className="flex items-center">
-      <div className="bg-pink/10 m-1 flex h-8 w-8 items-center justify-center rounded-full p-1">
+      <div className="bg-pink/10 m-1 flex h-8 w-8 items-center justify-center rounded-full p-2">
         <StartIcon className="opacity-50" />
       </div>
       <p className="mr-6 text-sm">{t(label)}</p>
