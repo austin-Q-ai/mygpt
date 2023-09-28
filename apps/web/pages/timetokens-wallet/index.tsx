@@ -19,13 +19,14 @@ import { trpc } from "@calcom/trpc/react";
 import {
   Select,
   Button,
+  ButtonGroup,
   Avatar,
   Badge,
   ConfirmationDialogContent,
   Dialog,
   Form,
+  Input,
   showToast,
-  TextField,
 } from "@calcom/ui";
 import { Plus } from "@calcom/ui/components/icon";
 
@@ -121,7 +122,7 @@ function TimeTokensWallet() {
 
   const mutation = trpc.viewer.updateProfile.useMutation({
     onSuccess: () => {
-      showToast(t("settings_updated_successfully"), "success");
+      showToast(t("profile_updated_successfully"), "success");
       utils.viewer.me.invalidate();
     },
     onError: () => {
@@ -282,7 +283,7 @@ function TimeTokensWallet() {
           return (
             <>
               <div className="flex flex-col-reverse justify-between lg:flex-row">
-                <div className="mb-8 flex w-full items-center justify-center gap-4 px-1 sm:mb-12 sm:px-4 lg:w-2/3">
+                <div className="mb-8 flex w-full items-center justify-center gap-4 px-1 sm:mb-12 sm:px-4 lg:mt-[150px] lg:w-2/3">
                   <Select
                     options={expertOptions}
                     components={{
@@ -321,7 +322,8 @@ function TimeTokensWallet() {
                 </div>
                 {/* Time Token Price update Graph  */}
                 <Form form={formMethods} handleSubmit={onSubmit}>
-                  <div className="bg-pink/10 mx-2 mb-4 flex flex-col gap-3 rounded-md p-4 lg:absolute lg:right-14 lg:top-10 lg:w-1/5">
+                  <div className="bg-pink/10 mx-2 mb-4 flex min-w-[250px] flex-col gap-1 rounded-md p-4 lg:absolute lg:right-14 lg:top-10 lg:w-1/5">
+                    {/* need to be fixed */}
                     <p className="text-center font-bold">TimeToken Price</p>
                     {!isLoading && user && (
                       <>
@@ -339,20 +341,19 @@ function TimeTokensWallet() {
                             colors={["green"]}
                             categories={["price"]}
                             valueFormatter={valueFormatter}
+                            showLegend={false}
                           />
                         )}
-                        <div className="flex gap-3">
-                          <TextField
-                            label={t("token_price")}
-                            {...formMethods.register("price")}
-                            type="number"
-                          />
-                          <TextField
-                            label={user.currency || "usd"}
-                            {...formMethods.register("priceUnit")}
-                            readOnly
-                          />
-                        </div>
+                        <ButtonGroup combined>
+                          <Input {...formMethods.register("price")} type="number" />
+                          <Button
+                            className="text-[.5rem] sm:text-sm"
+                            color="secondary"
+                            variant="icon"
+                            disabled>
+                            {user.currency.toUpperCase() || "EUR"}
+                          </Button>
+                        </ButtonGroup>
                       </>
                     )}
                     <Button
@@ -360,7 +361,7 @@ function TimeTokensWallet() {
                       disabled={isDisabled}
                       className="bg-pink/20 hover:bg-pink/10 text-pink w-full rounded-full text-center"
                       type="submit">
-                      Update Price
+                      {t("update")} {t("token_price")}
                     </Button>
                   </div>
                 </Form>
