@@ -1,12 +1,13 @@
-import { InfoIcon, LogOut, Menu, Mic, SendIcon, X } from "lucide-react";
+import classNames from "classnames";
+import { BotIcon, InfoIcon, LogOut, Menu, Mic, SendIcon, X } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import useGetBrandingColours from "@calcom/lib/getBrandColours";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
-import { Dialog, DialogContent, DialogTrigger, HeadSeo, TextField, useCalcomTheme } from "@calcom/ui";
+import { Button, HeadSeo, TextField, useCalcomTheme } from "@calcom/ui";
 
 import PageWrapper from "@components/PageWrapper";
 import Footer from "@components/auth/Footer";
@@ -24,34 +25,156 @@ export default function ExpertClone() {
     lightVal: "#6d278e",
     darkVal: "#fafafa",
   });
+  interface socialLinksType {
+    image: string;
+    url: string;
+  }
+  const socialLinks: socialLinksType[] = [
+    {
+      image: "telegram",
+      url: "/",
+    },
+    {
+      image: "facebook",
+      url: "/",
+    },
+    {
+      image: "discord",
+      url: "/",
+    },
+    {
+      image: "instagram",
+      url: "/",
+    },
+    {
+      image: "linkedin-in",
+      url: "/",
+    },
+  ];
   useCalcomTheme(brandTheme);
   const session = useSession();
   const { status } = session;
   const [authModalFlag, setAuthModalFlag] = useState(false);
   const [selectedTab, setSelectedTab] = useState("");
-
+  const [searchText, setSearchText] = useState("");
+  const [searchResultFlag, setSearchResultFlag] = useState(false);
+  const [toggleSideMenuFlag, setToggleSideMenu] = useState(false);
+  const sideMenuRef = useRef<HTMLInputElement>(null);
   const toggleAuthMadal = (flag: boolean, sign: string) => {
     console.log("open Modal");
     setAuthModalFlag(flag);
     setSelectedTab(sign);
   };
+
+  const handleSearch = (e: any) => {
+    e.preventDefault();
+    setSearchResultFlag(true);
+  };
+
+  const changeSearchValue = (e: any) => {
+    setSearchResultFlag(false);
+    setSearchText(e.target.value);
+  };
+
+  const toggleSideMenu = (flag: boolean) => {
+    console.log("open side menu");
+    setToggleSideMenu(flag);
+  };
+
+  useEffect(() => {
+    const handleSideMenu = (e: any) => {
+      if (e.target === sideMenuRef.current) {
+        return;
+      }
+      toggleSideMenu(false);
+    };
+    window.addEventListener("click", handleSideMenu, true);
+    return () => {
+      window.removeEventListener("click", handleSideMenu, true);
+    };
+  });
   return (
-    <div className="  h-[100vh] flex-1">
+    <div className="h-[100vh] flex-1">
+      <div
+        ref={sideMenuRef}
+        className={classNames(
+          "transition-2 absolute z-50 !h-[100vh] w-[50%] bg-white md:w-[20%]",
+          toggleSideMenuFlag ? "" : "hidden"
+        )}>
+        <div className="flex flex-col ">
+          <div className="flex flex-row justify-between gap-4 p-4">
+            <div className="flex-col">
+              <Image src="/my-gpt-logo.svg" alt="" width={140} height={40} />
+            </div>
+            <div className="flex-col">
+              <Button
+                onClick={() => toggleSideMenu(false)}
+                StartIcon={X}
+                variant="icon"
+                size="lg"
+                color="minimal"
+                className="!p-none text-secondary border-0"
+              />
+            </div>
+          </div>
+
+          <div className="text-secondary flex flex-row justify-center p-4 text-xl font-medium">HISTORY</div>
+
+          <div className="absolute bottom-0 flex w-full flex-row justify-center py-4">
+            <div className="m-4 flex w-full flex-col md:mx-8">
+              <div className="text-secondary mb-6 flex flex-row justify-center">
+                <div
+                  className="text-secondary flex cursor-pointer flex-row gap-1 "
+                  onClick={() => toggleAuthMadal(true, "sign_in")}>
+                  <LogOut className="h-12 w-8 flex-col" />
+                  <div className="flex flex-col">
+                    <div className="text-md flex-row">{t("sign_in")}</div>
+                    <div className="text-md flex-row">{t("sign_up")}</div>
+                  </div>
+                </div>
+              </div>
+              <div className="flex flex-row justify-between">
+                {socialLinks.map((item, index) => {
+                  return (
+                    <div className="" key={index}>
+                      <Link
+                        className="fill-pink flex flex-col justify-items-center"
+                        href={item.url}
+                        target="_blank">
+                        <Image
+                          alt={item.image}
+                          src={"/app-social/" + item.image + ".svg"}
+                          className="text-secondary border-pink round !fill-pink  rounded-full border p-2 hover:bg-gray-100"
+                          width={35}
+                          height={35}
+                        />
+                      </Link>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <HeadSeo title="Experts Clone" description="Experts Clone." />
       <div className="text-secondary flex flex-row justify-between px-6 py-4">
         <div className="flex flex-col">
-          <Menu width={30} height={30} />
+          <Menu
+            width={30}
+            height={30}
+            className="cursor-pointer hover:bg-white"
+            onClick={() => toggleSideMenu(true)}
+          />
         </div>
         <div className="flex flex-col">
-          <div className="flex flex-row gap-1">
+          <div
+            className="flex cursor-pointer flex-row gap-1"
+            onClick={() => toggleAuthMadal(true, "sign_in")}>
             <LogOut className="h-8 w-6 flex-col" />
             <div className="flex flex-col">
-              <Link href="/auth/login" className="flex-row text-xs">
-                {t("sign_in")}
-              </Link>
-              <Link href="/signup" className="flex-row text-xs">
-                {t("sign_up")}
-              </Link>
+              <div className="flex-row text-xs">{t("sign_in")}</div>
+              <div className="flex-row text-xs">{t("sign_up")}</div>
             </div>
           </div>
         </div>
@@ -61,8 +184,9 @@ export default function ExpertClone() {
           <div className="flex-row">
             <Image src="/expert-clone-side.svg" width={415} height={71} alt="expert-clone-side" />
           </div>
-          <div className="relative flex flex-row">
+          <form onSubmit={(e) => handleSearch(e)} className="relative flex flex-row">
             <TextField
+              onChange={(e) => changeSearchValue(e)}
               autoComplete="off"
               // addOnLeading={<Search color="#6D278E" />}
               addOnSuffix={
@@ -76,43 +200,6 @@ export default function ExpertClone() {
               inputMode="search"
               className="!border-secondary text-secondary selection:border-secondary placeholder:text-secondary/60 !w-full !bg-transparent py-2 text-2xl"
             />
-            {status === "authenticated" && (
-              <Dialog>
-                <DialogTrigger asChild>
-                  <div className="absolute h-full w-full">{null}</div>
-                </DialogTrigger>
-                <DialogContent
-                  className="to-emphasis bg-gradient-to-b from-gray-100"
-                  size="md"
-                  Icon={X}
-                  title={t("")}>
-                  <div className="flex flex-col justify-center">
-                    <div className="flex flex-row justify-center">
-                      <Image src="/robotics.webp" alt="robotics" width={200} height={200} />
-                    </div>
-                    <div className="my-4 flex flex-row justify-center">
-                      <p className="text-secondary mx-14 text-center">
-                        {t("sorry_you_cannot_engage_in_discussions")}. Please{" "}
-                        <Link
-                          href="#"
-                          onClick={() => toggleAuthMadal(true, "sign_up")}
-                          className="flex-row font-medium hover:underline">
-                          {t("sign_up")}
-                        </Link>{" "}
-                        or{" "}
-                        <Link
-                          href="#"
-                          onClick={() => toggleAuthMadal(true, "sign_in")}
-                          className="flex-row font-medium hover:underline">
-                          {t("sign_in")}
-                        </Link>{" "}
-                        to continue.
-                      </p>
-                    </div>
-                  </div>
-                </DialogContent>
-              </Dialog>
-            )}
 
             {authModalFlag && (
               <AuthModal
@@ -131,6 +218,19 @@ export default function ExpertClone() {
               className="absolute"
               style={{ top: "-18", right: "-18" }}
             />
+          </form>
+          <div className="flex flex-row">
+            {searchResultFlag && (
+              <>
+                <BotIcon
+                  color="white"
+                  width={50}
+                  height={50}
+                  className="border-subtle bg-brand-default rounded-md border p-2"
+                />
+                <span className="text-subtle mx-6 my-auto font-medium">{searchText}</span>
+              </>
+            )}
           </div>
         </div>
         <div className="col-span-1">
