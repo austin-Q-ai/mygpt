@@ -89,6 +89,7 @@ export default function ForgotPassword({ csrfToken }: { csrfToken: string }) {
 
   return (
     <AuthContainer
+      hideFooter
       showLogo
       title={!success ? t("forgot_password") : t("reset_link_sent")}
       heading={!success ? t("forgot_password") : t("reset_link_sent")}
@@ -104,7 +105,7 @@ export default function ForgotPassword({ csrfToken }: { csrfToken: string }) {
       }>
       {success && <Success />}
       {!success && (
-        <>
+        <div className="my-6 md:mx-8">
           <div className="space-y-6">{error && <p className="text-red-600">{error.message}</p>}</div>
           <form
             className="space-y-6"
@@ -141,7 +142,7 @@ export default function ForgotPassword({ csrfToken }: { csrfToken: string }) {
               </Button>
             </div>
           </form>
-        </>
+        </div>
       )}
     </AuthContainer>
   );
