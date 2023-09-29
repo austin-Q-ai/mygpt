@@ -62,6 +62,9 @@ export const ZUpdateProfileInputSchema = z.object({
   timeFormat: z.number().optional(),
   disableImpersonation: z.boolean().optional(),
   metadata: userMetadata.optional(),
+  aiAdvantage: z.array(z.string()).optional(),
+  timeTokenAdvantage: z.array(z.string()).optional(),
+  defaultValue: z.boolean().optional(),
 });
 
 export type TUpdateProfileInputSchema = z.infer<typeof ZUpdateProfileInputSchema>;

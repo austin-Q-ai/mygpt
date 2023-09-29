@@ -11,7 +11,11 @@ import { CoordonneesPage } from "./screens/coordonnees";
 import { ServicesPage } from "./screens/services";
 import { TimeTokenPage } from "./screens/timetoken";
 
-const MicroCards: React.FC = () => {
+interface MicroCardsProps {
+  userId?: number | undefined;
+}
+
+const MicroCards: React.FC<MicroCardsProps> = (props: MicroCardsProps) => {
   const router = useRouter();
   const { t } = useLocale();
 
@@ -158,10 +162,10 @@ const MicroCards: React.FC = () => {
     <div className="h-full w-full">
       <div ref={sceneRef} className="flex h-full w-full items-center justify-center" />
       <div>
-        <CoordonneesPage ref={aiRef} />
-        <AIPage ref={coordonneesRef} />
-        <TimeTokenPage ref={servicesRef} />
-        <ServicesPage ref={timetokenRef} />
+        <CoordonneesPage ref={aiRef} userId={props.userId || 3} />
+        <AIPage ref={coordonneesRef} userId={props.userId || 3} />
+        <TimeTokenPage ref={servicesRef} userId={props.userId || 3} />
+        <ServicesPage ref={timetokenRef} userId={props.userId || 3} />
       </div>
     </div>
   );

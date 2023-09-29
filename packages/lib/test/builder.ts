@@ -227,6 +227,8 @@ export const buildUser = <T extends Partial<UserPayload>>(user?: T): UserPayload
     verified: false,
     weekStart: "",
     organizationId: null,
+    aiAdvantage: [],
+    timeTokenAdvantage: [],
     ...user,
   };
 };

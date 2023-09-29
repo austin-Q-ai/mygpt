@@ -52,5 +52,7 @@ export const meHandler = async ({ ctx }: MeOptions) => {
     allowDynamicBooking: user.allowDynamicBooking,
     organizationId: user.organizationId,
     organization: user.organization,
+    aiAdvantage: user.aiAdvantage,
+    timeTokenAdvantage: user.timeTokenAdvantage,
   };
 };

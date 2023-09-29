@@ -15,6 +15,7 @@ import { bookingsRouter } from "./bookings/_router";
 import { deploymentSetupRouter } from "./deploymentSetup/_router";
 import { eventTypesRouter } from "./eventTypes/_router";
 import { googleWorkspaceRouter } from "./googleWorkspace/_router";
+import { microcardRouter } from "./microcard/_router";
 import { viewerOrganizationsRouter } from "./organizations/_router";
 import { paymentsRouter } from "./payments/_router";
 import { slotsRouter } from "./slots/_router";
@@ -26,7 +27,7 @@ import { workflowsRouter } from "./workflows/_router";
 
 export const viewerRouter = mergeRouters(
   loggedInViewerRouter,
-  router({                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+  router({
     loggedInViewerRouter,
     public: publicViewerRouter,
     auth: authRouter,
@@ -51,6 +52,7 @@ export const viewerRouter = mergeRouters(
     appsRouter,
     users: userAdminRouter,
     googleWorkspace: googleWorkspaceRouter,
+    microcard: microcardRouter,
     admin: adminRouter,
   })
 );
