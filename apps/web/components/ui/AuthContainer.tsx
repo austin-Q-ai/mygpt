@@ -21,6 +21,7 @@ interface Props {
   footerText?: React.ReactNode | string;
   showLogo?: boolean;
   heading?: string;
+  hideFooter?: boolean;
   loading?: boolean;
 }
 
@@ -252,8 +253,8 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
           </div>
         </div>
       ) : (
-        <>
-          <div className="flex flex-row">
+        <div className="md:grid md:!max-h-screen md:grid-rows-6">
+          <div className="flex flex-row md:row-span-1">
             <div className="mx-6 flex flex-1 flex-col justify-center bg-[#f3f4f6] py-4 sm:px-6 lg:px-4">
               <HeadSeo title={props.title} description={props.description} />
               <div className=" mb-auto flex justify-between">
@@ -317,8 +318,8 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
               </div>
             </div>
           </div>
-          <div className="flex flex-row  flex-wrap ">
-            <div className=" mt-12 flex flex-col justify-center  bg-[#f3f4f8] py-1 pt-4 sm:mx-2  md:mx-4 lg:mx-8 lg:flex-1 lg:px-4">
+          <div className="flex flex-row  flex-wrap md:row-span-4">
+            <div className="flex flex-col justify-center  bg-[#f3f4f8] py-1 pt-4 sm:mx-2  md:mx-4 lg:mx-8 lg:flex-1 lg:px-4">
               <div className="">
                 <div
                   className={classNames(props.showLogo ? "" : "", "flex-row sm:mx-2 sm:w-full sm:max-w-md")}>
@@ -337,12 +338,12 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                   <div className="mx-2 px-2 py-10 sm:px-2">{props.children}</div>
                   {/* <div className="text-default mt-8 text-center text-sm">{props.footerText}</div> */}
                 </div>
-                <div className="mt-5">
+                <div className="">
                   {/* <Image src="/standing-auth.svg" width={423} height={175} alt="standing_auth" /> */}
                   <div className="h-[175px] sm:w-[375px] md:w-[423px]">
                     <CarouselDemo />
                   </div>
-                  <p className="text-muted mx-3 mt-8 break-words sm:w-full sm:max-w-md md:mt-5 lg:w-[80%] lg:max-w-[80%]">
+                  <p className="text-muted mx-3 mt-4 break-words sm:w-full sm:max-w-md md:mt-5 lg:w-[80%] lg:max-w-[80%]">
                     {t("your_artifitial_footer")}
                   </p>
                 </div>
@@ -364,10 +365,12 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
               </div>
             </div>
           </div>
-          <div className="bottom-0 flex flex-row">
-            <Footer items={footerLinks} />
-          </div>
-        </>
+          {!props.hideFooter ? (
+            <div className="flex flex-row  md:row-span-1 md:my-auto">
+              <Footer items={footerLinks} />
+            </div>
+          ) : null}
+        </div>
       )}
     </>
   );

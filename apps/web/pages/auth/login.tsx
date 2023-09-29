@@ -229,7 +229,7 @@ export default function Login({
                     href="/signup"
                     type="submit"
                     color="secondary"
-                    className="hover:bg-muted w-full justify-center rounded-md border p-2 text-center text-lg">
+                    className="hover:bg-muted w-full justify-center rounded-md border p-1 text-center text-lg">
                     {t("sign_up")}
                   </Link>
                 </div>

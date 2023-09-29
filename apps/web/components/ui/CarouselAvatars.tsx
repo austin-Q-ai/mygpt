@@ -38,7 +38,7 @@ export default function CarouselDemo() {
           <div
             className={`${
               hasPrev ? "absolute" : "hidden"
-            } bottom-0 left-0 top-0 z-20 flex cursor-pointer items-center justify-center p-3 opacity-30 hover:opacity-100`}
+            } bottom-0 left-0 top-0 z-20 flex cursor-pointer items-center justify-center opacity-30 hover:opacity-100`}
             onClick={clickHandler}>
             <ChevronLeft className="text-emphasis h-7 w-7" />
           </div>
@@ -49,7 +49,7 @@ export default function CarouselDemo() {
           <div
             className={`${
               hasNext ? "absolute" : "hidden"
-            } bottom-0 right-0 top-0 z-20 flex cursor-pointer items-center justify-center p-3 opacity-30 hover:opacity-100`}
+            } bottom-0 right-0 top-0 z-20 flex cursor-pointer items-center justify-center opacity-30 hover:opacity-100`}
             onClick={clickHandler}>
             <ChevronRight className="text-emphasis h-7 w-7" />
           </div>
