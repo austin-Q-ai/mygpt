@@ -230,7 +230,7 @@ export default function Login({
                     type="submit"
                     color="secondary"
                     className="hover:bg-muted w-full justify-center rounded-md border p-2 text-center text-lg">
-                    {t("got_it_for_free")}
+                    {t("sign_up")}
                   </Link>
                 </div>
               </div>

@@ -22,6 +22,7 @@ export default function CarouselDemo() {
   }, []);
   return (
     <Carousel
+      autoPlay
       dynamicHeight
       showIndicators={false}
       showArrows={true}
