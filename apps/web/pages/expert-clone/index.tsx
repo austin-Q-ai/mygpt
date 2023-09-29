@@ -11,6 +11,7 @@ import { Button, HeadSeo, ScrollableArea, TextField, useCalcomTheme } from "@cal
 
 import PageWrapper from "@components/PageWrapper";
 import Footer from "@components/auth/Footer";
+import MicroCards from "@components/microcard";
 import { footerLinks } from "@components/ui/AuthContainer";
 
 import AuthModal from "./components/AuthModal";
@@ -278,7 +279,12 @@ export default function ExpertClone() {
           </div>
         </div>
         <div className={classNames(qaList.length > 0 ? "hidden" : "col-span-1")}>
-          <Image src="/expert-clone-banner.svg" width={362} height={672} alt="expert-clone-banner" />
+          {/* <Image src="/expert-clone-banner.svg" width={362} height={672} alt="expert-clone-banner" /> */}
+          <div className="mx-auto h-[70vh] flex-row">
+            <div className="h-full w-full">
+              <MicroCards />
+            </div>
+          </div>
         </div>
       </div>
       <div className="flex flex-row">
