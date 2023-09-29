@@ -10,38 +10,43 @@ export const ZUpdateProfileInputSchema = z.object({
   email: z.string().optional(),
   position: z.string().optional(),
   address: z.string().optional(),
-  experiences: z.array(
-    z.object({
-      id: z.number().optional(),
-      key: z.string().optional(),
-      position: z.string(),
-      company: z.string(),
-      address: z.string().optional(),
-      startMonth: z.number().optional(),
-      startYear: z.number().optional(),
-      endMonth: z.number().optional(),
-      endYear: z.number().optional(),
-      avatar: z.nullable(z.string()),
-      userId: z.number().optional(),
-      delete: z.boolean().optional(),
-    })
-  ).optional(),
-  educations: z.array(
-    z.object({
-      id: z.number().optional(),
-      key: z.string().optional(),
-      school: z.string(),
-      major: z.string().optional(),
-      degree: z.string().optional(),
-      startMonth: z.number().optional(),
-      startYear: z.number().optional(),
-      endMonth: z.number().optional(),
-      endYear: z.number().optional(),
-      avatar: z.nullable(z.string()),
-      userId: z.number().optional(),
-      delete: z.boolean().optional(),
-    })
-  ).optional(),
+  currency: z.string().optional(),
+  experiences: z
+    .array(
+      z.object({
+        id: z.number().optional(),
+        key: z.string().optional(),
+        position: z.string(),
+        company: z.string(),
+        address: z.string().optional(),
+        startMonth: z.number().optional(),
+        startYear: z.number().optional(),
+        endMonth: z.number().optional(),
+        endYear: z.number().optional(),
+        avatar: z.nullable(z.string()),
+        userId: z.number().optional(),
+        delete: z.boolean().optional(),
+      })
+    )
+    .optional(),
+  educations: z
+    .array(
+      z.object({
+        id: z.number().optional(),
+        key: z.string().optional(),
+        school: z.string(),
+        major: z.string().optional(),
+        degree: z.string().optional(),
+        startMonth: z.number().optional(),
+        startYear: z.number().optional(),
+        endMonth: z.number().optional(),
+        endYear: z.number().optional(),
+        avatar: z.nullable(z.string()),
+        userId: z.number().optional(),
+        delete: z.boolean().optional(),
+      })
+    )
+    .optional(),
   skills: z.array(z.string()).optional(),
   bio: z.string().optional(),
   avatar: z.string().optional(),
