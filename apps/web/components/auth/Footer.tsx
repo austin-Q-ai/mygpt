@@ -8,7 +8,7 @@ import { useLocale } from "@calcom/lib/hooks/useLocale";
 import type { SVGComponent } from "@calcom/types/SVGComponent";
 import { Button, Dialog, DialogContent, DialogTrigger } from "@calcom/ui";
 
-import Benifits from "@components/auth/Benifits";
+import Benefits from "@components/auth/Benefits";
 import Features from "@components/auth/Features";
 import UseCases from "@components/auth/UseCases";
 
@@ -25,13 +25,13 @@ type FooterPropsTypes = {
   items: LinkProps[];
   className?: string;
 };
-type nameKey = "benifits" | "features" | "use cases";
+type nameKey = "benefits" | "features" | "use cases";
 interface ModalsMapType {
   [key: string]: JSX.Element;
 }
 
 const ModalsMap: ModalsMapType = {
-  benifits: <Benifits />,
+  benefits: <Benefits />,
   features: <Features />,
   "use cases": <UseCases />,
 } as const;

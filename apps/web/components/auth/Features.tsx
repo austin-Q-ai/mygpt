@@ -8,21 +8,21 @@ const features = [
     id: 1,
     title: "Data security",
     description:
-      "Explore the latest advancements in AI, dive into thought-provoking discussions, and participate in stimulating challenges. Our platform opens the doors to endless opportunities to learn, share, and create.",
+      "In utilizing MyGPT, a significant benefit for data security is the inherent ability to generate responses in real-time without storing personal user information, thereby reducing the risk of sensitive data leakage or exposure.",
     img: "/app-features/data-secuirty.svg",
   },
   {
     id: 2,
     title: "Cloud Storage",
     description:
-      "Explore the latest advancements in AI, dive into thought-provoking discussions, and participate in stimulating challenges. Our platform opens the doors to endless opportunities to learn, share, and create.",
+      "Accessibility and scalability it offers, allowing users to access data from anywhere with an internet connection and easily adjust storage capacity based on needs, all while often enhancing data security through encrypted protection measures.",
     img: "/app-features/cloud-storage.svg",
   },
   {
     id: 3,
     title: "Daily Analytics",
     description:
-      "Explore the latest advancements in AI, dive into thought-provoking discussions, and participate in stimulating challenges. Our platform opens the doors to endless opportunities to learn, share, and create.",
+      "Ability to make informed and data-driven decisions promptly. By analyzing data on a daily basis, organizations can detect trends, monitor performance, and identify areas for improvement or optimization rapidly, enabling more agile and responsive operations.",
     img: "/app-features/daily-analytic.svg",
   },
 ];
