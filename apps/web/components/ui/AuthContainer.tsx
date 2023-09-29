@@ -319,7 +319,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
             </div>
           </div>
           <div className="flex flex-row  flex-wrap md:row-span-4">
-            <div className=" mt-12 flex flex-col justify-center  bg-[#f3f4f8] py-1 pt-4 sm:mx-2  md:mx-4 lg:mx-8 lg:flex-1 lg:px-4">
+            <div className="flex flex-col justify-center  bg-[#f3f4f8] py-1 pt-4 sm:mx-2  md:mx-4 lg:mx-8 lg:flex-1 lg:px-4">
               <div className="">
                 <div
                   className={classNames(props.showLogo ? "" : "", "flex-row sm:mx-2 sm:w-full sm:max-w-md")}>
