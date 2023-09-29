@@ -324,7 +324,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                 <div
                   className={classNames(props.showLogo ? "" : "", "flex-row sm:mx-2 sm:w-full sm:max-w-md")}>
                   {props.heading && (
-                    <h2 className="text-emphasis line-height-2  text-center font-sans text-3xl font-medium leading-normal md:text-left md:text-4xl">
+                    <h2 className="text-emphasis line-height-2  mx-6 text-center font-sans text-3xl font-medium leading-normal md:mx-0 md:text-left md:text-4xl">
                       {t("empower_with_ai_reveal")}
                     </h2>
                   )}
@@ -360,7 +360,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                   <CarouselAvatars />
                 </div>
               </div>
-              <div className="flew-row text-muted mx-auto mt-2 justify-center font-sans font-medium">
+              <div className="flew-row text-muted mx-auto my-4 justify-center font-sans font-medium md:mt-2">
                 {t("more_than_25k_experts_use_myqpt")}
               </div>
             </div>

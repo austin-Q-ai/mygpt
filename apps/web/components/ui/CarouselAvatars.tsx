@@ -30,7 +30,7 @@ export default function CarouselDemo() {
       showThumbs={false}
       interval={5000}
       centerMode
-      centerSlidePercentage={windowWidth > 375 ? 20 : 12}
+      centerSlidePercentage={windowWidth > 375 ? 20 : 4}
       transitionTime={900}
       infiniteLoop
       renderArrowPrev={(clickHandler, hasPrev) => {
@@ -55,16 +55,16 @@ export default function CarouselDemo() {
           </div>
         );
       }}>
-      <div className="relative w-20 pt-[75%]">
+      <div className="relative    pt-[75%]  md:w-20">
         <Image
           src="/app-members/1.svg"
           alt="avatar1"
           width={20}
           height={20}
-          className="left-0 top-0 w-20 rounded-2xl object-cover"
+          className="left-0 top-0 rounded-2xl object-cover"
         />
       </div>
-      <div className="relative w-20 pt-[75%]">
+      <div className="relative   pt-[75%]  md:w-20">
         <Image
           src="/app-members/2.svg"
           alt="avatar2"
@@ -73,7 +73,7 @@ export default function CarouselDemo() {
           className="left-0 top-0 rounded-2xl object-cover"
         />
       </div>
-      <div className="relative w-20 pt-[75%]">
+      <div className="relative   pt-[75%]  md:w-20">
         <Image
           src="/app-members/3.svg"
           alt="avatar3"
@@ -82,7 +82,7 @@ export default function CarouselDemo() {
           className="left-0 top-0 rounded-2xl object-cover"
         />
       </div>
-      <div className="relative w-20 pt-[75%]">
+      <div className="relative   pt-[75%]  md:w-20">
         <Image
           src="/app-members/4.svg"
           alt="avatar4"
@@ -91,7 +91,7 @@ export default function CarouselDemo() {
           className="left-0 top-0 rounded-2xl object-cover"
         />
       </div>
-      <div className="relative w-20 pt-[75%]">
+      <div className="relative   pt-[75%]  md:w-20">
         <Image
           src="/app-members/5.svg"
           alt="avatar5"
@@ -100,7 +100,7 @@ export default function CarouselDemo() {
           className="left-0 top-0 rounded-2xl object-cover"
         />
       </div>
-      <div className="relative w-20 pt-[75%]">
+      <div className="relative   pt-[75%]  md:w-20">
         <Image
           src="/app-members/6.svg"
           alt="avatar6"
@@ -109,7 +109,7 @@ export default function CarouselDemo() {
           className="left-0 top-0 rounded-2xl object-cover"
         />
       </div>
-      <div className="relative w-20 pt-[75%]">
+      <div className="relative   pt-[75%]  md:w-20">
         <Image
           src="/app-members/8.jpeg"
           alt="avatar8"
@@ -118,7 +118,7 @@ export default function CarouselDemo() {
           className="left-0 top-0 rounded-2xl object-cover"
         />
       </div>
-      <div className="relative w-20 pt-[75%]">
+      <div className="relative   pt-[75%]  md:w-20">
         <Image
           src="/app-members/9.jpeg"
           alt="avatar9"
@@ -127,7 +127,7 @@ export default function CarouselDemo() {
           className="left-0 top-0 rounded-2xl object-cover"
         />
       </div>
-      <div className="relative w-20 pt-[75%]">
+      <div className="relative   pt-[75%]  md:w-20">
         <Image
           src="/app-members/10.jpeg"
           alt="avatar10"
@@ -136,7 +136,7 @@ export default function CarouselDemo() {
           className="left-0 top-0 rounded-2xl object-cover"
         />
       </div>
-      <div className="relative w-20 pt-[75%]">
+      <div className="relative   pt-[75%]  md:w-20">
         <Image
           src="/app-members/11.jpeg"
           alt="avatar11"
@@ -145,7 +145,7 @@ export default function CarouselDemo() {
           className="left-0 top-0 rounded-2xl object-cover"
         />
       </div>
-      <div className="relative w-20 pt-[75%]">
+      <div className="relative   pt-[75%]  md:w-20">
         <Image
           src="/app-members/12.png"
           alt="avatar12"
@@ -154,7 +154,7 @@ export default function CarouselDemo() {
           className="left-0 top-0 rounded-2xl object-cover"
         />
       </div>
-      <div className="relative w-20 pt-[75%]">
+      <div className="relative   pt-[75%]  md:w-20">
         <Image
           src="/app-members/13.jpeg"
           alt="avatar13"
@@ -163,7 +163,7 @@ export default function CarouselDemo() {
           className="left-0 top-0 rounded-2xl object-cover"
         />
       </div>
-      <div className="relative w-20 pt-[75%]">
+      <div className="relative   pt-[75%]  md:w-20">
         <Image
           src="/app-members/14.jpeg"
           alt="avatar14"
@@ -172,7 +172,7 @@ export default function CarouselDemo() {
           className="left-0 top-0 rounded-2xl object-cover"
         />
       </div>
-      <div className="relative w-20 pt-[75%]">
+      <div className="relative   pt-[75%]  md:w-20">
         <Image
           src="/app-members/15.jpeg"
           alt="avatar15"
