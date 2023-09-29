@@ -56,7 +56,7 @@ const buttonClasses = cva(
       },
       size: {
         sm: "px-3 py-2 leading-4 rounded-sm" /** For backwards compatibility */,
-        base: "h-11 px-4 py-2.5 ",
+        base: "h-9 px-4 py-2.5 ",
         lg: "h-[36px] px-4 py-1.5 ",
       },
       loading: {
@@ -106,7 +106,7 @@ const buttonClasses = cva(
       {
         variant: "fab",
         size: "base",
-        className: "h-14 md:h-11 md:w-[36px] md:px-4 md:py-2.5",
+        className: "h-14 md:h-9 md:w-[36px] md:px-4 md:py-2.5",
       },
     ],
     defaultVariants: {

@@ -657,8 +657,8 @@ const NavigationItem: React.FC<{
           className={classNames(
             "[&[aria-current='page']]:bg-pink/80  text-default group flex items-center rounded-md bg-opacity-80 px-2 py-1.5 text-sm font-medium",
             isChild
-              ? `[&[aria-current='page']]:bg-brand-default hidden h-8 pl-16 lg:flex lg:pl-11 [&[aria-current='page']]:text-white ${
-                  props.index === 0 ? "mx-3 mt-2" : "mx-3"
+              ? `hidden h-8 pl-16 lg:flex lg:pl-11 [&[aria-current='page']]:bg-transparent [&[aria-current='page']]:text-white ${
+                  props.index === 0 ? "mt-0" : "mt-px"
                 }`
               : "mt-0.5 text-sm [&[aria-current='page']]:text-white",
             isLocaleReady ? "hover:bg-emphasis hover:text-emphasis" : ""
