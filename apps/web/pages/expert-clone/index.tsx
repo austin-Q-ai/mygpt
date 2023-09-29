@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { BotIcon, InfoIcon, LogOut, Menu, Mic, SendIcon, X } from "lucide-react";
+import { InfoIcon, LogOut, Menu, Mic, SendIcon, X } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from "react";
 
 import useGetBrandingColours from "@calcom/lib/getBrandColours";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
-import { Button, HeadSeo, TextField, useCalcomTheme } from "@calcom/ui";
+import { Button, HeadSeo, ScrollableArea, TextField, useCalcomTheme } from "@calcom/ui";
 
 import PageWrapper from "@components/PageWrapper";
 import Footer from "@components/auth/Footer";
@@ -51,6 +51,11 @@ export default function ExpertClone() {
       url: "/",
     },
   ];
+  type qaType = {
+    question: string;
+    answer: string;
+  };
+
   useCalcomTheme(brandTheme);
   const session = useSession();
   const { status } = session;
@@ -59,9 +64,12 @@ export default function ExpertClone() {
   const [searchText, setSearchText] = useState("");
   const [searchResultFlag, setSearchResultFlag] = useState(false);
   const [toggleSideMenuFlag, setToggleSideMenu] = useState(false);
-  const sideMenuRef = useRef<HTMLInputElement>(null);
+  const [qaList, setQaList] = useState<qaType[]>([]);
+  const searchInput = useRef<HTMLInputElement>(null);
+  const sideMenuRef = useRef<HTMLDivElement>(null);
+  const answersRef = useRef<HTMLDivElement>(null);
+
   const toggleAuthMadal = (flag: boolean, sign: string) => {
-    console.log("open Modal");
     setAuthModalFlag(flag);
     setSelectedTab(sign);
   };
@@ -69,15 +77,26 @@ export default function ExpertClone() {
   const handleSearch = (e: any) => {
     e.preventDefault();
     setSearchResultFlag(true);
+    const data = {
+      question: searchText,
+      answer: searchText,
+    };
+    if (searchInput.current) {
+      setSearchText("");
+      searchInput.current.value = "";
+      searchText ? setQaList([...qaList, data]) : null;
+    }
   };
 
+  useEffect(() => {
+    answersRef?.current?.scrollIntoView({ behavior: "smooth" });
+  }, [qaList]);
+
   const changeSearchValue = (e: any) => {
-    setSearchResultFlag(false);
     setSearchText(e.target.value);
   };
 
   const toggleSideMenu = (flag: boolean) => {
-    console.log("open side menu");
     setToggleSideMenu(flag);
   };
 
@@ -179,7 +198,13 @@ export default function ExpertClone() {
           </div>
         </div>
       </div>
-      <div className="mb-16 grid flex-row flex-wrap justify-items-center md:grid-cols-2 md:justify-items-start">
+      <div
+        className={classNames(
+          qaList.length > 0
+            ? " md:grid-cols-1  md:justify-items-center"
+            : " md:grid-cols-2  md:justify-items-start",
+          "mb-16 grid flex-row flex-wrap justify-items-center"
+        )}>
         <div className="col-span-1 mx-16 flex flex-col justify-center gap-6">
           <div className="flex-row">
             <Image src="/expert-clone-side.svg" width={415} height={71} alt="expert-clone-side" />
@@ -187,6 +212,7 @@ export default function ExpertClone() {
           <form onSubmit={(e) => handleSearch(e)} className="relative flex flex-row">
             <TextField
               onChange={(e) => changeSearchValue(e)}
+              ref={searchInput}
               autoComplete="off"
               // addOnLeading={<Search color="#6D278E" />}
               addOnSuffix={
@@ -219,26 +245,44 @@ export default function ExpertClone() {
               style={{ top: "-18", right: "-18" }}
             />
           </form>
-          <div className="flex flex-row">
-            {searchResultFlag && (
-              <>
-                <BotIcon
+          <div className="flex w-full flex-row">
+            <div className="flex w-full flex-col">
+              {searchResultFlag && (
+                <>
+                  {/* <BotIcon
                   color="white"
                   width={50}
                   height={50}
                   className="border-subtle bg-brand-default rounded-md border p-2"
-                />
-                <span className="text-subtle mx-6 my-auto font-medium">{searchText}</span>
-              </>
-            )}
+                /> */}
+                  <ScrollableArea className="h-[550px] w-full">
+                    {qaList.map((qa, index) => {
+                      return (
+                        <div
+                          className="py-2"
+                          key={index}
+                          ref={index === qaList.length - 1 ? answersRef : null}>
+                          <div className="text-subtle mx-6 my-auto flex flex-row font-bold">
+                            Q- {qa.question}
+                          </div>
+                          <div className="text-subtle mx-6 my-auto flex flex-row font-medium">
+                            A- {qa.answer}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </ScrollableArea>
+                </>
+              )}
+            </div>
           </div>
         </div>
-        <div className="col-span-1">
+        <div className={classNames(qaList.length > 0 ? "hidden" : "col-span-1")}>
           <Image src="/expert-clone-banner.svg" width={362} height={672} alt="expert-clone-banner" />
         </div>
       </div>
       <div className="flex flex-row">
-        <Footer items={footerLinks} />
+        <Footer items={footerLinks} className="md:absolute md:bottom-0" />
       </div>
     </div>
   );
