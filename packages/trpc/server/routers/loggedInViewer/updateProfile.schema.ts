@@ -10,38 +10,42 @@ export const ZUpdateProfileInputSchema = z.object({
   email: z.string().optional(),
   position: z.string().optional(),
   address: z.string().optional(),
-  experiences: z.array(
-    z.object({
-      id: z.number().optional(),
-      key: z.string().optional(),
-      position: z.string(),
-      company: z.string(),
-      address: z.string().optional(),
-      startMonth: z.number().optional(),
-      startYear: z.number().optional(),
-      endMonth: z.number().optional(),
-      endYear: z.number().optional(),
-      avatar: z.nullable(z.string()),
-      userId: z.number().optional(),
-      delete: z.boolean().optional(),
-    })
-  ).optional(),
-  educations: z.array(
-    z.object({
-      id: z.number().optional(),
-      key: z.string().optional(),
-      school: z.string(),
-      major: z.string().optional(),
-      degree: z.string().optional(),
-      startMonth: z.number().optional(),
-      startYear: z.number().optional(),
-      endMonth: z.number().optional(),
-      endYear: z.number().optional(),
-      avatar: z.nullable(z.string()),
-      userId: z.number().optional(),
-      delete: z.boolean().optional(),
-    })
-  ).optional(),
+  experiences: z
+    .array(
+      z.object({
+        id: z.number().optional(),
+        key: z.string().optional(),
+        position: z.string(),
+        company: z.string(),
+        address: z.string().optional(),
+        startMonth: z.number().optional(),
+        startYear: z.number().optional(),
+        endMonth: z.number().optional(),
+        endYear: z.number().optional(),
+        avatar: z.nullable(z.string()),
+        userId: z.number().optional(),
+        delete: z.boolean().optional(),
+      })
+    )
+    .optional(),
+  educations: z
+    .array(
+      z.object({
+        id: z.number().optional(),
+        key: z.string().optional(),
+        school: z.string(),
+        major: z.string().optional(),
+        degree: z.string().optional(),
+        startMonth: z.number().optional(),
+        startYear: z.number().optional(),
+        endMonth: z.number().optional(),
+        endYear: z.number().optional(),
+        avatar: z.nullable(z.string()),
+        userId: z.number().optional(),
+        delete: z.boolean().optional(),
+      })
+    )
+    .optional(),
   skills: z.array(z.string()).optional(),
   bio: z.string().optional(),
   avatar: z.string().optional(),
@@ -57,6 +61,9 @@ export const ZUpdateProfileInputSchema = z.object({
   timeFormat: z.number().optional(),
   disableImpersonation: z.boolean().optional(),
   metadata: userMetadata.optional(),
+  aiAdvantage: z.array(z.string()).optional(),
+  timeTokenAdvantage: z.array(z.string()).optional(),
+  defaultValue: z.boolean().optional(),
 });
 
 export type TUpdateProfileInputSchema = z.infer<typeof ZUpdateProfileInputSchema>;

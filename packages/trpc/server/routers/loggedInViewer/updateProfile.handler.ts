@@ -37,8 +37,10 @@ const index = client.index("users");
 
 export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions) => {
   const { user } = ctx;
+  const input1: TUpdateProfileInputSchema = input;
+  delete input1.defaultValue;
   const data: Prisma.UserUpdateInput = {
-    ...input,
+    ...input1,
     experiences: input.experiences
       ? {
           updateMany: input.experiences
@@ -84,7 +86,16 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
         }
       : {},
     metadata: input.metadata as Prisma.InputJsonValue,
-    aiAdvantage: [
+  };
+
+  const price: number = input.price || 0;
+
+  if (price) {
+    delete data.price;
+  }
+
+  if (input.defaultValue) {
+    data.aiAdvantage = [
       "Increased Efficiency",
       "24/7 Availability",
       "Rapid Data Processing",
@@ -94,8 +105,8 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
       "Personalized Services",
       "Reduced Operational Costs",
       "Improved Quality of Products or Services",
-    ],
-    timeTokenAdvantage: [
+    ];
+    data.timeTokenAdvantage = [
       "Efficient Time Management",
       "Transparency and Traceability",
       "Flexibility and Liquidity",
@@ -105,13 +116,7 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
       "Task Automation",
       "Transferability and Interoperability",
       "User Engagement and Loyalty",
-    ],
-  };
-
-  const price: number = input.price || 0;
-
-  if (price) {
-    delete data.price;
+    ];
   }
 
   let isPremiumUsername = false;

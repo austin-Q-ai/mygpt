@@ -64,6 +64,7 @@ const UserSettings = (props: IUserSettingsProps) => {
       name: data.name,
       price: parseInt(data.price),
       timeZone: selectedTimeZone,
+      defaultValue: true,
     });
   });
 
