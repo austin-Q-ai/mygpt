@@ -25,6 +25,7 @@ const ENDPOINTS = [
   "availability",
   "bookings",
   "timetokenswallet",
+  "microcard",
   "deploymentSetup",
   "eventTypes",
   "features",

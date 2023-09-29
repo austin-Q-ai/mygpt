@@ -84,6 +84,28 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
         }
       : {},
     metadata: input.metadata as Prisma.InputJsonValue,
+    aiAdvantage: [
+      "Increased Efficiency",
+      "24/7 Availability",
+      "Rapid Data Processing",
+      "Data-Driven Decision Making",
+      "Reduction of Human Errors",
+      "Task Flexibility",
+      "Personalized Services",
+      "Reduced Operational Costs",
+      "Improved Quality of Products or Services",
+    ],
+    timeTokenAdvantage: [
+      "Efficient Time Management",
+      "Transparency and Traceability",
+      "Flexibility and Liquidity",
+      "Global Accessibility",
+      "Customization",
+      "Reduced Transaction Fees",
+      "Task Automation",
+      "Transferability and Interoperability",
+      "User Engagement and Loyalty",
+    ],
   };
 
   const price: number = input.price || 0;

@@ -284,6 +284,8 @@ model User {
   emitterTimeTokens            TimeTokensWallet[]      @relation("emitter_relation")
   ownerTimeTokensTransaction   TimeTokensTransaction[] @relation("owner_relation")
   emitterTimeTokensTransaction TimeTokensTransaction[] @relation("emitter_relation")
+  aiAdvantage                  String[]
+  timeTokenAdvantage           String[]
 
   @@unique([email])
   @@unique([email, username])
