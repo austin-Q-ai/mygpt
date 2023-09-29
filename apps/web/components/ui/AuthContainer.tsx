@@ -5,21 +5,14 @@ import { useEffect, useState } from "react";
 
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { Button, Dialog, HeadSeo, DialogContent, DialogTrigger, ScrollableArea } from "@calcom/ui";
-import {
-  ChevronLeft,
-  ChevronRight,
-  LogOut,
-  Menu,
-  MessageSquare,
-  Share2,
-  X,
-} from "@calcom/ui/components/icon";
+import { LogOut, Menu, MessageSquare, Share2, X } from "@calcom/ui/components/icon";
 
 import Loader from "@components/Loader";
 import Footer from "@components/auth/Footer";
 import type { LinkProps } from "@components/auth/Footer";
 import MicroCards from "@components/microcard";
 import PriceListItem from "@components/prices/PriceListItem";
+import CarouselAvatars from "@components/ui/CarouselAvatars";
 import CarouselDemo from "@components/ui/CarouselDemo";
 
 interface Props {
@@ -33,7 +26,7 @@ interface Props {
 
 export const footerLinks: LinkProps[] = [
   {
-    name: "Benifits",
+    name: "Benefits",
     url: "/",
     type: "modal",
     col: 3,
@@ -361,31 +354,12 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                   <MicroCards />
                 </div>
               </div>
-              <div className="mx-auto mt-5 flex flex-row gap-4">
-                <div className="my-auto cursor-pointer flex-col">
-                  <ChevronLeft />
-                </div>
-                {members.map((member) => {
-                  return (
-                    <div
-                      key={member.id}
-                      data-testid={`app-store-member-${member.id}`}
-                      className="relative flex-col content-center rounded-md">
-                      <Image
-                        src={"/app-members/" + member.id + ".svg"}
-                        width={100}
-                        height={100}
-                        alt={member.alt}
-                        className="h-fit w-fit rounded-full"
-                      />
-                    </div>
-                  );
-                })}
-                <div className="my-auto cursor-pointer flex-col">
-                  <ChevronRight />
+              <div className="mx-auto my-5 flex flex-row gap-4">
+                <div className="h-[60px] sm:w-[300px] md:w-[423px]">
+                  <CarouselAvatars />
                 </div>
               </div>
-              <div className="flew-row text-muted mt-2 text-center font-sans font-medium">
+              <div className="flew-row text-muted mx-auto mt-2 justify-center font-sans font-medium">
                 {t("more_than_25k_experts_use_myqpt")}
               </div>
             </div>
