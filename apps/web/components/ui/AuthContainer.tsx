@@ -338,12 +338,12 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                   <div className="mx-2 px-2 py-10 sm:px-2">{props.children}</div>
                   {/* <div className="text-default mt-8 text-center text-sm">{props.footerText}</div> */}
                 </div>
-                <div className="mt-5">
+                <div className="">
                   {/* <Image src="/standing-auth.svg" width={423} height={175} alt="standing_auth" /> */}
                   <div className="h-[175px] sm:w-[375px] md:w-[423px]">
                     <CarouselDemo />
                   </div>
-                  <p className="text-muted mx-3 mt-8 break-words sm:w-full sm:max-w-md md:mt-5 lg:w-[80%] lg:max-w-[80%]">
+                  <p className="text-muted mx-3 mt-4 break-words sm:w-full sm:max-w-md md:mt-5 lg:w-[80%] lg:max-w-[80%]">
                     {t("your_artifitial_footer")}
                   </p>
                 </div>
