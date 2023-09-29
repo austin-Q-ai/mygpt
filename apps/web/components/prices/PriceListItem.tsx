@@ -1,19 +1,27 @@
+import getBrandColours from "@calcom/lib/getBrandColours";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
-import { Button } from "@calcom/ui";
+import { Button, useCalcomTheme } from "@calcom/ui";
 import { ArrowRight, CheckCircle2 } from "@calcom/ui/components/icon";
 
 type PriceListItemProps = {
   priceItem: { name: string; features: string[]; ipDevice: string; password: string };
 };
+
 export default function PriceListItem({ priceItem: props }: PriceListItemProps) {
   const { t } = useLocale();
+  const brandTheme = getBrandColours({
+    lightVal: "#6d278e",
+    darkVal: "#fafafa",
+  });
+  console.log(brandTheme);
+  useCalcomTheme(brandTheme);
   return (
     <div className="container col-span-1 my-4 flex flex-col rounded-md border bg-white p-3 shadow md:my-0">
       <div className="my-3 h-3/4 flex-row">
         {props.features.map((feature) => {
           return (
             <div className="my-2 flex flex-row gap-2 " key={feature}>
-              <CheckCircle2 className="h-5 w-5 text-white " fill="#5d2782" />
+              <CheckCircle2 className="h-5 w-5 text-white " fill="#6d278e" />
               <span className=" w-full text-xs">{t(feature)}</span>
             </div>
           );
@@ -29,7 +37,7 @@ export default function PriceListItem({ priceItem: props }: PriceListItemProps) 
             {t("read_and_accept_the_terms_and_conditions")}
           </div>
           <div className="flex-row text-center">
-            <Button className="!hover:bg-[#5d278270] !bg-[#5d2782] !text-white" EndIcon={ArrowRight}>
+            <Button color="primary" EndIcon={ArrowRight}>
               {t("sign_up")}
             </Button>
           </div>
