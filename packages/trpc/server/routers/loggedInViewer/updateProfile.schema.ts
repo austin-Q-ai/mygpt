@@ -10,6 +10,7 @@ export const ZUpdateProfileInputSchema = z.object({
   email: z.string().optional(),
   position: z.string().optional(),
   address: z.string().optional(),
+  currency: z.string().optional(),
   experiences: z
     .array(
       z.object({

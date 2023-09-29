@@ -8,44 +8,46 @@ import { ScrollableArea } from "@calcom/ui";
 type benifitType = {
   id: number;
   name: string;
-  subBenifits: string[];
+  subBenefits: string[];
 };
-const mainBenifits = [
+const mainBenefits = [
   {
     id: 1,
-    name: "Confiance Client et Fidélisation avec Ergonomie Exclusive",
-    subBenifits: [
-      "Connaissance à jour : Restez toujours au fait des dernières informations grâce aux suggestions automatisées de l'IA.",
-      "Gestion automatisée : Simplifiez la gestion de vos informations et partagez-les plus efficacement grâce à l'IA.",
-      "Gagnez du temps : L'IA vous permet de répondre plus rapidement à vos clients, vous laissant plus de temps pour d'autres tâches essentielles.",
-      "Réduction des erreurs : L'IA contribue à éviter les erreurs humaines, garantissant une qualité de service constante.",
-      "Suggestions automatisées : L'IA vous propose des suggestions pour réponses, analyses et rapports, augmentant votre efficacité.",
-      "Gestion centralisée : L'IA simplifie la gestion en regroupant et en organisant les informations clés de manière intelligente.",
+    name: "Customer Trust and Loyalty with Exclusive Ergonomics",
+    subBenefits: [
+      "Strengthened Relationships: Exclusive ergonomics fosters customer trust and loyalty by enhancing user interactions and experiences, establishing a more harmonious relationship with customers.",
+      "Enhanced User Experience: Exclusive ergonomics ensures that users have a seamless and intuitive experience, keeping them satisfied and more likely to return.",
+      "Positive Brand Perception: A focus on user-friendly design and functionality contributes to a positive brand image, encouraging customer loyalty and trust.",
+      "Increased Customer Retention: With improved ergonomics, customers are more likely to continue using the service/product, contributing to long-term success.",
+      "Reduced User Frustration: By prioritizing user-centered design, the instances of user frustration and dissatisfaction are minimized, fostering a more trusting relationship.",
+      "Personalized Interactions: Exclusive ergonomics enables more personalized and user-focused interactions, making customers feel valued and understood.",
+      "Consistent User Interface: A uniform and consistent interface assures users of the quality and reliability of the service, solidifying their trust and loyalty.",
     ],
   },
   {
     id: 2,
-    name: "Accroissement de Productivité au sein de l'Organisation",
-    subBenifits: [
-      "Réponses rapides : Notre IA génère des réponses instantanées, réduisant ainsi les délais d'attente pour vos clients.",
-      "Connaissance à jour : Restez toujours au fait des dernières informations grâce aux suggestions automatisées de l'IA.",
-      "Gestion automatisée : Simplifiez la gestion de vos informations et partagez-les plus efficacement grâce à l'IA.",
-      "Gagnez du temps : L'IA vous permet de répondre plus rapidement à vos clients, vous laissant plus de temps pour d'autres tâches essentielles.",
-      "Réduction des erreurs : L'IA contribue à éviter les erreurs humaines, garantissant une qualité de service constante.",
-      "Suggestions automatisées : L'IA vous propose des suggestions pour réponses, analyses et rapports, augmentant votre efficacité.",
-      "Gestion centralisée : L'IA simplifie la gestion en regroupant et en organisant les informations clés de manière intelligente.",
+    name: "Increase in Productivity within the Organization",
+    subBenefits: [
+      "Quick Responses: Our AI generates instant responses, thereby reducing waiting times for your customers.",
+      `Up-to-Date Knowledge: Always stay informed of the latest information thanks to the AI’s automated suggestions.`,
+      "Automated Management: Simplify the management of your information and share it more efficiently thanks to AI.",
+      "Save Time: AI allows you to respond to your customers more quickly, freeing up more time for other essential tasks.",
+      "Reduction of Errors: AI helps to avoid human errors, ensuring consistent quality of service.",
+      "Automated Suggestions: AI offers suggestions for responses, analyses, and reports, increasing your efficiency.",
+      "Centralized Management: AI simplifies management by compiling and organizing key information intelligently.",
     ],
   },
   {
     id: 3,
-    name: "Marketing Vis-à-Vis de l'Extérieur et Veille Technique",
-    subBenifits: [
-      "Réponses rapides : Notre IA génère des réponses instantanées, réduisant ainsi les délais d'attente pour vos clients.",
-      "Connaissance à jour : Restez toujours au fait des dernières informations grâce aux suggestions automatisées de l'IA.",
-      "Gestion automatisée : Simplifiez la gestion de vos informations et partagez-les plus efficacement grâce à l'IA.",
-      "Gagnez du temps : L'IA vous permet de répondre plus rapidement à vos clients, vous laissant plus de temps pour d'autres tâches essentielles.",
-      "Réduction des erreurs : L'IA contribue à éviter les erreurs humaines, garantissant une qualité de service constante.",
-      "Gestion centralisée : L'IA simplifie la gestion en regroupant et en organisant les informations clés de manière intelligente.",
+    name: "External Facing Marketing and Technical Monitoring",
+    subBenefits: [
+      "Brand Visibility: External facing marketing elevates the presence and visibility of your brand to the broader public, attracting potential customers and partnerships.",
+      "Targeted Outreach: With external facing marketing, reach your target audience more effectively by tailoring your messaging to suit their preferences and needs, optimizing engagement.",
+      "Competitive Edge: Technical monitoring enables the identification of market trends and the activities of competitors, allowing for strategic positioning and advantage.",
+      "Enhanced Reputation: By showcasing innovations, achievements, and advancements, external marketing enhances the overall reputation and perceived value of the organization.",
+      "Risk Mitigation: Technical monitoring allows for the early detection of potential issues or vulnerabilities, enabling proactive resolutions and mitigating risks.",
+      "Informed Decision-Making: The insights gained from technical monitoring inform strategic decisions, aligning operations with market demands and trends.",
+      "Real-time Adjustments: The constant flow of data from technical monitoring allows for real-time adjustments and optimizations, ensuring the relevancy and effectiveness of strategies.",
     ],
   },
 ];
@@ -76,17 +78,17 @@ const members = [
     id: 6,
   },
 ];
-export default function Benifits() {
+export default function Benefits() {
   const { t } = useLocale();
-  const [benifitSelected, setBenifit] = useState<number>(2);
-  const [subBenifit, setSubBenifits] = useState<string[] | null>(null);
+  const [benifitSelected, setBenifit] = useState<number>(1);
+  const [subBenifit, setSubBenefits] = useState<string[] | null>(null);
 
   const handleSetBenifit = (item: benifitType) => {
     if (benifitSelected === item.id) {
       return;
     }
     setBenifit(item.id);
-    setSubBenifits(item.subBenifits);
+    setSubBenefits(item.subBenefits);
   };
   const scrollableArea = useRef<HTMLDivElement>(null);
   let reachedBottom = false;
@@ -151,12 +153,12 @@ export default function Benifits() {
   });
 
   useEffect(() => {
-    const selectedBenifit: benifitType[] = mainBenifits.filter((item) => item.id === benifitSelected);
+    const selectedBenifit: benifitType[] = mainBenefits.filter((item) => item.id === benifitSelected);
     const valueToBeSet =
-      selectedBenifit[0].subBenifits !== undefined && selectedBenifit[0].subBenifits.length > 0
-        ? selectedBenifit[0].subBenifits
+      selectedBenifit[0].subBenefits !== undefined && selectedBenifit[0].subBenefits.length > 0
+        ? selectedBenifit[0].subBenefits
         : null;
-    setSubBenifits(valueToBeSet);
+    setSubBenefits(valueToBeSet);
     if (scrollableArea.current) {
       console.log(scrollableArea.current.children[0].scrollTop);
       scrollableArea.current.children[0].scrollTop = 0;
@@ -165,7 +167,7 @@ export default function Benifits() {
     }
   }, [benifitSelected]);
   return (
-    <div className="grid grid-cols-1 md:h-[600px] md:grid-cols-3">
+    <div className="grid grid-cols-1 md:h-[620px] md:grid-cols-3">
       <div className="col-span-1 mx-4 flex">
         <div className="flex h-full flex-col justify-center md:mr-4 md:px-2 ">
           <div className="flex-row">
@@ -173,7 +175,7 @@ export default function Benifits() {
           </div>
           <div className=" my-4 flex flex-row">
             <div className="flex-col">
-              {mainBenifits.map((benifit) => {
+              {mainBenefits.map((benifit) => {
                 return (
                   <div
                     key={benifit.id}
@@ -205,7 +207,7 @@ export default function Benifits() {
 
       <div className="col-span-2 flex flex-col justify-center px-3">
         <div className="flex flex-row justify-center">
-          <div className="flex  md:-space-x-6 ">
+          <div className="flex  md:-space-x-6">
             {members.map((member) => {
               return (
                 <Image
@@ -214,7 +216,7 @@ export default function Benifits() {
                   width={90}
                   height={90}
                   alt={member.alt}
-                  className="inline-block !h-full !w-full !overflow-hidden rounded-full ring-8 ring-[#E9E2EF] md:ring-gray-100"
+                  className="inline-block !h-full !w-full !overflow-hidden rounded-full ring-4 ring-[#E9E2EF] md:ring-8 md:ring-[#F0EFF4]"
                 />
               );
             })}

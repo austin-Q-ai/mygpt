@@ -154,7 +154,7 @@ export default function Signup({ prepopulateFormValues, token, orgSlug }: Signup
                   {!token && (
                     <Button
                       color="secondary"
-                      className="w-full justify-center"
+                      className="hover:bg-muted w-full justify-center rounded-md border p-2 text-center text-sm"
                       onClick={() =>
                         signIn("Cal.com", {
                           callbackUrl: router.query.callbackUrl

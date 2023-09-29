@@ -5,21 +5,14 @@ import { useEffect, useState } from "react";
 
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { Button, Dialog, HeadSeo, DialogContent, DialogTrigger, ScrollableArea } from "@calcom/ui";
-import {
-  ChevronLeft,
-  ChevronRight,
-  LogOut,
-  Menu,
-  MessageSquare,
-  Share2,
-  X,
-} from "@calcom/ui/components/icon";
+import { LogOut, Menu, MessageSquare, Share2, X } from "@calcom/ui/components/icon";
 
 import Loader from "@components/Loader";
 import Footer from "@components/auth/Footer";
 import type { LinkProps } from "@components/auth/Footer";
 import MicroCards from "@components/microcard";
 import PriceListItem from "@components/prices/PriceListItem";
+import CarouselAvatars from "@components/ui/CarouselAvatars";
 import CarouselDemo from "@components/ui/CarouselDemo";
 
 interface Props {
@@ -28,12 +21,13 @@ interface Props {
   footerText?: React.ReactNode | string;
   showLogo?: boolean;
   heading?: string;
+  hideFooter?: boolean;
   loading?: boolean;
 }
 
 export const footerLinks: LinkProps[] = [
   {
-    name: "Benifits",
+    name: "Benefits",
     url: "/",
     type: "modal",
     col: 3,
@@ -259,8 +253,8 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
           </div>
         </div>
       ) : (
-        <>
-          <div className="flex flex-row">
+        <div className="md:grid md:!max-h-screen md:grid-rows-6">
+          <div className="flex flex-row md:row-span-1">
             <div className="mx-6 flex flex-1 flex-col justify-center bg-[#f3f4f6] py-4 sm:px-6 lg:px-4">
               <HeadSeo title={props.title} description={props.description} />
               <div className=" mb-auto flex justify-between">
@@ -324,8 +318,8 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
               </div>
             </div>
           </div>
-          <div className="flex flex-row  flex-wrap ">
-            <div className=" mt-12 flex flex-col justify-center  bg-[#f3f4f8] py-1 pt-4 sm:mx-2  md:mx-4 lg:mx-8 lg:flex-1 lg:px-4">
+          <div className="flex flex-row  flex-wrap md:row-span-4">
+            <div className="flex flex-col justify-center  bg-[#f3f4f8] py-1 pt-4 sm:mx-2  md:mx-4 lg:mx-8 lg:flex-1 lg:px-4">
               <div className="">
                 <div
                   className={classNames(props.showLogo ? "" : "", "flex-row sm:mx-2 sm:w-full sm:max-w-md")}>
@@ -344,12 +338,12 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                   <div className="mx-2 px-2 py-10 sm:px-2">{props.children}</div>
                   {/* <div className="text-default mt-8 text-center text-sm">{props.footerText}</div> */}
                 </div>
-                <div className="mt-5">
+                <div className="">
                   {/* <Image src="/standing-auth.svg" width={423} height={175} alt="standing_auth" /> */}
                   <div className="h-[175px] sm:w-[375px] md:w-[423px]">
                     <CarouselDemo />
                   </div>
-                  <p className="text-muted mx-3 mt-8 break-words sm:w-full sm:max-w-md md:mt-5 lg:w-[80%] lg:max-w-[80%]">
+                  <p className="text-muted mx-3 mt-4 break-words sm:w-full sm:max-w-md md:mt-5 lg:w-[80%] lg:max-w-[80%]">
                     {t("your_artifitial_footer")}
                   </p>
                 </div>
@@ -361,39 +355,22 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                   <MicroCards />
                 </div>
               </div>
-              <div className="mx-auto mt-5 flex flex-row gap-4">
-                <div className="my-auto cursor-pointer flex-col">
-                  <ChevronLeft />
-                </div>
-                {members.map((member) => {
-                  return (
-                    <div
-                      key={member.id}
-                      data-testid={`app-store-member-${member.id}`}
-                      className="relative flex-col content-center rounded-md">
-                      <Image
-                        src={"/app-members/" + member.id + ".svg"}
-                        width={100}
-                        height={100}
-                        alt={member.alt}
-                        className="h-fit w-fit rounded-full"
-                      />
-                    </div>
-                  );
-                })}
-                <div className="my-auto cursor-pointer flex-col">
-                  <ChevronRight />
+              <div className="mx-auto my-5 flex flex-row gap-4">
+                <div className="h-[60px] sm:w-[300px] md:w-[423px]">
+                  <CarouselAvatars />
                 </div>
               </div>
-              <div className="flew-row text-muted mt-2 text-center font-sans font-medium">
+              <div className="flew-row text-muted mx-auto mt-2 justify-center font-sans font-medium">
                 {t("more_than_25k_experts_use_myqpt")}
               </div>
             </div>
           </div>
-          <div className="bottom-0 flex flex-row">
-            <Footer items={footerLinks} />
-          </div>
-        </>
+          {!props.hideFooter ? (
+            <div className="flex flex-row  md:row-span-1 md:my-auto">
+              <Footer items={footerLinks} />
+            </div>
+          ) : null}
+        </div>
       )}
     </>
   );

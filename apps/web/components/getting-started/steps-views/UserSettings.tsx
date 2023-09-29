@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { components } from "react-select";
 import { z } from "zod";
 
 import dayjs from "@calcom/dayjs";
@@ -8,8 +9,8 @@ import { FULL_NAME_LENGTH_MAX_LIMIT } from "@calcom/lib/constants";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { telemetryEventTypes, useTelemetry } from "@calcom/lib/telemetry";
 import { trpc } from "@calcom/trpc/react";
-import { Button, TimezoneSelect } from "@calcom/ui";
-import { ArrowRight } from "@calcom/ui/components/icon";
+import { Button, Select, TimezoneSelect, Tooltip } from "@calcom/ui";
+import { ArrowRight, AlertCircle } from "@calcom/ui/components/icon";
 
 import { UsernameAvailabilityField } from "@components/ui/UsernameAvailability";
 
@@ -17,9 +18,26 @@ interface IUserSettingsProps {
   nextStep: () => void;
 }
 
+type CurrencyOptionType = {
+  label: string;
+  value: string;
+};
+
+const currencyOption: CurrencyOptionType[] = [
+  {
+    label: "US Dollar(USD)",
+    value: "usd",
+  },
+  {
+    label: "Euro(EUR)",
+    value: "eur",
+  },
+];
+
 const UserSettings = (props: IUserSettingsProps) => {
   const { nextStep } = props;
   const [user] = trpc.viewer.me.useSuspenseQuery();
+  const [currency, setCurrency] = useState<string>("usd");
   const { t } = useLocale();
   const [selectedTimeZone, setSelectedTimeZone] = useState(dayjs.tz.guess());
   const telemetry = useTelemetry();
@@ -45,6 +63,14 @@ const UserSettings = (props: IUserSettingsProps) => {
     resolver: zodResolver(userSettingsSchema),
   });
 
+  const CustomOption = ({ value, label }: CurrencyOptionType) => {
+    return (
+      <div className="flex items-center">
+        <span>{label}</span>
+      </div>
+    );
+  };
+
   useEffect(() => {
     telemetry.event(telemetryEventTypes.onboardingStarted);
   }, [telemetry]);
@@ -65,6 +91,7 @@ const UserSettings = (props: IUserSettingsProps) => {
       price: parseInt(data.price),
       timeZone: selectedTimeZone,
       defaultValue: true,
+      currency: currency,
     });
   });
 
@@ -120,6 +147,38 @@ const UserSettings = (props: IUserSettingsProps) => {
             </p>
           )}
         </div>
+
+        {/* Currency select field */}
+        <div className="w-full">
+          <label htmlFor="Currency" className="text-default block text-sm font-medium">
+            {t("currency")}
+          </label>
+
+          <div className="flex items-center">
+            <Select
+              id="currency"
+              options={currencyOption}
+              components={{
+                Option: (props) => {
+                  return (
+                    <components.Option {...props}>
+                      <CustomOption value={props.data.value} label={props.data.label} />
+                    </components.Option>
+                  );
+                },
+              }}
+              onChange={(event) => {
+                setCurrency(event?.value || "eur");
+              }}
+              className="mt-2 w-full rounded-md text-sm"
+            />
+
+            <Tooltip content="You define your base currency once and you can't change it later">
+              <AlertCircle className="ml-2 h-4 w-4 text-black/10" />
+            </Tooltip>
+          </div>
+        </div>
+
         {/* Timezone select field */}
         <div className="w-full">
           <label htmlFor="timeZone" className="text-default block text-sm font-medium">
