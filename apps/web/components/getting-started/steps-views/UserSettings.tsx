@@ -166,7 +166,9 @@ const UserSettings = (props: IUserSettingsProps) => {
                   );
                 },
               }}
-              onChange={({ value }) => setCurrency(value)}
+              onChange={(event) => {
+                setCurrency(event?.value || "eur");
+              }}
               className="mt-2 w-full rounded-md text-sm"
             />
 
