@@ -52,6 +52,7 @@ const MicrocardView = () => {
     onSuccess: () => {
       showToast(t("settings_updated_successfully"), "success");
       utils.viewer.me.invalidate();
+      utils.viewer.microcard.user.invalidate();
     },
     onError: () => {
       showToast(t("error_updating_settings"), "error");
