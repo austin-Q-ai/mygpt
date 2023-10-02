@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, useEffect } from "react";
+import type { ReactElement } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -316,7 +317,7 @@ const MicrocardForm = ({
   );
 };
 
-MicrocardView.getLayout = function getLayout(page) {
+MicrocardView.getLayout = function getLayout(page: ReactElement) {
   return <SettingsLayout isMicroCards={true}>{page}</SettingsLayout>;
 };
 MicrocardView.PageWrapper = PageWrapper;
