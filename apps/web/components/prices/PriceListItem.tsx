@@ -13,14 +13,14 @@ export default function PriceListItem({ priceItem: props }: PriceListItemProps) 
     lightVal: "#6d278e",
     darkVal: "#fafafa",
   });
-  console.log(brandTheme);
   useCalcomTheme(brandTheme);
+
   return (
     <div className="container col-span-1 my-4 flex flex-col rounded-md border bg-white p-3 shadow md:my-0">
       <div className="my-3 h-3/4 flex-row">
         {props.features.map((feature) => {
           return (
-            <div className="my-2 flex flex-row gap-2 " key={feature}>
+            <div className="my-2 flex flex-row items-center gap-2" key={feature}>
               <CheckCircle2 className="h-5 w-5 text-white " fill="#6d278e" />
               <span className=" w-full text-xs">{t(feature)}</span>
             </div>
