@@ -5,8 +5,8 @@ import { Avatar } from "@calcom/ui";
 import { CalendarDays } from "@calcom/ui/components/icon";
 
 interface headerProps {
-  title: string;
-  description: string;
+  title: string | null;
+  description: string | null;
   hasCalendar?: boolean;
   isAI?: boolean;
 }
@@ -14,7 +14,7 @@ interface headerProps {
 const Header = (props: headerProps) => {
   const { title, description, hasCalendar, isAI } = props;
   return (
-    <div className="bg-pink/50 flex min-h-[25vh] flex-col gap-3 py-4">
+    <div className="bg-pink/50 flex h-[25%] flex-col gap-3 py-4">
       <div className={classNames("flex items-center justify-center", hasCalendar && "relative")}>
         <div className="relative flex rounded-full border-2 border-dashed border-white p-2">
           <Avatar
@@ -37,7 +37,7 @@ const Header = (props: headerProps) => {
           )}
         </div>
         {hasCalendar ? (
-          <div className="absolute right-5 flex flex-col items-center justify-center gap-1 text-white">
+          <div className="absolute right-[10%] flex flex-col items-center justify-center gap-1 text-white">
             <CalendarDays />
             <p className="text-[8px]">Get appointment</p>
           </div>
@@ -47,7 +47,7 @@ const Header = (props: headerProps) => {
       </div>
       <div className="flex flex-col text-center text-white">
         <p className="text-lg font-bold">{title}</p>
-        <p className="text-sm">{description}</p>
+        <p className="text-sm">{description}.myGPT.fi</p>
       </div>
     </div>
   );

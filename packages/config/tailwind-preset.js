@@ -81,6 +81,7 @@ module.exports = {
         attention: "var(--cal-text-attention, #73321B)",
         error: "var(--cal-text-error, #752522)",
         brand: "var(--cal-brand-text,'white')",
+        secondary: "var(--cal-text-secondary, #6d278e)",
       },
       fill: {
         emphasis: "var(--cal-text-emphasis, #111827)",

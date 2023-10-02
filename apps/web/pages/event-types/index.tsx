@@ -814,7 +814,7 @@ const TopItem = (props: topItemProps) => {
   const { StartIcon, label } = props;
   return (
     <div className="flex items-center">
-      <div className="bg-pink/10 m-1 flex h-8 w-8 items-center justify-center rounded-full p-1">
+      <div className="bg-pink/10 m-1 flex h-8 w-8 items-center justify-center rounded-full p-2">
         <StartIcon className="opacity-50" />
       </div>
       <p className="mr-6 text-sm">{t(label)}</p>
@@ -825,7 +825,7 @@ const TopItem = (props: topItemProps) => {
 const Actions = () => {
   return (
     <div className="hidden items-center md:flex">
-      <div className="text-pink bg-pink/5 mr-2 flex rounded-lg">
+      <div className="text-secondary bg-pink/5 mr-2 flex rounded-lg">
         <TopItem StartIcon={Video} label="video_conference" />
         <TopItem StartIcon={Laptop2} label="webinar" />
         <TopItem StartIcon={Phone} label="phone_call" />

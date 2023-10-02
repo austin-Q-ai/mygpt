@@ -1862,5 +1862,45 @@
   "exp": "Experiência",
   "edu": "Educação",
   "skill": "Habilidades",
-  "position": "Cargo"
+  "position": "Cargo",
+
+
+
+  "freemium": "Freemium",
+  "access_to_basic_features": "Acesso a recursos básicos",
+  "limit_of_500_messages/month": "Limite de 500 mensagens/mês",
+  "email_support_with_a_response_within_48_hours": "Suporte por e-mail com resposta em 48h",
+  "data_storage_limited_to_1_gb": "Armazenamento de dados limitado a 1 GB",
+  "one_active_user_online": "1 usuário ativo online",
+
+  "$34/month": "29 €/mês",
+  "access_to_advanced_features": "Acesso a recursos avançados",
+  "limit_of_5,000_messages/month": "Limite de 5.000 mensagens/mês",
+  "email_support_with_a_response_within_24_hours": "Suporte por e-mail com resposta em 24h",
+  "data_storage_up_to_10_gb": "Armazenamento de dados até 10 GB",
+  "two_active_users_online": "2 usuários ativos online",
+
+  "$70/month": "59 €/mês",
+  "access_to_all_premium_features": "Acesso a todos os recursos premium",
+  "limit_of_20,000_messages/month": "Limite de 20.000 mensagens/mês",
+  "priority_support_by_email_and_chat": "Suporte prioritário por e-mail e chat",
+  "data_storage_up_to_50_gb": "Armazenamento de dados até 50 GB",
+  "ten_active_users_online": "10 usuários ativos online",
+  "access_to_detailed_analyses_and_reports": "Acesso a análises e relatórios detalhados",
+
+
+  "$117/month": "99 €/mês",
+  "unlimited_access_to_all_features": "Acesso ilimitado a todos os recursos",
+  "limit_of_100,000_messages/month": "Limite de 100.000 mensagens/mês",
+  "24/7_priority_support": "Suporte prioritário 24/7",
+  "unlimited_data_storage": "Armazenamento de dados ilimitado",
+  "twenty_five_active_users_online":"25 usuários ativos online",
+
+  "contact_us": "Contact us",
+  "customizable_message_volume": "Volume de mensagens personalizado",
+  "customizable_data_storage": "Armazenamento de dados personalizado",
+  "customizable_number_of_active_bots": "Número de bots ativos personalizado",
+  "specific_integrations_or_custom_developments": "Integrações específicas ou desenvolvimentos personalizados",
+  "access_to_customizable_detailed_analyses_and_reports": "Acesso a análises e relatórios detalhados personalizados",
+  "read_and_accept_the_terms_and_conditions": "Leia e aceite os termos e condições"
 }

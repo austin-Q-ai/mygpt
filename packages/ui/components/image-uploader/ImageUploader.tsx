@@ -67,6 +67,7 @@ type ImageUploaderProps = {
   imageSrc?: string;
   target: string;
   large?: boolean;
+  avatar?: string;
 };
 
 interface FileEvent<T = Element> extends FormEvent<T> {
@@ -117,6 +118,7 @@ function CropContainer({
 export default function ImageUploader({
   target,
   large,
+  avatar,
   id,
   buttonMsg,
   handleAvatarChange,
@@ -187,8 +189,16 @@ export default function ImageUploader({
               <ImageIcon className="h-[45px] w-[50px]" />
             )}
           </Button>
+        ) : avatar ? (
+          <Avatar
+            alt=""
+            imageSrc={avatar}
+            gravatarFallbackMd5="fallback"
+            size="xl"
+            className="border-pink border-2 border-solid bg-white"
+          />
         ) : (
-          <Button color="secondary" className="h-[70px] w-[70px] rounded-full " variant="icon">
+          <Button color="secondary" className="rounded-full " variant="icon">
             {buttonMsg}
           </Button>
         )}

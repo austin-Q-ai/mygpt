@@ -89,6 +89,7 @@ export default function ForgotPassword({ csrfToken }: { csrfToken: string }) {
 
   return (
     <AuthContainer
+      hideFooter
       showLogo
       title={!success ? t("forgot_password") : t("reset_link_sent")}
       heading={!success ? t("forgot_password") : t("reset_link_sent")}
@@ -104,7 +105,7 @@ export default function ForgotPassword({ csrfToken }: { csrfToken: string }) {
       }>
       {success && <Success />}
       {!success && (
-        <>
+        <div className="my-6 md:mx-8">
           <div className="space-y-6">{error && <p className="text-red-600">{error.message}</p>}</div>
           <form
             className="space-y-6"
@@ -122,6 +123,8 @@ export default function ForgotPassword({ csrfToken }: { csrfToken: string }) {
             <EmailField
               onChange={handleChange}
               id="email"
+              floatingLabel
+              inputwidth="lg"
               name="email"
               label={t("email_address")}
               placeholder="john.doe@example.com"
@@ -129,7 +132,8 @@ export default function ForgotPassword({ csrfToken }: { csrfToken: string }) {
             />
             <div className="space-y-2">
               <Button
-                className="w-full justify-center"
+                className="!bg-pink w-full  justify-center p-2 text-lg !text-white"
+                color="secondary"
                 type="submit"
                 disabled={loading}
                 aria-label={t("request_password_reset")}
@@ -138,7 +142,7 @@ export default function ForgotPassword({ csrfToken }: { csrfToken: string }) {
               </Button>
             </div>
           </form>
-        </>
+        </div>
       )}
     </AuthContainer>
   );

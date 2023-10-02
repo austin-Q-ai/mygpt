@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { Prisma } from "@prisma/client";
 import { MeiliSearch } from "meilisearch";
 import type { NextApiResponse, GetServerSidePropsContext } from "next";
@@ -36,8 +37,10 @@ const index = client.index("users");
 
 export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions) => {
   const { user } = ctx;
+  const input1: TUpdateProfileInputSchema = input;
+  delete input1.defaultValue;
   const data: Prisma.UserUpdateInput = {
-    ...input,
+    ...input1,
     experiences: input.experiences
       ? {
           updateMany: input.experiences
@@ -89,6 +92,31 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
 
   if (price) {
     delete data.price;
+  }
+
+  if (input.defaultValue) {
+    data.aiAdvantage = [
+      "Increased Efficiency",
+      "24/7 Availability",
+      "Rapid Data Processing",
+      "Data-Driven Decision Making",
+      "Reduction of Human Errors",
+      "Task Flexibility",
+      "Personalized Services",
+      "Reduced Operational Costs",
+      "Improved Quality of Products or Services",
+    ];
+    data.timeTokenAdvantage = [
+      "Efficient Time Management",
+      "Transparency and Traceability",
+      "Flexibility and Liquidity",
+      "Global Accessibility",
+      "Customization",
+      "Reduced Transaction Fees",
+      "Task Automation",
+      "Transferability and Interoperability",
+      "User Engagement and Loyalty",
+    ];
   }
 
   let isPremiumUsername = false;
@@ -197,6 +225,11 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
         data: {
           price: {
             push: price,
+          },
+          TokenPrice: {
+            create: {
+              price: price,
+            },
           },
         },
       });

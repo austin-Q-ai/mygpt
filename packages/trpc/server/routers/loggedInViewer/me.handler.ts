@@ -19,6 +19,9 @@ export const meHandler = async ({ ctx }: MeOptions) => {
     email: user.email,
     position: user.position,
     address: user.address,
+    price: user.price,
+    TokenPrice: user.TokenPrice,
+    currency: user.currency,
     experiences: user.experiences,
     educations: user.educations,
     skills: user.skills,
@@ -49,5 +52,7 @@ export const meHandler = async ({ ctx }: MeOptions) => {
     allowDynamicBooking: user.allowDynamicBooking,
     organizationId: user.organizationId,
     organization: user.organization,
+    aiAdvantage: user.aiAdvantage,
+    timeTokenAdvantage: user.timeTokenAdvantage,
   };
 };

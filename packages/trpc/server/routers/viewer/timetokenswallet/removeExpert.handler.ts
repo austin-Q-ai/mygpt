@@ -76,6 +76,7 @@ export const removeExpertHandler = async ({ ctx, input }: RemoveExpertOptions) =
       emitter: {
         select: {
           id: true,
+          username: true,
           avatar: true,
           name: true,
           tokens: true,

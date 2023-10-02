@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 
 import { useLocale } from "@calcom/lib/hooks/useLocale";
@@ -14,10 +15,11 @@ import {
   Input,
   EmptyScreen,
 } from "@calcom/ui";
-import { MoreHorizontal, Trash2, ShoppingCart, Newspaper } from "@calcom/ui/components/icon";
+import { ExternalLink, MoreHorizontal, Trash2, ShoppingCart, Newspaper } from "@calcom/ui/components/icon";
 
 export type ExpertDataType = {
   userId: number;
+  username: string;
   fullname: string;
   avatar: string;
   expert_token_amount: number;
@@ -54,7 +56,7 @@ function CustomExpertTable(props: CustomExpertTableProps) {
   return (
     <div>
       {expertsData.length === 0 && (
-        <div className="w-full px-1 sm:px-4 2xl:w-2/3">
+        <div className="w-full px-1 sm:px-4">
           <EmptyScreen
             Icon={Newspaper}
             headline={t("no_expert_data")}
@@ -85,6 +87,9 @@ function CustomExpertTable(props: CustomExpertTableProps) {
                       imageSrc=""
                     />
                     {data.fullname}
+                    <Link href={`/${data.username}`} target="_blank">
+                      <Button variant="icon" color="minimal" StartIcon={ExternalLink} />
+                    </Link>
                   </div>
                 </td>
                 <td className="px-1 sm:px-4 sm:py-2">{data.expert_token_amount}</td>

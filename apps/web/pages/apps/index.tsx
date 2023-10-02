@@ -11,7 +11,7 @@ import { useLocale } from "@calcom/lib/hooks/useLocale";
 import type { AppCategories } from "@calcom/prisma/enums";
 import type { inferSSRProps } from "@calcom/types/inferSSRProps";
 import type { HorizontalTabItemProps } from "@calcom/ui";
-import { AllApps, AppStoreCategories, HorizontalTabs, TextField, PopularAppsSlider } from "@calcom/ui";
+import { AllApps, HorizontalTabs, TextField } from "@calcom/ui";
 import { Search } from "@calcom/ui/components/icon";
 
 import PageWrapper from "@components/PageWrapper";
@@ -39,9 +39,9 @@ function AppsSearch({
 }) {
   return (
     <TextField
-      className="bg-subtle !border-muted !pl-0 focus:!ring-offset-0"
-      addOnLeading={<Search className="text-subtle h-4 w-4" />}
-      addOnClassname="!border-muted"
+      className=" !border-pink/5 !bg-pink/5 !pl-0 focus:!ring-offset-0"
+      addOnLeading={<Search className="text-subtle  h-5 w-5" />}
+      addOnClassname="!border-muted !bg-pink/5 !border-pink/5"
       containerClassName={classNames("focus:!ring-offset-0 m-1", className)}
       type="search"
       autoComplete="false"
@@ -75,13 +75,13 @@ export default function Apps({
       )}
       headerClassName="sm:hidden lg:block hidden"
       emptyStore={!appStore.length}>
-      <div className="flex flex-col gap-y-8">
-        {!searchText && (
+      <div className="mx-8 flex flex-col gap-y-8">
+        {/* {!searchText && (
           <>
             <AppStoreCategories categories={categories} />
             <PopularAppsSlider items={appStore} />
           </>
-        )}
+        )} */}
         <AllApps
           apps={appStore}
           searchText={searchText}
