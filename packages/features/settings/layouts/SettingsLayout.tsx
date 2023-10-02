@@ -487,7 +487,11 @@ export default function SettingsLayout({
         <MobileSettingsContainer onSideContainerOpen={() => setSideContainerOpen(!sideContainerOpen)} />
       }>
       <div className="flex flex-1 [&>*]:flex-1">
-        <div className="mx-auto max-w-full justify-center">
+        <div
+          className={classNames(
+            "mx-auto max-w-full justify-center",
+            rest.isMicroCards ? "" : "md:max-w-3xl"
+          )}>
           <ShellHeader />
           <ErrorBoundary>
             <Suspense fallback={<Loader />}>{children}</Suspense>

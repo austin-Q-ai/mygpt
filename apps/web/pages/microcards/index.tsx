@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { getLayout } from "@calcom/features/settings/layouts/SettingsLayout";
+import SettingsLayout from "@calcom/features/settings/layouts/SettingsLayout";
 import { APP_NAME } from "@calcom/lib/constants";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { trpc } from "@calcom/trpc/react";
@@ -315,7 +315,9 @@ const MicrocardForm = ({
   );
 };
 
-MicrocardView.getLayout = getLayout;
+MicrocardView.getLayout = function getLayout(page) {
+  return <SettingsLayout isMicroCards={true}>{page}</SettingsLayout>;
+};
 MicrocardView.PageWrapper = PageWrapper;
 
 export default MicrocardView;
