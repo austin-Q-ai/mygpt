@@ -118,7 +118,7 @@ export default function ExpertClone() {
       <div
         ref={sideMenuRef}
         className={classNames(
-          "transition-2 absolute z-50 !h-[100vh] w-[50%] bg-white md:w-[20%]",
+          "transition-2 absolute z-50 !h-[100vh] w-[100%] bg-white md:w-[20%]",
           toggleSideMenuFlag ? "" : "hidden"
         )}>
         <div className="flex flex-col ">
@@ -206,7 +206,7 @@ export default function ExpertClone() {
             : " md:grid-cols-2  md:justify-items-start",
           "mb-16 grid flex-row flex-wrap justify-items-center"
         )}>
-        <div className="col-span-1 mx-16 flex flex-col justify-center gap-6">
+        <div className="col-span-1 m-6 flex flex-col justify-center gap-6 md:mx-16">
           <div className="flex-row">
             <Image src="/expert-clone-side.svg" width={415} height={71} alt="expert-clone-side" />
           </div>
