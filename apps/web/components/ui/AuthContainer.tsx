@@ -253,9 +253,9 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
           </div>
         </div>
       ) : (
-        <div className="md:grid md:!max-h-screen md:grid-rows-6">
+        <div className="md:grid lg:!max-h-screen lg:grid-rows-6">
           <div className="flex flex-row md:row-span-1">
-            <div className="mx-6 flex flex-1 flex-col justify-center bg-[#f3f4f6] py-4 sm:px-6 lg:px-4">
+            <div className="mx-6 flex flex-1 flex-col justify-center bg-[#f3f4f6] pt-4 sm:px-6 lg:px-4">
               <HeadSeo title={props.title} description={props.description} />
               <div className=" mb-auto flex justify-between">
                 <div className="flex-col">
@@ -318,55 +318,56 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
               </div>
             </div>
           </div>
-          <div className="flex flex-row  flex-wrap md:row-span-4">
-            <div className="flex flex-col justify-center  bg-[#f3f4f8] py-1 pt-4 sm:mx-2  md:mx-4 lg:mx-8 lg:flex-1 lg:px-4">
-              <div className="">
-                <div
-                  className={classNames(props.showLogo ? "" : "", "flex-row sm:mx-2 sm:w-full sm:max-w-md")}>
-                  {props.heading && (
-                    <h2 className="text-emphasis line-height-2  mx-6 text-center font-sans text-3xl font-medium leading-normal md:mx-0 md:text-left md:text-4xl">
-                      {t("empower_with_ai_reveal")}
-                    </h2>
-                  )}
-                </div>
+          <div className="grid lg:row-span-4 lg:grid-cols-[minmax(900px,_1fr)_1fr] lg:grid-rows-3 ">
+            <div className="row-start-1 lg:col-span-1 lg:row-span-1 lg:mx-4">
+              <div
+                className={classNames(
+                  props.showLogo ? "" : "",
+                  "flex-row sm:mx-2 sm:w-full sm:max-w-[100%] md:flex-col"
+                )}>
+                {props.heading && (
+                  <h2 className="text-emphasis line-height-2 mx-6 mt-6 text-center font-sans text-3xl font-medium leading-normal sm:max-w-md md:text-left md:text-4xl lg:mx-4 lg:mt-0">
+                    {t("empower_with_ai_reveal")}
+                  </h2>
+                )}
                 {props.loading && (
                   <div className=" absolute z-50 flex h-screen w-full items-center">
                     <Loader />
                   </div>
                 )}
-                <div className="mb-auto mt-8  sm:mx-1 sm:w-[100%] sm:max-w-lg md:max-w-[75%] xl:w-[95%]">
-                  <div className="mx-2 px-2 py-10 sm:px-2">{props.children}</div>
-                  {/* <div className="text-default mt-8 text-center text-sm">{props.footerText}</div> */}
-                </div>
-                <div className="">
-                  {/* <Image src="/standing-auth.svg" width={423} height={175} alt="standing_auth" /> */}
-                  <div className="h-[175px] sm:w-[375px] md:w-[423px]">
-                    <CarouselDemo />
-                  </div>
-                  <p className="text-muted mx-3 mt-4 break-words sm:w-full sm:max-w-md md:mt-5 lg:w-[80%] lg:max-w-[80%]">
-                    {t("your_artifitial_footer")}
-                  </p>
+                <div className="mb-auto mt-8 sm:mx-1  sm:w-[100%] sm:max-w-lg md:max-w-[80%] md:flex-col xl:w-[95%]">
+                  <div className="mx-2 px-2 pt-5 sm:px-2 md:py-10">{props.children}</div>
                 </div>
               </div>
             </div>
-            <div className="flex flex-1 flex-col  justify-start sm:px-6 lg:px-8">
-              <div className="mx-auto h-[60vh] flex-row">
+            <div className="order-last row-end-5 mb-2 bg-[#f3f4f8] lg:col-start-1 lg:row-start-3 lg:mx-10 lg:mb-0">
+              <div className="mx-auto sm:h-[135px] sm:w-[375px] md:h-[175px] md:w-[423px] lg:mx-0">
+                <CarouselDemo />
+              </div>
+              <div className="flex flex-row md:justify-center lg:justify-normal">
+                <p className="text-muted mx-3 mt-4 break-words text-center sm:w-full sm:max-w-md md:mt-5 lg:w-[70%] lg:max-w-[70%] lg:text-left">
+                  {t("your_artifitial_footer")}
+                </p>
+              </div>
+            </div>
+            <div className=" mx-2 flex h-fit flex-1 flex-col justify-center sm:px-6 lg:row-span-3 lg:mx-0 lg:w-[90%] lg:justify-start">
+              <div className="mx-auto my-6 h-[60vh] flex-row md:my-0">
                 <div className="h-full w-full">
                   <MicroCards />
                 </div>
               </div>
-              <div className="mx-auto my-5 flex flex-row gap-4">
-                <div className="h-[60px] sm:w-[300px] md:w-[423px]">
+              <div className="mb-4 md:mx-auto md:mb-0 md:mt-6">
+                <div className="h-[80px] md:w-[423px]">
                   <CarouselAvatars />
                 </div>
               </div>
-              <div className="flew-row text-muted mx-auto my-4 justify-center font-sans font-medium md:mt-2">
+              <div className="flew-row text-muted mx-auto my-2 justify-center font-sans font-medium md:my-4 ">
                 {t("more_than_25k_experts_use_myqpt")}
               </div>
             </div>
           </div>
           {!props.hideFooter ? (
-            <div className="flex flex-row  md:row-span-1 md:my-auto">
+            <div className="order-last flex  flex-row md:my-auto">
               <Footer items={footerLinks} />
             </div>
           ) : null}
