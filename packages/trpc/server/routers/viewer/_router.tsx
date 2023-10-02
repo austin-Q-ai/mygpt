@@ -12,6 +12,7 @@ import { appsRouter } from "./apps/_router";
 import { authRouter } from "./auth/_router";
 import { availabilityRouter } from "./availability/_router";
 import { bookingsRouter } from "./bookings/_router";
+import { chattingRouter } from "./chatting/_route";
 import { deploymentSetupRouter } from "./deploymentSetup/_router";
 import { eventTypesRouter } from "./eventTypes/_router";
 import { googleWorkspaceRouter } from "./googleWorkspace/_router";
@@ -54,5 +55,6 @@ export const viewerRouter = mergeRouters(
     googleWorkspace: googleWorkspaceRouter,
     microcard: microcardRouter,
     admin: adminRouter,
+    chatting: chattingRouter,
   })
 );

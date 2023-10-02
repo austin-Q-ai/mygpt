@@ -286,6 +286,7 @@ model User {
   emitterTimeTokensTransaction TimeTokensTransaction[] @relation("emitter_relation")
   aiAdvantage                  String[]
   timeTokenAdvantage           String[]
+  Chats                        Chats[]
 
   @@unique([email])
   @@unique([email, username])
@@ -964,4 +965,14 @@ view BookingTimeStatus {
   teamId      Int?
   eventLength Int?
   timeStatus  String?
+}
+
+model Chats {
+  id         Int      @id @default(autoincrement())
+  user       User?    @relation(fields: [userId], references: [id])
+  userId     Int?
+  chatText   String
+  chatReplay Json
+  sentFlag   Boolean
+  createdAt  DateTime
 }

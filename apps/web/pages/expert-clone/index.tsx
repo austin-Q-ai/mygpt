@@ -1,13 +1,26 @@
+import { DropdownMenuLabel } from "@radix-ui/react-dropdown-menu";
 import classNames from "classnames";
-import { InfoIcon, LogOut, Menu, Mic, SendIcon, X } from "lucide-react";
-import { useSession } from "next-auth/react";
+import { InfoIcon, LogOut, Menu, Mic, SendIcon, UserIcon, X } from "lucide-react";
+import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 import useGetBrandingColours from "@calcom/lib/getBrandColours";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
-import { Button, HeadSeo, ScrollableArea, TextField, useCalcomTheme } from "@calcom/ui";
+import { trpc } from "@calcom/trpc/react";
+import {
+  Button,
+  HeadSeo,
+  ScrollableArea,
+  TextField,
+  useCalcomTheme,
+  Dropdown,
+  DropdownItem,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@calcom/ui";
 
 import PageWrapper from "@components/PageWrapper";
 import Footer from "@components/auth/Footer";
@@ -21,6 +34,19 @@ export function DialogContentDiv(props: JSX.IntrinsicElements["div"]) {
 }
 
 export default function ExpertClone() {
+  const utils = trpc.useContext();
+  const onSuccess = async () => {
+    await utils.viewer.me.invalidate();
+  };
+  const mutation = trpc.viewer.chatting.chat.useMutation({
+    onSuccess: onSuccess,
+  });
+
+  const { data } = trpc.viewer.chatting.getChatsList.useQuery({
+    limit: 20,
+    cursor: 1,
+  });
+  console.log("listChats", data);
   const { t } = useLocale();
   const brandTheme = useGetBrandingColours({
     lightVal: "#6d278e",
@@ -69,7 +95,6 @@ export default function ExpertClone() {
   const searchInput = useRef<HTMLInputElement>(null);
   const sideMenuRef = useRef<HTMLDivElement>(null);
   const answersRef = useRef<HTMLDivElement>(null);
-
   const toggleAuthMadal = (flag: boolean, sign: string) => {
     setAuthModalFlag(flag);
     setSelectedTab(sign);
@@ -83,6 +108,9 @@ export default function ExpertClone() {
       answer: searchText,
     };
     if (searchInput.current) {
+      mutation.mutate({
+        chatText: searchText,
+      });
       setSearchText("");
       searchInput.current.value = "";
       searchText ? setQaList([...qaList, data]) : null;
@@ -138,11 +166,21 @@ export default function ExpertClone() {
             </div>
           </div>
 
-          <div className="text-secondary flex flex-row justify-center p-4 text-xl font-medium">HISTORY</div>
+          <div
+            className={classNames(
+              "text-secondary flex flex-row justify-center p-4 text-xl font-medium",
+              status !== "authenticated" && "hidden"
+            )}>
+            HISTORY
+          </div>
 
           <div className="absolute bottom-0 flex w-full flex-row justify-center py-4">
             <div className="m-4 flex w-full flex-col md:mx-8">
-              <div className="text-secondary mb-6 flex flex-row justify-center">
+              <div
+                className={classNames(
+                  "text-secondary mb-6 flex flex-row justify-center",
+                  status === "authenticated" && "hidden"
+                )}>
                 <div
                   className="text-secondary flex cursor-pointer flex-row gap-1 "
                   onClick={() => toggleAuthMadal(true, "sign_in")}>
@@ -178,7 +216,7 @@ export default function ExpertClone() {
         </div>
       </div>
       <HeadSeo title="Experts Clone" description="Experts Clone." />
-      <div className="text-secondary flex flex-row justify-between px-6 py-4">
+      <div className={classNames("text-secondary flex flex-row justify-between px-6 py-4")}>
         <div className="flex flex-col">
           <Menu
             width={30}
@@ -187,7 +225,7 @@ export default function ExpertClone() {
             onClick={() => toggleSideMenu(true)}
           />
         </div>
-        <div className="flex flex-col">
+        <div className={classNames("flex flex-col", status === "authenticated" && "hidden")}>
           <div
             className="flex cursor-pointer flex-row gap-1"
             onClick={() => toggleAuthMadal(true, "sign_in")}>
@@ -197,6 +235,26 @@ export default function ExpertClone() {
               <div className="flex-row text-xs">{t("sign_up")}</div>
             </div>
           </div>
+        </div>
+        <div className={classNames("flex flex-col", status !== "authenticated" && "hidden")}>
+          <Dropdown>
+            <DropdownMenuTrigger asChild>
+              <Button type="button" variant="icon" color="primary" StartIcon={UserIcon} rounded />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel className="text-center font-medium">
+                {session && session?.data?.user?.username}
+              </DropdownMenuLabel>
+              <DropdownMenuItem>
+                <DropdownItem
+                  type="button"
+                  StartIcon={(props) => <LogOut aria-hidden="true" {...props} />}
+                  onClick={() => signOut({ callbackUrl: "/auth/logout" })}>
+                  {t("sign_out")}
+                </DropdownItem>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </Dropdown>
         </div>
       </div>
       <div
@@ -288,7 +346,7 @@ export default function ExpertClone() {
         </div>
       </div>
       <div className="flex flex-row">
-        <Footer items={footerLinks} className="md:absolute md:bottom-0" />
+        {!toggleSideMenuFlag && <Footer items={footerLinks} className="md:absolute md:bottom-0" />}
       </div>
     </div>
   );
