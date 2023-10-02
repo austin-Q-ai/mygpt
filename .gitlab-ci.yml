@@ -17,5 +17,5 @@ push_into_walcaldeploy:
     - cd walcaldeploy/
     - git submodule update --remote --init
     - git add .
-    - git commit -m "update submodule on main"
+    - git commit -m "update submodule on dev"
     - git push
