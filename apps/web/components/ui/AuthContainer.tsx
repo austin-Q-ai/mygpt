@@ -253,9 +253,9 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
           </div>
         </div>
       ) : (
-        <div className="md:grid lg:!max-h-screen lg:grid-rows-6">
+        <div className="bg-[url('/imgpsh_fullsize_anim.png')] bg-cover bg-no-repeat md:grid lg:!max-h-screen lg:grid-rows-6">
           <div className="flex flex-row md:row-span-1">
-            <div className="mx-6 flex flex-1 flex-col justify-center bg-[#f3f4f6] pt-4 sm:px-6 lg:px-4">
+            <div className="mx-6 flex flex-1 flex-col justify-center pt-4 sm:px-6 lg:px-4">
               <HeadSeo title={props.title} description={props.description} />
               <div className=" mb-auto flex justify-between">
                 <div className="flex-col">
@@ -340,7 +340,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                 </div>
               </div>
             </div>
-            <div className="order-last row-end-5 mb-2 bg-[#f3f4f8] lg:col-start-1 lg:row-start-3 lg:mx-10 lg:mb-0">
+            <div className="order-last row-end-5 mb-2 lg:col-start-1 lg:row-start-3 lg:mx-10 lg:mb-0">
               <div className="mx-auto sm:h-[135px] sm:w-[375px] md:h-[175px] md:w-[423px] lg:mx-0">
                 <CarouselDemo />
               </div>
