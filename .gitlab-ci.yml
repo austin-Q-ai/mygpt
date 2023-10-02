@@ -15,8 +15,7 @@ push_into_walcaldeploy:
     - git config --global user.name "Oliver Cawson"
     - git clone https://cawsonoliver33:$ACCESS_TOKEN@gitlab.com/i2xo/walcaldeploy
     - cd walcaldeploy/
-    - git checkout dev
     - git submodule update --remote --init
     - git add .
-    - git commit -m "update submodule on dev"
+    - git commit -m "update submodule on main"
     - git push
