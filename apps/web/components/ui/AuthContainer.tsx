@@ -182,7 +182,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
     };
   }, []);
   return (
-    <>
+    <div className="to-emphasis bg-gradient-to-b from-gray-100">
       {toggleFlag ? (
         <div className="z-50 !h-screen !w-full bg-white p-5 transition delay-150 ease-in-out">
           <div className=" mb-auto flex justify-between">
@@ -336,12 +336,12 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                   </div>
                 )}
                 <div className="mb-auto mt-8 sm:mx-1  sm:w-[100%] sm:max-w-lg md:max-w-[80%] md:flex-col xl:w-[95%]">
-                  <div className="mx-2 px-2 pt-5 sm:px-2 md:py-10">{props.children}</div>
+                  <div className="mx-2 px-2 pt-5 sm:px-4 md:py-10">{props.children}</div>
                 </div>
               </div>
             </div>
             <div className="order-last row-end-5 mb-2 lg:col-start-1 lg:row-start-3 lg:mx-10 lg:mb-0">
-              <div className="mx-auto sm:h-[135px] sm:w-[375px] md:h-[175px] md:w-[423px] lg:mx-0">
+              <div className="mx-auto  sm:h-[135px] sm:w-[375px] md:h-[175px] md:w-[423px] lg:mx-0">
                 <CarouselDemo />
               </div>
               <div className="flex flex-row sm:justify-center lg:justify-normal">
@@ -356,8 +356,8 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                   <MicroCards />
                 </div>
               </div>
-              <div className="mb-4 md:mx-auto md:mb-0 md:mt-6">
-                <div className="h-[80px] md:w-[423px]">
+              <div className="mt-4 md:mx-auto md:mb-0 md:mt-10 lg:mt-2 ">
+                <div className="h-[80px]  sm:w-full md:w-[500px]">
                   <CarouselAvatars />
                 </div>
               </div>
@@ -373,6 +373,6 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
           ) : null}
         </div>
       )}
-    </>
+    </div>
   );
 }

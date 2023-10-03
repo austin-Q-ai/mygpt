@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { CSS3DRenderer, CSS3DObject } from "three/examples/jsm/renderers/CSS3DRenderer";
@@ -28,14 +28,23 @@ const MicroCards: React.FC<MicroCardsProps> = (props: MicroCardsProps) => {
   const servicesRef = useRef<HTMLDivElement>(null);
   const timetokenRef = useRef<HTMLDivElement>(null);
 
+  const [windowWidth, setWindowWidth] = useState(0);
+
   useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+    setWindowWidth(window.innerWidth);
+
+    window.addEventListener("resize", handleResize);
+
     const sceneElement = sceneRef.current;
 
     const sizes: {
       width: number;
       height: number;
     } = {
-      width: sceneElement?.clientWidth || 0,
+      width: windowWidth <= 375 ? 374 : sceneElement?.clientWidth || 0,
       height: sceneElement?.clientHeight || 0,
     };
 
@@ -152,6 +161,7 @@ const MicroCards: React.FC<MicroCardsProps> = (props: MicroCardsProps) => {
     // Clean up function
     return () => {
       // Stop the animation loop when the component is unmounted
+      window.removeEventListener("resize", handleResize);
       if (requestRef.current) {
         cancelAnimationFrame(requestRef.current);
       }
