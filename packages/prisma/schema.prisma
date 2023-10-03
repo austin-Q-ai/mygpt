@@ -966,13 +966,3 @@ view BookingTimeStatus {
   eventLength Int?
   timeStatus  String?
 }
-
-model Chats {
-  id         Int      @id @default(autoincrement())
-  user       User?    @relation(fields: [userId], references: [id])
-  userId     Int?
-  chatText   String
-  chatReplay Json
-  sentFlag   Boolean
-  createdAt  DateTime
-}

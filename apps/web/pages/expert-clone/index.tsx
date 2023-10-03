@@ -8,7 +8,6 @@ import { useEffect, useRef, useState } from "react";
 
 import useGetBrandingColours from "@calcom/lib/getBrandColours";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
-import { trpc } from "@calcom/trpc/react";
 import {
   Button,
   HeadSeo,
@@ -34,19 +33,6 @@ export function DialogContentDiv(props: JSX.IntrinsicElements["div"]) {
 }
 
 export default function ExpertClone() {
-  const utils = trpc.useContext();
-  const onSuccess = async () => {
-    await utils.viewer.me.invalidate();
-  };
-  const mutation = trpc.viewer.chatting.chat.useMutation({
-    onSuccess: onSuccess,
-  });
-
-  const { data } = trpc.viewer.chatting.getChatsList.useQuery({
-    limit: 20,
-    cursor: 1,
-  });
-  console.log("listChats", data);
   const { t } = useLocale();
   const brandTheme = useGetBrandingColours({
     lightVal: "#6d278e",
@@ -108,9 +94,6 @@ export default function ExpertClone() {
       answer: searchText,
     };
     if (searchInput.current) {
-      mutation.mutate({
-        chatText: searchText,
-      });
       setSearchText("");
       searchInput.current.value = "";
       searchText ? setQaList([...qaList, data]) : null;
@@ -242,7 +225,7 @@ export default function ExpertClone() {
               <Button type="button" variant="icon" color="primary" StartIcon={UserIcon} rounded />
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuLabel className="text-center font-medium">
+              <DropdownMenuLabel className="p-2 text-center font-medium">
                 {session && session?.data?.user?.username}
               </DropdownMenuLabel>
               <DropdownMenuItem>
