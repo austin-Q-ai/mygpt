@@ -8,8 +8,7 @@ import { ChevronLeft, ChevronRight } from "@calcom/ui/components/icon";
 export default function CarouselDemo() {
   return (
     <Carousel
-      className="mx-8 sm:h-[150px] sm:w-[275px] md:mx-0 md:h-[175px]
-      md:w-[423px]"
+      className="mx-8 max-w-[450px] min-[320px]:w-[275px]"
       autoPlay
       dynamicHeight
       showIndicators={false}
