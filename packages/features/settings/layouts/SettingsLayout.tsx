@@ -20,7 +20,6 @@ import {
   User,
   Key,
   CreditCard,
-  Terminal,
   Users,
   Loader,
   Lock,
@@ -30,6 +29,8 @@ import {
   Plus,
   Menu,
   Building,
+  Wrench,
+  RefreshCw,
 } from "@calcom/ui/components/icon";
 
 const tabs: VerticalTabItemProps[] = [
@@ -65,9 +66,15 @@ const tabs: VerticalTabItemProps[] = [
     children: [{ name: "manage_billing", href: "/settings/billing" }],
   },
   {
+    name: "subscription",
+    href: "/settings/upgrade-plan",
+    icon: RefreshCw,
+    children: [{ name: "upgrade_your_plan", href: "/settings/upgrade-plan" }],
+  },
+  {
     name: "developer",
     href: "/settings/developer",
-    icon: Terminal,
+    icon: Wrench,
     children: [
       //
       { name: "webhooks", href: "/settings/developer/webhooks" },
@@ -437,9 +444,9 @@ const MobileSettingsContainer = (props: { onSideContainerOpen?: () => void }) =>
 
 export default function SettingsLayout({
   children,
-  isMicroCards,
+  isWide,
   ...rest
-}: { children: React.ReactNode; isMicroCards?: boolean } & ComponentProps<typeof Shell>) {
+}: { children: React.ReactNode; isWide?: boolean } & ComponentProps<typeof Shell>) {
   const router = useRouter();
   const state = useState(false);
   const { t } = useLocale();
@@ -489,7 +496,7 @@ export default function SettingsLayout({
         <MobileSettingsContainer onSideContainerOpen={() => setSideContainerOpen(!sideContainerOpen)} />
       }>
       <div className="flex flex-1 [&>*]:flex-1">
-        <div className={classNames("mx-auto max-w-full justify-center", isMicroCards ? "" : "md:max-w-3xl")}>
+        <div className={classNames("mx-auto max-w-full justify-center", isWide ? "" : "md:max-w-3xl")}>
           <ShellHeader />
           <ErrorBoundary>
             <Suspense fallback={<Loader />}>{children}</Suspense>

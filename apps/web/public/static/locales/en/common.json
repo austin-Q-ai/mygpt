@@ -2097,11 +2097,30 @@
   "access_to_customizable_detailed_analyses_and_reports": "Access to customizable detailed analyses and reports",
   "read_and_accept_the_terms_and_conditions": "Read and accept the terms and conditions",
 
+  "basic_feature_access": "Basic feature access",
+  "500_messages/month_limit": "500 messages/month limit",
+  "email_support_with_a_response_within_48h": "Email support with a response within 48h",
+  "5000_messages/month_limit": "5,000 messages/month limit",
+  "email_support_with_a_response_within_24h": "Email support with a response within 24h",
+  "20000_messages/month_limit": "20,000 messages/month limit",
+  "access_to_detailed_analysis_and_reports": "Access to detailed analysis and reports",
+  "100000_messages/month_limit": "100,000 messages/month limit",
+  "customized_message_volume": "Customized message volume",
+  "customized_data_storage": "Customized data storage",
+  "customized_number_of_active_bots": "Customized number of active bots",
+
 
   "forgot_your_password": "Forgot your password ?",
   "sorry_you_cannot_engage_in_discussions": "Sorry, you cannot engage in discussions with walletGPT because you are not signed in.",
   "sign_in_your_account_for_free": "Sign in your account for free",
   "create_for_free_your_account": "Create for free your account",
   "or_login_with": "or login with",
-  "create_my_free_account": "Create my free account"
+  "create_my_free_account": "Create my free account",
+  "upgrade_your_plan": "Upgrade your plan",
+  "subscription": "Subscription",
+  "your_subscription": "Your subscription",
+  "subscription_description": "Manage your settings for your Subscription",
+  "read_and_accept_the": "Read and accept the",
+  "terms_and_conditions": "terms and conditions",
+  "your_currently_plan": "Your currently plan"
 }
