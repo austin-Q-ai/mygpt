@@ -318,7 +318,7 @@ const MicrocardForm = ({
 };
 
 MicrocardView.getLayout = function getLayout(page: ReactElement) {
-  return <SettingsLayout isMicroCards={true}>{page}</SettingsLayout>;
+  return <SettingsLayout isWide={true}>{page}</SettingsLayout>;
 };
 MicrocardView.PageWrapper = PageWrapper;
 
