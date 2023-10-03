@@ -91,7 +91,7 @@ export default function Signup({ prepopulateFormValues, token, orgSlug }: Signup
 
   return (
     <>
-      <div>
+      <div className="h-fit w-full lg:w-fit">
         <HeadSeo title={t("sign_up")} description={t("sign_up")} />
         <div className="">
           <AuthContainer title={t("login")} description={t("login")} showLogo>

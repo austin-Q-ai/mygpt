@@ -318,15 +318,15 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
               </div>
             </div>
           </div>
-          <div className="grid lg:row-span-4 lg:grid-cols-[minmax(900px,_1fr)_1fr] lg:grid-rows-3 ">
-            <div className="row-start-1 lg:col-span-1 lg:row-span-1 lg:mx-4">
+          <div className="grid lg:row-span-4 lg:grid-cols-[minmax(500px,_1fr)_1fr] lg:grid-rows-3 ">
+            <div className="row-start-1 mx-auto lg:col-span-1 lg:row-span-1 lg:mx-4">
               <div
                 className={classNames(
                   props.showLogo ? "" : "",
                   "flex-row sm:mx-2 sm:w-full sm:max-w-[100%] md:flex-col"
                 )}>
                 {props.heading && (
-                  <h2 className="text-emphasis line-height-2 mx-6 mt-6 text-center font-sans text-3xl font-medium leading-normal sm:max-w-md md:text-left md:text-4xl lg:mx-4 lg:mt-0">
+                  <h2 className="text-emphasis line-height-2 mx-6 mt-6 text-center font-sans text-3xl font-medium leading-normal sm:max-w-md md:text-4xl lg:mx-4 lg:mt-0 lg:text-left">
                     {t("empower_with_ai_reveal")}
                   </h2>
                 )}
@@ -335,17 +335,15 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                     <Loader />
                   </div>
                 )}
-                <div className="mb-auto mt-8 sm:mx-1  sm:w-[100%] sm:max-w-lg md:max-w-[80%] md:flex-col xl:w-[95%]">
+                <div className="mb-auto mt-8 sm:mx-1  sm:w-[100%] sm:max-w-lg  md:flex-col xl:w-[95%]">
                   <div className="mx-2 px-2 pt-5 sm:px-4 md:py-10">{props.children}</div>
                 </div>
               </div>
             </div>
-            <div className="order-last row-end-5 mb-2 lg:col-start-1 lg:row-start-3 lg:mx-10 lg:mb-0">
-              <div className="mx-auto  sm:h-[135px] sm:w-[375px] md:h-[175px] md:w-[423px] lg:mx-0">
-                <CarouselDemo />
-              </div>
+            <div className="order-last row-end-5 mx-auto my-4 lg:col-start-1 lg:row-start-3 lg:mx-10 lg:mb-0">
+              <CarouselDemo />
               <div className="flex flex-row sm:justify-center lg:justify-normal">
-                <p className="text-muted mx-3 mt-4 break-words text-center sm:w-full sm:max-w-md md:mt-5 lg:w-[70%] lg:max-w-[70%] lg:text-left">
+                <p className="text-muted mx-3 my-8 break-words text-center sm:w-full sm:max-w-md  md:mt-5 lg:w-[70%] lg:max-w-[70%] lg:text-left">
                   {t("your_artifitial_footer")}
                 </p>
               </div>
@@ -356,12 +354,12 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                   <MicroCards />
                 </div>
               </div>
-              <div className="mt-4 md:mx-auto md:mb-0 md:mt-10 lg:mt-2 ">
-                <div className="h-[80px]  sm:w-full md:w-[500px]">
+              <div className="mt-4 md:mx-auto  md:my-4 lg:mt-2 ">
+                <div className="h-[80px]  w-full max-[900px]:max-w-[500px] md:max-w-[500px]">
                   <CarouselAvatars />
                 </div>
               </div>
-              <div className="flew-row text-muted mx-auto my-2 justify-center font-sans font-medium md:my-4 ">
+              <div className="flew-row text-muted mx-auto my-4 justify-center font-sans font-medium md:my-4 ">
                 {t("more_than_25k_experts_use_myqpt")}
               </div>
             </div>
