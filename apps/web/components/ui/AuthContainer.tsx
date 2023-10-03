@@ -344,7 +344,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
               <div className="mx-auto sm:h-[135px] sm:w-[375px] md:h-[175px] md:w-[423px] lg:mx-0">
                 <CarouselDemo />
               </div>
-              <div className="flex flex-row md:justify-center lg:justify-normal">
+              <div className="flex flex-row sm:justify-center lg:justify-normal">
                 <p className="text-muted mx-3 mt-4 break-words text-center sm:w-full sm:max-w-md md:mt-5 lg:w-[70%] lg:max-w-[70%] lg:text-left">
                   {t("your_artifitial_footer")}
                 </p>

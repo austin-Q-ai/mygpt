@@ -30,7 +30,7 @@ export default function CarouselDemo() {
       showThumbs={false}
       interval={5000}
       centerMode
-      centerSlidePercentage={windowWidth > 375 ? 20 : 14}
+      centerSlidePercentage={windowWidth > 900 ? 20 : 14}
       transitionTime={900}
       infiniteLoop
       renderArrowPrev={(clickHandler, hasPrev) => {
