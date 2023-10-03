@@ -4,8 +4,9 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 
 import { WEBSITE_URL } from "@calcom/lib/constants";
+import getBrandColours from "@calcom/lib/getBrandColours";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
-import { Button } from "@calcom/ui";
+import { Button, useCalcomTheme } from "@calcom/ui";
 import { Check } from "@calcom/ui/components/icon";
 
 import type { inferSSRProps } from "@lib/types/inferSSRProps";
@@ -19,6 +20,13 @@ type Props = inferSSRProps<typeof getServerSideProps>;
 
 export function Logout(props: Props) {
   const { status } = useSession();
+
+  const brandTheme = getBrandColours({
+    lightVal: "#6d278e",
+    darkVal: "#fafafa",
+  });
+  useCalcomTheme(brandTheme);
+
   if (status === "authenticated") signOut({ redirect: false });
   const router = useRouter();
   useEffect(() => {
@@ -32,8 +40,8 @@ export function Logout(props: Props) {
   return (
     <AuthContainer hideFooter title={t("logged_out")} description={t("youve_been_logged_out")} showLogo>
       <div className="mb-4">
-        <div className="bg-success mx-auto flex h-12 w-12 items-center justify-center rounded-full">
-          <Check className="h-6 w-6 text-green-600" />
+        <div className="bg-badge mx-auto flex h-12 w-12 items-center justify-center rounded-full">
+          <Check className="text-secondary h-6 w-6" />
         </div>
         <div className="mt-3 text-center sm:mt-5">
           <h3 className="text-emphasis text-lg font-medium leading-6" id="modal-title">
