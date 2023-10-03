@@ -19,7 +19,7 @@ export const TimeTokenPage = React.forwardRef<HTMLDivElement, TimeTokenPageProps
         {user && !isLoading && (
           <>
             <Header title="Timetoken" description={user.username} />
-            <div className="h-[75vh] px-5 py-8">
+            <div className="h-[75%] px-5 py-8">
               <div className="bg-pink/10 flex h-full flex-col gap-10 rounded-[25.9px] px-8 pb-9 pt-12">
                 <div className="flex flex-col gap-4">
                   <div className="text-center text-xl font-bold">Timetoken</div>
