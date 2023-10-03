@@ -286,7 +286,6 @@ model User {
   emitterTimeTokensTransaction TimeTokensTransaction[] @relation("emitter_relation")
   aiAdvantage                  String[]
   timeTokenAdvantage           String[]
-  Chats                        Chats[]
 
   @@unique([email])
   @@unique([email, username])
