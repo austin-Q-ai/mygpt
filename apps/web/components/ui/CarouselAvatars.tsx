@@ -38,7 +38,7 @@ export default function CarouselDemo() {
           <div
             className={`${
               hasPrev ? "absolute" : "hidden"
-            } bottom-0 z-20 flex cursor-pointer items-center justify-center rounded-full opacity-40 hover:opacity-100`}
+            } bottom-0 left-0 top-0 z-20 flex cursor-pointer items-center justify-center rounded-full opacity-30 hover:opacity-100`}
             onClick={clickHandler}>
             <ChevronLeft className="text-emphasis h-7 w-7" />
           </div>
@@ -49,7 +49,7 @@ export default function CarouselDemo() {
           <div
             className={`${
               hasNext ? "absolute" : "hidden"
-            } bottom-0 right-0 top-0 z-20 flex cursor-pointer items-center justify-center opacity-40 hover:opacity-100`}
+            } bottom-0 right-0 top-0 z-20 flex cursor-pointer items-center justify-center opacity-30 hover:opacity-100`}
             onClick={clickHandler}>
             <ChevronRight className="text-emphasis h-7 w-7" />
           </div>
@@ -61,7 +61,7 @@ export default function CarouselDemo() {
           alt="avatar1"
           width={20}
           height={20}
-          className="rounded-full object-cover"
+          className="left-0 top-0 rounded-full object-cover"
         />
       </div>
       <div className="relative pt-[80%] md:pt-[63%] lg:w-20">
@@ -70,7 +70,7 @@ export default function CarouselDemo() {
           alt="avatar2"
           width={20}
           height={20}
-          className="rounded-full object-cover"
+          className="left-0 top-0 rounded-full object-cover"
         />
       </div>
       <div className="relative pt-[80%] md:pt-[63%] lg:w-20">
@@ -79,7 +79,7 @@ export default function CarouselDemo() {
           alt="avatar3"
           width={20}
           height={20}
-          className="rounded-full object-cover"
+          className="left-0 top-0 rounded-full object-cover"
         />
       </div>
       <div className="relative pt-[80%] md:pt-[63%] lg:w-20">
@@ -88,7 +88,7 @@ export default function CarouselDemo() {
           alt="avatar4"
           width={20}
           height={20}
-          className="rounded-full object-cover"
+          className="left-0 top-0 rounded-full object-cover"
         />
       </div>
       <div className="relative pt-[80%] md:pt-[63%] lg:w-20">
@@ -97,7 +97,7 @@ export default function CarouselDemo() {
           alt="avatar5"
           width={20}
           height={20}
-          className="rounded-full object-cover"
+          className="left-0 top-0 rounded-full object-cover"
         />
       </div>
       <div className="relative pt-[80%] md:pt-[63%] lg:w-20">
@@ -106,7 +106,7 @@ export default function CarouselDemo() {
           alt="avatar6"
           width={20}
           height={20}
-          className="rounded-full object-cover"
+          className="left-0 top-0 rounded-full object-cover"
         />
       </div>
       <div className="relative pt-[80%] md:pt-[63%] lg:w-20">
@@ -115,7 +115,7 @@ export default function CarouselDemo() {
           alt="avatar8"
           width={20}
           height={20}
-          className="rounded-full object-cover"
+          className="left-0 top-0 rounded-full object-cover"
         />
       </div>
       <div className="relative pt-[80%] md:pt-[63%] lg:w-20">
@@ -124,7 +124,7 @@ export default function CarouselDemo() {
           alt="avatar9"
           width={20}
           height={20}
-          className="rounded-full object-cover"
+          className="left-0 top-0 rounded-full object-cover"
         />
       </div>
       <div className="relative pt-[80%] md:pt-[63%] lg:w-20">
@@ -133,7 +133,7 @@ export default function CarouselDemo() {
           alt="avatar10"
           width={20}
           height={20}
-          className="rounded-full object-cover"
+          className="left-0 top-0 rounded-full object-cover"
         />
       </div>
       <div className="relative pt-[80%] md:pt-[63%] lg:w-20">
@@ -142,7 +142,7 @@ export default function CarouselDemo() {
           alt="avatar11"
           width={20}
           height={20}
-          className="rounded-full object-cover"
+          className="left-0 top-0 rounded-full object-cover"
         />
       </div>
       <div className="relative pt-[80%] md:pt-[63%] lg:w-20">
@@ -151,7 +151,7 @@ export default function CarouselDemo() {
           alt="avatar12"
           width={20}
           height={20}
-          className="rounded-full object-cover"
+          className="left-0 top-0 rounded-full object-cover"
         />
       </div>
       <div className="relative pt-[80%] md:pt-[63%] lg:w-20">
@@ -160,7 +160,7 @@ export default function CarouselDemo() {
           alt="avatar13"
           width={20}
           height={20}
-          className="rounded-full object-cover"
+          className="left-0 top-0 rounded-full object-cover"
         />
       </div>
       <div className="relative pt-[80%] md:pt-[63%] lg:w-20">
@@ -169,7 +169,7 @@ export default function CarouselDemo() {
           alt="avatar14"
           width={20}
           height={20}
-          className="rounded-full object-cover"
+          className="left-0 top-0 rounded-full object-cover"
         />
       </div>
       <div className="relative pt-[80%] md:pt-[63%] lg:w-20">
@@ -178,7 +178,7 @@ export default function CarouselDemo() {
           alt="avatar15"
           width={20}
           height={20}
-          className="rounded-full object-cover"
+          className="left-0 top-0 rounded-full object-cover"
         />
       </div>
       <div className="relative pt-[80%] md:pt-[63%] lg:w-20">
@@ -187,7 +187,7 @@ export default function CarouselDemo() {
           alt="avatar16"
           width={20}
           height={20}
-          className="rounded-full object-cover"
+          className="left-0 top-0 rounded-full object-cover"
         />
       </div>
     </Carousel>
