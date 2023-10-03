@@ -12,7 +12,8 @@ import Footer from "@components/auth/Footer";
 import type { LinkProps } from "@components/auth/Footer";
 import MicroCards from "@components/microcard";
 import PriceListItem from "@components/prices/PriceListItem";
-import CarouselAvatars from "@components/ui/CarouselAvatars";
+// import CarouselAvatars from "@components/ui/CarouselAvatars";\
+import CarouselAvatarsComponent from "@components/ui/CarouselAvatarsComponent";
 import CarouselDemo from "@components/ui/CarouselDemo";
 
 interface Props {
@@ -355,8 +356,9 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                 </div>
               </div>
               <div className="mt-4 md:mx-auto  md:my-4 lg:mt-2 ">
-                <div className="h-[80px]  w-full max-[900px]:max-w-[500px] md:max-w-[500px]">
-                  <CarouselAvatars />
+                <div className="mx-auto ">
+                  {/* <CarouselAvatars /> */}
+                  <CarouselAvatarsComponent />
                 </div>
               </div>
               <div className="flew-row text-muted mx-auto my-4 justify-center font-sans font-medium md:my-4 ">
