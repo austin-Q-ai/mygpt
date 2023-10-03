@@ -7,11 +7,9 @@
   "typescript.preferences.importModuleSpecifier": "non-relative",
   "spellright.language": ["en"],
   "spellright.documentTypes": ["markdown", "typescript", "typescriptreact"],
-  "tailwindCSS.experimental.classRegex": [
-    [
-      "cva\\(([^)]*)\\)",
-      "[\"'`]([^\"'`]*).*?[\"'`]"
-    ]
-  ],
-  "editor.defaultFormatter": "esbenp.prettier-vscode"
+  "tailwindCSS.experimental.classRegex": [["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]],
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
+  }
 }
