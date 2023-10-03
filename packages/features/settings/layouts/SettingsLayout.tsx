@@ -39,6 +39,7 @@ const tabs: VerticalTabItemProps[] = [
     icon: User,
     children: [
       { name: "profile", href: "/settings/my-account/profile" },
+      { name: "microcard", href: "/settings/my-account/microcard" },
       { name: "general", href: "/settings/my-account/general" },
       { name: "calendars", href: "/settings/my-account/calendars" },
       { name: "conferencing", href: "/settings/my-account/conferencing" },
@@ -436,8 +437,9 @@ const MobileSettingsContainer = (props: { onSideContainerOpen?: () => void }) =>
 
 export default function SettingsLayout({
   children,
+  isMicroCards,
   ...rest
-}: { children: React.ReactNode } & ComponentProps<typeof Shell>) {
+}: { children: React.ReactNode; isMicroCards?: boolean } & ComponentProps<typeof Shell>) {
   const router = useRouter();
   const state = useState(false);
   const { t } = useLocale();
@@ -487,7 +489,7 @@ export default function SettingsLayout({
         <MobileSettingsContainer onSideContainerOpen={() => setSideContainerOpen(!sideContainerOpen)} />
       }>
       <div className="flex flex-1 [&>*]:flex-1">
-        <div className="mx-auto max-w-full justify-center">
+        <div className={classNames("mx-auto max-w-full justify-center", isMicroCards ? "" : "md:max-w-3xl")}>
           <ShellHeader />
           <ErrorBoundary>
             <Suspense fallback={<Loader />}>{children}</Suspense>

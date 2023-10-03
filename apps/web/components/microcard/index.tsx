@@ -158,14 +158,16 @@ const MicroCards: React.FC<MicroCardsProps> = (props: MicroCardsProps) => {
     };
   }, []);
 
+  const randamUserId = -1;
+
   return (
     <div className="h-full w-full">
       <div ref={sceneRef} className="flex h-full w-full items-center justify-center" />
       <div>
-        <CoordonneesPage ref={aiRef} userId={props.userId || 3} />
-        <AIPage ref={coordonneesRef} userId={props.userId || 3} />
-        <TimeTokenPage ref={servicesRef} userId={props.userId || 3} />
-        <ServicesPage ref={timetokenRef} userId={props.userId || 3} />
+        <CoordonneesPage ref={aiRef} userId={props.userId || randamUserId} />
+        <AIPage ref={coordonneesRef} userId={props.userId || randamUserId} />
+        <TimeTokenPage ref={servicesRef} userId={props.userId || randamUserId} />
+        <ServicesPage ref={timetokenRef} userId={props.userId || randamUserId} />
       </div>
     </div>
   );

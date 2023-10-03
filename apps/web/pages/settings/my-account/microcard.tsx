@@ -1,9 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, useEffect } from "react";
+import type { ReactElement } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { getLayout } from "@calcom/features/settings/layouts/SettingsLayout";
+import SettingsLayout from "@calcom/features/settings/layouts/SettingsLayout";
 import { APP_NAME } from "@calcom/lib/constants";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { trpc } from "@calcom/trpc/react";
@@ -52,6 +53,7 @@ const MicrocardView = () => {
     onSuccess: () => {
       showToast(t("settings_updated_successfully"), "success");
       utils.viewer.me.invalidate();
+      utils.viewer.microcard.user.invalidate();
     },
     onError: () => {
       showToast(t("error_updating_settings"), "error");
@@ -315,7 +317,9 @@ const MicrocardForm = ({
   );
 };
 
-MicrocardView.getLayout = getLayout;
+MicrocardView.getLayout = function getLayout(page: ReactElement) {
+  return <SettingsLayout isMicroCards={true}>{page}</SettingsLayout>;
+};
 MicrocardView.PageWrapper = PageWrapper;
 
 export default MicrocardView;

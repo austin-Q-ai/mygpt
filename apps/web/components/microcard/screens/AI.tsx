@@ -13,7 +13,7 @@ interface AIPageProps {
 export const AIPage = React.forwardRef<HTMLDivElement, AIPageProps>((props: AIPageProps, ref) => {
   const { data: user, isLoading } = trpc.viewer.microcard.user.useQuery({ userId: props.userId });
   const title =
-    user?.username?.charAt(0).toUpperCase() || "MyGPT" + user?.username?.slice(1) || "MyGPT" + " AI";
+    (user?.username?.charAt(0).toUpperCase() || "MyGPT") + (user?.username?.slice(1) || "MyGPT") + " AI";
 
   return (
     <div className="flex h-[900px] w-[500px] flex-col bg-white" ref={ref}>

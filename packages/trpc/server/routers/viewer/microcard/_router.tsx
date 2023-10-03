@@ -1,4 +1,4 @@
-import authedProcedure from "../../../procedures/authedProcedure";
+import publicProcedure from "../../../procedures/publicProcedure";
 import { router } from "../../../trpc";
 import { ZUserInputSchema } from "./user.schema";
 
@@ -9,7 +9,7 @@ type microcardRouterHandlerCache = {
 const UNSTABLE_HANDLER_CACHE: microcardRouterHandlerCache = {};
 
 export const microcardRouter = router({
-  user: authedProcedure.input(ZUserInputSchema).query(async ({ ctx, input }) => {
+  user: publicProcedure.input(ZUserInputSchema).query(async ({ ctx, input }) => {
     if (!UNSTABLE_HANDLER_CACHE.user) {
       UNSTABLE_HANDLER_CACHE.user = await import("./user.handler").then((mod) => mod.userHandler);
     }

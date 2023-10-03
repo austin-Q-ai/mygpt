@@ -1978,5 +1978,7 @@
   "exp": "Expérience",
   "edu": "Formation",
   "skill": "Compétences",
-  "position": "Poste"
+  "position": "Poste",
+  "microcard": "Microcard",
+  "microcard_description": "Gérer les paramètres de votre Microcard"
 }
