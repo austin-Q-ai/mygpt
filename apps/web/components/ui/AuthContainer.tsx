@@ -182,9 +182,9 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
     };
   }, []);
   return (
-    <div className="to-emphasis w-fit bg-gradient-to-b from-gray-100">
+    <div className="to-emphasis bg-gradient-to-b from-gray-100">
       {toggleFlag ? (
-        <div className="z-50 !h-screen !w-full w-fit bg-white p-5 transition delay-150 ease-in-out">
+        <div className="z-50 !h-screen !w-full bg-white p-5 transition delay-150 ease-in-out">
           <div className=" mb-auto flex justify-between">
             <div className="flex-col">
               {props.showLogo && (
@@ -318,7 +318,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
               </div>
             </div>
           </div>
-          <div className="grid lg:row-span-4 lg:grid-cols-[minmax(900px,_1fr)_1fr] lg:grid-rows-3 ">
+          <div className="grid lg:row-span-4 lg:grid-cols-[minmax(500px,_1fr)_1fr] lg:grid-rows-3 ">
             <div className="row-start-1 mx-auto lg:col-span-1 lg:row-span-1 lg:mx-4">
               <div
                 className={classNames(

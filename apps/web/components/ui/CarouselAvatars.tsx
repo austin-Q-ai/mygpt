@@ -37,9 +37,10 @@ export default function CarouselDemo() {
       renderArrowPrev={(clickHandler, hasPrev) => {
         return (
           <div
+            style={{ left: "calc(4% + 1px)" }}
             className={`${
               hasPrev ? "absolute" : "hidden"
-            } bottom-0 left-0 top-0 z-20  flex cursor-pointer items-center justify-center opacity-30 hover:opacity-100`}
+            } bottom-0  top-0 z-20  flex cursor-pointer items-center justify-center opacity-30 hover:opacity-100`}
             onClick={clickHandler}>
             <ChevronLeft className="text-emphasis h-7 w-7" />
           </div>
@@ -48,6 +49,7 @@ export default function CarouselDemo() {
       renderArrowNext={(clickHandler, hasNext) => {
         return (
           <div
+            style={{ right: "calc(4% + 1px)" }}
             className={`${
               hasNext ? "absolute" : "hidden"
             } bottom-0 right-0 top-0 z-20 flex cursor-pointer items-center justify-center opacity-30 hover:opacity-100`}
