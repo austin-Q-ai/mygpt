@@ -254,7 +254,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
           </div>
         </div>
       ) : (
-        <div className="bg-[url('/imgpsh_fullsize_anim.png')] bg-cover bg-no-repeat md:grid lg:!max-h-screen lg:grid-rows-6">
+        <div className="bg-[url('/imgpsh_fullsize_anim.png')] bg-cover bg-no-repeat md:grid lg:!max-h-screen lg:grid-rows-[_80px_1fr_1fr_1fr_1fr_1fr_0px]">
           <div className="flex flex-row md:row-span-1">
             <div className="mx-6 flex flex-1 flex-col justify-center pt-4 sm:px-6 lg:px-4">
               <HeadSeo title={props.title} description={props.description} />
@@ -320,11 +320,11 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
             </div>
           </div>
           <div className="grid lg:row-span-4 lg:grid-cols-[minmax(500px,_1fr)_1fr] lg:grid-rows-3 ">
-            <div className="row-start-1 mx-auto lg:col-span-1 lg:row-span-1 lg:mx-4">
+            <div className="row-start-1 mx-auto h-fit lg:col-span-1 lg:row-span-1 lg:mx-4">
               <div
                 className={classNames(
                   props.showLogo ? "" : "",
-                  "flex-row sm:mx-2 sm:w-full sm:max-w-[100%] md:flex-col"
+                  "flex-row sm:mx-2 sm:w-full sm:max-w-[100%] md:mt-14 md:flex-col"
                 )}>
                 {props.heading && (
                   <h2 className="text-emphasis line-height-2 mx-6 mt-6 text-center font-sans text-3xl font-medium leading-normal sm:max-w-md md:text-4xl lg:mx-4 lg:mt-0 lg:text-left">
@@ -337,7 +337,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                   </div>
                 )}
                 <div className="mb-auto mt-8 sm:mx-1  sm:w-[100%] sm:max-w-lg  md:flex-col xl:w-[95%]">
-                  <div className="mx-2 px-2 pt-5 sm:px-4 md:py-10">{props.children}</div>
+                  <div className="mx-2 px-2 pt-5 sm:px-4 ">{props.children}</div>
                 </div>
               </div>
             </div>
@@ -367,7 +367,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
             </div>
           </div>
           {!props.hideFooter ? (
-            <div className="order-last flex  flex-row md:my-auto">
+            <div className=" order-last flex flex-row md:my-auto">
               <Footer items={footerLinks} />
             </div>
           ) : null}
