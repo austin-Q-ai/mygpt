@@ -216,6 +216,7 @@ export const buildUser = <T extends Partial<UserPayload>>(user?: T): UserPayload
     metadata: null,
     password: null,
     role: "USER",
+    level: "FREEMIUM",
     schedules: [],
     selectedCalendars: [],
     startTime: 0,
