@@ -1,4 +1,5 @@
 import { DropdownMenuLabel } from "@radix-ui/react-dropdown-menu";
+import axios from "axios";
 import classNames from "classnames";
 import { InfoIcon, LogOut, Menu, Mic, SendIcon, UserIcon, X } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
@@ -27,6 +28,11 @@ import MicroCards from "@components/microcard";
 import { footerLinks } from "@components/ui/AuthContainer";
 
 import AuthModal from "./components/AuthModal";
+
+const BRAIN_API_KEY = "4cf4d75f4b17c08b0966843d88c8aa9b";
+const BRAIN_ID = "9355e20b-d41d-44af-860b-7cb8505c8af8";
+const CREATE_BRAIN_STRING = "CREATE_BRAIN_STRING";
+const BRAIN_SERVICE = "http://104.248.16.57:5050";
 
 export function DialogContentDiv(props: JSX.IntrinsicElements["div"]) {
   <span>{props.children}</span>;
@@ -86,17 +92,65 @@ export default function ExpertClone() {
     setSelectedTab(sign);
   };
 
+  // current chat id
+  const [currentChatId, setCurrentChatId] = useState("");
+
+  const handleChat = (chatId: string) => {
+    axios
+      .post(
+        `${BRAIN_SERVICE}/chat/${chatId}/question`,
+        {
+          question: searchText,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${BRAIN_API_KEY}`,
+            "Content-Type": "application/json",
+          },
+          params: { brain_id: BRAIN_ID },
+        }
+      )
+      .then((data) => {
+        if (searchInput.current) {
+          setSearchText("");
+          searchInput.current.value = "";
+          searchText
+            ? setQaList([
+                ...qaList,
+                {
+                  question: searchText,
+                  answer: data.data.assistant,
+                },
+              ])
+            : null;
+        }
+      });
+  };
+
   const handleSearch = (e: any) => {
     e.preventDefault();
     setSearchResultFlag(true);
-    const data = {
-      question: searchText,
-      answer: searchText,
-    };
-    if (searchInput.current) {
-      setSearchText("");
-      searchInput.current.value = "";
-      searchText ? setQaList([...qaList, data]) : null;
+    if (currentChatId === "") {
+      // if not started new chat, create new chat
+      axios
+        .post(
+          `${BRAIN_SERVICE}/chat`,
+          {
+            name: CREATE_BRAIN_STRING,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${BRAIN_API_KEY}`,
+            },
+          }
+        )
+        .then((data) => {
+          setCurrentChatId(data.data.chat_id);
+          handleChat(data.data.chat_id);
+        });
+    } else {
+      // if chat id exist, it chats with experts
+      handleChat(currentChatId);
     }
   };
 
