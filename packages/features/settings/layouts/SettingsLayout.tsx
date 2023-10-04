@@ -41,7 +41,7 @@ const tabs: VerticalTabItemProps[] = [
     children: [
       { name: "profile", href: "/settings/my-account/profile" },
       { name: "microcard", href: "/settings/my-account/microcard" },
-      { name: "mytopics", href: "/settings/my-account/mytopics" },
+      { name: "my_topics", href: "/settings/my-account/mytopics" },
       { name: "general", href: "/settings/my-account/general" },
       { name: "calendars", href: "/settings/my-account/calendars" },
       { name: "conferencing", href: "/settings/my-account/conferencing" },
