@@ -154,6 +154,44 @@ export default function ExpertClone() {
     }
   };
 
+  // get chat history
+
+  const getChatHistory = () => {
+    axios
+      .get(`${BRAIN_SERVICE}/chat`, {
+        headers: {
+          Authorization: `Bearer ${BRAIN_API_KEY}`,
+        },
+      })
+      .then((data) => {
+        console.log(data);
+        // you can use data.data.chats
+        // (data.data.chats is array of objects, each object schema is as follows)
+        // {
+        //   chat_id: string
+        //   chat_name: string
+        //   creation_time: date
+        //   user_id: string
+        // }
+      });
+  };
+
+  // delete chat history using chat_id
+  const deleteChatHistory = (chatId: string) => {
+    axios
+      .delete(`${BRAIN_SERVICE}/chat/${chatId}`, {
+        headers: {
+          Authorization: `Bearer ${BRAIN_API_KEY}`,
+        },
+      })
+      .then((data) => {
+        console.log(data);
+        // you can use data.data.message
+        // data.data.message type is string and it is as follows
+        // `${chat_id} has been deleted.`
+      });
+  };
+
   useEffect(() => {
     answersRef?.current?.scrollIntoView({ behavior: "smooth" });
   }, [qaList]);
