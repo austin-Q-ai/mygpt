@@ -171,6 +171,7 @@ enum UserLevel {
   LEVEL1
   LEVEL2
   LEVEL3
+  CUSTOM
 }
 
 model Experience {
