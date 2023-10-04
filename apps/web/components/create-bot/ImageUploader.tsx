@@ -1,9 +1,9 @@
+import { ImageIcon } from "lucide-react";
 import type { ChangeEvent, DragEvent } from "react";
 import React, { useState, useRef, useEffect } from "react";
 import Webcam from "react-webcam";
 
 import { Button, Label } from "@calcom/ui";
-import { Edit2 } from "@calcom/ui/components/icon";
 
 interface ImageUploaderProps {
   setImage: (image: string) => void;
@@ -50,24 +50,26 @@ const ImageUploader: React.FC<ImageUploaderProps> = (props) => {
   }, [image]);
 
   return (
-    <div className="flex flex-col items-center p-10">
+    <div className="flex flex-col items-center">
       <div
         onClick={() => setShowSelection(true)}
-        className="show-edit relative h-[100px] w-[100px] cursor-pointer rounded-full bg-zinc-400 hover:opacity-80 sm:h-[80px] sm:w-[80px] md:h-[100px] md:w-[100px] lg:h-[110px] lg:w-[110px]">
+        className="show-edit relative h-[100px] w-[100px] cursor-pointer rounded-md border-2 border-dashed border-gray-300 hover:opacity-80 sm:h-[80px] sm:w-[80px] md:h-[100px] md:w-[100px] lg:h-[150px] lg:w-[250px]">
         {image.length ? (
           <img
-            className="h-[100px] w-[100px] rounded-full sm:h-[80px] sm:w-[80px] md:h-[100px] md:w-[100px] lg:h-[110px] lg:w-[110px]"
+            className="h-[100px] w-[100px] rounded-md p-2 sm:h-[80px] sm:w-[80px] md:h-[100px] md:w-[100px] lg:h-[150px] lg:w-[250px]"
             src={image}
             alt="avatar"
           />
         ) : (
-          <span className=" h-[100px] w-[100px] rounded-full sm:h-[80px] sm:w-[80px] md:h-[100px] md:w-[100px] lg:h-[110px] lg:w-[110px]">
-            <p className="flex justify-center pt-4">Avatar</p>
+          <span className=" flex h-[100px] w-[100px] items-center justify-center rounded-md  sm:h-[80px] sm:w-[80px] md:h-[100px] md:w-[100px] lg:h-[150px] lg:w-[250px]">
+            <p className="">
+              <ImageIcon width={70} height={70} color="#61677F" />
+            </p>
           </span>
         )}
-        <div className="edit-btn absolute top-0 flex h-full w-full items-center justify-center rounded-full bg-transparent">
+        {/* <div className="edit-btn absolute top-0 flex h-full w-full items-center justify-center rounded-full bg-transparent">
           <Edit2 className="m-auto" />
-        </div>
+        </div> */}
       </div>
       {showSelection && (
         <div className="fixed left-0 top-0 z-10 flex h-full w-full items-center justify-center bg-black bg-opacity-50">
@@ -94,7 +96,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = (props) => {
             </Button>
             <Button
               onClick={() => setShowSelection(false)}
-              className="ml-9 mt-5 border-[1px] border-gray-400 text-red-500 hover:border-gray-500">
+              className="ml-9 mt-5 border-[1px] border-gray-400  hover:border-gray-500">
               Close
             </Button>
           </Label>
@@ -115,7 +117,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = (props) => {
             </Button>
             <Button
               onClick={() => setShowWebcam(false)}
-              className="ml-9 mt-5 border-[1px] border-gray-400 text-red-500 hover:border-gray-500">
+              className="ml-9 mt-5 border-[1px] border-gray-400  hover:border-gray-500">
               Close
             </Button>
           </div>
