@@ -166,6 +166,13 @@ enum UserPermissionRole {
   ADMIN
 }
 
+enum UserLevel {
+  FREEMIUM
+  LEVEL1
+  LEVEL2
+  LEVEL3
+}
+
 model Experience {
   id         Int     @id @default(autoincrement())
   position   String  @default("")
@@ -260,6 +267,7 @@ model User {
   metadata                     Json?
   verified                     Boolean?                @default(false)
   role                         UserPermissionRole      @default(USER)
+  level                        UserLevel               @default(FREEMIUM)
   disableImpersonation         Boolean                 @default(false)
   impersonatedUsers            Impersonations[]        @relation("impersonated_user")
   impersonatedBy               Impersonations[]        @relation("impersonated_by_user")
