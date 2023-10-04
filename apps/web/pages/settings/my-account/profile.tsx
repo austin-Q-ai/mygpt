@@ -620,8 +620,8 @@ const ProfileForm = ({
                 }}
                 variant="ProfileCard"
                 description={
-                  <div className="flex items-start justify-between">
-                    <div>
+                  <div className="flex flex-col items-start justify-between md:flex-row">
+                    <div className="flex w-full justify-between md:w-auto md:justify-normal">
                       {!editableHeader ? (
                         <Avatar
                           alt=""
@@ -642,11 +642,22 @@ const ProfileForm = ({
                           imageSrc={value || undefined}
                         />
                       )}
+                      <div className="flex md:hidden">
+                        <Button
+                          color="primary"
+                          StartIcon={!editableHeader ? Edit2 : Cross}
+                          className={`!rounded-full ${editableHeader ? "rotate-45 transform" : ""}`}
+                          variant="icon"
+                          onClick={handleUpdateContactInfo}
+                        />
+                      </div>
                     </div>
-                    <div className="items-left mx-4 flex flex-grow flex-col">
+                    <div className="items-left mx-4 mt-4 flex flex-grow flex-col md:mt-0">
                       <div
                         className={
-                          !editableHeader && defaultValues.position ? "" : "flex w-full flex-row gap-2"
+                          !editableHeader && defaultValues.position
+                            ? ""
+                            : "flex w-full flex-col gap-2 md:flex-row"
                         }>
                         <div
                           className={
@@ -691,7 +702,9 @@ const ProfileForm = ({
                       </div>
                       <div
                         className={
-                          !editableHeader && defaultValues.position ? "" : "flex w-full flex-row gap-2"
+                          !editableHeader && defaultValues.position
+                            ? ""
+                            : "flex w-full flex-col gap-2 md:flex-row"
                         }>
                         <div
                           className={
@@ -720,7 +733,7 @@ const ProfileForm = ({
                           className={
                             !editableHeader
                               ? "mt-2 flex flex-wrap items-center gap-2"
-                              : "mt-5 flex w-full flex-col items-start"
+                              : "mt-2 flex w-full flex-col items-start md:mt-7"
                           }>
                           <div className={!editableHeader ? "" : "flex w-full flex-row items-center gap-2"}>
                             <Button
@@ -873,7 +886,7 @@ const ProfileForm = ({
                         </div>
                       </div>
                     </div>
-                    <div className="flex">
+                    <div className="hidden md:flex">
                       <Button
                         color="primary"
                         StartIcon={!editableHeader ? Edit2 : Cross}
