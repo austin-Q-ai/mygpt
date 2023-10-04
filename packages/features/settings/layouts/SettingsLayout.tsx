@@ -44,7 +44,7 @@ const tabs: VerticalTabItemProps[] = [
       { name: "general", href: "/settings/my-account/general" },
       { name: "calendars", href: "/settings/my-account/calendars" },
       { name: "conferencing", href: "/settings/my-account/conferencing" },
-      { name: "appearance", href: "/settings/my-account/appearance" },
+      // { name: "appearance", href: "/settings/my-account/appearance" },
       // TODO
       // { name: "referrals", href: "/settings/my-account/referrals" },
     ],
@@ -100,10 +100,10 @@ const tabs: VerticalTabItemProps[] = [
         name: "members",
         href: "/settings/organizations/members",
       },
-      {
-        name: "appearance",
-        href: "/settings/organizations/appearance",
-      },
+      // {
+      //   name: "appearance",
+      //   href: "/settings/organizations/appearance",
+      // },
       {
         name: "billing",
         href: "/settings/organizations/billing",
@@ -369,12 +369,12 @@ const SettingsSidebarContainer = ({
                               textClassNames="px-3 text-emphasis font-medium text-sm"
                               disableChevron
                             /> */}
-                                <VerticalTabItem
+                                {/* <VerticalTabItem
                                   name={t("appearance")}
                                   href={`/settings/teams/${team.id}/appearance`}
                                   textClassNames="px-3 text-emphasis font-medium text-sm"
                                   disableChevron
-                                />
+                                /> */}
                                 {/* Hide if there is a parent ID */}
                                 {!team.parentId ? (
                                   <>
