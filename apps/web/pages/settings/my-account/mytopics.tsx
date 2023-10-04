@@ -1,17 +1,25 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { getLayout } from "@calcom/features/settings/layouts/SettingsLayout";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
+import { trpc } from "@calcom/trpc/react";
 import { Button, Dialog, DialogContent, TextArea, Meta } from "@calcom/ui";
 import { Plus, Pencil, Trash } from "@calcom/ui/components/icon";
 
 import PageWrapper from "@components/PageWrapper";
 
 interface ITopic {
-  topicName: string;
+  id: string;
   topicDesc: string;
 }
-const TopicCard = ({ topicName, topicDesc }: ITopic) => {
+interface TopicCardProps {
+  id: string;
+  topicName: string;
+  topicDesc: string;
+  handleEdit: (edit_id: string, desc: string) => void;
+  handleRemove: (delete_id: string) => void;
+}
+const TopicCard = ({ id, topicName, topicDesc, handleEdit, handleRemove }: TopicCardProps) => {
   const { t } = useLocale();
 
   return (
@@ -27,7 +35,7 @@ const TopicCard = ({ topicName, topicDesc }: ITopic) => {
           className="flex gap-[11px] p-[10px] text-sm leading-4 shadow-md"
           color="secondary"
           onClick={() => {
-            console.log("edit");
+            handleEdit(id, topicDesc);
           }}
           EndIcon={Pencil}>
           {t("edit")}
@@ -36,7 +44,7 @@ const TopicCard = ({ topicName, topicDesc }: ITopic) => {
           className="flex gap-[11px] p-[10px] text-sm leading-4 shadow-md"
           color="secondary"
           onClick={() => {
-            console.log("remove");
+            handleRemove(id);
           }}
           EndIcon={Trash}>
           {t("remove")}
@@ -49,26 +57,50 @@ const TopicCard = ({ topicName, topicDesc }: ITopic) => {
 const TopicsView = () => {
   const { t } = useLocale();
   const [isOpen, setIsOpen] = useState(false);
-  const [topics, setTopics] = useState<ITopic[]>([
-    {
-      topicName: "Topic1",
-      topicDesc: "Evaluate a Residential property in the Rural area with a Buy and Hold investment strategy.",
-    },
-    {
-      topicName: "Topic2",
-      topicDesc: "Evaluate a Residential property in the Rural area with a Buy and Hold investment strategy.",
-    },
-    {
-      topicName: "Topic3",
-      topicDesc: "Evaluate a Residential property in the Rural area with a Buy and Hold investment strategy.",
-    },
-  ]);
+  const [isEdit, setIsEdit] = useState(false);
+  const [editID, setEditID] = useState("");
+  const [topics, setTopics] = useState<ITopic[]>([]);
+
+  const { data: user, isLoading } = trpc.viewer.me.useQuery();
+  const [topicTitle, setTopicTitle] = useState("");
+
+  const handleAdd = () => {
+    if (isEdit) {
+      setTopics(
+        topics.map((topic) => {
+          if (topic.id === editID) return { id: topic.id, topicDesc: topicTitle };
+          else return topic;
+        })
+      );
+    } else {
+      setTopics([...topics, { id: Date.now().toString(36), topicDesc: topicTitle }]);
+    }
+    setTopicTitle("");
+    setIsOpen(false);
+  };
+
+  const handleEdit = (edit_id: string, desc: string) => {
+    setIsEdit(true);
+    setEditID(edit_id);
+    setTopicTitle(desc);
+    setIsOpen(true);
+  };
+
+  const handleRemove = (delete_id: string) => {
+    setTopics(topics.filter((topic) => topic.id !== delete_id));
+  };
+
+  const handleSave = () => {
+    if (isLoading || !user) return;
+    // add some save functionality to qdrant
+    // console.log("userdata: ", user, "topics: ", topics);
+  };
 
   return (
     <>
       <div className="flex flex-col gap-[30px]">
         <Meta
-          title={t("microcard_description")}
+          title={t("my_topics_description")}
           description=" "
           CTA={
             <Button
@@ -77,41 +109,55 @@ const TopicsView = () => {
               className="h-[40px] w-[40px] !rounded-full"
               variant="icon"
               onClick={() => {
+                setIsEdit(false);
+                setTopicTitle("");
                 setIsOpen(true);
               }}
             />
           }
         />
         <div className="flex flex-col gap-[10px]">
-          {topics.map((topic, key) => (
-            <TopicCard key={key} {...topic} />
+          {topics.map((topic, _key) => (
+            <TopicCard
+              key={_key}
+              id={topic.id}
+              topicName={`Topic ${_key + 1}`}
+              topicDesc={topic.topicDesc}
+              handleEdit={handleEdit}
+              handleRemove={handleRemove}
+            />
           ))}
         </div>
         <div>
           <Button
             color="primary"
-            className="flex h-[36px] w-[80px] justify-center p-[6.166px] text-[12.332px] leading-[17.264px]">
+            className={`flex h-[36px] w-[80px] justify-center p-[6.166px] text-[12.332px] leading-[17.264px] ${
+              !topics.length ? "hidden" : ""
+            }`}>
             {t("save")}
           </Button>
         </div>
       </div>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent title={t("add_topic")} type="creation">
+        <DialogContent title={isEdit ? t("edit_topic") : t("add_topic")} type="creation">
           <div className="flex flex-col gap-[29.6px] rounded-[6.166px] border-[0.617px] border-solid border-[#E5E7EB] p-[30.83px]">
             <div className="flex flex-col gap-[18.5px]">
               <div className="text-[14.798px] leading-[17.264px]">{t("title")}</div>
               <TextArea
                 id="topic_title"
-                placeholder={t("form_description_placeholder")}
+                placeholder={t("add_topic_placeholder")}
                 rows={5}
                 className="rounded-[3.083px] border-[0.617px] border-[#C4C4C4]"
+                value={topicTitle}
+                onChange={(e) => setTopicTitle(e.target.value)}
               />
             </div>
             <div className="flex justify-end">
               <Button
                 color="primary"
-                onClick={() => console.log("click")}
-                className="flex h-[36px] w-[80px] justify-center p-[6.166px]">
+                onClick={handleAdd}
+                className="flex h-[36px] w-[80px] justify-center p-[6.166px]"
+                disabled={topicTitle === ""}>
                 {t("save")}
               </Button>
             </div>
