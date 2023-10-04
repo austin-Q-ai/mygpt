@@ -3,6 +3,7 @@ import type { ReactElement } from "react";
 import { useState } from "react";
 
 import SettingsLayout from "@calcom/features/settings/layouts/SettingsLayout";
+import { buyTokens } from "@calcom/features/timetokenswallet";
 import { classNames } from "@calcom/lib";
 import { APP_NAME } from "@calcom/lib/constants";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
@@ -11,7 +12,6 @@ import { trpc } from "@calcom/trpc/react";
 import {
   Meta,
   ScrollableArea,
-  showToast,
   SkeletonAvatar,
   SkeletonButton,
   SkeletonContainer,
@@ -170,14 +170,27 @@ const SubscriptionView = () => {
   const [upgradeConfirmOpen, setUpgradeConfirmOpen] = useState<boolean>(false);
   const [upgradeLevel, setUpgradeLevel] = useState<UserLevel>(UserLevel.FREEMIUM);
 
-  const mutation = trpc.viewer.updateProfile.useMutation({
-    onSuccess: () => {
-      showToast(t("settings_updated_successfully"), "success");
-      utils.viewer.me.invalidate();
-      utils.viewer.avatar.invalidate();
-    },
-    onError: () => {
-      showToast(t("error_updating_settings"), "error");
+  // const mutation = trpc.viewer.updateProfile.useMutation({
+  //   onSuccess: () => {
+  //     showToast(t("settings_updated_successfully"), "success");
+  //     utils.viewer.me.invalidate();
+  //     utils.viewer.avatar.invalidate();
+  //   },
+  //   onError: () => {
+  //     showToast(t("error_updating_settings"), "error");
+  //   },
+  // });
+
+  const upgradeMutation = useMutation(buyTokens, {
+    onSuccess: async (responseData) => {
+      const { paymentUid } = responseData;
+      if (paymentUid) {
+        return await router.push(
+          createTokenPaymentLink({
+            paymentUid,
+          })
+        );
+      }
     },
   });
 
