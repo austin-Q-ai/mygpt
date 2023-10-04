@@ -215,6 +215,7 @@ export const buildUser = <T extends Partial<UserPayload>>(user?: T): UserPayload
     invitedTo: null,
     locale: "en",
     metadata: null,
+    social: null,
     password: null,
     role: "USER",
     level: "FREEMIUM",
