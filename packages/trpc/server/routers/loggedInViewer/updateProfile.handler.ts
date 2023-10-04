@@ -86,6 +86,7 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
         }
       : {},
     metadata: input.metadata as Prisma.InputJsonValue,
+    social: input.social,
   };
 
   const price: number = input.price || 0;
@@ -200,6 +201,7 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
       educations: true,
       skills: true,
       metadata: true,
+      social: true,
       name: true,
       createdDate: true,
       bio: true,

@@ -62,6 +62,15 @@ export const ZUpdateProfileInputSchema = z.object({
   timeFormat: z.number().optional(),
   disableImpersonation: z.boolean().optional(),
   metadata: userMetadata.optional(),
+  social: z
+    .object({
+      telegram: z.string().optional(),
+      facebook: z.string().optional(),
+      discord: z.string().optional(),
+      instagram: z.string().optional(),
+      linkedin: z.string().optional(),
+    })
+    .optional(),
   aiAdvantage: z.array(z.string()).optional(),
   timeTokenAdvantage: z.array(z.string()).optional(),
   defaultValue: z.boolean().optional(),
