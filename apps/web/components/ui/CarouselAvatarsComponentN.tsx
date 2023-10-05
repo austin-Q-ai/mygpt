@@ -5,21 +5,6 @@ import { useSpringCarousel } from "react-spring-carousel";
 import { ChevronLeft, ChevronRight } from "@calcom/ui/components/icon";
 
 export default function CarouselAvatarComponentN() {
-  const [windowWidth, setWindowWidth] = useState(0);
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
-    setWindowWidth(window.innerWidth);
-
-    window.addEventListener("resize", handleResize);
-
-    // Clean up the event listener when the component unmounts
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
   const images = [
     {
       url: "/app-members/1.svg",
@@ -78,9 +63,9 @@ export default function CarouselAvatarComponentN() {
           key={index}
           src={img.url}
           alt={img.url}
-          width={windowWidth >= 1030 ? 70 : windowWidth >= 768 ? 60 : 50}
-          height={windowWidth >= 1030 ? 70 : windowWidth >= 768 ? 60 : 50}
-          className="object-cover transition-all duration-500 ease-in rounded-full cursor-pointer"
+          width={70}
+          height={70}
+          className="object-cover mx-auto transition-all duration-500 ease-in rounded-full cursor-pointer"
           draggable={false}
         />
       ),
@@ -106,7 +91,7 @@ export default function CarouselAvatarComponentN() {
         />
       </div>
 
-      <div className="overflow-hidden">{carouselFragment}</div>
+      <div className="max-w-[500px] overflow-hidden">{carouselFragment}</div>
       <div className="flex my-auto">
         <ChevronRight
           className="cursor-pointer text-emphasis h-7 w-7 opacity-60 hover:opacity-100 lg:h-10 lg:w-10"
