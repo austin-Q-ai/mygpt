@@ -57,14 +57,18 @@ function CreateBot() {
         customLoader={<SkeletonLoader />}
         success={({ data }) => {
           return (
-            <>
-              <ImageUploader setImage={setImage} />
+            <div className="mx-auto lg:w-[85%] ">
               <VoiceUploader setVoice={setVoice} />
-              <BotDataInput setBotName={setBotName} setUserName={setUserName} setToken={setToken} />
-              <div className="mt-4 flex items-center justify-center">
+              <div className="flex flex-row">
+                <div className="my-auto me-2 md:my-0 md:me-6">
+                  <ImageUploader setImage={setImage} />
+                </div>
+                <BotDataInput setBotName={setBotName} setUserName={setUserName} setToken={setToken} />
+              </div>
+              <div className="mt-4 flex items-start justify-start">
                 <Button onClick={handleSubmit}>Submit</Button>
               </div>
-            </>
+            </div>
           );
         }}
       />
