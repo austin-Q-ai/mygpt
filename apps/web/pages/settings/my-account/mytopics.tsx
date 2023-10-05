@@ -3,8 +3,17 @@ import { useEffect, useState } from "react";
 import { getLayout } from "@calcom/features/settings/layouts/SettingsLayout";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { trpc } from "@calcom/trpc/react";
-import { Button, Dialog, DialogContent, TextArea, Meta } from "@calcom/ui";
-import { Plus, Pencil, Trash } from "@calcom/ui/components/icon";
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  TextArea,
+  Meta,
+  EmptyScreen,
+  DialogTrigger,
+  ConfirmationDialogContent,
+} from "@calcom/ui";
+import { Plus, Pencil, Trash2, Newspaper } from "@calcom/ui/components/icon";
 
 import PageWrapper from "@components/PageWrapper";
 
@@ -40,15 +49,20 @@ const TopicCard = ({ id, topicName, topicDesc, handleEdit, handleRemove }: Topic
           EndIcon={Pencil}>
           {t("edit")}
         </Button>
-        <Button
-          className="flex gap-[11px] p-[10px] text-sm leading-4 shadow-md"
-          color="secondary"
-          onClick={() => {
-            handleRemove(id);
-          }}
-          EndIcon={Trash}>
-          {t("remove")}
-        </Button>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button color="secondary" className="border" StartIcon={Trash2}>
+              {t("remove")}
+            </Button>
+          </DialogTrigger>
+          <ConfirmationDialogContent
+            variety="danger"
+            title={t("delete_topic")}
+            confirmBtnText={t("confirm_delete_topic")}
+            onConfirm={() => handleRemove(id)}>
+            {t("delete_topic_confirmation_message")}
+          </ConfirmationDialogContent>
+        </Dialog>
       </div>
     </div>
   );
@@ -136,6 +150,15 @@ const TopicsView = () => {
             }`}>
             {t("save")}
           </Button>
+        </div>
+        <div className="w-full px-1 sm:px-4">
+          {!topics.length && (
+            <EmptyScreen
+              Icon={Newspaper}
+              headline={t("no_topics_data")}
+              description={t("no_topics_data_description")}
+            />
+          )}
         </div>
       </div>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
