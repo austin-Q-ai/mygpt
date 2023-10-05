@@ -63,7 +63,7 @@ const VoiceUploader: React.FC<VoiceUploaderProps> = ({ setVoice }) => {
   }, []);
 
   return (
-    <div className="border-emphasis  my-6 flex flex-col items-center justify-center rounded-md border-2 border-dotted p-8 font-sans ">
+    <div className="border-emphasis mb-4 flex flex-col items-center justify-center rounded-md border-2 border-dotted p-8 font-sans md:my-6 ">
       <div className="bg-emphasis mb-6  flex h-24 w-24 items-center rounded-full">
         <MicIcon className="text-secondary  mx-auto h-14 w-14" />
       </div>

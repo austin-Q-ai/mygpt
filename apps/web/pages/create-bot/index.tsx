@@ -65,7 +65,7 @@ function CreateBot() {
                 </div>
                 <BotDataInput setBotName={setBotName} setUserName={setUserName} setToken={setToken} />
               </div>
-              <div className="mt-4 flex items-start justify-start">
+              <div className="mb-4 mt-2 flex items-start justify-start md:my-4">
                 <Button onClick={handleSubmit}>Submit</Button>
               </div>
             </div>
