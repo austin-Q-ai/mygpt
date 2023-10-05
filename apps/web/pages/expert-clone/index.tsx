@@ -39,10 +39,10 @@ import { footerLinks } from "@components/ui/AuthContainer";
 
 import AuthModal from "./components/AuthModal";
 
-const BRAIN_API_KEY = "4cf4d75f4b17c08b0966843d88c8aa9b";
-const BRAIN_ID = "9355e20b-d41d-44af-860b-7cb8505c8af8";
-const CREATE_BRAIN_STRING = "CREATE_BRAIN_STRING";
-const BRAIN_SERVICE = "http://104.248.16.57:5050";
+const BRAIN_API_KEY = "4cf4d75f4b17c08b0966843d88c8aa9b"; // indicate user
+const BRAIN_ID = "9355e20b-d41d-44af-860b-7cb8505c8af8"; // expert brain id
+const CREATE_BRAIN_STRING = "CREATE_BRAIN_STRING"; // not necessary actually, you can use first chat string as create brain string
+const BRAIN_SERVICE = "http://104.248.16.57:5050"; // backend url for brains
 
 export function DialogContentDiv(props: JSX.IntrinsicElements["div"]) {
   <span>{props.children}</span>;
@@ -183,6 +183,44 @@ export default function ExpertClone() {
         handleChat(currentChatId);
       }
     }
+  };
+
+  // get chat history
+
+  const getChatHistory = () => {
+    axios
+      .get(`${BRAIN_SERVICE}/chat`, {
+        headers: {
+          Authorization: `Bearer ${BRAIN_API_KEY}`,
+        },
+      })
+      .then((data) => {
+        console.log(data);
+        // you can use data.data.chats
+        // (data.data.chats is array of objects, each object schema is as follows)
+        // {
+        //   chat_id: string
+        //   chat_name: string
+        //   creation_time: date
+        //   user_id: string
+        // }
+      });
+  };
+
+  // delete chat history using chat_id
+  const deleteChatHistory = (chatId: string) => {
+    axios
+      .delete(`${BRAIN_SERVICE}/chat/${chatId}`, {
+        headers: {
+          Authorization: `Bearer ${BRAIN_API_KEY}`,
+        },
+      })
+      .then((data) => {
+        console.log(data);
+        // you can use data.data.message
+        // data.data.message type is string and it is as follows
+        // `${chat_id} has been deleted.`
+      });
   };
 
   useEffect(() => {
