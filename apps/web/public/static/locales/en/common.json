@@ -2068,6 +2068,9 @@
   "delete_topic": "Delete Topic",
   "confirm_delete_topic": "Yes, delete topic",
   "delete_topic_confirmation_message": "Are you sure you want to delete this topic?",
+  "topics_saved_successfully": "Your topics saved successfully",
+  "error_topics_save": "Error on saving topics",
+  "error_get_topics": "Error on getting topics",
 
   "freemium": "Freemium",
   "access_to_basic_features": "Access to basic features",
