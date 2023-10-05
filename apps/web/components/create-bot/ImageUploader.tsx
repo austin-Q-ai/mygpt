@@ -22,7 +22,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = (props) => {
   const [showSelection, setShowSelection] = useState(false);
   const [showWebcam, setShowWebcam] = useState(false);
   const webcamRef = useRef<Webcam | null>(null);
-  const innerImageRef = useRef<HTMLImageElement>(null);
+  const innerImageRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const onImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && isImageFile(event.target.files[0])) {
@@ -47,10 +47,13 @@ const ImageUploader: React.FC<ImageUploaderProps> = (props) => {
   };
 
   useEffect(() => {
-    const handleClick = () => {
+    const handleClick = (e: any) => {
+      if (e.target !== innerImageRef.current) {
+        return;
+      }
       fileInputRef.current?.click();
     };
-    innerImageRef.current?.addEventListener("click", handleClick);
+    innerImageRef.current?.addEventListener("click", handleClick, true);
     return () => {
       innerImageRef.current?.removeEventListener("click", handleClick);
     };
@@ -98,11 +101,13 @@ const ImageUploader: React.FC<ImageUploaderProps> = (props) => {
                 className="hidden"
               />
               <label htmlFor="file-upload " className="cursor-pointer text-slate-600">
-                {image ? (
-                  <img src={image} alt="Image" className="h-56 w-56 object-contain" ref={innerImageRef} />
-                ) : (
-                  "Drop image or click"
-                )}
+                <div ref={innerImageRef}>
+                  {image ? (
+                    <img src={image} alt="Image" className="h-56 w-56 object-contain" />
+                  ) : (
+                    "Drop image or click"
+                  )}
+                </div>
               </label>
             </div>
             <Button
