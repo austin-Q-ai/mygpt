@@ -14,17 +14,17 @@ const BotDataInput = (props: BotDataProps) => {
     <div className="ms-2 flex flex-col justify-between">
       <TextField
         addOnLeading="Bot Name"
-        addOnClassname="w-[70%] md:w-[60%] bg-emphasis font-light"
+        addOnClassname="w-[70%] md:w-[60%] bg-emphasis text-black"
         onChange={(e) => setBotName(e.target.value)}
       />
       <TextField
         addOnLeading="UserName"
-        addOnClassname="w-[70%] md:w-[60%] bg-emphasis font-light"
+        addOnClassname="w-[70%] md:w-[60%] bg-emphasis text-black"
         onChange={(e) => setUserName(e.target.value)}
       />
       <TextField
         addOnLeading="Token"
-        addOnClassname="w-[70%] md:w-[60%] bg-emphasis font-light"
+        addOnClassname="w-[70%] md:w-[60%] bg-emphasis text-black"
         onChange={(e) => setToken(e.target.value)}
       />
     </div>
