@@ -1,9 +1,11 @@
+import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
 import type { ReactElement } from "react";
 import { useState } from "react";
 
+import { createUpgradePaymentLink } from "@calcom/app-store/stripepayment/lib/client";
 import SettingsLayout from "@calcom/features/settings/layouts/SettingsLayout";
-import { buyTokens } from "@calcom/features/timetokenswallet";
+import { upgradePlan } from "@calcom/features/upgrade-plan";
 import { classNames } from "@calcom/lib";
 import { APP_NAME } from "@calcom/lib/constants";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
@@ -181,12 +183,12 @@ const SubscriptionView = () => {
   //   },
   // });
 
-  const upgradeMutation = useMutation(buyTokens, {
+  const upgradeMutation = useMutation(upgradePlan, {
     onSuccess: async (responseData) => {
       const { paymentUid } = responseData;
       if (paymentUid) {
         return await router.push(
-          createTokenPaymentLink({
+          createUpgradePaymentLink({
             paymentUid,
           })
         );

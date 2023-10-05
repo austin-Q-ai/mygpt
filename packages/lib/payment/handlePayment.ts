@@ -6,6 +6,28 @@ import type { EventTypeModel } from "@calcom/prisma/zod";
 import type { CalendarEvent } from "@calcom/types/Calendar";
 import type { IAbstractPaymentService, PaymentApp } from "@calcom/types/PaymentService";
 
+const handleUpgradePayment = async (subscriptionId: number) => {
+  const paymentApp = (await appStore["stripepayment" as keyof typeof appStore]()) as PaymentApp;
+  if (!paymentApp?.lib?.PaymentService) {
+    console.warn(`payment App service of type ${paymentApp} is not implemented`);
+    return null;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const PaymentService = paymentApp.lib.PaymentService as any;
+
+  const paymentInstance = new PaymentService() as IAbstractPaymentService;
+
+  const paymentData = await paymentInstance.createUpgradePayment(subscriptionId);
+
+  if (!paymentData) {
+    console.error("Payment data is null");
+    throw new Error("Payment data is null");
+  }
+
+  return paymentData;
+};
+
 const handleBuyPayment = async (
   walletId: number,
   paymentAppCredentials: {
@@ -110,4 +132,4 @@ const handlePayment = async (
   return paymentData;
 };
 
-export { handlePayment, handleBuyPayment };
+export { handlePayment, handleBuyPayment, handleUpgradePayment };

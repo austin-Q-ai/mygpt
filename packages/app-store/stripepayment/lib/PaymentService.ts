@@ -29,14 +29,95 @@ const stripeAppKeysSchema = z.object({
 
 export class PaymentService implements IAbstractPaymentService {
   private stripe: Stripe;
-  private credentials: z.infer<typeof stripeCredentialKeysSchema>;
+  private credentials?: z.infer<typeof stripeCredentialKeysSchema>;
 
-  constructor(credentials: { key: Prisma.JsonValue }) {
+  constructor(credentials?: { key: Prisma.JsonValue }) {
     // parse credentials key
-    this.credentials = stripeCredentialKeysSchema.parse(credentials.key);
+    if (credentials) this.credentials = stripeCredentialKeysSchema.parse(credentials.key);
     this.stripe = new Stripe(process.env.STRIPE_PRIVATE_KEY || "", {
       apiVersion: "2020-08-27",
     });
+  }
+
+  /** This method is for creating charges at the time of upgrading subscription plan */
+  async createUpgradePayment(subscriptionId: number) {
+    try {
+      const subscription = await prisma?.subscription.findUnique({
+        where: {
+          id: subscriptionId,
+        },
+        select: {
+          user: {
+            select: {
+              email: true,
+              currency: true,
+            },
+          },
+          level: true,
+        },
+      });
+
+      if (!subscription) throw new Error("Subscription not found");
+
+      // Load stripe keys
+      const stripeAppKeys = await prisma?.app.findFirst({
+        select: {
+          keys: true,
+        },
+        where: {
+          slug: "stripe",
+        },
+      });
+
+      const amount = 1000;
+
+      // Parse keys with zod
+      const { payment_fee_fixed, payment_fee_percentage } = stripeAppKeysSchema.parse(stripeAppKeys?.keys);
+      const paymentFee = Math.round(amount * payment_fee_percentage + payment_fee_fixed);
+
+      const customer = await retrieveOrCreateStripeCustomerByEmail(subscription.user.email, "");
+
+      const params: Stripe.PaymentIntentCreateParams = {
+        amount: amount,
+        application_fee_amount: paymentFee,
+        currency: subscription.user.currency,
+        payment_method_types: ["card"],
+        customer: customer.id,
+      };
+
+      const paymentIntent = await this.stripe.paymentIntents.create(params);
+
+      const paymentData = await prisma?.payment.create({
+        data: {
+          uid: uuidv4(),
+          app: {
+            connect: {
+              slug: "stripe",
+            },
+          },
+          subscription: {
+            connect: {
+              id: subscriptionId,
+            },
+          },
+          amount: amount,
+          currency: subscription.user.currency,
+          externalId: paymentIntent.id,
+
+          data: Object.assign({}, paymentIntent) as unknown as Prisma.InputJsonValue,
+          fee: 0,
+          refunded: false,
+          success: false,
+        },
+      });
+      if (!paymentData) {
+        throw new Error();
+      }
+      return paymentData;
+    } catch (error) {
+      console.error(`Payment could not be created for level ${level}`, error);
+      throw new Error("Payment could not be created");
+    }
   }
 
   /** This method is for creating charges at the time of buying timetokens */

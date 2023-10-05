@@ -23,3 +23,9 @@ export function createTokenPaymentLink(opts: { paymentUid: string }): string {
   const link = WEBSITE_URL;
   return link + `/payment/${paymentUid}`;
 }
+
+export function createUpgradePaymentLink(opts: { paymentUid: string }): string {
+  const { paymentUid } = opts;
+  const link = WEBSITE_URL;
+  return link + `/payment/${paymentUid}`;
+}

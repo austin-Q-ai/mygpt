@@ -9,8 +9,11 @@ export interface PaymentApp {
 }
 
 export interface IAbstractPaymentService {
-  /* This method is for creating charges at the time of booking */
+  /* This method is for creating charges at the time of upgrading */
+  createUpgradePayment(subscriptionId: number): Promise<Payment>;
+  /* This method is for creating charges at the time of buying tokens */
   createBuyPayment(walletId: number): Promise<Payment>;
+  /* This method is for creating charges at the time of booking */
   create(
     payment: Pick<Prisma.PaymentUncheckedCreateInput, "amount" | "currency">,
     bookingId: Booking["id"],

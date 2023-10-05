@@ -6,9 +6,8 @@ import short from "short-uuid";
 import type { EventTypeAppsList } from "@calcom/app-store/utils";
 import { checkRateLimitAndThrowError } from "@calcom/lib/checkRateLimitAndThrowError";
 import getIP from "@calcom/lib/getIP";
-import { HttpError } from "@calcom/lib/http-error";
 import logger from "@calcom/lib/logger";
-import { handleBuyPayment } from "@calcom/lib/payment/handlePayment";
+import { handleUpgradePayment } from "@calcom/lib/payment/handlePayment";
 import type { userSelect } from "@calcom/prisma";
 import prisma from "@calcom/prisma";
 import type { BufferedBusyTime } from "@calcom/types/BufferedBusyTime";
@@ -30,9 +29,9 @@ interface IEventTypePaymentCredentialType {
 
 async function handler(req: NextApiRequest & { userId?: number | undefined }) {
   const { userId } = req;
-  const { emitterId, amount } = req.body;
+  const { level } = req.body;
 
-  if (!emitterId || !amount || !userId) throw new Error("Missing parameter!");
+  if (!level || !userId) throw new Error("Missing parameter!");
 
   const userIp = getIP(req);
 
@@ -41,46 +40,17 @@ async function handler(req: NextApiRequest & { userId?: number | undefined }) {
     identifier: userIp,
   });
 
-  const createdWallet = await prisma?.timeTokensTransaction.create({
+  const createSubscription = await prisma?.subscription.create({
     data: {
-      owner: { connect: { id: userId } },
-      emitter: { connect: { id: emitterId } },
-      amount: amount,
+      user: { connect: { id: userId } },
+      level: level,
     },
     select: {
       id: true,
     },
   });
 
-  const paymentAppCredential = await prisma.credential.findFirst({
-    where: {
-      userId: emitterId,
-      app: {
-        categories: {
-          hasSome: ["payment"],
-        },
-      },
-    },
-    select: {
-      key: true,
-      appId: true,
-      app: {
-        select: {
-          categories: true,
-          dirName: true,
-        },
-      },
-    },
-  });
-
-  if (!paymentAppCredential) {
-    throw new HttpError({ statusCode: 400, message: "Missing payment credentials" });
-  }
-
-  const payment = await handleBuyPayment(
-    createdWallet.id,
-    paymentAppCredential as IEventTypePaymentCredentialType
-  );
+  const payment = await handleUpgradePayment(createSubscription.id);
 
   const result: { paymentUid: string } = { paymentUid: payment?.uid || "" };
 

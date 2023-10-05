@@ -1,1 +1,1 @@
-export { buyTokens } from "./buyTokens";
+export { upgradePlan } from "./upgradePlan";

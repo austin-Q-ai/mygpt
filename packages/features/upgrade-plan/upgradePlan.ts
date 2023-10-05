@@ -1,11 +1,11 @@
 import { post } from "@calcom/lib/fetch-wrapper";
-import type { BuyTokensBody } from "@calcom/prisma/zod-utils";
+import type { UpgradePlanBody } from "@calcom/prisma/zod-utils";
 
-type BuyTokensResponse = Awaited<
-  ReturnType<typeof import("@calcom/features/timetokenswallet/handleBuyTokens").default>
+type UpgradePlanResponse = Awaited<
+  ReturnType<typeof import("@calcom/features/upgrade-plan/handleUpgradePlan").default>
 >;
 
-export const buyTokens = async (data: BuyTokensBody) => {
-  const response = await post<BuyTokensBody, BuyTokensResponse>("/api/timetokenswallet/event", data);
+export const upgradePlan = async (data: UpgradePlanBody) => {
+  const response = await post<UpgradePlanBody, UpgradePlanResponse>("/api/upgrade-plan/event", data);
   return response;
 };
