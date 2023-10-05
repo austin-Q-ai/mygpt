@@ -22,7 +22,8 @@ const ImageUploader: React.FC<ImageUploaderProps> = (props) => {
   const [showSelection, setShowSelection] = useState(false);
   const [showWebcam, setShowWebcam] = useState(false);
   const webcamRef = useRef<Webcam | null>(null);
-
+  const innerImageRef = useRef<HTMLImageElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const onImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && isImageFile(event.target.files[0])) {
       setImage(URL.createObjectURL(event.target.files[0]));
@@ -46,6 +47,16 @@ const ImageUploader: React.FC<ImageUploaderProps> = (props) => {
   };
 
   useEffect(() => {
+    const handleClick = () => {
+      fileInputRef.current?.click();
+    };
+    innerImageRef.current?.addEventListener("click", handleClick);
+    return () => {
+      innerImageRef.current?.removeEventListener("click", handleClick);
+    };
+  }, [showSelection]);
+
+  useEffect(() => {
     props.setImage(image);
   }, [image]);
 
@@ -56,7 +67,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = (props) => {
         className="show-edit relative h-[100px] w-[100px] cursor-pointer rounded-md border-2 border-dashed border-gray-300 hover:opacity-80 sm:h-[80px] sm:w-[80px] md:h-[100px] md:w-[100px] lg:h-[150px] lg:w-[250px]">
         {image.length ? (
           <img
-            className="h-[100px] w-[100px] rounded-md p-2 sm:h-[80px] sm:w-[80px] md:h-[100px] md:w-[100px] lg:h-[150px] lg:w-[250px]"
+            className="h-[100px] w-[100px] rounded-md object-contain p-2 sm:h-[80px] sm:w-[80px] md:h-[100px] md:w-[100px] lg:h-[150px] lg:w-[250px]"
             src={image}
             alt="avatar"
           />
@@ -77,16 +88,21 @@ const ImageUploader: React.FC<ImageUploaderProps> = (props) => {
             <div
               onDrop={onDrop}
               onDragOver={handleDragOver}
-              className="mt-5 flex h-60 w-60 cursor-pointer items-center justify-center border-2 border-dashed border-gray-400">
+              className="mt-5 flex h-60 w-60 cursor-pointer items-center justify-center border-2 border-dashed border-gray-400 ">
               <input
                 id="file-upload"
                 type="file"
                 accept="image/*"
                 onChange={onImageUpload}
+                ref={fileInputRef}
                 className="hidden"
               />
-              <label htmlFor="file-upload " className=" text-slate-600">
-                {image ? <img src={image} alt="Image" className="h-56 w-56" /> : "Drop image or click"}
+              <label htmlFor="file-upload " className="cursor-pointer text-slate-600">
+                {image ? (
+                  <img src={image} alt="Image" className="h-56 w-56 object-contain" ref={innerImageRef} />
+                ) : (
+                  "Drop image or click"
+                )}
               </label>
             </div>
             <Button

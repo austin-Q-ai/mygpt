@@ -11,26 +11,20 @@ const BotDataInput = (props: BotDataProps) => {
   const { t } = useLocale();
   const { setBotName, setUserName, setToken } = props;
   return (
-    <div className="flex flex-col justify-between">
+    <div className="ms-2 flex flex-col justify-between">
       <TextField
         addOnLeading="Bot Name"
-        addOnClassname="md:w-32 w-24 bg-emphasis font-light"
-        className="w-48"
-        containerClassName="md:w-80 w-72"
+        addOnClassname="w-[70%] md:w-[60%] bg-emphasis font-light"
         onChange={(e) => setBotName(e.target.value)}
       />
       <TextField
         addOnLeading="UserName"
-        addOnClassname="md:w-32 w-24 bg-emphasis font-light"
-        containerClassName="md:w-80 w-72"
-        className="w-48"
+        addOnClassname="w-[70%] md:w-[60%] bg-emphasis font-light"
         onChange={(e) => setUserName(e.target.value)}
       />
       <TextField
         addOnLeading="Token"
-        addOnClassname="md:w-32 w-24 bg-emphasis font-light"
-        containerClassName="md:w-80 w-72"
-        className="w-48"
+        addOnClassname="w-[70%] md:w-[60%] bg-emphasis font-light"
         onChange={(e) => setToken(e.target.value)}
       />
     </div>
