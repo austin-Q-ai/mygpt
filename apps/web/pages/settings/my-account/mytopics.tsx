@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
 
 import { getLayout } from "@calcom/features/settings/layouts/SettingsLayout";
@@ -12,10 +13,14 @@ import {
   EmptyScreen,
   DialogTrigger,
   ConfirmationDialogContent,
+  showToast,
 } from "@calcom/ui";
 import { Plus, Pencil, Trash2, Newspaper } from "@calcom/ui/components/icon";
 
 import PageWrapper from "@components/PageWrapper";
+
+const QDRANT_URL = "http://159.89.5.59:6333";
+const COLLECTION_NAME = "topics";
 
 interface ITopic {
   id: string;
@@ -77,6 +82,7 @@ const TopicsView = () => {
 
   const { data: user, isLoading } = trpc.viewer.me.useQuery();
   const [topicTitle, setTopicTitle] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
 
   const handleAdd = () => {
     if (isEdit) {
@@ -108,7 +114,95 @@ const TopicsView = () => {
     if (isLoading || !user) return;
     // add some save functionality to qdrant
     // console.log("userdata: ", user, "topics: ", topics);
+    setIsSaving(true);
+    axios
+      .get(`${QDRANT_URL}/collections`)
+      .then((res) => {
+        const collections = res.data.result.collections;
+        console.log("collections: ", collections);
+        if (collections.find((collection: { name: string }) => collection.name === COLLECTION_NAME)) {
+          console.log("collection ", COLLECTION_NAME, " exists");
+          axios
+            .put(`${QDRANT_URL}/collections/${COLLECTION_NAME}/points`, {
+              points: [
+                {
+                  id: user.id, //Math.floor(Math.random() * Number.MAX_SAFE_INTEGER),
+                  vector: [0],
+                  payload: {
+                    ...user,
+                    topics: topics,
+                  },
+                },
+              ],
+            })
+            .then((_res) => {
+              console.log("save success: ", _res);
+              showToast(t("topics_saved_successfully"), "success");
+            })
+            .catch((_err) => {
+              console.log("save error: ", _err);
+              showToast(t("error_topics_save"), "error");
+            });
+        } else {
+          console.log("collection ", COLLECTION_NAME, " does not exist");
+          axios
+            .put(`${QDRANT_URL}/collections/${COLLECTION_NAME}`, {
+              vectors: {
+                size: 1,
+                distance: "Cosine",
+              },
+            })
+            .then((_res) => {
+              console.log(`collection ${COLLECTION_NAME} created`);
+              axios
+                .put(`${QDRANT_URL}/collections/${COLLECTION_NAME}/points`, {
+                  points: [
+                    {
+                      id: user.id, //Math.floor(Math.random() * Number.MAX_SAFE_INTEGER),
+                      vector: [0],
+                      payload: {
+                        ...user,
+                        topics: topics,
+                      },
+                    },
+                  ],
+                })
+                .then((_res) => {
+                  console.log("save success: ", _res);
+                  showToast(t("topics_saved_successfully"), "success");
+                })
+                .catch((_err) => {
+                  console.log("save error: ", _err);
+                  showToast(t("error_topics_save"), "error");
+                });
+            })
+            .catch((_err) => {
+              console.log("collection creating failed: ", _err);
+              showToast(t("error_topics_save"), "error");
+            });
+        }
+      })
+      .catch((err) => {
+        console.log("fetch collection error: ", err);
+        showToast(t("error_topics_save"), "error");
+      })
+      .finally(() => setIsSaving(false));
   };
+
+  useEffect(() => {
+    if (isLoading || !user) return;
+    axios
+      .get(`${QDRANT_URL}/collections/${COLLECTION_NAME}/points/${user.id}`)
+      .then((res) => {
+        const payload = res.data.result.payload;
+        console.log("payload: ", payload);
+        setTopics(payload.topics);
+      })
+      .catch((_err) => {
+        console.log("err on fetching existing data: ", _err);
+        showToast(t("error_get_topics"), "error");
+      });
+  }, [isLoading]);
 
   return (
     <>
@@ -147,7 +241,9 @@ const TopicsView = () => {
             color="primary"
             className={`flex h-[36px] w-[80px] justify-center p-[6.166px] text-[12.332px] leading-[17.264px] ${
               !topics.length ? "hidden" : ""
-            }`}>
+            }`}
+            loading={isSaving}
+            onClick={handleSave}>
             {t("save")}
           </Button>
         </div>
