@@ -38,7 +38,7 @@ export function Logout(props: Props) {
   const { t } = useLocale();
 
   return (
-    <AuthContainer hideFooter title={t("logged_out")} description={t("youve_been_logged_out")} showLogo>
+    <AuthContainer title={t("logged_out")} description={t("youve_been_logged_out")} showLogo>
       <div className="mb-4">
         <div className="bg-badge mx-auto flex h-12 w-12 items-center justify-center rounded-full">
           <Check className="text-secondary h-6 w-6" />

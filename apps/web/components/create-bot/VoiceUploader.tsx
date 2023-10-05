@@ -1,6 +1,9 @@
+import { MicIcon } from "lucide-react";
 import MicRecorder from "mic-recorder-to-mp3";
 import React, { useState, useEffect } from "react";
 import Countdown from "react-countdown";
+
+import { Button } from "@calcom/ui";
 
 const Mp3Recorder = new MicRecorder({ bitRate: 128 });
 
@@ -60,9 +63,12 @@ const VoiceUploader: React.FC<VoiceUploaderProps> = ({ setVoice }) => {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center rounded-[10px] border-2 border-dashed border-white p-8">
-      <h1 className="mb-8 text-center text-2xl font-semibold">Voice Recorder</h1>
-      <p className="mb-8 text-justify text-sm">{sampleText}</p>
+    <div className="border-emphasis mb-4 flex flex-col items-center justify-center rounded-md border-2 border-dotted p-8 font-sans md:my-6 ">
+      <div className="bg-emphasis mb-6  flex h-24 w-24 items-center rounded-full">
+        <MicIcon className="text-secondary  mx-auto h-14 w-14" />
+      </div>
+      <h1 className="mb-8 text-center text-2xl font-medium">Voice Recorder</h1>
+      <p className="text-subtle text-md mx-4 mb-2 break-words text-center md:mx-14 md:mb-8">{sampleText}</p>
       {isRecording ? (
         <Countdown
           date={Date.now() + 30000}
@@ -74,16 +80,18 @@ const VoiceUploader: React.FC<VoiceUploaderProps> = ({ setVoice }) => {
           onComplete={stopRecording}
         />
       ) : (
-        <h2 className="text-md mt-8 text-center font-semibold">You have 30 seconds to record your audio</h2>
+        <h2 className="text-md mt-8 text-center font-medium">You have 30 seconds to record your audio</h2>
       )}
       <div className="flex items-center justify-center">
-        <button
-          className={`mt-8 w-full rounded-sm px-8 py-4 text-sm font-semibold shadow-lg ${
-            isRecording ? "bg-red-500" : "bg-blue-500"
+        <Button
+          size="lg"
+          color="secondary"
+          className={`mt-8 w-full rounded-sm px-8 py-4 text-sm font-medium shadow-lg ${
+            isRecording ? "bg-red-500 text-white hover:text-red-500" : ""
           }`}
           onClick={isRecording ? stopRecording : startRecording}>
           {isRecording ? "Stop Recording" : "Start Recording"}
-        </button>
+        </Button>
       </div>
       {blobURL && (
         <div className="mt-8 text-center">
