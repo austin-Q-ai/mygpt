@@ -1,7 +1,17 @@
 import { DropdownMenuLabel } from "@radix-ui/react-dropdown-menu";
 import axios from "axios";
 import classNames from "classnames";
-import { InfoIcon, LogOut, Menu, Mic, SendIcon, UserIcon, X } from "lucide-react";
+import {
+  InfoIcon,
+  LogOut,
+  Menu,
+  SendIcon,
+  UserIcon,
+  X,
+  MessageCircle,
+  TrashIcon,
+  Edit2Icon,
+} from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -83,6 +93,7 @@ export default function ExpertClone() {
   const [searchText, setSearchText] = useState("");
   const [searchResultFlag, setSearchResultFlag] = useState(false);
   const [toggleSideMenuFlag, setToggleSideMenu] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [qaList, setQaList] = useState<qaType[]>([]);
   const searchInput = useRef<HTMLInputElement>(null);
   const sideMenuRef = useRef<HTMLDivElement>(null);
@@ -91,6 +102,21 @@ export default function ExpertClone() {
     setAuthModalFlag(flag);
     setSelectedTab(sign);
   };
+
+  const [windowWidth, setWindowWidth] = useState(0);
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+    setWindowWidth(window.innerWidth);
+
+    window.addEventListener("resize", handleResize);
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   // current chat id
   const [currentChatId, setCurrentChatId] = useState("");
@@ -113,6 +139,8 @@ export default function ExpertClone() {
       .then((data) => {
         if (searchInput.current) {
           setSearchText("");
+          setIsLoading(false);
+          setSearchResultFlag(false);
           searchInput.current.value = "";
           searchText
             ? setQaList([
@@ -129,28 +157,31 @@ export default function ExpertClone() {
 
   const handleSearch = (e: any) => {
     e.preventDefault();
-    setSearchResultFlag(true);
-    if (currentChatId === "") {
-      // if not started new chat, create new chat
-      axios
-        .post(
-          `${BRAIN_SERVICE}/chat`,
-          {
-            name: CREATE_BRAIN_STRING,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${BRAIN_API_KEY}`,
+    if (searchText && searchText.length > 0) {
+      setSearchResultFlag(true);
+      setIsLoading(true);
+      if (currentChatId === "") {
+        // if not started new chat, create new chat
+        axios
+          .post(
+            `${BRAIN_SERVICE}/chat`,
+            {
+              name: CREATE_BRAIN_STRING,
             },
-          }
-        )
-        .then((data) => {
-          setCurrentChatId(data.data.chat_id);
-          handleChat(data.data.chat_id);
-        });
-    } else {
-      // if chat id exist, it chats with experts
-      handleChat(currentChatId);
+            {
+              headers: {
+                Authorization: `Bearer ${BRAIN_API_KEY}`,
+              },
+            }
+          )
+          .then((data) => {
+            setCurrentChatId(data.data.chat_id);
+            handleChat(data.data.chat_id);
+          });
+      } else {
+        // if chat id exist, it chats with experts
+        handleChat(currentChatId);
+      }
     }
   };
 
@@ -166,9 +197,27 @@ export default function ExpertClone() {
     setToggleSideMenu(flag);
   };
 
+  const deleteHistoryItem = (item: any) => {
+    console.log(item);
+    const updatedAnswers = qaList.filter((qa) => qa.question !== item.question);
+    setQaList([...updatedAnswers]);
+  };
+  const editHistoryItem = (item: any) => {
+    if (searchInput.current) {
+      setSearchText(item.question);
+      searchInput.current.value = item.question;
+      toggleSideMenu(false);
+      searchInput.current.focus();
+    }
+  };
+  const checkIfAuthenticated = () => {
+    if (status !== "authenticated") {
+      toggleAuthMadal(true, "sign_in");
+    }
+  };
   useEffect(() => {
     const handleSideMenu = (e: any) => {
-      if (e.target === sideMenuRef.current) {
+      if (sideMenuRef.current?.contains(e.target)) {
         return;
       }
       toggleSideMenu(false);
@@ -183,14 +232,12 @@ export default function ExpertClone() {
       <div
         ref={sideMenuRef}
         className={classNames(
-          "transition-2 absolute z-50 !h-[100vh] w-[100%] bg-white md:w-[20%]",
+          "absolute z-50 !h-[100vh] w-[100%] bg-white transition-all duration-300 ease-in md:w-[450px]",
           toggleSideMenuFlag ? "" : "hidden"
         )}>
         <div className="flex flex-col ">
           <div className="flex flex-row justify-between gap-4 p-4">
-            <div className="flex-col">
-              <Image src="/my-gpt-logo.svg" alt="" width={140} height={40} />
-            </div>
+            <div className="flex-col" />
             <div className="flex-col">
               <Button
                 onClick={() => toggleSideMenu(false)}
@@ -203,12 +250,65 @@ export default function ExpertClone() {
             </div>
           </div>
 
+          <div className="mb-8 flex flex-row justify-center">
+            <Image src="/expert-clone-side.svg" alt="" width={270} height={60} />
+          </div>
+
           <div
             className={classNames(
-              "text-secondary flex flex-row justify-center p-4 text-xl font-medium",
+              "text-secondary flex flex-row p-4 text-xl font-medium",
               status !== "authenticated" && "hidden"
             )}>
-            HISTORY
+            <div className="flex w-full flex-col ">
+              <div className="ms-3 flex flex-row justify-start">HISTORY</div>
+              <ScrollableArea className="mt-6 flex h-[600px] w-full flex-row">
+                <div className="flex w-full flex-col">
+                  {qaList.length > 0 ? (
+                    qaList.map((qa, index) => {
+                      return (
+                        <div
+                          key={index}
+                          className="bg-emphasis mb-2 ms-3 flex flex-row justify-between rounded-md  px-3 py-2">
+                          <div className="flex flex-col">
+                            <div className="flex flex-row">
+                              <div className="my-auto flex-col">
+                                <MessageCircle />
+                              </div>
+                              <div className="w-fit flex-col">
+                                <span className="ms-2 h-fit text-sm">
+                                  {qa.question.substring(0, windowWidth >= 800 ? 30 : 20)}{" "}
+                                  {qa.question.length > (windowWidth >= 800 ? 30 : 20) ? "..." : ""}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="flex flex-col">
+                            <div className="my-auto flex flex-row gap-2">
+                              <Edit2Icon
+                                width={18}
+                                height={18}
+                                className="cursor-pointer"
+                                onClick={() => editHistoryItem(qa)}
+                              />
+                              <TrashIcon
+                                width={18}
+                                height={18}
+                                className="cursor-pointer"
+                                onClick={() => deleteHistoryItem(qa)}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <div className="text-muted my-4 ms-3 flex flex-row justify-between rounded-md  px-3 py-2">
+                      No History
+                    </div>
+                  )}
+                </div>
+              </ScrollableArea>
+            </div>
           </div>
 
           <div className="absolute bottom-0 flex w-full flex-row justify-center py-4">
@@ -228,7 +328,7 @@ export default function ExpertClone() {
                   </div>
                 </div>
               </div>
-              <div className="flex flex-row justify-between">
+              <div className="flex flex-row justify-around md:mx-8">
                 {socialLinks.map((item, index) => {
                   return (
                     <div className="" key={index}>
@@ -247,6 +347,18 @@ export default function ExpertClone() {
                     </div>
                   );
                 })}
+              </div>
+              <div
+                className={classNames(
+                  "text-secondary mt-6 flex flex-row justify-center",
+                  status !== "authenticated" && "hidden"
+                )}>
+                <div
+                  className="text-secondary flex cursor-pointer flex-row gap-1 "
+                  onClick={() => signOut({ callbackUrl: "/auth/logout" })}>
+                  <LogOut className="h-12 w-8 flex-col" />
+                  <div className="text-md flex flex-col justify-center">{t("sign_out")}</div>
+                </div>
               </div>
             </div>
           </div>
@@ -296,31 +408,83 @@ export default function ExpertClone() {
       </div>
       <div
         className={classNames(
-          qaList.length > 0
-            ? " md:grid-cols-1  md:justify-items-center"
-            : " md:grid-cols-2  md:justify-items-start",
-          "mb-16 grid flex-row flex-wrap justify-items-center"
+          " md:justify-items-start  lg:grid-cols-2",
+          " grid flex-row flex-wrap justify-items-center"
         )}>
-        <div className="col-span-1 m-6 flex flex-col justify-center gap-6 md:mx-16">
-          <div className="flex-row">
-            <Image src="/expert-clone-side.svg" width={415} height={71} alt="expert-clone-side" />
+        <div className="col-span-1 m-6 flex flex-col justify-center gap-6 md:mx-16 md:w-[80%]">
+          <div className="flex w-full flex-row">
+            <div className="flex w-full flex-col">
+              {qaList.length > 0 && (
+                <>
+                  <ScrollableArea className="bg-pink/5 scrollbar-track-emphasis !scrollbar-thin scrollbar-thumb-pink h-[350px] w-full rounded-sm ">
+                    {qaList.map((qa, index) => {
+                      return (
+                        <div
+                          className="mb-6 py-2"
+                          key={index}
+                          ref={index === qaList.length - 1 ? answersRef : null}>
+                          <div className="text-secondary mx-6 my-auto flex flex-row font-bold">
+                            <div>
+                              <UserIcon
+                                color="white"
+                                width={45}
+                                height={45}
+                                className="border-subtle bg-brand-default rounded-md border p-2"
+                              />
+                            </div>
+                            <div className="ms-6">{qa.question}</div>
+                          </div>
+                          <div className="text-secondary mx-6 my-auto mt-4 flex flex-row font-medium">
+                            <Image
+                              src="/app-members/1.svg"
+                              alt="expert"
+                              color="white"
+                              width={70}
+                              height={70}
+                              className="h-12 w-12 rounded-full border-2 border-white"
+                            />
+                            <p className="ms-6">{qa.answer}</p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </ScrollableArea>
+                </>
+              )}
+            </div>
           </div>
-          <form onSubmit={(e) => handleSearch(e)} className="relative flex flex-row">
+          {qaList.length > 0 ? null : (
+            <div className="my-6 flex-row">
+              <Image src="/expert-clone-side.svg" width={415} height={71} alt="expert-clone-side" />
+            </div>
+          )}
+          <form onSubmit={(e) => handleSearch(e)} className="relative flex w-full flex-row">
             <TextField
+              onClick={() => checkIfAuthenticated()}
               onChange={(e) => changeSearchValue(e)}
               ref={searchInput}
+              disabled={isLoading && searchResultFlag}
               autoComplete="off"
               // addOnLeading={<Search color="#6D278E" />}
               addOnSuffix={
-                <div className="text-secondary flex justify-items-center gap-4 border-l-0">
-                  <Mic /> <SendIcon fill="#6D278E" className="rotate-45" />
-                </div>
+                <>
+                  <Button
+                    variant="icon"
+                    disabled={(isLoading && searchResultFlag) || status !== "authenticated"}
+                    loading={isLoading && searchResultFlag}
+                    type="sumbit"
+                    color="minimal"
+                    className="text-secondary flex cursor-pointer justify-items-center gap-4 border-l-0">
+                    {isLoading && searchResultFlag ? null : <SendIcon fill="#6D278E" className="rotate-45" />}
+                  </Button>
+                </>
               }
               placeholder="Ask me anything ..."
               inputwidth="lg"
-              addOnClassname=" !border-secondary !text-secondary !h-[50px] !bg-transparent"
+              addOnClassname=" !border-darkemphasis !text-secondary !h-[50px] !bg-transparent"
               inputMode="search"
-              className="!border-secondary text-secondary selection:border-secondary placeholder:text-secondary/60 !w-full !bg-transparent py-2 text-2xl"
+              containerClassName="w-full"
+              className="!border-darkemphasis text-secondary selection:border-secondary placeholder:text-darkemphasis !w-full !bg-transparent py-2 text-2xl"
             />
 
             {authModalFlag && (
@@ -332,48 +496,18 @@ export default function ExpertClone() {
                 }}
               />
             )}
-
-            <InfoIcon
-              color="#6D278E"
-              width={20}
-              height={20}
-              className="absolute"
-              style={{ top: "-18", right: "-18" }}
-            />
+            {qaList.length > 0 ? null : (
+              <InfoIcon
+                color="#6D278E"
+                width={20}
+                height={20}
+                className="absolute"
+                style={{ top: "-18", right: "-18" }}
+              />
+            )}
           </form>
-          <div className="flex w-full flex-row">
-            <div className="flex w-full flex-col">
-              {searchResultFlag && (
-                <>
-                  {/* <BotIcon
-                  color="white"
-                  width={50}
-                  height={50}
-                  className="border-subtle bg-brand-default rounded-md border p-2"
-                /> */}
-                  <ScrollableArea className="h-[550px] w-full">
-                    {qaList.map((qa, index) => {
-                      return (
-                        <div
-                          className="py-2"
-                          key={index}
-                          ref={index === qaList.length - 1 ? answersRef : null}>
-                          <div className="text-subtle mx-6 my-auto flex flex-row font-bold">
-                            Q- {qa.question}
-                          </div>
-                          <div className="text-subtle mx-6 my-auto flex flex-row font-medium">
-                            A- {qa.answer}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </ScrollableArea>
-                </>
-              )}
-            </div>
-          </div>
         </div>
-        <div className={classNames(qaList.length > 0 ? "hidden" : "col-span-1")}>
+        <div className={classNames("col-span-1 mb-4 w-full md:mb-0")}>
           {/* <Image src="/expert-clone-banner.svg" width={362} height={672} alt="expert-clone-banner" /> */}
           <div className="mx-auto h-[70vh] flex-row">
             <div className="h-full w-full">
@@ -382,9 +516,11 @@ export default function ExpertClone() {
           </div>
         </div>
       </div>
-      <div className="flex flex-row">
-        {!toggleSideMenuFlag && <Footer items={footerLinks} className="md:absolute md:bottom-0" />}
-      </div>
+      {windowWidth >= 800 ? (
+        <div className="flex flex-row">
+          <Footer items={footerLinks} className={classNames("md:absolute md:bottom-0")} />
+        </div>
+      ) : null}
     </div>
   );
 }
