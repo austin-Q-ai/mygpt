@@ -1,20 +1,27 @@
+import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import type { ReactElement } from "react";
+import { useState } from "react";
 
+import { createUpgradePaymentLink } from "@calcom/app-store/stripepayment/lib/client";
 import SettingsLayout from "@calcom/features/settings/layouts/SettingsLayout";
+import { upgradePlan } from "@calcom/features/upgrade-plan";
 import { classNames } from "@calcom/lib";
 import { APP_NAME } from "@calcom/lib/constants";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
+import { UserLevel } from "@calcom/prisma/enums";
 import { trpc } from "@calcom/trpc/react";
 import {
   Meta,
   ScrollableArea,
-  showToast,
   SkeletonAvatar,
   SkeletonButton,
   SkeletonContainer,
   SkeletonText,
   Button,
+  ConfirmationDialogContent,
+  Dialog,
 } from "@calcom/ui";
 import { Check, ArrowRight } from "@calcom/ui/components/icon";
 
@@ -25,11 +32,17 @@ interface SubscriptionCardProps {
   advantageList: string[];
   price: string;
   isDisabled?: boolean;
+  handleUpgrade: () => void;
 }
 
-const data: SubscriptionCardProps[] = [
+interface SubscriptionDataType {
+  advantageList: string[];
+  price: string;
+  level: UserLevel;
+}
+
+const data: SubscriptionDataType[] = [
   {
-    isCurrent: false,
     advantageList: [
       "basic_feature_access",
       "500_messages/month_limit",
@@ -38,10 +51,9 @@ const data: SubscriptionCardProps[] = [
       "one_active_user_online",
     ],
     price: "freemium",
-    isDisabled: true,
+    level: UserLevel.FREEMIUM,
   },
   {
-    isCurrent: true,
     advantageList: [
       "access_to_advanced_features",
       "5000_messages/month_limit",
@@ -50,9 +62,9 @@ const data: SubscriptionCardProps[] = [
       "two_active_users_online",
     ],
     price: "29 €/month",
+    level: UserLevel.LEVEL1,
   },
   {
-    isCurrent: false,
     advantageList: [
       "access_to_all_premium_features",
       "20000_messages/month_limit",
@@ -62,9 +74,9 @@ const data: SubscriptionCardProps[] = [
       "access_to_detailed_analysis_and_reports",
     ],
     price: "59 €/month",
+    level: UserLevel.LEVEL2,
   },
   {
-    isCurrent: false,
     advantageList: [
       "unlimited_access_to_all_features",
       "100000_messages/month_limit",
@@ -73,9 +85,9 @@ const data: SubscriptionCardProps[] = [
       "twenty_five_active_users_online",
     ],
     price: "99 €/month",
+    level: UserLevel.LEVEL3,
   },
   {
-    isCurrent: false,
     advantageList: [
       "customized_message_volume",
       "customized_data_storage",
@@ -84,6 +96,7 @@ const data: SubscriptionCardProps[] = [
       "Access to customized detailed analysis and reports",
     ],
     price: "contact_us",
+    level: UserLevel.CUSTOM,
   },
 ];
 
@@ -139,7 +152,10 @@ const SubscriptionCard = (props: SubscriptionCardProps) => {
               {t("terms_and_conditions")}
             </Link>
           </p>
-          <Button className="mt-auto flex w-full justify-center" disabled={props.isDisabled}>
+          <Button
+            className="mt-auto flex w-full justify-center"
+            disabled={props?.isDisabled}
+            onClick={() => props.handleUpgrade()}>
             {t("upgrade")}
             <ArrowRight className="ml-2 h-4 w-4 self-center" aria-hidden="true" />{" "}
           </Button>
@@ -151,16 +167,34 @@ const SubscriptionCard = (props: SubscriptionCardProps) => {
 
 const SubscriptionView = () => {
   const { t } = useLocale();
+  const router = useRouter();
   const utils = trpc.useContext();
   const { data: user, isLoading } = trpc.viewer.me.useQuery();
-  const mutation = trpc.viewer.updateProfile.useMutation({
-    onSuccess: () => {
-      showToast(t("settings_updated_successfully"), "success");
-      utils.viewer.me.invalidate();
-      utils.viewer.avatar.invalidate();
-    },
-    onError: () => {
-      showToast(t("error_updating_settings"), "error");
+
+  const [upgradeConfirmOpen, setUpgradeConfirmOpen] = useState<boolean>(false);
+  const [upgradeLevel, setUpgradeLevel] = useState<UserLevel>(UserLevel.FREEMIUM);
+
+  // const mutation = trpc.viewer.updateProfile.useMutation({
+  //   onSuccess: () => {
+  //     showToast(t("settings_updated_successfully"), "success");
+  //     utils.viewer.me.invalidate();
+  //     utils.viewer.avatar.invalidate();
+  //   },
+  //   onError: () => {
+  //     showToast(t("error_updating_settings"), "error");
+  //   },
+  // });
+
+  const upgradeMutation = useMutation(upgradePlan, {
+    onSuccess: async (responseData) => {
+      const { paymentUid } = responseData;
+      if (paymentUid) {
+        return await router.push(
+          createUpgradePaymentLink({
+            paymentUid,
+          })
+        );
+      }
     },
   });
 
@@ -168,6 +202,11 @@ const SubscriptionView = () => {
     return (
       <SkeletonLoader title={t("profile")} description={t("profile_description", { appName: APP_NAME })} />
     );
+
+  const handleUpgrade = (level: UserLevel) => {
+    setUpgradeLevel(level);
+    setUpgradeConfirmOpen(true);
+  };
 
   return (
     <div className="flex flex-row">
@@ -179,14 +218,28 @@ const SubscriptionView = () => {
         <ScrollableArea className="grid grid-cols-1 gap-4 md:h-[100vh] md:grid-cols-2 lg:grid-cols-3 2xl:h-[70vh] 2xl:grid-cols-5">
           {data.map((e, key) => (
             <SubscriptionCard
-              isCurrent={e.isCurrent}
+              isCurrent={e.level === user.level}
               advantageList={e.advantageList}
               price={e.price}
-              isDisabled={e.isDisabled || false}
               key={key}
+              handleUpgrade={() => handleUpgrade(e.level)}
             />
           ))}
         </ScrollableArea>
+        <Dialog open={upgradeConfirmOpen} onOpenChange={setUpgradeConfirmOpen}>
+          <ConfirmationDialogContent
+            variety="danger"
+            title="Confirmation"
+            confirmBtnText={t(`confirm_upgrade_event`)}
+            loadingText={t(`confirm_upgrade_event`)}
+            onConfirm={(e) => {
+              e.preventDefault();
+              setUpgradeConfirmOpen(false);
+              upgradeMutation.mutate({ level: upgradeLevel });
+            }}>
+            <p className="mt-5">{t(`confirm_upgrade_question`)}</p>
+          </ConfirmationDialogContent>
+        </Dialog>
       </div>
     </div>
   );

@@ -135,8 +135,11 @@ async function handlePaymentSuccess(event: Stripe.Event) {
       id: true,
       bookingId: true,
       walletId: true,
+      subscriptionId: true,
     },
   });
+
+  console.log(payment);
   // if (!payment?.bookingId) {
   //   console.log(JSON.stringify(paymentIntent), JSON.stringify(payment));
   // }
@@ -397,6 +400,27 @@ async function handlePaymentSuccess(event: Stripe.Event) {
     });
 
     const transaction = await prisma.$transaction([updateWallet, updateTokens]);
+  } else if (payment?.subscriptionId) {
+    const subscription = await prisma.subscription.findUnique({
+      where: {
+        id: payment?.subscriptionId,
+      },
+      select: {
+        userId: true,
+        level: true,
+      },
+    });
+
+    if (!subscription) throw new Error("Subscription not found");
+
+    await prisma.user.update({
+      where: {
+        id: subscription.userId,
+      },
+      data: {
+        level: subscription.level,
+      },
+    });
   } else throw new HttpCode({ statusCode: 204, message: "Payment and Transaction not found" });
 }
 
@@ -515,9 +539,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const event = stripe.webhooks.constructEvent(payload, sig, process.env.STRIPE_WEBHOOK_SECRET);
 
-    if (!event.account) {
-      throw new HttpCode({ statusCode: 202, message: "Incoming connected account" });
-    }
+    // if (!event.account) {
+    //   throw new HttpCode({ statusCode: 202, message: "Incoming connected account" });
+    // }
 
     const handler = webhookHandlers[event.type];
     if (handler) {

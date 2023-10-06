@@ -19,7 +19,7 @@ import { Plus, Pencil, Trash2, Newspaper } from "@calcom/ui/components/icon";
 
 import PageWrapper from "@components/PageWrapper";
 
-const QDRANT_URL = "http://159.89.5.59:6333";
+const QDRANT_URL = process.env.NEXT_PUBLIC_QDRANT_URL;
 const COLLECTION_NAME = "topics";
 
 interface ITopic {
