@@ -130,6 +130,7 @@ export type FormValues = {
   bookingFields: z.infer<typeof eventTypeBookingFields>;
   availability?: AvailabilityOption;
   bookerLayouts: BookerLayoutSettings;
+  logo?: string | undefined;
 };
 
 export type CustomInputParsed = typeof customInputSchema._output;
@@ -270,6 +271,7 @@ const EventTypePage = (props: EventTypeSetupProps) => {
               .filter((slug) => slug !== eventType.slug) ?? [],
         },
       })),
+      logo: eventType.logo || undefined,
     };
   }, [eventType, periodDates, metadata]);
 

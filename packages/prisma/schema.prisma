@@ -55,6 +55,7 @@ model EventType {
   description             String?
   position                Int                     @default(0)
   /// @zod.custom(imports.eventTypeLocations)
+  logo                    String?
   locations               Json?
   length                  Int
   offsetStart             Int                     @default(0)

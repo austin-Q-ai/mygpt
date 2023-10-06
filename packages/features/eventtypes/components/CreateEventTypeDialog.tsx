@@ -26,6 +26,8 @@ import {
   DialogClose,
   DialogContent,
   Form,
+  ImageUploader,
+  Label,
   RadioGroup as RadioArea,
   showToast,
   TextField,
@@ -152,6 +154,7 @@ export default function CreateEventTypeDialog({
         "length",
         "slug",
         "locations",
+        "logo",
       ]}>
       <DialogContent
         type="creation"
@@ -294,6 +297,20 @@ export default function CreateEventTypeDialog({
                 </RadioArea.Group>
               </div>
             )}
+            <div className="flex flex-col">
+              <Label className="text-sm">{t("image")}</Label>
+              <ImageUploader
+                target="Image"
+                id="image-upload"
+                isFilled
+                buttonMsg=""
+                large
+                handleAvatarChange={(logo) => {
+                  form.setValue("logo", logo, { shouldDirty: true });
+                }}
+                imageSrc={undefined}
+              />
+            </div>
           </div>
           <DialogFooter showDivider>
             <DialogClose />

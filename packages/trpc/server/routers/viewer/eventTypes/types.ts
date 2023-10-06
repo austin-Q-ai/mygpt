@@ -11,6 +11,7 @@ export const EventTypeUpdateInput = _EventTypeModel
       integration: true,
       externalId: true,
     }),
+    logo: z.string().optional(),
     users: z.array(stringOrNumber).optional(),
     children: z
       .array(
