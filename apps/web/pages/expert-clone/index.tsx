@@ -30,6 +30,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  showToast,
 } from "@calcom/ui";
 
 import PageWrapper from "@components/PageWrapper";
@@ -82,7 +83,15 @@ export default function ExpertClone() {
   ];
   type qaType = {
     question: string;
+    chat_id?: string;
     answer: string;
+  };
+
+  type historyType = {
+    chat_id: string;
+    chat_name: string;
+    creation_time: Date;
+    user_id: string;
   };
 
   useCalcomTheme(brandTheme);
@@ -95,6 +104,8 @@ export default function ExpertClone() {
   const [toggleSideMenuFlag, setToggleSideMenu] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [qaList, setQaList] = useState<qaType[]>([]);
+  const [qaHistory, setQaHistory] = useState<historyType[]>([]);
+  const [historyItemDelete, setHistoryItemDelete] = useState("");
   const searchInput = useRef<HTMLInputElement>(null);
   const sideMenuRef = useRef<HTMLDivElement>(null);
   const answersRef = useRef<HTMLDivElement>(null);
@@ -121,7 +132,7 @@ export default function ExpertClone() {
   // current chat id
   const [currentChatId, setCurrentChatId] = useState("");
 
-  const handleChat = (chatId: string) => {
+  const handleChat = (chatId: string, edit?: boolean) => {
     axios
       .post(
         `${BRAIN_SERVICE}/chat/${chatId}/question`,
@@ -137,21 +148,30 @@ export default function ExpertClone() {
         }
       )
       .then((data) => {
+        setSearchText("");
+        setIsLoading(false);
+        setSearchResultFlag(false);
         if (searchInput.current) {
-          setSearchText("");
-          setIsLoading(false);
-          setSearchResultFlag(false);
           searchInput.current.value = "";
-          searchText
+        }
+        data.data.chat_id
+          ? edit
             ? setQaList([
-                ...qaList,
                 {
                   question: searchText,
+                  chat_id: data.data.chat_id,
                   answer: data.data.assistant,
                 },
               ])
-            : null;
-        }
+            : setQaList([
+                ...qaList,
+                {
+                  question: searchText,
+                  chat_id: data.data.chat_id,
+                  answer: data.data.assistant,
+                },
+              ])
+          : null;
       });
   };
 
@@ -160,28 +180,28 @@ export default function ExpertClone() {
     if (searchText && searchText.length > 0) {
       setSearchResultFlag(true);
       setIsLoading(true);
-      if (currentChatId === "") {
-        // if not started new chat, create new chat
-        axios
-          .post(
-            `${BRAIN_SERVICE}/chat`,
-            {
-              name: CREATE_BRAIN_STRING,
+    }
+    if (currentChatId === "") {
+      // if not started new chat, create new chat
+      axios
+        .post(
+          `${BRAIN_SERVICE}/chat`,
+          {
+            name: CREATE_BRAIN_STRING,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${BRAIN_API_KEY}`,
             },
-            {
-              headers: {
-                Authorization: `Bearer ${BRAIN_API_KEY}`,
-              },
-            }
-          )
-          .then((data) => {
-            setCurrentChatId(data.data.chat_id);
-            handleChat(data.data.chat_id);
-          });
-      } else {
-        // if chat id exist, it chats with experts
-        handleChat(currentChatId);
-      }
+          }
+        )
+        .then((data) => {
+          setCurrentChatId(data.data.chat_id);
+          handleChat(data.data.chat_id);
+        });
+    } else {
+      // if chat id exist, it chats with experts
+      handleChat(currentChatId);
     }
   };
 
@@ -195,7 +215,9 @@ export default function ExpertClone() {
         },
       })
       .then((data) => {
-        console.log(data);
+        if (data.data.chats) {
+          setQaHistory(data.data.chats);
+        }
         // you can use data.data.chats
         // (data.data.chats is array of objects, each object schema is as follows)
         // {
@@ -216,15 +238,16 @@ export default function ExpertClone() {
         },
       })
       .then((data) => {
-        console.log(data);
+        showToast(data.data.message, "success");
+        setCurrentChatId("");
         // you can use data.data.message
         // data.data.message type is string and it is as follows
         // `${chat_id} has been deleted.`
       });
   };
-
   useEffect(() => {
     answersRef?.current?.scrollIntoView({ behavior: "smooth" });
+    getChatHistory();
   }, [qaList]);
 
   const changeSearchValue = (e: any) => {
@@ -235,18 +258,21 @@ export default function ExpertClone() {
     setToggleSideMenu(flag);
   };
 
-  const deleteHistoryItem = (item: any) => {
-    console.log(item);
-    const updatedAnswers = qaList.filter((qa) => qa.question !== item.question);
-    setQaList([...updatedAnswers]);
+  const deleteHistoryItem = (item: historyType) => {
+    setHistoryItemDelete(item.chat_id);
+    const updatedQas = qaList.filter((qa) => qa.chat_id !== item.chat_id);
+    setQaList([...updatedQas]);
+    getChatHistory();
+
+    deleteChatHistory(item.chat_id);
   };
-  const editHistoryItem = (item: any) => {
-    if (searchInput.current) {
-      setSearchText(item.question);
-      searchInput.current.value = item.question;
-      toggleSideMenu(false);
-      searchInput.current.focus();
-    }
+  const editHistoryItem = (item: historyType) => {
+    setCurrentChatId(item.chat_id);
+    setSearchResultFlag(true);
+    setIsLoading(true);
+    setToggleSideMenu(false);
+    setQaList([]);
+    handleChat(item.chat_id, true);
   };
   const checkIfAuthenticated = () => {
     if (status !== "authenticated") {
@@ -299,41 +325,60 @@ export default function ExpertClone() {
             )}>
             <div className="flex w-full flex-col ">
               <div className="ms-3 flex flex-row justify-start">HISTORY</div>
-              <ScrollableArea className="mt-6 flex h-[600px] w-full flex-row">
+              <ScrollableArea className="mt-6 flex h-[450px] w-full flex-row">
                 <div className="flex w-full flex-col">
-                  {qaList.length > 0 ? (
-                    qaList.map((qa, index) => {
+                  {qaHistory.length > 0 ? (
+                    qaHistory.map((qa, index) => {
                       return (
                         <div
                           key={index}
                           className="bg-emphasis mb-2 ms-3 flex flex-row justify-between rounded-md  px-3 py-2">
-                          <div className="flex flex-col">
+                          <div className="my-auto flex flex-col">
                             <div className="flex flex-row">
                               <div className="my-auto flex-col">
                                 <MessageCircle />
                               </div>
                               <div className="w-fit flex-col">
                                 <span className="ms-2 h-fit text-sm">
-                                  {qa.question.substring(0, windowWidth >= 800 ? 30 : 20)}{" "}
-                                  {qa.question.length > (windowWidth >= 800 ? 30 : 20) ? "..." : ""}
+                                  {qa.chat_name.substring(0, windowWidth >= 800 ? 30 : 20)}{" "}
+                                  {qa.chat_name.length > (windowWidth >= 800 ? 30 : 20) ? "..." : ""}
                                 </span>
                               </div>
                             </div>
                           </div>
                           <div className="flex flex-col">
-                            <div className="my-auto flex flex-row gap-2">
-                              <Edit2Icon
-                                width={18}
-                                height={18}
-                                className="cursor-pointer"
-                                onClick={() => editHistoryItem(qa)}
-                              />
-                              <TrashIcon
-                                width={18}
-                                height={18}
-                                className="cursor-pointer"
-                                onClick={() => deleteHistoryItem(qa)}
-                              />
+                            <div className="my-auto flex flex-row justify-center gap-2">
+                              <Button
+                                color="minimal"
+                                variant="icon"
+                                disabled={historyItemDelete === qa.chat_id}
+                                onClick={() => editHistoryItem(qa)}>
+                                <Edit2Icon
+                                  width={18}
+                                  height={18}
+                                  className={classNames(
+                                    historyItemDelete === qa.chat_id
+                                      ? "disabled text-muted cursor-not-allowed"
+                                      : "text-secondary cursor-pointer"
+                                  )}
+                                />
+                              </Button>
+                              <Button
+                                color="minimal"
+                                variant="icon"
+                                loading={historyItemDelete === qa.chat_id}
+                                disabled={historyItemDelete === qa.chat_id}
+                                onClick={() => deleteHistoryItem(qa)}>
+                                <TrashIcon
+                                  width={18}
+                                  height={18}
+                                  className={classNames(
+                                    historyItemDelete === qa.chat_id
+                                      ? "hidden"
+                                      : "text-secondary cursor-pointer"
+                                  )}
+                                />
+                              </Button>
                             </div>
                           </div>
                         </div>
