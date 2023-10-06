@@ -599,11 +599,13 @@ export default function ExpertClone() {
           </div>
         </div>
       </div>
-      {windowWidth >= 800 ? (
+      {windowWidth >= 1024 ? (
         <div className="flex flex-row">
           <Footer items={footerLinks} className={classNames("md:absolute md:bottom-0")} />
         </div>
-      ) : null}
+      ) : (
+        <Footer items={footerLinks} />
+      )}
     </div>
   );
 }
