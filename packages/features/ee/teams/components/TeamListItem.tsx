@@ -323,7 +323,7 @@ export default function TeamListItem(props: Props) {
                               color="destructive"
                               type="button"
                               StartIcon={Trash}
-                              onClick={(e) => {
+                              onClick={(e: any) => {
                                 e.stopPropagation();
                               }}>
                               {t("disband_team")}
@@ -351,7 +351,7 @@ export default function TeamListItem(props: Props) {
                               color="destructive"
                               type="button"
                               StartIcon={LogOut}
-                              onClick={(e) => {
+                              onClick={(e: any) => {
                                 e.stopPropagation();
                               }}>
                               {t("leave_team")}

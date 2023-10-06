@@ -52,7 +52,7 @@ export function EmptyScreen({
           <div className="text-default mb-8 mt-3 text-center text-sm font-normal leading-6">
             {description}
           </div>
-          {buttonOnClick && buttonText && <Button onClick={(e) => buttonOnClick(e)}>{buttonText}</Button>}
+          {buttonOnClick && buttonText && <Button onClick={(e: any) => buttonOnClick(e)}>{buttonText}</Button>}
           {buttonRaw}
         </div>
       </div>
