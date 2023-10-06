@@ -167,7 +167,7 @@ export default function Benefits() {
     }
   }, [benifitSelected]);
   return (
-    <div className="grid grid-cols-1 md:h-[620px] md:grid-cols-3">
+    <div className="grid grid-cols-1 md:h-[650px] md:grid-cols-3">
       <div className="col-span-1 mx-4 flex">
         <div className="flex h-full flex-col justify-center md:mr-4 md:px-2 ">
           <div className="flex-row">

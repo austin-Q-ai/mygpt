@@ -144,14 +144,15 @@ export default function Login({
 
   return (
     <div
-    // style={
-    //   {
-    //     "--cal-brand": "#111827",
-    //     "--cal-brand-emphasis": "#101010",
-    //     "--cal-brand-text": "white",
-    //     "--cal-brand-subtle": "#9CA3AF",
-    //   } as CSSProperties
-    // }
+      className="h-fit w-full lg:w-fit"
+      // style={
+      //   {
+      //     "--cal-brand": "#111827",
+      //     "--cal-brand-emphasis": "#101010",
+      //     "--cal-brand-text": "white",
+      //     "--cal-brand-subtle": "#9CA3AF",
+      //   } as CSSProperties
+      // }
     >
       <AuthContainer
         title={t("login")}
@@ -229,7 +230,7 @@ export default function Login({
                     href="/signup"
                     type="submit"
                     color="secondary"
-                    className="hover:bg-muted w-full justify-center rounded-md border p-1 text-center text-lg">
+                    className="hover:bg-subtle bg-muted border-subtle w-full justify-center rounded-md border p-1 text-center text-lg font-medium">
                     {t("sign_up")}
                   </Link>
                 </div>

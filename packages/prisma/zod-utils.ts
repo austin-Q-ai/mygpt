@@ -217,6 +217,10 @@ export const buyTokensBodySchema = z.object({
   amount: z.number(),
 });
 
+export const upgradePlanBodySchema = z.object({
+  level: z.string(),
+});
+
 export const requiredCustomInputSchema = z.union([
   // string must be given & nonempty
   z.string().trim().min(1),
@@ -227,6 +231,7 @@ export const requiredCustomInputSchema = z.union([
 export type BookingCreateBody = z.input<typeof bookingCreateBodySchema>;
 
 export type BuyTokensBody = z.input<typeof buyTokensBodySchema>;
+export type UpgradePlanBody = z.input<typeof upgradePlanBodySchema>;
 
 export const bookingConfirmPatchBodySchema = z.object({
   bookingId: z.number(),
@@ -286,6 +291,14 @@ export const vitalSettingsUpdateSchema = z.object({
   connected: z.boolean().optional(),
   selectedParam: z.string().optional(),
   sleepValue: z.number().optional(),
+});
+
+export const socialLink = z.object({
+  telegram: z.string().optional(),
+  facebook: z.string().optional(),
+  discord: z.string().optional(),
+  instagram: z.string().optional(),
+  linkedin: z.string().optional(),
 });
 
 export const createdEventSchema = z
@@ -577,6 +590,7 @@ export const allManagedEventTypeProps: { [k in keyof Omit<Prisma.EventTypeSelect
   workflows: true,
   bookingFields: true,
   durationLimits: true,
+  logo: true,
 };
 
 // All properties that are defined as unlocked based on all managed props

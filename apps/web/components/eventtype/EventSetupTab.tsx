@@ -20,6 +20,7 @@ import { slugify } from "@calcom/lib/slugify";
 import turndown from "@calcom/lib/turndownService";
 import {
   Button,
+  ImageUploader,
   Label,
   Select,
   SettingsToggle,
@@ -494,6 +495,20 @@ export const EventSetupTab = (
             min={1}
           />
         )}
+        <div className="flex flex-col">
+          <Label className="text-sm">{t("image")}</Label>
+          <ImageUploader
+            target="Image"
+            id="image-upload"
+            isFilled
+            buttonMsg=""
+            large
+            handleAvatarChange={(logo) => {
+              formMethods.setValue("logo", logo, { shouldDirty: true });
+            }}
+            imageSrc={eventType.logo || undefined}
+          />
+        </div>
         {!lengthLockedProps.disabled && (
           <div className="!mt-4 [&_label]:my-1 [&_label]:font-normal">
             <SettingsToggle

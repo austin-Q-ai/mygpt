@@ -27,18 +27,20 @@ export default function CarouselDemo() {
       showIndicators={false}
       showArrows={true}
       showStatus={false}
+      className="relative"
       showThumbs={false}
       interval={5000}
       centerMode
-      centerSlidePercentage={windowWidth > 375 ? 20 : 14}
+      centerSlidePercentage={windowWidth > 900 ? 20 : 12}
       transitionTime={900}
       infiniteLoop
       renderArrowPrev={(clickHandler, hasPrev) => {
         return (
           <div
+            style={{ left: "calc(4% + 1px)" }}
             className={`${
               hasPrev ? "absolute" : "hidden"
-            } bottom-0 left-0 top-0 z-20 flex cursor-pointer items-center justify-center opacity-30 hover:opacity-100`}
+            } bottom-0  top-0 z-20  flex cursor-pointer items-center justify-center opacity-30 hover:opacity-100`}
             onClick={clickHandler}>
             <ChevronLeft className="text-emphasis h-7 w-7" />
           </div>
@@ -47,6 +49,7 @@ export default function CarouselDemo() {
       renderArrowNext={(clickHandler, hasNext) => {
         return (
           <div
+            style={{ right: "calc(4% + 1px)" }}
             className={`${
               hasNext ? "absolute" : "hidden"
             } bottom-0 right-0 top-0 z-20 flex cursor-pointer items-center justify-center opacity-30 hover:opacity-100`}
@@ -55,130 +58,139 @@ export default function CarouselDemo() {
           </div>
         );
       }}>
-      <div className="relative    pt-[75%]  md:w-20">
+      <div className="relative pt-[80%] min-[320px]:pt-[63%]  lg:w-20 lg:pt-[65%]">
         <Image
           src="/app-members/1.svg"
           alt="avatar1"
           width={20}
           height={20}
-          className="left-0 top-0 rounded-2xl object-cover"
+          className="left-0 top-0 rounded-full object-cover"
         />
       </div>
-      <div className="relative   pt-[75%]  md:w-20">
+      <div className="relative pt-[80%] min-[320px]:pt-[63%]  lg:w-20 lg:pt-[65%]">
         <Image
           src="/app-members/2.svg"
           alt="avatar2"
           width={20}
           height={20}
-          className="left-0 top-0 rounded-2xl object-cover"
+          className="left-0 top-0 rounded-full object-cover"
         />
       </div>
-      <div className="relative   pt-[75%]  md:w-20">
+      <div className="relative pt-[80%] min-[320px]:pt-[63%]  lg:w-20 lg:pt-[65%]">
         <Image
           src="/app-members/3.svg"
           alt="avatar3"
           width={20}
           height={20}
-          className="left-0 top-0 rounded-2xl object-cover"
+          className="left-0 top-0 rounded-full object-cover"
         />
       </div>
-      <div className="relative   pt-[75%]  md:w-20">
+      <div className="relative pt-[80%] min-[320px]:pt-[63%]  lg:w-20 lg:pt-[65%]">
         <Image
           src="/app-members/4.svg"
           alt="avatar4"
           width={20}
           height={20}
-          className="left-0 top-0 rounded-2xl object-cover"
+          className="left-0 top-0 rounded-full object-cover"
         />
       </div>
-      <div className="relative   pt-[75%]  md:w-20">
+      <div className="relative pt-[80%] min-[320px]:pt-[63%]  lg:w-20 lg:pt-[65%]">
         <Image
           src="/app-members/5.svg"
           alt="avatar5"
           width={20}
           height={20}
-          className="left-0 top-0 rounded-2xl object-cover"
+          className="left-0 top-0 rounded-full object-cover"
         />
       </div>
-      <div className="relative   pt-[75%]  md:w-20">
+      <div className="relative pt-[80%] min-[320px]:pt-[63%]  lg:w-20 lg:pt-[65%]">
         <Image
           src="/app-members/6.svg"
           alt="avatar6"
           width={20}
           height={20}
-          className="left-0 top-0 rounded-2xl object-cover"
+          className="left-0 top-0 rounded-full object-cover"
         />
       </div>
-      <div className="relative   pt-[75%]  md:w-20">
+      <div className="relative pt-[80%] min-[320px]:pt-[63%]  lg:w-20 lg:pt-[65%]">
         <Image
           src="/app-members/8.jpeg"
           alt="avatar8"
           width={20}
           height={20}
-          className="left-0 top-0 rounded-2xl object-cover"
+          className="left-0 top-0 rounded-full object-cover"
         />
       </div>
-      <div className="relative   pt-[75%]  md:w-20">
+      <div className="relative pt-[80%] min-[320px]:pt-[63%]  lg:w-20 lg:pt-[65%]">
         <Image
           src="/app-members/9.jpeg"
           alt="avatar9"
           width={20}
           height={20}
-          className="left-0 top-0 rounded-2xl object-cover"
+          className="left-0 top-0 rounded-full object-cover"
         />
       </div>
-      <div className="relative   pt-[75%]  md:w-20">
+      <div className="relative pt-[80%] min-[320px]:pt-[63%]  lg:w-20 lg:pt-[65%]">
         <Image
           src="/app-members/10.jpeg"
           alt="avatar10"
           width={20}
           height={20}
-          className="left-0 top-0 rounded-2xl object-cover"
+          className="left-0 top-0 rounded-full object-cover"
         />
       </div>
-      <div className="relative   pt-[75%]  md:w-20">
+      <div className="relative pt-[80%] min-[320px]:pt-[63%]  lg:w-20 lg:pt-[65%]">
         <Image
           src="/app-members/11.jpeg"
           alt="avatar11"
           width={20}
           height={20}
-          className="left-0 top-0 rounded-2xl object-cover"
+          className="left-0 top-0 rounded-full object-cover"
         />
       </div>
-      <div className="relative   pt-[75%]  md:w-20">
+      <div className="relative pt-[80%] min-[320px]:pt-[63%]  lg:w-20 lg:pt-[65%]">
         <Image
           src="/app-members/12.png"
           alt="avatar12"
           width={20}
           height={20}
-          className="left-0 top-0 rounded-2xl object-cover"
+          className="left-0 top-0 rounded-full object-cover"
         />
       </div>
-      <div className="relative   pt-[75%]  md:w-20">
+      <div className="relative pt-[80%] min-[320px]:pt-[63%]  lg:w-20 lg:pt-[65%]">
         <Image
           src="/app-members/13.jpeg"
           alt="avatar13"
           width={20}
           height={20}
-          className="left-0 top-0 rounded-2xl object-cover"
+          className="left-0 top-0 rounded-full object-cover"
         />
       </div>
-      <div className="relative   pt-[75%]  md:w-20">
+      <div className="relative pt-[80%] min-[320px]:pt-[63%]  lg:w-20 lg:pt-[65%]">
         <Image
           src="/app-members/14.jpeg"
           alt="avatar14"
           width={20}
           height={20}
-          className="left-0 top-0 rounded-2xl object-cover"
+          className="left-0 top-0 rounded-full object-cover"
         />
       </div>
-      <div className="relative   pt-[75%]  md:w-20">
+      <div className="relative pt-[80%] min-[320px]:pt-[63%]  lg:w-20 lg:pt-[65%]">
         <Image
           src="/app-members/15.jpeg"
           alt="avatar15"
           width={20}
           height={20}
-          className="left-0 top-0 rounded-2xl object-cover"
+          className="left-0 top-0 rounded-full object-cover"
+        />
+      </div>
+      <div className="relative pt-[80%] min-[320px]:pt-[63%]  lg:w-20 lg:pt-[65%]">
+        <Image
+          src="/app-members/16.jpeg"
+          alt="avatar16"
+          width={20}
+          height={20}
+          className="left-0 top-0 rounded-full object-cover"
         />
       </div>
     </Carousel>

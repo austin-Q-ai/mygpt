@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { CSS3DRenderer, CSS3DObject } from "three/examples/jsm/renderers/CSS3DRenderer";
@@ -28,14 +28,23 @@ const MicroCards: React.FC<MicroCardsProps> = (props: MicroCardsProps) => {
   const servicesRef = useRef<HTMLDivElement>(null);
   const timetokenRef = useRef<HTMLDivElement>(null);
 
+  const [windowWidth, setWindowWidth] = useState(0);
+
   useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+    setWindowWidth(window.innerWidth);
+
+    window.addEventListener("resize", handleResize);
+
     const sceneElement = sceneRef.current;
 
     const sizes: {
       width: number;
       height: number;
     } = {
-      width: sceneElement?.clientWidth || 0,
+      width: windowWidth <= 375 ? 374 : sceneElement?.clientWidth || 0,
       height: sceneElement?.clientHeight || 0,
     };
 
@@ -152,20 +161,23 @@ const MicroCards: React.FC<MicroCardsProps> = (props: MicroCardsProps) => {
     // Clean up function
     return () => {
       // Stop the animation loop when the component is unmounted
+      window.removeEventListener("resize", handleResize);
       if (requestRef.current) {
         cancelAnimationFrame(requestRef.current);
       }
     };
   }, []);
 
+  const randamUserId = -1;
+
   return (
     <div className="h-full w-full">
       <div ref={sceneRef} className="flex h-full w-full items-center justify-center" />
       <div>
-        <CoordonneesPage ref={aiRef} userId={props.userId || 3} />
-        <AIPage ref={coordonneesRef} userId={props.userId || 3} />
-        <TimeTokenPage ref={servicesRef} userId={props.userId || 3} />
-        <ServicesPage ref={timetokenRef} userId={props.userId || 3} />
+        <CoordonneesPage ref={aiRef} userId={props.userId || randamUserId} />
+        <AIPage ref={coordonneesRef} userId={props.userId || randamUserId} />
+        <TimeTokenPage ref={servicesRef} userId={props.userId || randamUserId} />
+        <ServicesPage ref={timetokenRef} userId={props.userId || randamUserId} />
       </div>
     </div>
   );

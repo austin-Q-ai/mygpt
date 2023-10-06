@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
@@ -16,13 +15,14 @@ export const ServicesPage = React.forwardRef<HTMLDivElement, ServicesPageProps>(
   (props: ServicesPageProps, ref) => {
     // you need to replace userId with props.id
     const { data: user, isLoading } = trpc.viewer.microcard.user.useQuery({ userId: props.userId });
+    console.log(user?.eventTypes);
 
     return (
       <div className="flex h-[900px] w-[500px] flex-col bg-white" ref={ref}>
         {user && !isLoading && (
           <>
-            <Header title="Events" description={user.username} hasCalendar />
-            <div className="h-[75vh] px-5 py-5">
+            <Header title="Events" description={user.username} />
+            <div className="h-[75%] px-5 py-5">
               <p className="pb-4 text-center text-lg font-bold">Book Meeting</p>
               <div className="bg-pink/10 rounded-md">
                 {user.eventTypes
@@ -35,7 +35,7 @@ export const ServicesPage = React.forwardRef<HTMLDivElement, ServicesPageProps>(
                           <p className="text-sm font-bold ">{event.title}</p>
                           <p className="text-xs text-gray-500">lun.29 aug, 9:00 AM - 5:00 PM</p>
                           <p className="text-[10px] text-gray-500">
-                            Link: hugo.myGPT.fi/hugo/videoconference
+                            Link: {user.username}.myGPT.fi/hugo/videoconference
                           </p>
                           <Badge className="w-fit" variant="gray" startIcon={Clock}>
                             {event.slug}
@@ -44,16 +44,13 @@ export const ServicesPage = React.forwardRef<HTMLDivElement, ServicesPageProps>(
                             <CalendarPlus className="h-4" />
                           </span>
                         </div>
-                        <Image alt="image" src="https://picsum.photos/536/354" width={90} height={110} />
+                        {event.logo && <img alt={event.title} src={event.logo} width={90} height={110} />}
                       </div>
                     </div>
                   ))}
               </div>
               <div className="flex items-center">
-                <Link
-                  href={{
-                    pathname: `/${user.username}`,
-                  }}>
+                <Link href={`/${user.username}`}>
                   <button className="bg-pink/50 mx-auto mt-4 rounded px-2 py-1 text-center text-lg text-white">
                     All events
                   </button>

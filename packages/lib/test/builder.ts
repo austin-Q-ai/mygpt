@@ -103,6 +103,7 @@ export const buildEventType = (eventType?: Partial<EventType>): EventType => {
     successRedirectUrl: null,
     bookingFields: [],
     parentId: null,
+    logo: "",
     ...eventType,
   };
 };
@@ -214,8 +215,10 @@ export const buildUser = <T extends Partial<UserPayload>>(user?: T): UserPayload
     invitedTo: null,
     locale: "en",
     metadata: null,
+    social: null,
     password: null,
     role: "USER",
+    level: "FREEMIUM",
     schedules: [],
     selectedCalendars: [],
     startTime: 0,

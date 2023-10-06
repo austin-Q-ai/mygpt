@@ -56,6 +56,7 @@ model EventType {
   position                Int                     @default(0)
   /// @zod.custom(imports.eventTypeLocations)
   locations               Json?
+  logo                    String?
   length                  Int
   offsetStart             Int                     @default(0)
   hidden                  Boolean                 @default(false)
@@ -166,6 +167,14 @@ enum UserPermissionRole {
   ADMIN
 }
 
+enum UserLevel {
+  FREEMIUM
+  LEVEL1
+  LEVEL2
+  LEVEL3
+  CUSTOM
+}
+
 model Experience {
   id         Int     @id @default(autoincrement())
   position   String  @default("")
@@ -258,8 +267,11 @@ model User {
   allowDynamicBooking          Boolean?                @default(true)
   /// @zod.custom(imports.userMetadata)
   metadata                     Json?
+  /// @zod.custom(imports.socialLink)
+  social                       Json?
   verified                     Boolean?                @default(false)
   role                         UserPermissionRole      @default(USER)
+  level                        UserLevel               @default(FREEMIUM)
   disableImpersonation         Boolean                 @default(false)
   impersonatedUsers            Impersonations[]        @relation("impersonated_user")
   impersonatedBy               Impersonations[]        @relation("impersonated_by_user")
@@ -286,6 +298,7 @@ model User {
   emitterTimeTokensTransaction TimeTokensTransaction[] @relation("emitter_relation")
   aiAdvantage                  String[]
   timeTokenAdvantage           String[]
+  Subscription                 Subscription[]
 
   @@unique([email])
   @@unique([email, username])
@@ -471,6 +484,15 @@ model Schedule {
   @@index([userId])
 }
 
+model Subscription {
+  id      Int       @id @default(autoincrement())
+  user    User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId  Int
+  level   UserLevel
+  paid    Boolean   @default(false)
+  Payment Payment[]
+}
+
 model TimeTokensTransaction {
   id        Int       @id @default(autoincrement())
   owner     User      @relation("owner_relation", fields: [ownerId], references: [id], onDelete: Cascade)
@@ -568,22 +590,24 @@ model ReminderMail {
 }
 
 model Payment {
-  id            Int                    @id @default(autoincrement())
-  uid           String                 @unique
-  app           App?                   @relation(fields: [appId], references: [slug], onDelete: Cascade)
-  appId         String?
-  bookingId     Int?
-  booking       Booking?               @relation(fields: [bookingId], references: [id], onDelete: Cascade)
-  walletId      Int?
-  wallet        TimeTokensTransaction? @relation(fields: [walletId], references: [id], onDelete: Cascade)
-  amount        Int
-  fee           Int
-  currency      String
-  success       Boolean
-  refunded      Boolean
-  data          Json
-  externalId    String                 @unique
-  paymentOption PaymentOption?         @default(ON_BOOKING)
+  id             Int                    @id @default(autoincrement())
+  uid            String                 @unique
+  app            App?                   @relation(fields: [appId], references: [slug], onDelete: Cascade)
+  appId          String?
+  bookingId      Int?
+  booking        Booking?               @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  walletId       Int?
+  wallet         TimeTokensTransaction? @relation(fields: [walletId], references: [id], onDelete: Cascade)
+  subscriptionId Int?
+  subscription   Subscription?          @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  amount         Int
+  fee            Int
+  currency       String
+  success        Boolean
+  refunded       Boolean
+  data           Json
+  externalId     String                 @unique
+  paymentOption  PaymentOption?         @default(ON_BOOKING)
 
   @@index([bookingId])
   @@index([externalId])

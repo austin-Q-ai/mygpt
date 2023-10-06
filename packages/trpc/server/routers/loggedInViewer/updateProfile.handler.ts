@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import type { Prisma } from "@prisma/client";
+import axios from "axios";
 import { MeiliSearch } from "meilisearch";
 import type { NextApiResponse, GetServerSidePropsContext } from "next";
 
@@ -20,6 +21,9 @@ import { TRPCError } from "@trpc/server";
 
 import type { TUpdateProfileInputSchema } from "./updateProfile.schema";
 
+const QDRANT_URL = process.env.NEXT_PUBLIC_QDRANT_URL;
+const COLLECTION_NAME = "topics";
+
 type UpdateProfileOptions = {
   ctx: {
     user: NonNullable<TrpcSessionUser>;
@@ -37,10 +41,8 @@ const index = client.index("users");
 
 export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions) => {
   const { user } = ctx;
-  const input1: TUpdateProfileInputSchema = input;
-  delete input1.defaultValue;
-  const data: Prisma.UserUpdateInput = {
-    ...input1,
+  const data: Prisma.UserUpdateInput & { defaultValue?: boolean } = {
+    ...input,
     experiences: input.experiences
       ? {
           updateMany: input.experiences
@@ -86,6 +88,7 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
         }
       : {},
     metadata: input.metadata as Prisma.InputJsonValue,
+    social: input.social,
   };
 
   const price: number = input.price || 0;
@@ -117,6 +120,7 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
       "Transferability and Interoperability",
       "User Engagement and Loyalty",
     ];
+    delete data.defaultValue;
   }
 
   let isPremiumUsername = false;
@@ -200,6 +204,7 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
       educations: true,
       skills: true,
       metadata: true,
+      social: true,
       name: true,
       createdDate: true,
       bio: true,
@@ -282,5 +287,11 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
       .then(() => console.info("Booking pages revalidated"))
       .catch((e) => console.error(e));
   }*/
+
+  // update data on qdrant db
+  await axios.post(`${QDRANT_URL}/collections/${COLLECTION_NAME}/points/payload`, {
+    payload: input,
+    points: [user.id],
+  });
   return input;
 };

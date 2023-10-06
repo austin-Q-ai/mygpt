@@ -2,8 +2,9 @@ workflow:
   rules:
     - if: $CI_PIPELINE_SOURCE == "push"
     - if: $CI_PIPELINE_SOURSE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH  == "dev"
 
-stages:          # List of stages for jobs, and their order of execution
+stages: # List of stages for jobs, and their order of execution
   - push_into_walcaldeploy
 
 push_into_walcaldeploy:
@@ -15,6 +16,7 @@ push_into_walcaldeploy:
     - git config --global user.name "Oliver Cawson"
     - git clone https://cawsonoliver33:$ACCESS_TOKEN@gitlab.com/i2xo/walcaldeploy
     - cd walcaldeploy/
+    - git checkout dev
     - git submodule update --remote --init
     - git add .
     - git commit -m "update submodule on dev"

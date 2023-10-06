@@ -1,9 +1,9 @@
+import { ImageIcon } from "lucide-react";
 import type { ChangeEvent, DragEvent } from "react";
 import React, { useState, useRef, useEffect } from "react";
 import Webcam from "react-webcam";
 
 import { Button, Label } from "@calcom/ui";
-import { Edit2 } from "@calcom/ui/components/icon";
 
 interface ImageUploaderProps {
   setImage: (image: string) => void;
@@ -22,7 +22,8 @@ const ImageUploader: React.FC<ImageUploaderProps> = (props) => {
   const [showSelection, setShowSelection] = useState(false);
   const [showWebcam, setShowWebcam] = useState(false);
   const webcamRef = useRef<Webcam | null>(null);
-
+  const innerImageRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const onImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && isImageFile(event.target.files[0])) {
       setImage(URL.createObjectURL(event.target.files[0]));
@@ -46,28 +47,43 @@ const ImageUploader: React.FC<ImageUploaderProps> = (props) => {
   };
 
   useEffect(() => {
+    const handleClick = (e: any) => {
+      if (e.target !== innerImageRef.current) {
+        return;
+      }
+      fileInputRef.current?.click();
+    };
+    innerImageRef.current?.addEventListener("click", handleClick, true);
+    return () => {
+      innerImageRef.current?.removeEventListener("click", handleClick);
+    };
+  }, [showSelection]);
+
+  useEffect(() => {
     props.setImage(image);
   }, [image]);
 
   return (
-    <div className="flex flex-col items-center p-10">
+    <div className="flex flex-col items-center">
       <div
         onClick={() => setShowSelection(true)}
-        className="show-edit relative h-[100px] w-[100px] cursor-pointer rounded-full bg-zinc-400 hover:opacity-80 sm:h-[80px] sm:w-[80px] md:h-[100px] md:w-[100px] lg:h-[110px] lg:w-[110px]">
+        className="show-edit relative h-[100px] w-[100px] cursor-pointer rounded-md border-2 border-dashed border-gray-300 hover:opacity-80 sm:h-[80px] sm:w-[80px] md:h-[100px] md:w-[100px] lg:h-[150px] lg:w-[250px]">
         {image.length ? (
           <img
-            className="h-[100px] w-[100px] rounded-full sm:h-[80px] sm:w-[80px] md:h-[100px] md:w-[100px] lg:h-[110px] lg:w-[110px]"
+            className="h-[100px] w-[100px] rounded-md object-contain p-2 sm:h-[80px] sm:w-[80px] md:h-[100px] md:w-[100px] lg:h-[150px] lg:w-[250px]"
             src={image}
             alt="avatar"
           />
         ) : (
-          <span className=" h-[100px] w-[100px] rounded-full sm:h-[80px] sm:w-[80px] md:h-[100px] md:w-[100px] lg:h-[110px] lg:w-[110px]">
-            <p className="flex justify-center pt-4">Avatar</p>
+          <span className=" flex h-[100px] w-[100px] items-center justify-center rounded-md  sm:h-[80px] sm:w-[80px] md:h-[100px] md:w-[100px] lg:h-[150px] lg:w-[250px]">
+            <p className="">
+              <ImageIcon width={70} height={70} color="#61677F" />
+            </p>
           </span>
         )}
-        <div className="edit-btn absolute top-0 flex h-full w-full items-center justify-center rounded-full bg-transparent">
+        {/* <div className="edit-btn absolute top-0 flex h-full w-full items-center justify-center rounded-full bg-transparent">
           <Edit2 className="m-auto" />
-        </div>
+        </div> */}
       </div>
       {showSelection && (
         <div className="fixed left-0 top-0 z-10 flex h-full w-full items-center justify-center bg-black bg-opacity-50">
@@ -75,16 +91,23 @@ const ImageUploader: React.FC<ImageUploaderProps> = (props) => {
             <div
               onDrop={onDrop}
               onDragOver={handleDragOver}
-              className="mt-5 flex h-60 w-60 cursor-pointer items-center justify-center border-2 border-dashed border-gray-400">
+              className="mt-5 flex h-60 w-60 cursor-pointer items-center justify-center border-2 border-dashed border-gray-400 ">
               <input
                 id="file-upload"
                 type="file"
                 accept="image/*"
                 onChange={onImageUpload}
+                ref={fileInputRef}
                 className="hidden"
               />
-              <label htmlFor="file-upload " className=" text-slate-600">
-                {image ? <img src={image} alt="Image" className="h-56 w-56" /> : "Drop image or click"}
+              <label htmlFor="file-upload " className="cursor-pointer text-slate-600">
+                <div ref={innerImageRef}>
+                  {image ? (
+                    <img src={image} alt="Image" className="h-56 w-56 object-contain" />
+                  ) : (
+                    "Drop image or click"
+                  )}
+                </div>
               </label>
             </div>
             <Button
@@ -94,7 +117,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = (props) => {
             </Button>
             <Button
               onClick={() => setShowSelection(false)}
-              className="ml-9 mt-5 border-[1px] border-gray-400 text-red-500 hover:border-gray-500">
+              className="ml-9 mt-5 border-[1px] border-gray-400  hover:border-gray-500">
               Close
             </Button>
           </Label>
@@ -115,7 +138,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = (props) => {
             </Button>
             <Button
               onClick={() => setShowWebcam(false)}
-              className="ml-9 mt-5 border-[1px] border-gray-400 text-red-500 hover:border-gray-500">
+              className="ml-9 mt-5 border-[1px] border-gray-400  hover:border-gray-500">
               Close
             </Button>
           </div>

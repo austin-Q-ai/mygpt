@@ -12,7 +12,9 @@ import Footer from "@components/auth/Footer";
 import type { LinkProps } from "@components/auth/Footer";
 import MicroCards from "@components/microcard";
 import PriceListItem from "@components/prices/PriceListItem";
-import CarouselAvatars from "@components/ui/CarouselAvatars";
+import CarouselAvatarComponentN from "@components/ui/CarouselAvatarsComponentN";
+// import CarouselAvatars from "@components/ui/CarouselAvatars";
+// import CarouselAvatarsComponent from "@components/ui/CarouselAvatarsComponent";
 import CarouselDemo from "@components/ui/CarouselDemo";
 
 interface Props {
@@ -182,10 +184,10 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
     };
   }, []);
   return (
-    <>
+    <div className="to-darkemphasis bg-gradient-to-b from-gray-100">
       {toggleFlag ? (
         <div className="z-50 !h-screen !w-full bg-white p-5 transition delay-150 ease-in-out">
-          <div className=" mb-auto flex justify-between">
+          <div className="mb-auto flex justify-between ">
             <div className="flex-col">
               {props.showLogo && (
                 <Image src="/my-gpt-logo.svg" width={130} height={20} className="left-0" alt="logo" />
@@ -193,7 +195,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
             </div>
             <div className="text-secondary flex-col">
               <div className="flex flex-row gap-8">
-                <div className="  flex-col">
+                <div className="flex-col ">
                   <div className="flex flex-row gap-1">
                     <Button
                       onClick={() => handleToggleNav()}
@@ -217,7 +219,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                       variant="icon"
                       size="lg"
                       color="secondary"
-                      className="p-none text-secondary mr-1  h-10 w-12 self-center border-0 bg-transparent text-xl">
+                      className="p-none text-secondary mr-1 h-10 w-12 self-center border-0 bg-transparent text-xl">
                       Prices
                     </Button>
                   </DialogTrigger>
@@ -226,7 +228,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                     size="xl"
                     Icon={X}
                     title={t("")}>
-                    <div className=" mt-5   flex-row ">
+                    <div className="mt-5 flex-row ">
                       <ScrollableArea className="grid h-[600px] gap-5  sm:grid-cols-1 md:h-full md:grid-cols-5">
                         {pricesList.map((priceItem, index) => {
                           return <PriceListItem key={index} priceItem={priceItem} />;
@@ -235,7 +237,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                     </div>
                   </DialogContent>
                 </Dialog>
-                <div className=" flex flex-row">
+                <div className="flex flex-row ">
                   <div className="flex flex-row gap-1">
                     <LogOut className="h-12 w-10 flex-col" />
                     <div className="flex flex-col">
@@ -253,11 +255,11 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
           </div>
         </div>
       ) : (
-        <div className="bg-[url('/imgpsh_fullsize_anim.png')] bg-cover bg-no-repeat md:grid lg:!max-h-screen lg:grid-rows-6">
+        <div className="bg-[url('/imgpsh_fullsize_anim.png')] bg-cover bg-no-repeat md:grid lg:!max-h-screen lg:grid-rows-[_80px_1fr_1fr_1fr_1fr_1fr_0px]">
           <div className="flex flex-row md:row-span-1">
             <div className="mx-6 flex flex-1 flex-col justify-center pt-4 sm:px-6 lg:px-4">
               <HeadSeo title={props.title} description={props.description} />
-              <div className=" mb-auto flex justify-between">
+              <div className="mb-auto flex justify-between ">
                 <div className="flex-col">
                   {props.showLogo && (
                     <Image src="/my-gpt-logo.svg" width={178} height={30} className="left-0" alt="logo" />
@@ -281,7 +283,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                         size="xl"
                         Icon={X}
                         title={t("")}>
-                        <div className=" mt-5   flex-row ">
+                        <div className="mt-5 flex-row ">
                           <ScrollableArea className="grid h-[600px] gap-5  sm:grid-cols-1 md:h-full md:grid-cols-5">
                             {pricesList.map((priceItem, index) => {
                               return <PriceListItem key={index} priceItem={priceItem} />;
@@ -290,7 +292,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                         </div>
                       </DialogContent>
                     </Dialog>
-                    <div className=" hidden flex-col md:contents">
+                    <div className="hidden flex-col md:contents">
                       <div className="flex flex-row gap-1">
                         <LogOut className="h-8 w-6 flex-col" />
                         <div className="flex flex-col">
@@ -318,34 +320,32 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
               </div>
             </div>
           </div>
-          <div className="grid lg:row-span-4 lg:grid-cols-[minmax(900px,_1fr)_1fr] lg:grid-rows-3 ">
-            <div className="row-start-1 lg:col-span-1 lg:row-span-1 lg:mx-4">
+          <div className="grid lg:row-span-4 lg:grid-cols-[minmax(500px,_1fr)_1fr] lg:grid-rows-3 ">
+            <div className="row-start-1 mx-auto h-fit lg:col-span-1 lg:row-span-1 lg:mx-4">
               <div
                 className={classNames(
                   props.showLogo ? "" : "",
-                  "flex-row sm:mx-2 sm:w-full sm:max-w-[100%] md:flex-col"
+                  "flex-row sm:mx-2 sm:w-full sm:max-w-[100%] md:mt-14 md:flex-col"
                 )}>
                 {props.heading && (
-                  <h2 className="text-emphasis line-height-2 mx-6 mt-6 text-center font-sans text-3xl font-medium leading-normal sm:max-w-md md:text-left md:text-4xl lg:mx-4 lg:mt-0">
+                  <h2 className="text-emphasis line-height-2 mx-6 mt-6 text-center font-sans text-3xl font-medium leading-normal sm:max-w-md md:text-4xl lg:mx-4 lg:mt-0 lg:text-left">
                     {t("empower_with_ai_reveal")}
                   </h2>
                 )}
                 {props.loading && (
-                  <div className=" absolute z-50 flex h-screen w-full items-center">
+                  <div className="absolute z-50 flex h-screen w-full items-center ">
                     <Loader />
                   </div>
                 )}
-                <div className="mb-auto mt-8 sm:mx-1  sm:w-[100%] sm:max-w-lg md:max-w-[80%] md:flex-col xl:w-[95%]">
-                  <div className="mx-2 px-2 pt-5 sm:px-2 md:py-10">{props.children}</div>
+                <div className="mb-auto mt-8 sm:mx-1  sm:w-[100%] sm:max-w-lg  md:flex-col xl:w-[95%]">
+                  <div className="mx-2 px-2 pt-5 sm:px-4 ">{props.children}</div>
                 </div>
               </div>
             </div>
-            <div className="order-last row-end-5 mb-2 lg:col-start-1 lg:row-start-3 lg:mx-10 lg:mb-0">
-              <div className="mx-auto sm:h-[135px] sm:w-[375px] md:h-[175px] md:w-[423px] lg:mx-0">
-                <CarouselDemo />
-              </div>
-              <div className="flex flex-row md:justify-center lg:justify-normal">
-                <p className="text-muted mx-3 mt-4 break-words text-center sm:w-full sm:max-w-md md:mt-5 lg:w-[70%] lg:max-w-[70%] lg:text-left">
+            <div className="order-last row-end-5 mx-auto my-4 lg:col-start-1 lg:row-start-3 lg:mx-10 lg:mb-0">
+              <CarouselDemo />
+              <div className="flex flex-row sm:justify-center lg:justify-normal">
+                <p className="mx-3 my-8 break-words text-center text-gray-500 sm:w-full sm:max-w-md  md:mt-5 lg:w-[70%] lg:max-w-[70%] lg:text-left">
                   {t("your_artifitial_footer")}
                 </p>
               </div>
@@ -356,23 +356,24 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                   <MicroCards />
                 </div>
               </div>
-              <div className="mb-4 md:mx-auto md:mb-0 md:mt-6">
-                <div className="h-[80px] md:w-[423px]">
-                  <CarouselAvatars />
+              <div className="mt-4 md:mx-auto md:my-4 lg:mt-2 ">
+                <div className="mx-auto ">
+                  {/* <CarouselAvatars /> */}
+                  <CarouselAvatarComponentN />
                 </div>
               </div>
-              <div className="flew-row text-muted mx-auto my-2 justify-center font-sans font-medium md:my-4 ">
+              <div className="flew-row mx-auto my-4 justify-center font-sans font-medium text-gray-500 md:my-4 ">
                 {t("more_than_25k_experts_use_myqpt")}
               </div>
             </div>
           </div>
           {!props.hideFooter ? (
-            <div className="order-last flex  flex-row md:my-auto">
+            <div className="order-last flex flex-row md:my-auto">
               <Footer items={footerLinks} />
             </div>
           ) : null}
         </div>
       )}
-    </>
+    </div>
   );
 }

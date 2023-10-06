@@ -4,18 +4,26 @@ import { getCsrfToken } from "next-auth/react";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import type { CSSProperties, SyntheticEvent } from "react";
+import type { SyntheticEvent } from "react";
 import React from "react";
 
 import { getServerSession } from "@calcom/features/auth/lib/getServerSession";
+import getBrandColours from "@calcom/lib/getBrandColours";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
-import { Button, EmailField } from "@calcom/ui";
+import { Button, EmailField, useCalcomTheme } from "@calcom/ui";
 
 import PageWrapper from "@components/PageWrapper";
 import AuthContainer from "@components/ui/AuthContainer";
 
 export default function ForgotPassword({ csrfToken }: { csrfToken: string }) {
   const { t } = useLocale();
+
+  const brandTheme = getBrandColours({
+    lightVal: "#6d278e",
+    darkVal: "#fafafa",
+  });
+  useCalcomTheme(brandTheme);
+
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<{ message: string } | null>(null);
   const [success, setSuccess] = React.useState(false);
@@ -107,18 +115,7 @@ export default function ForgotPassword({ csrfToken }: { csrfToken: string }) {
       {!success && (
         <div className="my-6 md:mx-8">
           <div className="space-y-6">{error && <p className="text-red-600">{error.message}</p>}</div>
-          <form
-            className="space-y-6"
-            onSubmit={handleSubmit}
-            action="#"
-            style={
-              {
-                "--cal-brand": "#111827",
-                "--cal-brand-emphasis": "#101010",
-                "--cal-brand-text": "white",
-                "--cal-brand-subtle": "#9CA3AF",
-              } as CSSProperties
-            }>
+          <form className="space-y-6" onSubmit={handleSubmit} action="#">
             <input name="csrfToken" type="hidden" defaultValue={csrfToken} hidden />
             <EmailField
               onChange={handleChange}

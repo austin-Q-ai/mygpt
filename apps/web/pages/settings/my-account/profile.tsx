@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { zodResolver } from "@hookform/resolvers/zod";
+import classNames from "classnames";
 import { signOut } from "next-auth/react";
 import type { BaseSyntheticEvent } from "react";
 import { useRef, useState, useEffect } from "react";
@@ -94,6 +96,13 @@ type ExperienceInput = {
   delete: boolean | undefined;
 };
 
+type SocialType = {
+  telegram?: string;
+  facebook?: string;
+  discord?: string;
+  instagram?: string;
+  linkedin?: string;
+};
 type EducationInput = {
   id: number | undefined;
   key: string;
@@ -119,6 +128,7 @@ type FormValues = {
   experiences: ExperienceInput[];
   educations: EducationInput[];
   skills: string[];
+  social: SocialType;
 };
 
 const ProfileView = () => {
@@ -130,6 +140,7 @@ const ProfileView = () => {
     onSuccess: () => {
       showToast(t("settings_updated_successfully"), "success");
       utils.viewer.me.invalidate();
+      console.log("updated: ", user);
       utils.viewer.avatar.invalidate();
       setTempFormValues(null);
     },
@@ -274,6 +285,7 @@ const ProfileView = () => {
         }))
       : ([] as EducationInput[]),
     skills: user.skills || [],
+    social: (user.social as SocialType) || ({} as SocialType),
   };
 
   return (
@@ -413,6 +425,7 @@ const ProfileForm = ({
   const [editableAbout, setEditableAbout] = useState(false);
   const [editableSkill, setEditableSkill] = useState(false);
   const [skills, setSkills] = useState<string[]>([]);
+  const [expEduAvatar, setExpEduAvatar] = useState<string>("");
 
   const [addExpOpen, setAddExpOpen] = useState(false);
   const [showErrorInExp, setShowErrorInExp] = useState(false);
@@ -429,6 +442,13 @@ const ProfileForm = ({
   const [addEduOpen, setAddEduOpen] = useState(false);
   const [showErrorInEdu, setShowErrorInEdu] = useState(false);
   const [educations, setEducations] = useState<EducationInput[]>([]);
+  const [social, setSocial] = useState<SocialType>({
+    telegram: "",
+    facebook: "",
+    discord: "",
+    instagram: "",
+    linkedin: "",
+  });
   const [indexEdu, setIndexEdu] = useState(-1);
   const [schoolEdu, setSchoolEdu] = useState("");
   const [majorEdu, setMajorEdu] = useState<string | undefined>("");
@@ -439,7 +459,6 @@ const ProfileForm = ({
   const [endYearEdu, setEndYearEdu] = useState(new Date().getFullYear());
 
   let settable = true;
-
   const profileFormSchema = z.object({
     username: z.string(),
     avatar: z.string(),
@@ -485,6 +504,13 @@ const ProfileForm = ({
       })
     ),
     skills: z.array(z.string()),
+    social: z.object({
+      telegram: z.string().optional(),
+      facebook: z.string().optional(),
+      discord: z.string().optional(),
+      instagram: z.string().optional(),
+      linkedin: z.string().optional(),
+    }),
   });
 
   const formMethods = useForm<FormValues>({
@@ -516,6 +542,7 @@ const ProfileForm = ({
         };
       })
     );
+    setSocial(formMethods.getValues("social"));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -533,6 +560,21 @@ const ProfileForm = ({
     { value: 11, label: "Nov" },
     { value: 12, label: "Dec" },
   ];
+
+  const handleUpdateContactInfo = () => {
+    if (
+      (formMethods.getValues("name") &&
+        formMethods.getValues("position") &&
+        formMethods.getValues("address")) ||
+      !editableHeader
+    ) {
+      setEditableHeader(!editableHeader);
+      setShowErrorInHeader(false);
+    } else {
+      setEditableHeader(!editableHeader);
+      setShowErrorInHeader(false);
+    }
+  };
 
   return (
     <div>
@@ -552,8 +594,8 @@ const ProfileForm = ({
                 }}
                 variant="ProfileCard"
                 description={
-                  <div className="flex items-center">
-                    <div>
+                  <div className="flex flex-col items-start justify-between md:flex-row">
+                    <div className="flex w-full justify-between md:w-auto md:justify-normal">
                       {!editableHeader ? (
                         <Avatar
                           alt=""
@@ -574,131 +616,227 @@ const ProfileForm = ({
                           imageSrc={value || undefined}
                         />
                       )}
+                      <div className="flex md:hidden">
+                        <Button
+                          color="primary"
+                          StartIcon={!editableHeader ? Edit2 : Cross}
+                          className={`!rounded-full ${editableHeader ? "rotate-45 transform" : ""}`}
+                          variant="icon"
+                          onClick={handleUpdateContactInfo}
+                        />
+                      </div>
                     </div>
-                    <div className="items-left ms-4 flex flex-grow flex-col">
-                      <div className="text-xl">
-                        {!editableHeader ? (
-                          <p className="font-xl font-bold text-black">
-                            {defaultValues.name ? defaultValues.name : t("nameless")}
-                          </p>
-                        ) : (
-                          <>
-                            <TextField label={`${t("full_name")}*`} {...formMethods.register("name")} />
-                            {showErrorInHeader && !formMethods.getValues("name") && (
-                              <Alert
-                                key="error_full_name_required"
-                                severity="error"
-                                title={t("error_full_name_required")}
-                              />
-                            )}
-                          </>
-                        )}
-                      </div>
-                      <div className={!editableHeader && defaultValues.position ? "mt-4" : ""}>
-                        {!editableHeader ? (
-                          <>{defaultValues.position}</>
-                        ) : (
-                          <>
-                            <TextField label={`${t("position")}*`} {...formMethods.register("position")} />
-                            {showErrorInHeader && !formMethods.getValues("position") && (
-                              <Alert
-                                key="error_current_position_required"
-                                severity="error"
-                                title={t("error_current_position_required")}
-                              />
-                            )}
-                          </>
-                        )}
-                      </div>
-                      <div className={!editableHeader && defaultValues.address ? "mt-2 flex" : ""}>
-                        {!editableHeader ? (
-                          <>
-                            <MousePointer2 className="h-4 w-4 rotate-90 transform" />
-                            {defaultValues.address}
-                          </>
-                        ) : (
-                          <>
-                            <TextField label={`${t("address")}*`} {...formMethods.register("address")} />
-                            {showErrorInHeader && !formMethods.getValues("address") && (
-                              <Alert
-                                className="mb-2"
-                                key="error_address_required"
-                                severity="error"
-                                title={t("error_address_required")}
-                              />
-                            )}
-                          </>
-                        )}
-                      </div>
+                    <div className="items-left mx-4 mt-4 flex flex-grow flex-col md:mt-0">
                       <div
                         className={
-                          !editableHeader
-                            ? "mt-2 flex flex-wrap items-center gap-2"
-                            : "flex flex-wrap items-center gap-2"
+                          !editableHeader && defaultValues.position
+                            ? ""
+                            : "flex w-full flex-col gap-2 md:flex-row"
                         }>
-                        <Button
-                          color="secondary"
-                          className="rounded-full border-gray-700 bg-transparent md:rounded-full"
-                          variant="icon">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            height="1em"
-                            viewBox="0 0 496 512"
-                            style={{ fill: "gray" }}>
-                            <path d="M248,8C111.033,8,0,119.033,0,256S111.033,504,248,504,496,392.967,496,256,384.967,8,248,8ZM362.952,176.66c-3.732,39.215-19.881,134.378-28.1,178.3-3.476,18.584-10.322,24.816-16.948,25.425-14.4,1.326-25.338-9.517-39.287-18.661-21.827-14.308-34.158-23.215-55.346-37.177-24.485-16.135-8.612-25,5.342-39.5,3.652-3.793,67.107-61.51,68.335-66.746.153-.655.3-3.1-1.154-4.384s-3.59-.849-5.135-.5q-3.283.746-104.608,69.142-14.845,10.194-26.894,9.934c-8.855-.191-25.888-5.006-38.551-9.123-15.531-5.048-27.875-7.717-26.8-16.291q.84-6.7,18.45-13.7,108.446-47.248,144.628-62.3c68.872-28.647,83.183-33.623,92.511-33.789,2.052-.034,6.639.474,9.61,2.885a10.452,10.452,0,0,1,3.53,6.716A43.765,43.765,0,0,1,362.952,176.66Z" />
-                          </svg>
-                        </Button>
-                        <Button
-                          color="secondary"
-                          StartIcon={Facebook}
-                          className="rounded-full border-gray-700 bg-transparent md:rounded-full"
-                          variant="icon"
-                        />
-                        <Button
-                          color="secondary"
-                          className="rounded-full border-gray-700 bg-transparent md:rounded-full"
-                          variant="icon">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            height="1em"
-                            viewBox="0 0 640 512"
-                            style={{ fill: "gray" }}>
-                            <path d="M524.531,69.836a1.5,1.5,0,0,0-.764-.7A485.065,485.065,0,0,0,404.081,32.03a1.816,1.816,0,0,0-1.923.91,337.461,337.461,0,0,0-14.9,30.6,447.848,447.848,0,0,0-134.426,0,309.541,309.541,0,0,0-15.135-30.6,1.89,1.89,0,0,0-1.924-.91A483.689,483.689,0,0,0,116.085,69.137a1.712,1.712,0,0,0-.788.676C39.068,183.651,18.186,294.69,28.43,404.354a2.016,2.016,0,0,0,.765,1.375A487.666,487.666,0,0,0,176.02,479.918a1.9,1.9,0,0,0,2.063-.676A348.2,348.2,0,0,0,208.12,430.4a1.86,1.86,0,0,0-1.019-2.588,321.173,321.173,0,0,1-45.868-21.853,1.885,1.885,0,0,1-.185-3.126c3.082-2.309,6.166-4.711,9.109-7.137a1.819,1.819,0,0,1,1.9-.256c96.229,43.917,200.41,43.917,295.5,0a1.812,1.812,0,0,1,1.924.233c2.944,2.426,6.027,4.851,9.132,7.16a1.884,1.884,0,0,1-.162,3.126,301.407,301.407,0,0,1-45.89,21.83,1.875,1.875,0,0,0-1,2.611,391.055,391.055,0,0,0,30.014,48.815,1.864,1.864,0,0,0,2.063.7A486.048,486.048,0,0,0,610.7,405.729a1.882,1.882,0,0,0,.765-1.352C623.729,277.594,590.933,167.465,524.531,69.836ZM222.491,337.58c-28.972,0-52.844-26.587-52.844-59.239S193.056,219.1,222.491,219.1c29.665,0,53.306,26.82,52.843,59.239C275.334,310.993,251.924,337.58,222.491,337.58Zm195.38,0c-28.971,0-52.843-26.587-52.843-59.239S388.437,219.1,417.871,219.1c29.667,0,53.307,26.82,52.844,59.239C470.715,310.993,447.538,337.58,417.871,337.58Z" />
-                          </svg>
-                        </Button>
-                        <Button
-                          color="secondary"
-                          StartIcon={Instagram}
-                          className="rounded-full border-gray-700 bg-transparent md:rounded-full"
-                          variant="icon"
-                        />
-                        <Button
-                          color="secondary"
-                          StartIcon={Linkedin}
-                          className="rounded-full border-gray-700 bg-transparent md:rounded-full"
-                          variant="icon"
-                        />
+                        <div
+                          className={
+                            !editableHeader && defaultValues.position ? "" : "w-full flex-col text-xl"
+                          }>
+                          {!editableHeader ? (
+                            <p className="text-3xl font-bold text-black">
+                              {defaultValues.name ? defaultValues.name : t("nameless")}
+                            </p>
+                          ) : (
+                            <>
+                              <TextField label={`${t("full_name")}*`} {...formMethods.register("name")} />
+                              {showErrorInHeader && !formMethods.getValues("name") && (
+                                <Alert
+                                  key="error_full_name_required"
+                                  severity="error"
+                                  title={t("error_full_name_required")}
+                                />
+                              )}
+                            </>
+                          )}
+                        </div>
+                        <div
+                          className={classNames(
+                            !editableHeader && defaultValues.position ? "mt-4" : "w-full flex-col"
+                          )}>
+                          {!editableHeader ? (
+                            <>{defaultValues.position}</>
+                          ) : (
+                            <>
+                              <TextField label={`${t("position")}*`} {...formMethods.register("position")} />
+                              {showErrorInHeader && !formMethods.getValues("position") && (
+                                <Alert
+                                  key="error_current_position_required"
+                                  severity="error"
+                                  title={t("error_current_position_required")}
+                                />
+                              )}
+                            </>
+                          )}
+                        </div>
+                      </div>
+                      <div className={!editableHeader ? "" : "flex w-full flex-col gap-2 md:flex-row"}>
+                        <div
+                          className={
+                            !editableHeader && defaultValues.address ? "mt-2 flex" : "flex w-full flex-col"
+                          }>
+                          {!editableHeader ? (
+                            <>
+                              <MousePointer2 className="mr-2 h-4 w-4 rotate-90 transform" fill="gray" />
+                              {defaultValues.address}
+                            </>
+                          ) : (
+                            <>
+                              <TextField label={`${t("address")}*`} {...formMethods.register("address")} />
+                              {showErrorInHeader && !formMethods.getValues("address") && (
+                                <Alert
+                                  className="mb-2"
+                                  key="error_address_required"
+                                  severity="error"
+                                  title={t("error_address_required")}
+                                />
+                              )}
+                            </>
+                          )}
+                        </div>
+                        <div
+                          className={
+                            !editableHeader
+                              ? "mt-2 flex flex-wrap items-center gap-2"
+                              : "mt-2 flex w-full flex-col items-start md:mt-7"
+                          }>
+                          <div className={!editableHeader ? "" : "flex w-full flex-row items-center gap-2"}>
+                            <Button
+                              color="secondary"
+                              className="rounded-full border-gray-700 bg-transparent md:rounded-full"
+                              variant="icon">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                height="1em"
+                                viewBox="0 0 496 512"
+                                style={{ fill: "#434C5C" }}>
+                                <path d="M248,8C111.033,8,0,119.033,0,256S111.033,504,248,504,496,392.967,496,256,384.967,8,248,8ZM362.952,176.66c-3.732,39.215-19.881,134.378-28.1,178.3-3.476,18.584-10.322,24.816-16.948,25.425-14.4,1.326-25.338-9.517-39.287-18.661-21.827-14.308-34.158-23.215-55.346-37.177-24.485-16.135-8.612-25,5.342-39.5,3.652-3.793,67.107-61.51,68.335-66.746.153-.655.3-3.1-1.154-4.384s-3.59-.849-5.135-.5q-3.283.746-104.608,69.142-14.845,10.194-26.894,9.934c-8.855-.191-25.888-5.006-38.551-9.123-15.531-5.048-27.875-7.717-26.8-16.291q.84-6.7,18.45-13.7,108.446-47.248,144.628-62.3c68.872-28.647,83.183-33.623,92.511-33.789,2.052-.034,6.639.474,9.61,2.885a10.452,10.452,0,0,1,3.53,6.716A43.765,43.765,0,0,1,362.952,176.66Z" />
+                              </svg>
+                            </Button>
+                            <TextField
+                              autoComplete="off"
+                              value={social.telegram}
+                              onChange={(e: any) => {
+                                setSocial({ ...social, telegram: e.target.value });
+                                formMethods.setValue(
+                                  "social",
+                                  { ...social, telegram: e.target.value },
+                                  { shouldDirty: true }
+                                );
+                              }}
+                              label=""
+                              className={!editableHeader ? "hidden" : "w-full"}
+                            />
+                          </div>
+
+                          <div className={!editableHeader ? "" : "flex w-full flex-row items-center gap-2"}>
+                            <Button
+                              color="secondary"
+                              StartIcon={Facebook}
+                              className="rounded-full border-gray-700 bg-transparent md:rounded-full"
+                              variant="icon"
+                            />
+                            <TextField
+                              autoComplete="off"
+                              value={social.facebook}
+                              onChange={(e: any) => {
+                                setSocial({ ...social, facebook: e.target.value });
+                                formMethods.setValue(
+                                  "social",
+                                  { ...social, facebook: e.target.value },
+                                  { shouldDirty: true }
+                                );
+                              }}
+                              label=""
+                              className={!editableHeader ? "hidden" : ""}
+                            />
+                          </div>
+                          <div className={!editableHeader ? "" : "flex w-full flex-row items-center gap-2"}>
+                            <Button
+                              color="secondary"
+                              className="rounded-full border-gray-700 bg-transparent md:rounded-full"
+                              variant="icon">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                height="1em"
+                                viewBox="0 0 640 512"
+                                style={{ fill: "#434C5C" }}>
+                                <path d="M524.531,69.836a1.5,1.5,0,0,0-.764-.7A485.065,485.065,0,0,0,404.081,32.03a1.816,1.816,0,0,0-1.923.91,337.461,337.461,0,0,0-14.9,30.6,447.848,447.848,0,0,0-134.426,0,309.541,309.541,0,0,0-15.135-30.6,1.89,1.89,0,0,0-1.924-.91A483.689,483.689,0,0,0,116.085,69.137a1.712,1.712,0,0,0-.788.676C39.068,183.651,18.186,294.69,28.43,404.354a2.016,2.016,0,0,0,.765,1.375A487.666,487.666,0,0,0,176.02,479.918a1.9,1.9,0,0,0,2.063-.676A348.2,348.2,0,0,0,208.12,430.4a1.86,1.86,0,0,0-1.019-2.588,321.173,321.173,0,0,1-45.868-21.853,1.885,1.885,0,0,1-.185-3.126c3.082-2.309,6.166-4.711,9.109-7.137a1.819,1.819,0,0,1,1.9-.256c96.229,43.917,200.41,43.917,295.5,0a1.812,1.812,0,0,1,1.924.233c2.944,2.426,6.027,4.851,9.132,7.16a1.884,1.884,0,0,1-.162,3.126,301.407,301.407,0,0,1-45.89,21.83,1.875,1.875,0,0,0-1,2.611,391.055,391.055,0,0,0,30.014,48.815,1.864,1.864,0,0,0,2.063.7A486.048,486.048,0,0,0,610.7,405.729a1.882,1.882,0,0,0,.765-1.352C623.729,277.594,590.933,167.465,524.531,69.836ZM222.491,337.58c-28.972,0-52.844-26.587-52.844-59.239S193.056,219.1,222.491,219.1c29.665,0,53.306,26.82,52.843,59.239C275.334,310.993,251.924,337.58,222.491,337.58Zm195.38,0c-28.971,0-52.843-26.587-52.843-59.239S388.437,219.1,417.871,219.1c29.667,0,53.307,26.82,52.844,59.239C470.715,310.993,447.538,337.58,417.871,337.58Z" />
+                              </svg>
+                            </Button>
+                            <TextField
+                              autoComplete="off"
+                              value={social.discord}
+                              onChange={(e: any) => {
+                                setSocial({ ...social, discord: e.target.value });
+                                formMethods.setValue(
+                                  "social",
+                                  { ...social, discord: e.target.value },
+                                  { shouldDirty: true }
+                                );
+                              }}
+                              label=""
+                              className={!editableHeader ? "hidden" : ""}
+                            />
+                          </div>
+                          <div className={!editableHeader ? "" : "flex w-full flex-row items-center gap-2"}>
+                            <Button
+                              color="secondary"
+                              StartIcon={Instagram}
+                              className="rounded-full border-gray-700 bg-transparent md:rounded-full"
+                              variant="icon"
+                            />
+                            <TextField
+                              autoComplete="off"
+                              value={social.instagram}
+                              onChange={(e: any) => {
+                                setSocial({ ...social, instagram: e.target.value });
+                                formMethods.setValue(
+                                  "social",
+                                  { ...social, instagram: e.target.value },
+                                  { shouldDirty: true }
+                                );
+                              }}
+                              label=""
+                              className={!editableHeader ? "hidden" : ""}
+                            />
+                          </div>
+                          <div className={!editableHeader ? "" : "flex w-full flex-row items-center gap-2"}>
+                            <Button
+                              color="secondary"
+                              StartIcon={Linkedin}
+                              className="rounded-full border-gray-700 bg-transparent md:rounded-full"
+                              variant="icon"
+                            />
+                            <TextField
+                              autoComplete="off"
+                              value={social.linkedin}
+                              onChange={(e: any) => {
+                                setSocial({ ...social, linkedin: e.target.value });
+                                formMethods.setValue(
+                                  "social",
+                                  { ...social, linkedin: e.target.value },
+                                  { shouldDirty: true }
+                                );
+                              }}
+                              label=""
+                              className={!editableHeader ? "hidden" : ""}
+                            />
+                          </div>
+                        </div>
                       </div>
                     </div>
-                    <div className="ms-4 flex flex-grow justify-end">
+                    <div className="hidden md:flex">
                       <Button
                         color="primary"
                         StartIcon={!editableHeader ? Edit2 : Cross}
                         className={`!rounded-full ${editableHeader ? "rotate-45 transform" : ""}`}
                         variant="icon"
-                        onClick={() => {
-                          if (
-                            (formMethods.getValues("name") &&
-                              formMethods.getValues("position") &&
-                              formMethods.getValues("address")) ||
-                            !editableHeader
-                          ) {
-                            setEditableHeader(!editableHeader);
-                            setShowErrorInHeader(false);
-                          } else {
-                            setShowErrorInHeader(true);
-                          }
-                        }}
+                        onClick={handleUpdateContactInfo}
                       />
                     </div>
                   </div>
@@ -863,6 +1001,7 @@ const ProfileForm = ({
                           setCompanyExp("");
                           setAddressExp("");
                           setIndexExp(-1);
+                          setExpEduAvatar("");
                           setStartMonthExp(new Date().getMonth() + 1);
                           setStartYearExp(new Date().getFullYear());
                           setEndMonthExp(new Date().getMonth() + 1);
@@ -893,7 +1032,12 @@ const ProfileForm = ({
                               <div className="items-left mb-4 flex flex-col" key={`exp-${exp.id}`}>
                                 <div className="mb-4 flex gap-2">
                                   <div className="mr-4">
-                                    <Avatar alt="" imageSrc="" gravatarFallbackMd5="fallback" size="sm" />
+                                    <Avatar
+                                      alt=""
+                                      imageSrc={exp.avatar || ""}
+                                      gravatarFallbackMd5="fallback"
+                                      size="sm"
+                                    />
                                   </div>
                                   <div className="flex flex-col justify-start">
                                     <div className="mb-1">
@@ -927,7 +1071,12 @@ const ProfileForm = ({
                                 <div className="items-left mb-4 flex flex-col" key={exp.key}>
                                   <div className="mb-4 flex gap-2">
                                     <div className="flex-grow">
-                                      <Avatar alt="" imageSrc="" gravatarFallbackMd5="fallback" size="sm" />
+                                      <Avatar
+                                        alt=""
+                                        imageSrc={exp.avatar || ""}
+                                        gravatarFallbackMd5="fallback"
+                                        size="sm"
+                                      />
                                     </div>
                                     <div className="flex flex-grow flex-col justify-start">
                                       <div className="mb-1">
@@ -956,6 +1105,7 @@ const ProfileForm = ({
                                           setStartYearExp(exp.startYear);
                                           setEndMonthExp(exp.endMonth);
                                           setEndYearExp(exp.endYear);
+                                          setExpEduAvatar(exp.avatar || "");
                                         }}
                                       />
                                     </div>
@@ -994,6 +1144,7 @@ const ProfileForm = ({
                           setDegreeEdu("");
                           setMajorEdu("");
                           setIndexEdu(-1);
+                          setExpEduAvatar("");
                           setStartMonthEdu(new Date().getMonth() + 1);
                           setStartYearEdu(new Date().getFullYear());
                           setEndMonthEdu(new Date().getMonth() + 1);
@@ -1024,7 +1175,12 @@ const ProfileForm = ({
                               <div className="items-left mb-4 flex flex-col" key={`edu-${edu.id}`}>
                                 <div className="mb-4 flex gap-2">
                                   <div className="mr-4">
-                                    <Avatar alt="" imageSrc="" gravatarFallbackMd5="fallback" size="sm" />
+                                    <Avatar
+                                      alt=""
+                                      imageSrc={edu.avatar || ""}
+                                      gravatarFallbackMd5="fallback"
+                                      size="sm"
+                                    />
                                   </div>
                                   <div className="flex flex-col justify-start">
                                     <div className="mb-1">
@@ -1058,7 +1214,12 @@ const ProfileForm = ({
                                 <div className="items-left mb-4 flex flex-col" key={edu.key}>
                                   <div className="mb-4 flex gap-2">
                                     <div className="flex-grow">
-                                      <Avatar alt="" imageSrc="" gravatarFallbackMd5="fallback" size="sm" />
+                                      <Avatar
+                                        alt=""
+                                        imageSrc={edu.avatar || ""}
+                                        gravatarFallbackMd5="fallback"
+                                        size="sm"
+                                      />
                                     </div>
                                     <div className="flex flex-grow flex-col justify-start">
                                       <div className="mb-1">
@@ -1087,6 +1248,7 @@ const ProfileForm = ({
                                           setStartYearEdu(edu.startYear);
                                           setEndMonthEdu(edu.endMonth);
                                           setEndYearEdu(edu.endYear);
+                                          setExpEduAvatar(edu.avatar || "");
                                         }}
                                       />
                                     </div>
@@ -1258,6 +1420,20 @@ const ProfileForm = ({
                 setAddressExp(e.target.value);
               }}
             />
+            <div className="flex flex-col">
+              <Label className="text-sm">{t("image")}</Label>
+              <ImageUploader
+                target="Image"
+                id="image-exp-upload"
+                isFilled
+                buttonMsg=""
+                large
+                handleAvatarChange={(avatar) => {
+                  setExpEduAvatar(avatar);
+                }}
+                imageSrc={expEduAvatar || undefined}
+              />
+            </div>
           </div>
           <DialogFooter showDivider>
             {indexExp !== -1 && (
@@ -1291,7 +1467,7 @@ const ProfileForm = ({
                       startYear: startYearExp,
                       endMonth: endMonthExp,
                       endYear: endYearExp,
-                      avatar: "",
+                      avatar: expEduAvatar || "",
                       delete: undefined,
                     });
                   } else {
@@ -1305,7 +1481,7 @@ const ProfileForm = ({
                       startYear: startYearExp,
                       endMonth: endMonthExp,
                       endYear: endYearExp,
-                      avatar: "",
+                      avatar: expEduAvatar || "",
                     };
                   }
                   setExperiences(formData);
@@ -1436,6 +1612,20 @@ const ProfileForm = ({
                 setMajorEdu(e.target.value);
               }}
             />
+            <div className="flex flex-col">
+              <Label className="text-sm">{t("image")}</Label>
+              <ImageUploader
+                target="Image"
+                id="image-edu-upload"
+                isFilled
+                buttonMsg=""
+                large
+                handleAvatarChange={(avatar) => {
+                  setExpEduAvatar(avatar);
+                }}
+                imageSrc={expEduAvatar || undefined}
+              />
+            </div>
           </div>
           <DialogFooter showDivider>
             {indexEdu !== -1 && (
@@ -1469,7 +1659,7 @@ const ProfileForm = ({
                       startYear: startYearEdu,
                       endMonth: endMonthEdu,
                       endYear: endYearEdu,
-                      avatar: "",
+                      avatar: expEduAvatar || "",
                       delete: undefined,
                     });
                   } else {
@@ -1483,7 +1673,7 @@ const ProfileForm = ({
                       startYear: startYearEdu,
                       endMonth: endMonthEdu,
                       endYear: endYearEdu,
-                      avatar: "",
+                      avatar: expEduAvatar || "",
                     };
                   }
                   setEducations(formData);
