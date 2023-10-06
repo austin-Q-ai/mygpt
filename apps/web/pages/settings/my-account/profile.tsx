@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { zodResolver } from "@hookform/resolvers/zod";
 import classNames from "classnames";
 import { signOut } from "next-auth/react";
@@ -95,11 +96,13 @@ type ExperienceInput = {
   delete: boolean | undefined;
 };
 
-type SocialInput = {
-  name: string;
-  url: string;
+type SocialType = {
+  telegram?: string;
+  facebook?: string;
+  discord?: string;
+  instagram?: string;
+  linkedin?: string;
 };
-
 type EducationInput = {
   id: number | undefined;
   key: string;
@@ -125,7 +128,7 @@ type FormValues = {
   experiences: ExperienceInput[];
   educations: EducationInput[];
   skills: string[];
-  social: SocialInput[];
+  social: SocialType;
 };
 
 const ProfileView = () => {
@@ -282,13 +285,7 @@ const ProfileView = () => {
         }))
       : ([] as EducationInput[]),
     skills: user.skills || [],
-    social: [],
-    // social: user.social
-    //   ? user.social.map((soc) => ({
-    //       name: soc.name,
-    //       url: soc.url,
-    //     }))
-    //   : ([] as SocialInput[]),
+    social: (user.social as SocialType) || ({} as SocialType),
   };
 
   return (
@@ -445,12 +442,13 @@ const ProfileForm = ({
   const [addEduOpen, setAddEduOpen] = useState(false);
   const [showErrorInEdu, setShowErrorInEdu] = useState(false);
   const [educations, setEducations] = useState<EducationInput[]>([]);
-  const [social, setSocial] = useState<SocialInput[]>([]);
-  const [telegram, setTelegram] = useState("");
-  const [facebook, setFacebook] = useState("");
-  const [discord, setDiscord] = useState("");
-  const [instagram, setInstagram] = useState("");
-  const [linkedin, setLinkedin] = useState("");
+  const [social, setSocial] = useState<SocialType>({
+    telegram: "",
+    facebook: "",
+    discord: "",
+    instagram: "",
+    linkedin: "",
+  });
   const [indexEdu, setIndexEdu] = useState(-1);
   const [schoolEdu, setSchoolEdu] = useState("");
   const [majorEdu, setMajorEdu] = useState<string | undefined>("");
@@ -461,26 +459,6 @@ const ProfileForm = ({
   const [endYearEdu, setEndYearEdu] = useState(new Date().getFullYear());
 
   let settable = true;
-
-  const handleAddToSocial = (obj: any) => {
-    console.log(obj[0]);
-    const socialList = [...social];
-    const currentItem = socialList.find((i) => i.name === obj[0].name);
-    if (currentItem) {
-      const updatedData = obj[0];
-      const newState = social.map((item) => {
-        if (item.name === updatedData.name) {
-          return { ...item, ...updatedData };
-        }
-
-        return item;
-      });
-
-      setSocial(newState);
-    } else {
-      setSocial([...social, obj[0]]);
-    }
-  };
   const profileFormSchema = z.object({
     username: z.string(),
     avatar: z.string(),
@@ -526,12 +504,13 @@ const ProfileForm = ({
       })
     ),
     skills: z.array(z.string()),
-    social: z.array(
-      z.object({
-        name: z.string(),
-        url: z.string(),
-      })
-    ),
+    social: z.object({
+      telegram: z.string().optional(),
+      facebook: z.string().optional(),
+      discord: z.string().optional(),
+      instagram: z.string().optional(),
+      linkedin: z.string().optional(),
+    }),
   });
 
   const formMethods = useForm<FormValues>({
@@ -563,13 +542,7 @@ const ProfileForm = ({
         };
       })
     );
-    setSocial(
-      formMethods.getValues("social").map((soc) => {
-        return {
-          ...soc,
-        };
-      })
-    );
+    setSocial(formMethods.getValues("social"));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -621,8 +594,8 @@ const ProfileForm = ({
                 }}
                 variant="ProfileCard"
                 description={
-                  <div className="flex items-start justify-between">
-                    <div>
+                  <div className="flex flex-col items-start justify-between md:flex-row">
+                    <div className="flex w-full justify-between md:w-auto md:justify-normal">
                       {!editableHeader ? (
                         <Avatar
                           alt=""
@@ -643,11 +616,22 @@ const ProfileForm = ({
                           imageSrc={value || undefined}
                         />
                       )}
+                      <div className="flex md:hidden">
+                        <Button
+                          color="primary"
+                          StartIcon={!editableHeader ? Edit2 : Cross}
+                          className={`!rounded-full ${editableHeader ? "rotate-45 transform" : ""}`}
+                          variant="icon"
+                          onClick={handleUpdateContactInfo}
+                        />
+                      </div>
                     </div>
-                    <div className="flex flex-col flex-grow mx-4 items-left">
+                    <div className="items-left mx-4 mt-4 flex flex-grow flex-col md:mt-0">
                       <div
                         className={
-                          !editableHeader && defaultValues.position ? "" : "flex w-full flex-row gap-2"
+                          !editableHeader && defaultValues.position
+                            ? ""
+                            : "flex w-full flex-col gap-2 md:flex-row"
                         }>
                         <div
                           className={
@@ -690,10 +674,7 @@ const ProfileForm = ({
                           )}
                         </div>
                       </div>
-                      <div
-                        className={
-                          !editableHeader && defaultValues.position ? "" : "flex w-full flex-row gap-2"
-                        }>
+                      <div className={!editableHeader ? "" : "flex w-full flex-col gap-2 md:flex-row"}>
                         <div
                           className={
                             !editableHeader && defaultValues.address ? "mt-2 flex" : "flex w-full flex-col"
@@ -721,7 +702,7 @@ const ProfileForm = ({
                           className={
                             !editableHeader
                               ? "mt-2 flex flex-wrap items-center gap-2"
-                              : "mt-5 flex w-full flex-col items-start"
+                              : "mt-2 flex w-full flex-col items-start md:mt-7"
                           }>
                           <div className={!editableHeader ? "" : "flex w-full flex-row items-center gap-2"}>
                             <Button
@@ -738,22 +719,17 @@ const ProfileForm = ({
                             </Button>
                             <TextField
                               autoComplete="off"
-                              value={telegram}
-                              onChange={(e) => {
-                                setTelegram(e.target.value);
-                                const formData = [...social];
-                                formData[0] = { name: "telegram", url: e.target.value };
+                              value={social.telegram}
+                              onChange={(e: any) => {
+                                setSocial({ ...social, telegram: e.target.value });
                                 formMethods.setValue(
                                   "social",
-                                  formData.filter((soc) => soc),
-                                  {
-                                    shouldDirty: true,
-                                  }
+                                  { ...social, telegram: e.target.value },
+                                  { shouldDirty: true }
                                 );
-                                handleAddToSocial(formData);
                               }}
                               label=""
-                              className={!editableHeader ? "hidden" : ""}
+                              className={!editableHeader ? "hidden" : "w-full"}
                             />
                           </div>
 
@@ -766,19 +742,14 @@ const ProfileForm = ({
                             />
                             <TextField
                               autoComplete="off"
-                              value={facebook}
-                              onChange={(e) => {
-                                setFacebook(e.target.value);
-                                const formData = [...social];
-                                formData[0] = { name: "facebook", url: e.target.value };
+                              value={social.facebook}
+                              onChange={(e: any) => {
+                                setSocial({ ...social, facebook: e.target.value });
                                 formMethods.setValue(
                                   "social",
-                                  formData.filter((soc) => soc),
-                                  {
-                                    shouldDirty: true,
-                                  }
+                                  { ...social, facebook: e.target.value },
+                                  { shouldDirty: true }
                                 );
-                                handleAddToSocial(formData);
                               }}
                               label=""
                               className={!editableHeader ? "hidden" : ""}
@@ -799,19 +770,14 @@ const ProfileForm = ({
                             </Button>
                             <TextField
                               autoComplete="off"
-                              value={discord}
-                              onChange={(e) => {
-                                setDiscord(e.target.value);
-                                const formData = [...social];
-                                formData[0] = { name: "discord", url: e.target.value };
+                              value={social.discord}
+                              onChange={(e: any) => {
+                                setSocial({ ...social, discord: e.target.value });
                                 formMethods.setValue(
                                   "social",
-                                  formData.filter((soc) => soc),
-                                  {
-                                    shouldDirty: true,
-                                  }
+                                  { ...social, discord: e.target.value },
+                                  { shouldDirty: true }
                                 );
-                                handleAddToSocial(formData);
                               }}
                               label=""
                               className={!editableHeader ? "hidden" : ""}
@@ -826,19 +792,14 @@ const ProfileForm = ({
                             />
                             <TextField
                               autoComplete="off"
-                              value={instagram}
-                              onChange={(e) => {
-                                setInstagram(e.target.value);
-                                const formData = [...social];
-                                formData[0] = { name: "instagram", url: e.target.value };
+                              value={social.instagram}
+                              onChange={(e: any) => {
+                                setSocial({ ...social, instagram: e.target.value });
                                 formMethods.setValue(
                                   "social",
-                                  formData.filter((soc) => soc),
-                                  {
-                                    shouldDirty: true,
-                                  }
+                                  { ...social, instagram: e.target.value },
+                                  { shouldDirty: true }
                                 );
-                                handleAddToSocial(formData);
                               }}
                               label=""
                               className={!editableHeader ? "hidden" : ""}
@@ -853,19 +814,14 @@ const ProfileForm = ({
                             />
                             <TextField
                               autoComplete="off"
-                              value={linkedin}
-                              onChange={(e) => {
-                                setLinkedin(e.target.value);
-                                const formData = [...social];
-                                formData[0] = { name: "linkedin", url: e.target.value };
+                              value={social.linkedin}
+                              onChange={(e: any) => {
+                                setSocial({ ...social, linkedin: e.target.value });
                                 formMethods.setValue(
                                   "social",
-                                  formData.filter((soc) => soc),
-                                  {
-                                    shouldDirty: true,
-                                  }
+                                  { ...social, linkedin: e.target.value },
+                                  { shouldDirty: true }
                                 );
-                                handleAddToSocial(formData);
                               }}
                               label=""
                               className={!editableHeader ? "hidden" : ""}
@@ -874,7 +830,7 @@ const ProfileForm = ({
                         </div>
                       </div>
                     </div>
-                    <div className="flex">
+                    <div className="hidden md:flex">
                       <Button
                         color="primary"
                         StartIcon={!editableHeader ? Edit2 : Cross}

@@ -293,6 +293,14 @@ export const vitalSettingsUpdateSchema = z.object({
   sleepValue: z.number().optional(),
 });
 
+export const socialLink = z.object({
+  telegram: z.string().optional(),
+  facebook: z.string().optional(),
+  discord: z.string().optional(),
+  instagram: z.string().optional(),
+  linkedin: z.string().optional(),
+});
+
 export const createdEventSchema = z
   .object({
     id: z.string(),
