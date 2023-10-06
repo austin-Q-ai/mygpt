@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import type { Prisma } from "@prisma/client";
+import axios from "axios";
 import { MeiliSearch } from "meilisearch";
 import type { NextApiResponse, GetServerSidePropsContext } from "next";
 
@@ -19,6 +20,9 @@ import type { TrpcSessionUser } from "@calcom/trpc/server/trpc";
 import { TRPCError } from "@trpc/server";
 
 import type { TUpdateProfileInputSchema } from "./updateProfile.schema";
+
+const QDRANT_URL = process.env.NEXT_PUBLIC_QDRANT_URL;
+const COLLECTION_NAME = "topics";
 
 type UpdateProfileOptions = {
   ctx: {
@@ -282,5 +286,11 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
       .then(() => console.info("Booking pages revalidated"))
       .catch((e) => console.error(e));
   }*/
+
+  // update data on qdrant db
+  await axios.post(`${QDRANT_URL}/collections/${COLLECTION_NAME}/points/payload`, {
+    payload: input,
+    points: [user.id],
+  });
   return input;
 };
