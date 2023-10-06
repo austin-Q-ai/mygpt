@@ -266,6 +266,7 @@ model User {
   allowDynamicBooking          Boolean?                @default(true)
   /// @zod.custom(imports.userMetadata)
   metadata                     Json?
+  /// @zod.custom(imports.socialLink)
   social                       Json?
   verified                     Boolean?                @default(false)
   role                         UserPermissionRole      @default(USER)

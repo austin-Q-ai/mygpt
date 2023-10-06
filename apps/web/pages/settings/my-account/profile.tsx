@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { zodResolver } from "@hookform/resolvers/zod";
 import classNames from "classnames";
 import { signOut } from "next-auth/react";
@@ -127,7 +128,7 @@ type FormValues = {
   experiences: ExperienceInput[];
   educations: EducationInput[];
   skills: string[];
-  social: any;
+  social: SocialType;
 };
 
 const ProfileView = () => {
@@ -283,7 +284,7 @@ const ProfileView = () => {
         }))
       : ([] as EducationInput[]),
     skills: user.skills || [],
-    social: user.social || {},
+    social: (user.social as SocialType) || ({} as SocialType),
   };
 
   return (
@@ -295,7 +296,6 @@ const ProfileView = () => {
           defaultValues={defaultValues}
           isLoading={mutation.isLoading}
           onSubmit={(values) => {
-            console.log("submit");
             if (values.email !== user.email && isCALIdentityProviver) {
               setTempFormValues(values);
               setConfirmPasswordOpen(true);
@@ -448,11 +448,6 @@ const ProfileForm = ({
     instagram: "",
     linkedin: "",
   });
-  const [telegram, setTelegram] = useState("");
-  const [facebook, setFacebook] = useState("");
-  const [discord, setDiscord] = useState("");
-  const [instagram, setInstagram] = useState("");
-  const [linkedin, setLinkedin] = useState("");
   const [indexEdu, setIndexEdu] = useState(-1);
   const [schoolEdu, setSchoolEdu] = useState("");
   const [majorEdu, setMajorEdu] = useState<string | undefined>("");
@@ -508,12 +503,13 @@ const ProfileForm = ({
       })
     ),
     skills: z.array(z.string()),
-    social: z.array(
-      z.object({
-        name: z.string(),
-        url: z.string(),
-      })
-    ),
+    social: z.object({
+      telegram: z.string().optional(),
+      facebook: z.string().optional(),
+      discord: z.string().optional(),
+      instagram: z.string().optional(),
+      linkedin: z.string().optional(),
+    }),
   });
 
   const formMethods = useForm<FormValues>({
@@ -722,9 +718,8 @@ const ProfileForm = ({
                             </Button>
                             <TextField
                               autoComplete="off"
-                              value={telegram}
+                              value={social.telegram}
                               onChange={(e: any) => {
-                                setTelegram(e.target.value);
                                 setSocial({ ...social, telegram: e.target.value });
                                 formMethods.setValue(
                                   "social",
@@ -746,9 +741,8 @@ const ProfileForm = ({
                             />
                             <TextField
                               autoComplete="off"
-                              value={facebook}
+                              value={social.facebook}
                               onChange={(e: any) => {
-                                setFacebook(e.target.value);
                                 setSocial({ ...social, facebook: e.target.value });
                                 formMethods.setValue(
                                   "social",
@@ -775,9 +769,8 @@ const ProfileForm = ({
                             </Button>
                             <TextField
                               autoComplete="off"
-                              value={discord}
+                              value={social.discord}
                               onChange={(e: any) => {
-                                setDiscord(e.target.value);
                                 setSocial({ ...social, discord: e.target.value });
                                 formMethods.setValue(
                                   "social",
@@ -798,9 +791,8 @@ const ProfileForm = ({
                             />
                             <TextField
                               autoComplete="off"
-                              value={instagram}
+                              value={social.instagram}
                               onChange={(e: any) => {
-                                setInstagram(e.target.value);
                                 setSocial({ ...social, instagram: e.target.value });
                                 formMethods.setValue(
                                   "social",
@@ -821,9 +813,8 @@ const ProfileForm = ({
                             />
                             <TextField
                               autoComplete="off"
-                              value={linkedin}
+                              value={social.linkedin}
                               onChange={(e: any) => {
-                                setLinkedin(e.target.value);
                                 setSocial({ ...social, linkedin: e.target.value });
                                 formMethods.setValue(
                                   "social",
