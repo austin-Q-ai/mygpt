@@ -14,6 +14,7 @@ export const createEventTypeInput = z.object({
   schedulingType: z.nativeEnum(SchedulingType).nullish(),
   locations: imports.eventTypeLocations,
   metadata: imports.EventTypeMetaDataSchema.optional(),
+  logo: z.string().optional(),
 })
   .partial({ hidden: true, locations: true })
   .refine((data) => (data.teamId ? data.teamId && data.schedulingType : true), {

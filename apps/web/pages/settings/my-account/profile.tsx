@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { zodResolver } from "@hookform/resolvers/zod";
 import classNames from "classnames";
 import { signOut } from "next-auth/react";
@@ -64,14 +65,14 @@ const SkeletonLoader = ({ title, description }: { title: string; description: st
       <Meta title={title} description={description} />
       <div className="mb-8 space-y-6">
         <div className="flex items-center">
-          <SkeletonAvatar className="me-4 mt-0 h-16 w-16 px-4" />
-          <SkeletonButton className="h-6 w-32 rounded-md p-5" />
+          <SkeletonAvatar className="w-16 h-16 px-4 mt-0 me-4" />
+          <SkeletonButton className="w-32 h-6 p-5 rounded-md" />
         </div>
-        <SkeletonText className="h-8 w-full" />
-        <SkeletonText className="h-8 w-full" />
-        <SkeletonText className="h-8 w-full" />
+        <SkeletonText className="w-full h-8" />
+        <SkeletonText className="w-full h-8" />
+        <SkeletonText className="w-full h-8" />
 
-        <SkeletonButton className="mr-6 h-8 w-20 rounded-md p-5" />
+        <SkeletonButton className="w-20 h-8 p-5 mr-6 rounded-md" />
       </div>
     </SkeletonContainer>
   );
@@ -95,11 +96,13 @@ type ExperienceInput = {
   delete: boolean | undefined;
 };
 
-type SocialInput = {
-  name: string;
-  url: string;
+type SocialType = {
+  telegram?: string;
+  facebook?: string;
+  discord?: string;
+  instagram?: string;
+  linkedin?: string;
 };
-
 type EducationInput = {
   id: number | undefined;
   key: string;
@@ -125,7 +128,7 @@ type FormValues = {
   experiences: ExperienceInput[];
   educations: EducationInput[];
   skills: string[];
-  social: SocialInput[];
+  social: SocialType;
 };
 
 const ProfileView = () => {
@@ -137,6 +140,7 @@ const ProfileView = () => {
     onSuccess: () => {
       showToast(t("settings_updated_successfully"), "success");
       utils.viewer.me.invalidate();
+      console.log("updated: ", user)
       utils.viewer.avatar.invalidate();
       setTempFormValues(null);
     },
@@ -281,13 +285,7 @@ const ProfileView = () => {
         }))
       : ([] as EducationInput[]),
     skills: user.skills || [],
-    social: [],
-    // social: user.social
-    //   ? user.social.map((soc) => ({
-    //       name: soc.name,
-    //       url: soc.url,
-    //     }))
-    //   : ([] as SocialInput[]),
+    social: (user.social as SocialType) || ({} as SocialType),
   };
 
   return (
@@ -321,7 +319,7 @@ const ProfileView = () => {
           }
         />
 
-        <hr className="border-subtle my-6" />
+        <hr className="my-6 border-subtle" />
 
         <Label>{t("danger_zone")}</Label>
         {/* Delete account Dialog */}
@@ -338,7 +336,7 @@ const ProfileView = () => {
             Icon={AlertTriangle}>
             <>
               <div className="mb-10">
-                <p className="text-default mb-4">
+                <p className="mb-4 text-default">
                   {t("delete_account_confirmation_message", { appName: APP_NAME })}
                 </p>
                 {isCALIdentityProviver && (
@@ -427,6 +425,7 @@ const ProfileForm = ({
   const [editableAbout, setEditableAbout] = useState(false);
   const [editableSkill, setEditableSkill] = useState(false);
   const [skills, setSkills] = useState<string[]>([]);
+  const [expEduAvatar, setExpEduAvatar] = useState<string>("");
 
   const [addExpOpen, setAddExpOpen] = useState(false);
   const [showErrorInExp, setShowErrorInExp] = useState(false);
@@ -443,12 +442,13 @@ const ProfileForm = ({
   const [addEduOpen, setAddEduOpen] = useState(false);
   const [showErrorInEdu, setShowErrorInEdu] = useState(false);
   const [educations, setEducations] = useState<EducationInput[]>([]);
-  const [social, setSocial] = useState<SocialInput[]>([]);
-  const [telegram, setTelegram] = useState("");
-  const [facebook, setFacebook] = useState("");
-  const [discord, setDiscord] = useState("");
-  const [instagram, setInstagram] = useState("");
-  const [linkedin, setLinkedin] = useState("");
+  const [social, setSocial] = useState<SocialType>({
+    telegram: "",
+    facebook: "",
+    discord: "",
+    instagram: "",
+    linkedin: "",
+  });
   const [indexEdu, setIndexEdu] = useState(-1);
   const [schoolEdu, setSchoolEdu] = useState("");
   const [majorEdu, setMajorEdu] = useState<string | undefined>("");
@@ -459,26 +459,6 @@ const ProfileForm = ({
   const [endYearEdu, setEndYearEdu] = useState(new Date().getFullYear());
 
   let settable = true;
-
-  const handleAddToSocial = (obj: any) => {
-    console.log(obj[0]);
-    const socialList = [...social];
-    const currentItem = socialList.find((i) => i.name === obj[0].name);
-    if (currentItem) {
-      const updatedData = obj[0];
-      const newState = social.map((item) => {
-        if (item.name === updatedData.name) {
-          return { ...item, ...updatedData };
-        }
-
-        return item;
-      });
-
-      setSocial(newState);
-    } else {
-      setSocial([...social, obj[0]]);
-    }
-  };
   const profileFormSchema = z.object({
     username: z.string(),
     avatar: z.string(),
@@ -524,12 +504,13 @@ const ProfileForm = ({
       })
     ),
     skills: z.array(z.string()),
-    social: z.array(
-      z.object({
-        name: z.string(),
-        url: z.string(),
-      })
-    ),
+    social: z.object({
+      telegram: z.string().optional(),
+      facebook: z.string().optional(),
+      discord: z.string().optional(),
+      instagram: z.string().optional(),
+      linkedin: z.string().optional(),
+    }),
   });
 
   const formMethods = useForm<FormValues>({
@@ -561,13 +542,7 @@ const ProfileForm = ({
         };
       })
     );
-    setSocial(
-      formMethods.getValues("social").map((soc) => {
-        return {
-          ...soc,
-        };
-      })
-    );
+    setSocial(formMethods.getValues("social"));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -619,15 +594,15 @@ const ProfileForm = ({
                 }}
                 variant="ProfileCard"
                 description={
-                  <div className="flex items-start justify-between">
-                    <div>
+                  <div className="flex flex-col items-start justify-between md:flex-row">
+                    <div className="flex w-full justify-between md:w-auto md:justify-normal">
                       {!editableHeader ? (
                         <Avatar
                           alt=""
                           imageSrc={value}
                           gravatarFallbackMd5="fallback"
                           size="xl"
-                          className="border-pink border-2 border-solid bg-white"
+                          className="bg-white border-2 border-solid border-pink"
                         />
                       ) : (
                         <ImageUploader
@@ -641,11 +616,22 @@ const ProfileForm = ({
                           imageSrc={value || undefined}
                         />
                       )}
+                      <div className="flex md:hidden">
+                        <Button
+                          color="primary"
+                          StartIcon={!editableHeader ? Edit2 : Cross}
+                          className={`!rounded-full ${editableHeader ? "rotate-45 transform" : ""}`}
+                          variant="icon"
+                          onClick={handleUpdateContactInfo}
+                        />
+                      </div>
                     </div>
-                    <div className="items-left mx-4 flex flex-grow flex-col">
+                    <div className="items-left mx-4 mt-4 flex flex-grow flex-col md:mt-0">
                       <div
                         className={
-                          !editableHeader && defaultValues.position ? "" : "flex w-full flex-row gap-2"
+                          !editableHeader && defaultValues.position
+                            ? ""
+                            : "flex w-full flex-col gap-2 md:flex-row"
                         }>
                         <div
                           className={
@@ -688,17 +674,14 @@ const ProfileForm = ({
                           )}
                         </div>
                       </div>
-                      <div
-                        className={
-                          !editableHeader && defaultValues.position ? "" : "flex w-full flex-row gap-2"
-                        }>
+                      <div className={!editableHeader ? "" : "flex w-full flex-col gap-2 md:flex-row"}>
                         <div
                           className={
                             !editableHeader && defaultValues.address ? "mt-2 flex" : "flex w-full flex-col"
                           }>
                           {!editableHeader ? (
                             <>
-                              <MousePointer2 className="mr-2 h-4 w-4 rotate-90 transform" fill="gray" />
+                              <MousePointer2 className="w-4 h-4 mr-2 transform rotate-90" fill="gray" />
                               {defaultValues.address}
                             </>
                           ) : (
@@ -719,12 +702,12 @@ const ProfileForm = ({
                           className={
                             !editableHeader
                               ? "mt-2 flex flex-wrap items-center gap-2"
-                              : "mt-5 flex w-full flex-col items-start"
+                              : "mt-2 flex w-full flex-col items-start md:mt-7"
                           }>
                           <div className={!editableHeader ? "" : "flex w-full flex-row items-center gap-2"}>
                             <Button
                               color="secondary"
-                              className="rounded-full border-gray-700 bg-transparent md:rounded-full"
+                              className="bg-transparent border-gray-700 rounded-full md:rounded-full"
                               variant="icon">
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -736,22 +719,17 @@ const ProfileForm = ({
                             </Button>
                             <TextField
                               autoComplete="off"
-                              value={telegram}
-                              onChange={(e) => {
-                                setTelegram(e.target.value);
-                                const formData = [...social];
-                                formData[0] = { name: "telegram", url: e.target.value };
+                              value={social.telegram}
+                              onChange={(e: any) => {
+                                setSocial({ ...social, telegram: e.target.value });
                                 formMethods.setValue(
                                   "social",
-                                  formData.filter((soc) => soc),
-                                  {
-                                    shouldDirty: true,
-                                  }
+                                  { ...social, telegram: e.target.value },
+                                  { shouldDirty: true }
                                 );
-                                handleAddToSocial(formData);
                               }}
                               label=""
-                              className={!editableHeader ? "hidden" : ""}
+                              className={!editableHeader ? "hidden" : "w-full"}
                             />
                           </div>
 
@@ -759,24 +737,19 @@ const ProfileForm = ({
                             <Button
                               color="secondary"
                               StartIcon={Facebook}
-                              className="rounded-full border-gray-700 bg-transparent md:rounded-full"
+                              className="bg-transparent border-gray-700 rounded-full md:rounded-full"
                               variant="icon"
                             />
                             <TextField
                               autoComplete="off"
-                              value={facebook}
-                              onChange={(e) => {
-                                setFacebook(e.target.value);
-                                const formData = [...social];
-                                formData[0] = { name: "facebook", url: e.target.value };
+                              value={social.facebook}
+                              onChange={(e: any) => {
+                                setSocial({ ...social, facebook: e.target.value });
                                 formMethods.setValue(
                                   "social",
-                                  formData.filter((soc) => soc),
-                                  {
-                                    shouldDirty: true,
-                                  }
+                                  { ...social, facebook: e.target.value },
+                                  { shouldDirty: true }
                                 );
-                                handleAddToSocial(formData);
                               }}
                               label=""
                               className={!editableHeader ? "hidden" : ""}
@@ -785,7 +758,7 @@ const ProfileForm = ({
                           <div className={!editableHeader ? "" : "flex w-full flex-row items-center gap-2"}>
                             <Button
                               color="secondary"
-                              className="rounded-full border-gray-700 bg-transparent md:rounded-full"
+                              className="bg-transparent border-gray-700 rounded-full md:rounded-full"
                               variant="icon">
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -797,19 +770,14 @@ const ProfileForm = ({
                             </Button>
                             <TextField
                               autoComplete="off"
-                              value={discord}
-                              onChange={(e) => {
-                                setDiscord(e.target.value);
-                                const formData = [...social];
-                                formData[0] = { name: "discord", url: e.target.value };
+                              value={social.discord}
+                              onChange={(e: any) => {
+                                setSocial({ ...social, discord: e.target.value });
                                 formMethods.setValue(
                                   "social",
-                                  formData.filter((soc) => soc),
-                                  {
-                                    shouldDirty: true,
-                                  }
+                                  { ...social, discord: e.target.value },
+                                  { shouldDirty: true }
                                 );
-                                handleAddToSocial(formData);
                               }}
                               label=""
                               className={!editableHeader ? "hidden" : ""}
@@ -819,24 +787,19 @@ const ProfileForm = ({
                             <Button
                               color="secondary"
                               StartIcon={Instagram}
-                              className="rounded-full border-gray-700 bg-transparent md:rounded-full"
+                              className="bg-transparent border-gray-700 rounded-full md:rounded-full"
                               variant="icon"
                             />
                             <TextField
                               autoComplete="off"
-                              value={instagram}
-                              onChange={(e) => {
-                                setInstagram(e.target.value);
-                                const formData = [...social];
-                                formData[0] = { name: "instagram", url: e.target.value };
+                              value={social.instagram}
+                              onChange={(e: any) => {
+                                setSocial({ ...social, instagram: e.target.value });
                                 formMethods.setValue(
                                   "social",
-                                  formData.filter((soc) => soc),
-                                  {
-                                    shouldDirty: true,
-                                  }
+                                  { ...social, instagram: e.target.value },
+                                  { shouldDirty: true }
                                 );
-                                handleAddToSocial(formData);
                               }}
                               label=""
                               className={!editableHeader ? "hidden" : ""}
@@ -846,24 +809,19 @@ const ProfileForm = ({
                             <Button
                               color="secondary"
                               StartIcon={Linkedin}
-                              className="rounded-full border-gray-700 bg-transparent md:rounded-full"
+                              className="bg-transparent border-gray-700 rounded-full md:rounded-full"
                               variant="icon"
                             />
                             <TextField
                               autoComplete="off"
-                              value={linkedin}
-                              onChange={(e) => {
-                                setLinkedin(e.target.value);
-                                const formData = [...social];
-                                formData[0] = { name: "linkedin", url: e.target.value };
+                              value={social.linkedin}
+                              onChange={(e: any) => {
+                                setSocial({ ...social, linkedin: e.target.value });
                                 formMethods.setValue(
                                   "social",
-                                  formData.filter((soc) => soc),
-                                  {
-                                    shouldDirty: true,
-                                  }
+                                  { ...social, linkedin: e.target.value },
+                                  { shouldDirty: true }
                                 );
-                                handleAddToSocial(formData);
                               }}
                               label=""
                               className={!editableHeader ? "hidden" : ""}
@@ -872,7 +830,7 @@ const ProfileForm = ({
                         </div>
                       </div>
                     </div>
-                    <div className="flex">
+                    <div className="hidden md:flex">
                       <Button
                         color="primary"
                         StartIcon={!editableHeader ? Edit2 : Cross}
@@ -894,7 +852,7 @@ const ProfileForm = ({
             variant="ProfileCard"
             description={
               <>
-                <div className="mb-4 flex justify-between">
+                <div className="flex justify-between mb-4">
                   <Label className="text-lg">{t("about")}</Label>
                   <Button
                     color="primary"
@@ -943,7 +901,7 @@ const ProfileForm = ({
             variant="ProfileCard"
             description={
               <>
-                <div className="mb-4 flex justify-between">
+                <div className="flex justify-between mb-4">
                   <Label className="text-lg">{t("skill")}</Label>
                   <div className="flex gap-2">
                     {editableSkill && (
@@ -969,7 +927,7 @@ const ProfileForm = ({
                     />
                   </div>
                 </div>
-                <div className="mb-4 flex w-full flex-wrap gap-2">
+                <div className="flex flex-wrap w-full gap-2 mb-4">
                   {(!editableSkill && defaultValues.skills.length === 0) ||
                   (editableSkill && skills.length === 0) ? (
                     <div className="p-2 text-center">{t("no_data_yet")}</div>
@@ -978,7 +936,7 @@ const ProfileForm = ({
                       {!editableSkill
                         ? defaultValues.skills.map((skill, i) => (
                             <div
-                              className="rounded-md border-none border-gray-500 bg-white p-2 text-center"
+                              className="p-2 text-center bg-white border-gray-500 border-none rounded-md"
                               key={i}>
                               {skill}
                             </div>
@@ -1021,14 +979,14 @@ const ProfileForm = ({
             }
           />
         </div>
-        <div className="mt-8 flex flex-col gap-2 md:flex-row">
+        <div className="flex flex-col gap-2 mt-8 md:flex-row">
           <Card
             title=""
             containerProps={{ style: { width: "100%", borderRadius: "20px" } }}
             variant="ProfileCard"
             description={
               <>
-                <div className="mb-4 flex justify-between">
+                <div className="flex justify-between mb-4">
                   <Label className="text-lg">{t("exp")}</Label>
                   <div className="flex gap-2">
                     {editableExp && (
@@ -1043,6 +1001,7 @@ const ProfileForm = ({
                           setCompanyExp("");
                           setAddressExp("");
                           setIndexExp(-1);
+                          setExpEduAvatar("");
                           setStartMonthExp(new Date().getMonth() + 1);
                           setStartYearExp(new Date().getFullYear());
                           setEndMonthExp(new Date().getMonth() + 1);
@@ -1070,10 +1029,15 @@ const ProfileForm = ({
                         <>
                           {defaultValues.experiences.map((exp) => {
                             return (
-                              <div className="items-left mb-4 flex flex-col" key={`exp-${exp.id}`}>
-                                <div className="mb-4 flex gap-2">
+                              <div className="flex flex-col mb-4 items-left" key={`exp-${exp.id}`}>
+                                <div className="flex gap-2 mb-4">
                                   <div className="mr-4">
-                                    <Avatar alt="" imageSrc="" gravatarFallbackMd5="fallback" size="sm" />
+                                    <Avatar
+                                      alt=""
+                                      imageSrc={exp.avatar || ""}
+                                      gravatarFallbackMd5="fallback"
+                                      size="sm"
+                                    />
                                   </div>
                                   <div className="flex flex-col justify-start">
                                     <div className="mb-1">
@@ -1104,12 +1068,17 @@ const ProfileForm = ({
                               return <></>;
                             } else {
                               return (
-                                <div className="items-left mb-4 flex flex-col" key={exp.key}>
-                                  <div className="mb-4 flex gap-2">
+                                <div className="flex flex-col mb-4 items-left" key={exp.key}>
+                                  <div className="flex gap-2 mb-4">
                                     <div className="flex-grow">
-                                      <Avatar alt="" imageSrc="" gravatarFallbackMd5="fallback" size="sm" />
+                                      <Avatar
+                                        alt=""
+                                        imageSrc={exp.avatar || ""}
+                                        gravatarFallbackMd5="fallback"
+                                        size="sm"
+                                      />
                                     </div>
-                                    <div className="flex flex-grow flex-col justify-start">
+                                    <div className="flex flex-col justify-start flex-grow">
                                       <div className="mb-1">
                                         <b>{exp.position}</b>
                                       </div>
@@ -1119,7 +1088,7 @@ const ProfileForm = ({
                                       } ${exp.endYear}`}</div>
                                       {exp.address && <div>{exp.address}</div>}
                                     </div>
-                                    <div className="flex flex-grow justify-end">
+                                    <div className="flex justify-end flex-grow">
                                       <Button
                                         color="primary"
                                         StartIcon={Edit2}
@@ -1136,6 +1105,7 @@ const ProfileForm = ({
                                           setStartYearExp(exp.startYear);
                                           setEndMonthExp(exp.endMonth);
                                           setEndYearExp(exp.endYear);
+                                          setExpEduAvatar(exp.avatar || "");
                                         }}
                                       />
                                     </div>
@@ -1159,7 +1129,7 @@ const ProfileForm = ({
             variant="ProfileCard"
             description={
               <>
-                <div className="mb-4 flex justify-between">
+                <div className="flex justify-between mb-4">
                   <Label className="text-lg">{t("edu")}</Label>
                   <div className="flex gap-2">
                     {editableEdu && (
@@ -1174,6 +1144,7 @@ const ProfileForm = ({
                           setDegreeEdu("");
                           setMajorEdu("");
                           setIndexEdu(-1);
+                          setExpEduAvatar("");
                           setStartMonthEdu(new Date().getMonth() + 1);
                           setStartYearEdu(new Date().getFullYear());
                           setEndMonthEdu(new Date().getMonth() + 1);
@@ -1201,10 +1172,15 @@ const ProfileForm = ({
                         <>
                           {defaultValues.educations.map((edu) => {
                             return (
-                              <div className="items-left mb-4 flex flex-col" key={`edu-${edu.id}`}>
-                                <div className="mb-4 flex gap-2">
+                              <div className="flex flex-col mb-4 items-left" key={`edu-${edu.id}`}>
+                                <div className="flex gap-2 mb-4">
                                   <div className="mr-4">
-                                    <Avatar alt="" imageSrc="" gravatarFallbackMd5="fallback" size="sm" />
+                                    <Avatar
+                                      alt=""
+                                      imageSrc={edu.avatar || ""}
+                                      gravatarFallbackMd5="fallback"
+                                      size="sm"
+                                    />
                                   </div>
                                   <div className="flex flex-col justify-start">
                                     <div className="mb-1">
@@ -1235,12 +1211,17 @@ const ProfileForm = ({
                               return <></>;
                             } else {
                               return (
-                                <div className="items-left mb-4 flex flex-col" key={edu.key}>
-                                  <div className="mb-4 flex gap-2">
+                                <div className="flex flex-col mb-4 items-left" key={edu.key}>
+                                  <div className="flex gap-2 mb-4">
                                     <div className="flex-grow">
-                                      <Avatar alt="" imageSrc="" gravatarFallbackMd5="fallback" size="sm" />
+                                      <Avatar
+                                        alt=""
+                                        imageSrc={edu.avatar || ""}
+                                        gravatarFallbackMd5="fallback"
+                                        size="sm"
+                                      />
                                     </div>
-                                    <div className="flex flex-grow flex-col justify-start">
+                                    <div className="flex flex-col justify-start flex-grow">
                                       <div className="mb-1">
                                         <b>{edu.school}</b>
                                       </div>
@@ -1250,7 +1231,7 @@ const ProfileForm = ({
                                       } ${edu.endYear}`}</div>
                                       {edu.major && <div>{edu.major}</div>}
                                     </div>
-                                    <div className="flex flex-grow justify-end">
+                                    <div className="flex justify-end flex-grow">
                                       <Button
                                         color="primary"
                                         StartIcon={Edit2}
@@ -1267,6 +1248,7 @@ const ProfileForm = ({
                                           setStartYearEdu(edu.startYear);
                                           setEndMonthEdu(edu.endMonth);
                                           setEndYearEdu(edu.endYear);
+                                          setExpEduAvatar(edu.avatar || "");
                                         }}
                                       />
                                     </div>
@@ -1289,7 +1271,7 @@ const ProfileForm = ({
         <div className="hidden">
           <TextField label={t("email")} hint={t("change_email_hint")} {...formMethods.register("email")} />
         </div>
-        <Button loading={isLoading} disabled={isDisabled} color="primary" className="mr-4 mt-8" type="submit">
+        <Button loading={isLoading} disabled={isDisabled} color="primary" className="mt-8 mr-4" type="submit">
           {t("update")}
         </Button>
         {!isDisabled && (
@@ -1357,7 +1339,7 @@ const ProfileForm = ({
             {showErrorInExp && !companyExp && (
               <Alert key="error_company_required" severity="error" title={t("error_company_required")} />
             )}
-            <div className="mb-2 flex justify-between">
+            <div className="flex justify-between mb-2">
               <div className="flex gap-2">
                 <SelectField
                   options={months}
@@ -1438,6 +1420,20 @@ const ProfileForm = ({
                 setAddressExp(e.target.value);
               }}
             />
+            <div className="flex flex-col">
+              <Label className="text-sm">{t("image")}</Label>
+              <ImageUploader
+                target="Image"
+                id="image-exp-upload"
+                isFilled
+                buttonMsg=""
+                large
+                handleAvatarChange={(avatar) => {
+                  setExpEduAvatar(avatar);
+                }}
+                imageSrc={expEduAvatar || undefined}
+              />
+            </div>
           </div>
           <DialogFooter showDivider>
             {indexExp !== -1 && (
@@ -1471,7 +1467,7 @@ const ProfileForm = ({
                       startYear: startYearExp,
                       endMonth: endMonthExp,
                       endYear: endYearExp,
-                      avatar: "",
+                      avatar: expEduAvatar || "",
                       delete: undefined,
                     });
                   } else {
@@ -1485,7 +1481,7 @@ const ProfileForm = ({
                       startYear: startYearExp,
                       endMonth: endMonthExp,
                       endYear: endYearExp,
-                      avatar: "",
+                      avatar: expEduAvatar || "",
                     };
                   }
                   setExperiences(formData);
@@ -1535,7 +1531,7 @@ const ProfileForm = ({
                 setDegreeEdu(e.target.value);
               }}
             />
-            <div className="mb-2 flex justify-between">
+            <div className="flex justify-between mb-2">
               <div className="flex gap-2">
                 <SelectField
                   options={months}
@@ -1616,6 +1612,20 @@ const ProfileForm = ({
                 setMajorEdu(e.target.value);
               }}
             />
+            <div className="flex flex-col">
+              <Label className="text-sm">{t("image")}</Label>
+              <ImageUploader
+                target="Image"
+                id="image-edu-upload"
+                isFilled
+                buttonMsg=""
+                large
+                handleAvatarChange={(avatar) => {
+                  setExpEduAvatar(avatar);
+                }}
+                imageSrc={expEduAvatar || undefined}
+              />
+            </div>
           </div>
           <DialogFooter showDivider>
             {indexEdu !== -1 && (
@@ -1649,7 +1659,7 @@ const ProfileForm = ({
                       startYear: startYearEdu,
                       endMonth: endMonthEdu,
                       endYear: endYearEdu,
-                      avatar: "",
+                      avatar: expEduAvatar || "",
                       delete: undefined,
                     });
                   } else {
@@ -1663,7 +1673,7 @@ const ProfileForm = ({
                       startYear: startYearEdu,
                       endMonth: endMonthEdu,
                       endYear: endYearEdu,
-                      avatar: "",
+                      avatar: expEduAvatar || "",
                     };
                   }
                   setEducations(formData);

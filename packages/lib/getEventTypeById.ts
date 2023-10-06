@@ -215,6 +215,7 @@ export default async function getEventTypeById({
           },
         },
       },
+      logo: true,
     },
   });
 
