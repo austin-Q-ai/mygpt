@@ -4,6 +4,7 @@ import type { FormEvent } from "react";
 import { useCallback, useEffect, useState } from "react";
 import Cropper from "react-easy-crop";
 
+import { classNames } from "@calcom/lib";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 
 import { Avatar, Button, Dialog, DialogClose, DialogContent, DialogTrigger } from "../..";
@@ -65,6 +66,7 @@ type ImageUploaderProps = {
   buttonMsg: string | JSX.Element;
   handleAvatarChange: (imageSrc: string) => void;
   imageSrc?: string;
+  isFilled?: boolean;
   target: string;
   large?: boolean;
   avatar?: string;
@@ -120,6 +122,7 @@ export default function ImageUploader({
   large,
   avatar,
   id,
+  isFilled,
   buttonMsg,
   handleAvatarChange,
   ...props
@@ -179,12 +182,16 @@ export default function ImageUploader({
             className="h-[134px] w-[200px] rounded-full border border-2 border-dashed"
             variant="icon">
             {imageSrc ? (
-              <Avatar
-                className="border-default h-[45px] w-[45px] border"
-                alt=""
-                imageSrc={imageSrc}
-                size="lg"
-              />
+              !isFilled ? (
+                <Avatar
+                  className="border-default h-[45px] w-[45px] border"
+                  alt=""
+                  imageSrc={imageSrc}
+                  size="lg"
+                />
+              ) : (
+                <img className="h-28 w-28" src={imageSrc} alt="" />
+              )
             ) : (
               <ImageIcon className="h-[45px] w-[50px]" />
             )}
@@ -222,7 +229,11 @@ export default function ImageUploader({
                 )}
                 {imageSrc && (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img className="h-20 w-20 rounded-full" src={imageSrc} alt={target} />
+                  <img
+                    className={classNames("h-20 w-20", !isFilled && "rounded-full")}
+                    src={imageSrc}
+                    alt={target}
+                  />
                 )}
               </div>
             )}

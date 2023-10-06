@@ -15,6 +15,7 @@ export const ServicesPage = React.forwardRef<HTMLDivElement, ServicesPageProps>(
   (props: ServicesPageProps, ref) => {
     // you need to replace userId with props.id
     const { data: user, isLoading } = trpc.viewer.microcard.user.useQuery({ userId: props.userId });
+    console.log(user?.eventTypes);
 
     return (
       <div className="flex h-[900px] w-[500px] flex-col bg-white" ref={ref}>
@@ -29,18 +30,21 @@ export const ServicesPage = React.forwardRef<HTMLDivElement, ServicesPageProps>(
                   .filter((event) => !event.teamId)
                   .map((event, key) => (
                     <div key={key}>
-                      <div className="flex flex-col gap-2 p-4">
-                        <p className="text-sm font-bold ">{event.title}</p>
-                        <p className="text-xs text-gray-500">lun.29 aug, 9:00 AM - 5:00 PM</p>
-                        <p className="text-[10px] text-gray-500">
-                          Link: {user.username}.myGPT.fi/hugo/videoconference
-                        </p>
-                        <Badge className="w-fit" variant="gray" startIcon={Clock}>
-                          {event.slug}
-                        </Badge>
-                        <span className="bg-pink w-fit rounded px-3 py-1 text-white">
-                          <CalendarPlus className="h-4" />
-                        </span>
+                      <div className="flex justify-between p-4">
+                        <div className="flex flex-col gap-2">
+                          <p className="text-sm font-bold ">{event.title}</p>
+                          <p className="text-xs text-gray-500">lun.29 aug, 9:00 AM - 5:00 PM</p>
+                          <p className="text-[10px] text-gray-500">
+                            Link: {user.username}.myGPT.fi/hugo/videoconference
+                          </p>
+                          <Badge className="w-fit" variant="gray" startIcon={Clock}>
+                            {event.slug}
+                          </Badge>
+                          <span className="bg-pink w-fit rounded px-3 py-1 text-white">
+                            <CalendarPlus className="h-4" />
+                          </span>
+                        </div>
+                        {event.logo && <img alt={event.title} src={event.logo} width={90} height={110} />}
                       </div>
                     </div>
                   ))}

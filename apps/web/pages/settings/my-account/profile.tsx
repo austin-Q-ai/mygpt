@@ -427,6 +427,7 @@ const ProfileForm = ({
   const [editableAbout, setEditableAbout] = useState(false);
   const [editableSkill, setEditableSkill] = useState(false);
   const [skills, setSkills] = useState<string[]>([]);
+  const [expEduAvatar, setExpEduAvatar] = useState<string>("");
 
   const [addExpOpen, setAddExpOpen] = useState(false);
   const [showErrorInExp, setShowErrorInExp] = useState(false);
@@ -1043,6 +1044,7 @@ const ProfileForm = ({
                           setCompanyExp("");
                           setAddressExp("");
                           setIndexExp(-1);
+                          setExpEduAvatar("");
                           setStartMonthExp(new Date().getMonth() + 1);
                           setStartYearExp(new Date().getFullYear());
                           setEndMonthExp(new Date().getMonth() + 1);
@@ -1073,7 +1075,12 @@ const ProfileForm = ({
                               <div className="items-left mb-4 flex flex-col" key={`exp-${exp.id}`}>
                                 <div className="mb-4 flex gap-2">
                                   <div className="mr-4">
-                                    <Avatar alt="" imageSrc="" gravatarFallbackMd5="fallback" size="sm" />
+                                    <Avatar
+                                      alt=""
+                                      imageSrc={exp.avatar || ""}
+                                      gravatarFallbackMd5="fallback"
+                                      size="sm"
+                                    />
                                   </div>
                                   <div className="flex flex-col justify-start">
                                     <div className="mb-1">
@@ -1107,7 +1114,12 @@ const ProfileForm = ({
                                 <div className="items-left mb-4 flex flex-col" key={exp.key}>
                                   <div className="mb-4 flex gap-2">
                                     <div className="flex-grow">
-                                      <Avatar alt="" imageSrc="" gravatarFallbackMd5="fallback" size="sm" />
+                                      <Avatar
+                                        alt=""
+                                        imageSrc={exp.avatar || ""}
+                                        gravatarFallbackMd5="fallback"
+                                        size="sm"
+                                      />
                                     </div>
                                     <div className="flex flex-grow flex-col justify-start">
                                       <div className="mb-1">
@@ -1136,6 +1148,7 @@ const ProfileForm = ({
                                           setStartYearExp(exp.startYear);
                                           setEndMonthExp(exp.endMonth);
                                           setEndYearExp(exp.endYear);
+                                          setExpEduAvatar(exp.avatar || "");
                                         }}
                                       />
                                     </div>
@@ -1174,6 +1187,7 @@ const ProfileForm = ({
                           setDegreeEdu("");
                           setMajorEdu("");
                           setIndexEdu(-1);
+                          setExpEduAvatar("");
                           setStartMonthEdu(new Date().getMonth() + 1);
                           setStartYearEdu(new Date().getFullYear());
                           setEndMonthEdu(new Date().getMonth() + 1);
@@ -1204,7 +1218,12 @@ const ProfileForm = ({
                               <div className="items-left mb-4 flex flex-col" key={`edu-${edu.id}`}>
                                 <div className="mb-4 flex gap-2">
                                   <div className="mr-4">
-                                    <Avatar alt="" imageSrc="" gravatarFallbackMd5="fallback" size="sm" />
+                                    <Avatar
+                                      alt=""
+                                      imageSrc={edu.avatar || ""}
+                                      gravatarFallbackMd5="fallback"
+                                      size="sm"
+                                    />
                                   </div>
                                   <div className="flex flex-col justify-start">
                                     <div className="mb-1">
@@ -1238,7 +1257,12 @@ const ProfileForm = ({
                                 <div className="items-left mb-4 flex flex-col" key={edu.key}>
                                   <div className="mb-4 flex gap-2">
                                     <div className="flex-grow">
-                                      <Avatar alt="" imageSrc="" gravatarFallbackMd5="fallback" size="sm" />
+                                      <Avatar
+                                        alt=""
+                                        imageSrc={edu.avatar || ""}
+                                        gravatarFallbackMd5="fallback"
+                                        size="sm"
+                                      />
                                     </div>
                                     <div className="flex flex-grow flex-col justify-start">
                                       <div className="mb-1">
@@ -1267,6 +1291,7 @@ const ProfileForm = ({
                                           setStartYearEdu(edu.startYear);
                                           setEndMonthEdu(edu.endMonth);
                                           setEndYearEdu(edu.endYear);
+                                          setExpEduAvatar(edu.avatar || "");
                                         }}
                                       />
                                     </div>
@@ -1438,6 +1463,20 @@ const ProfileForm = ({
                 setAddressExp(e.target.value);
               }}
             />
+            <div className="flex flex-col">
+              <Label className="text-sm">{t("image")}</Label>
+              <ImageUploader
+                target="Image"
+                id="image-exp-upload"
+                isFilled
+                buttonMsg=""
+                large
+                handleAvatarChange={(avatar) => {
+                  setExpEduAvatar(avatar);
+                }}
+                imageSrc={expEduAvatar || undefined}
+              />
+            </div>
           </div>
           <DialogFooter showDivider>
             {indexExp !== -1 && (
@@ -1471,7 +1510,7 @@ const ProfileForm = ({
                       startYear: startYearExp,
                       endMonth: endMonthExp,
                       endYear: endYearExp,
-                      avatar: "",
+                      avatar: expEduAvatar || "",
                       delete: undefined,
                     });
                   } else {
@@ -1485,7 +1524,7 @@ const ProfileForm = ({
                       startYear: startYearExp,
                       endMonth: endMonthExp,
                       endYear: endYearExp,
-                      avatar: "",
+                      avatar: expEduAvatar || "",
                     };
                   }
                   setExperiences(formData);
@@ -1616,6 +1655,20 @@ const ProfileForm = ({
                 setMajorEdu(e.target.value);
               }}
             />
+            <div className="flex flex-col">
+              <Label className="text-sm">{t("image")}</Label>
+              <ImageUploader
+                target="Image"
+                id="image-edu-upload"
+                isFilled
+                buttonMsg=""
+                large
+                handleAvatarChange={(avatar) => {
+                  setExpEduAvatar(avatar);
+                }}
+                imageSrc={expEduAvatar || undefined}
+              />
+            </div>
           </div>
           <DialogFooter showDivider>
             {indexEdu !== -1 && (
@@ -1649,7 +1702,7 @@ const ProfileForm = ({
                       startYear: startYearEdu,
                       endMonth: endMonthEdu,
                       endYear: endYearEdu,
-                      avatar: "",
+                      avatar: expEduAvatar || "",
                       delete: undefined,
                     });
                   } else {
@@ -1663,7 +1716,7 @@ const ProfileForm = ({
                       startYear: startYearEdu,
                       endMonth: endMonthEdu,
                       endYear: endYearEdu,
-                      avatar: "",
+                      avatar: expEduAvatar || "",
                     };
                   }
                   setEducations(formData);
