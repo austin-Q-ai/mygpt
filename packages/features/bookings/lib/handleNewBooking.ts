@@ -54,7 +54,6 @@ import getPaymentAppData from "@calcom/lib/getPaymentAppData";
 import { HttpError } from "@calcom/lib/http-error";
 import isOutOfBounds, { BookingDateInPastError } from "@calcom/lib/isOutOfBounds";
 import logger from "@calcom/lib/logger";
-import { handlePayment } from "@calcom/lib/payment/handlePayment";
 import { checkBookingLimits, checkDurationLimits, getLuckyUser } from "@calcom/lib/server";
 import { getTranslation } from "@calcom/lib/server/i18n";
 import { slugify } from "@calcom/lib/slugify";
@@ -1666,19 +1665,19 @@ async function handler(
 
         console.log(eventTypePaymentAppCredential);
 
-        const payment = await handlePayment(
-          evt,
-          eventType,
-          eventTypePaymentAppCredential as IEventTypePaymentCredentialType,
-          booking,
-          bookerEmail,
-          userId
-        );
+        // const payment = await handlePayment(
+        //   evt,
+        //   eventType,
+        //   eventTypePaymentAppCredential as IEventTypePaymentCredentialType,
+        //   booking,
+        //   bookerEmail,
+        //   userId
+        // );
 
         resultBooking = { ...foundBooking };
 
         resultBooking["message"] = "Payment required";
-        resultBooking["paymentUid"] = payment?.uid;
+        resultBooking["paymentUid"] = ""; // payment?.uid;
       } else {
         resultBooking = { ...foundBooking };
       }
@@ -2211,17 +2210,17 @@ async function handler(
     // Convert type of eventTypePaymentAppCredential to appId: EventTypeAppList
     if (!booking.user) booking.user = organizerUser;
     console.log(eventTypePaymentAppCredential);
-    const payment = await handlePayment(
-      evt,
-      eventType,
-      eventTypePaymentAppCredential as IEventTypePaymentCredentialType,
-      booking,
-      bookerEmail,
-      userId
-    );
+    // const payment = await handlePayment(
+    //   evt,
+    //   eventType,
+    //   eventTypePaymentAppCredential as IEventTypePaymentCredentialType,
+    //   booking,
+    //   bookerEmail,
+    //   userId
+    // );
 
     req.statusCode = 201;
-    return { ...booking, message: "Payment required", paymentUid: payment?.uid };
+    return { ...booking, message: "Payment required", paymentUid: "" }; // payment?.uid };
   }
 
   log.debug(`Booking ${organizerUser.username} completed`);

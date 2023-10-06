@@ -20,7 +20,6 @@ import sendPayload from "@calcom/features/webhooks/lib/sendPayload";
 import { isPrismaObjOrUndefined, parseRecurringEvent } from "@calcom/lib";
 import { HttpError } from "@calcom/lib/http-error";
 import logger from "@calcom/lib/logger";
-import { handleRefundError } from "@calcom/lib/payment/handleRefundError";
 import { getTranslation } from "@calcom/lib/server/i18n";
 import prisma, { bookingMinimalSelect } from "@calcom/prisma";
 import { BookingStatus, MembershipRole, WorkflowMethods } from "@calcom/prisma/enums";
@@ -609,15 +608,15 @@ async function handler(req: CustomRequest) {
     const PaymentService = paymentApp.lib.PaymentService as unknown as any;
     const paymentInstance = new PaymentService(paymentAppCredential) as IAbstractPaymentService;
 
-    try {
-      await paymentInstance.refund(successPayment.id);
-    } catch (error) {
-      await handleRefundError({
-        event: evt,
-        reason: error?.toString() || "unknown",
-        paymentId: successPayment.externalId,
-      });
-    }
+    // try {
+    //   await paymentInstance.refund(successPayment.id);
+    // } catch (error) {
+    //   await handleRefundError({
+    //     event: evt,
+    //     reason: error?.toString() || "unknown",
+    //     paymentId: successPayment.externalId,
+    //   });
+    // }
 
     await prisma.booking.update({
       where: {

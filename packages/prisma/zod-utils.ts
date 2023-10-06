@@ -217,6 +217,10 @@ export const buyTokensBodySchema = z.object({
   amount: z.number(),
 });
 
+export const upgradePlanBodySchema = z.object({
+  level: z.string(),
+});
+
 export const requiredCustomInputSchema = z.union([
   // string must be given & nonempty
   z.string().trim().min(1),
@@ -227,6 +231,7 @@ export const requiredCustomInputSchema = z.union([
 export type BookingCreateBody = z.input<typeof bookingCreateBodySchema>;
 
 export type BuyTokensBody = z.input<typeof buyTokensBodySchema>;
+export type UpgradePlanBody = z.input<typeof upgradePlanBodySchema>;
 
 export const bookingConfirmPatchBodySchema = z.object({
   bookingId: z.number(),

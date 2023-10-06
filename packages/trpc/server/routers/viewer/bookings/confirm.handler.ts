@@ -288,10 +288,10 @@ export const confirmHandler = async ({ ctx, input }: ConfirmOptions) => {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const PaymentService = paymentApp.lib.PaymentService as any;
           const paymentInstance = new PaymentService(paymentAppCredential) as IAbstractPaymentService;
-          const paymentData = await paymentInstance.refund(successPayment.id);
-          if (!paymentData.refunded) {
-            throw new Error("Payment could not be refunded");
-          }
+          // const paymentData = await paymentInstance.refund(successPayment.id);
+          // if (!paymentData.refunded) {
+          //   throw new Error("Payment could not be refunded");
+          // }
         }
       }
       // end handle refunds.
