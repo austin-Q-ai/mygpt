@@ -65,14 +65,14 @@ const SkeletonLoader = ({ title, description }: { title: string; description: st
       <Meta title={title} description={description} />
       <div className="mb-8 space-y-6">
         <div className="flex items-center">
-          <SkeletonAvatar className="w-16 h-16 px-4 mt-0 me-4" />
-          <SkeletonButton className="w-32 h-6 p-5 rounded-md" />
+          <SkeletonAvatar className="me-4 mt-0 h-16 w-16 px-4" />
+          <SkeletonButton className="h-6 w-32 rounded-md p-5" />
         </div>
-        <SkeletonText className="w-full h-8" />
-        <SkeletonText className="w-full h-8" />
-        <SkeletonText className="w-full h-8" />
+        <SkeletonText className="h-8 w-full" />
+        <SkeletonText className="h-8 w-full" />
+        <SkeletonText className="h-8 w-full" />
 
-        <SkeletonButton className="w-20 h-8 p-5 mr-6 rounded-md" />
+        <SkeletonButton className="mr-6 h-8 w-20 rounded-md p-5" />
       </div>
     </SkeletonContainer>
   );
@@ -140,7 +140,7 @@ const ProfileView = () => {
     onSuccess: () => {
       showToast(t("settings_updated_successfully"), "success");
       utils.viewer.me.invalidate();
-      console.log("updated: ", user)
+      console.log("updated: ", user);
       utils.viewer.avatar.invalidate();
       setTempFormValues(null);
     },
@@ -319,7 +319,7 @@ const ProfileView = () => {
           }
         />
 
-        <hr className="my-6 border-subtle" />
+        <hr className="border-subtle my-6" />
 
         <Label>{t("danger_zone")}</Label>
         {/* Delete account Dialog */}
@@ -336,7 +336,7 @@ const ProfileView = () => {
             Icon={AlertTriangle}>
             <>
               <div className="mb-10">
-                <p className="mb-4 text-default">
+                <p className="text-default mb-4">
                   {t("delete_account_confirmation_message", { appName: APP_NAME })}
                 </p>
                 {isCALIdentityProviver && (
@@ -602,7 +602,7 @@ const ProfileForm = ({
                           imageSrc={value}
                           gravatarFallbackMd5="fallback"
                           size="xl"
-                          className="bg-white border-2 border-solid border-pink"
+                          className="border-pink border-2 border-solid bg-white"
                         />
                       ) : (
                         <ImageUploader
@@ -681,7 +681,7 @@ const ProfileForm = ({
                           }>
                           {!editableHeader ? (
                             <>
-                              <MousePointer2 className="w-4 h-4 mr-2 transform rotate-90" fill="gray" />
+                              <MousePointer2 className="mr-2 h-4 w-4 rotate-90 transform" fill="gray" />
                               {defaultValues.address}
                             </>
                           ) : (
@@ -707,7 +707,7 @@ const ProfileForm = ({
                           <div className={!editableHeader ? "" : "flex w-full flex-row items-center gap-2"}>
                             <Button
                               color="secondary"
-                              className="bg-transparent border-gray-700 rounded-full md:rounded-full"
+                              className="rounded-full border-gray-700 bg-transparent md:rounded-full"
                               variant="icon">
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -737,7 +737,7 @@ const ProfileForm = ({
                             <Button
                               color="secondary"
                               StartIcon={Facebook}
-                              className="bg-transparent border-gray-700 rounded-full md:rounded-full"
+                              className="rounded-full border-gray-700 bg-transparent md:rounded-full"
                               variant="icon"
                             />
                             <TextField
@@ -758,7 +758,7 @@ const ProfileForm = ({
                           <div className={!editableHeader ? "" : "flex w-full flex-row items-center gap-2"}>
                             <Button
                               color="secondary"
-                              className="bg-transparent border-gray-700 rounded-full md:rounded-full"
+                              className="rounded-full border-gray-700 bg-transparent md:rounded-full"
                               variant="icon">
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -787,7 +787,7 @@ const ProfileForm = ({
                             <Button
                               color="secondary"
                               StartIcon={Instagram}
-                              className="bg-transparent border-gray-700 rounded-full md:rounded-full"
+                              className="rounded-full border-gray-700 bg-transparent md:rounded-full"
                               variant="icon"
                             />
                             <TextField
@@ -809,7 +809,7 @@ const ProfileForm = ({
                             <Button
                               color="secondary"
                               StartIcon={Linkedin}
-                              className="bg-transparent border-gray-700 rounded-full md:rounded-full"
+                              className="rounded-full border-gray-700 bg-transparent md:rounded-full"
                               variant="icon"
                             />
                             <TextField
@@ -852,7 +852,7 @@ const ProfileForm = ({
             variant="ProfileCard"
             description={
               <>
-                <div className="flex justify-between mb-4">
+                <div className="mb-4 flex justify-between">
                   <Label className="text-lg">{t("about")}</Label>
                   <Button
                     color="primary"
@@ -901,7 +901,7 @@ const ProfileForm = ({
             variant="ProfileCard"
             description={
               <>
-                <div className="flex justify-between mb-4">
+                <div className="mb-4 flex justify-between">
                   <Label className="text-lg">{t("skill")}</Label>
                   <div className="flex gap-2">
                     {editableSkill && (
@@ -927,7 +927,7 @@ const ProfileForm = ({
                     />
                   </div>
                 </div>
-                <div className="flex flex-wrap w-full gap-2 mb-4">
+                <div className="mb-4 flex w-full flex-wrap gap-2">
                   {(!editableSkill && defaultValues.skills.length === 0) ||
                   (editableSkill && skills.length === 0) ? (
                     <div className="p-2 text-center">{t("no_data_yet")}</div>
@@ -936,7 +936,7 @@ const ProfileForm = ({
                       {!editableSkill
                         ? defaultValues.skills.map((skill, i) => (
                             <div
-                              className="p-2 text-center bg-white border-gray-500 border-none rounded-md"
+                              className="rounded-md border-none border-gray-500 bg-white p-2 text-center"
                               key={i}>
                               {skill}
                             </div>
@@ -979,14 +979,14 @@ const ProfileForm = ({
             }
           />
         </div>
-        <div className="flex flex-col gap-2 mt-8 md:flex-row">
+        <div className="mt-8 flex flex-col gap-2 md:flex-row">
           <Card
             title=""
             containerProps={{ style: { width: "100%", borderRadius: "20px" } }}
             variant="ProfileCard"
             description={
               <>
-                <div className="flex justify-between mb-4">
+                <div className="mb-4 flex justify-between">
                   <Label className="text-lg">{t("exp")}</Label>
                   <div className="flex gap-2">
                     {editableExp && (
@@ -1029,8 +1029,8 @@ const ProfileForm = ({
                         <>
                           {defaultValues.experiences.map((exp) => {
                             return (
-                              <div className="flex flex-col mb-4 items-left" key={`exp-${exp.id}`}>
-                                <div className="flex gap-2 mb-4">
+                              <div className="items-left mb-4 flex flex-col" key={`exp-${exp.id}`}>
+                                <div className="mb-4 flex gap-2">
                                   <div className="mr-4">
                                     <Avatar
                                       alt=""
@@ -1068,8 +1068,8 @@ const ProfileForm = ({
                               return <></>;
                             } else {
                               return (
-                                <div className="flex flex-col mb-4 items-left" key={exp.key}>
-                                  <div className="flex gap-2 mb-4">
+                                <div className="items-left mb-4 flex flex-col" key={exp.key}>
+                                  <div className="mb-4 flex gap-2">
                                     <div className="flex-grow">
                                       <Avatar
                                         alt=""
@@ -1078,7 +1078,7 @@ const ProfileForm = ({
                                         size="sm"
                                       />
                                     </div>
-                                    <div className="flex flex-col justify-start flex-grow">
+                                    <div className="flex flex-grow flex-col justify-start">
                                       <div className="mb-1">
                                         <b>{exp.position}</b>
                                       </div>
@@ -1088,7 +1088,7 @@ const ProfileForm = ({
                                       } ${exp.endYear}`}</div>
                                       {exp.address && <div>{exp.address}</div>}
                                     </div>
-                                    <div className="flex justify-end flex-grow">
+                                    <div className="flex flex-grow justify-end">
                                       <Button
                                         color="primary"
                                         StartIcon={Edit2}
@@ -1129,7 +1129,7 @@ const ProfileForm = ({
             variant="ProfileCard"
             description={
               <>
-                <div className="flex justify-between mb-4">
+                <div className="mb-4 flex justify-between">
                   <Label className="text-lg">{t("edu")}</Label>
                   <div className="flex gap-2">
                     {editableEdu && (
@@ -1172,8 +1172,8 @@ const ProfileForm = ({
                         <>
                           {defaultValues.educations.map((edu) => {
                             return (
-                              <div className="flex flex-col mb-4 items-left" key={`edu-${edu.id}`}>
-                                <div className="flex gap-2 mb-4">
+                              <div className="items-left mb-4 flex flex-col" key={`edu-${edu.id}`}>
+                                <div className="mb-4 flex gap-2">
                                   <div className="mr-4">
                                     <Avatar
                                       alt=""
@@ -1211,8 +1211,8 @@ const ProfileForm = ({
                               return <></>;
                             } else {
                               return (
-                                <div className="flex flex-col mb-4 items-left" key={edu.key}>
-                                  <div className="flex gap-2 mb-4">
+                                <div className="items-left mb-4 flex flex-col" key={edu.key}>
+                                  <div className="mb-4 flex gap-2">
                                     <div className="flex-grow">
                                       <Avatar
                                         alt=""
@@ -1221,7 +1221,7 @@ const ProfileForm = ({
                                         size="sm"
                                       />
                                     </div>
-                                    <div className="flex flex-col justify-start flex-grow">
+                                    <div className="flex flex-grow flex-col justify-start">
                                       <div className="mb-1">
                                         <b>{edu.school}</b>
                                       </div>
@@ -1231,7 +1231,7 @@ const ProfileForm = ({
                                       } ${edu.endYear}`}</div>
                                       {edu.major && <div>{edu.major}</div>}
                                     </div>
-                                    <div className="flex justify-end flex-grow">
+                                    <div className="flex flex-grow justify-end">
                                       <Button
                                         color="primary"
                                         StartIcon={Edit2}
@@ -1271,7 +1271,7 @@ const ProfileForm = ({
         <div className="hidden">
           <TextField label={t("email")} hint={t("change_email_hint")} {...formMethods.register("email")} />
         </div>
-        <Button loading={isLoading} disabled={isDisabled} color="primary" className="mt-8 mr-4" type="submit">
+        <Button loading={isLoading} disabled={isDisabled} color="primary" className="mr-4 mt-8" type="submit">
           {t("update")}
         </Button>
         {!isDisabled && (
@@ -1339,7 +1339,7 @@ const ProfileForm = ({
             {showErrorInExp && !companyExp && (
               <Alert key="error_company_required" severity="error" title={t("error_company_required")} />
             )}
-            <div className="flex justify-between mb-2">
+            <div className="mb-2 flex justify-between">
               <div className="flex gap-2">
                 <SelectField
                   options={months}
@@ -1531,7 +1531,7 @@ const ProfileForm = ({
                 setDegreeEdu(e.target.value);
               }}
             />
-            <div className="flex justify-between mb-2">
+            <div className="mb-2 flex justify-between">
               <div className="flex gap-2">
                 <SelectField
                   options={months}

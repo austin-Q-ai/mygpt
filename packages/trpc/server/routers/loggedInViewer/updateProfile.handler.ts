@@ -41,10 +41,8 @@ const index = client.index("users");
 
 export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions) => {
   const { user } = ctx;
-  const input1: TUpdateProfileInputSchema = input;
-  delete input1.defaultValue;
-  const data: Prisma.UserUpdateInput = {
-    ...input1,
+  const data: Prisma.UserUpdateInput & { defaultValue?: boolean } = {
+    ...input,
     experiences: input.experiences
       ? {
           updateMany: input.experiences
@@ -122,6 +120,7 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
       "Transferability and Interoperability",
       "User Engagement and Loyalty",
     ];
+    delete data.defaultValue;
   }
 
   let isPremiumUsername = false;

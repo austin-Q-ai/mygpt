@@ -222,6 +222,9 @@ const SubscriptionView = () => {
               advantageList={e.advantageList}
               price={e.price}
               key={key}
+              isDisabled={
+                Object.keys(UserLevel).indexOf(e.level) < Object.keys(UserLevel).indexOf(user.level)
+              }
               handleUpgrade={() => handleUpgrade(e.level)}
             />
           ))}
