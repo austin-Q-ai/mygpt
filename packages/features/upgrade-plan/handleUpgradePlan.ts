@@ -28,6 +28,7 @@ interface IEventTypePaymentCredentialType {
 }
 
 async function handler(req: NextApiRequest & { userId?: number | undefined }) {
+  console.log(req.body, "====");
   const { userId } = req;
   const { level } = req.body;
 
@@ -50,7 +51,11 @@ async function handler(req: NextApiRequest & { userId?: number | undefined }) {
     },
   });
 
+  console.log("=== 1 ===");
+
   const payment = await handleUpgradePayment(createSubscription.id);
+
+  console.log("=== 2 ===");
 
   const result: { paymentUid: string } = { paymentUid: payment?.uid || "" };
 

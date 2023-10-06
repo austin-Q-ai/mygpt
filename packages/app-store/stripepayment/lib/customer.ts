@@ -90,7 +90,7 @@ export async function retrieveOrCreateStripeCustomerByEmail(email: string, strip
       limit: 1,
     },
     {
-      stripeAccount: stripeAccountId ? stripeAccountId : null,
+      stripeAccount: stripeAccountId ? stripeAccountId : undefined,
     }
   );
 
@@ -100,7 +100,7 @@ export async function retrieveOrCreateStripeCustomerByEmail(email: string, strip
     const newCustomer = await stripe.customers.create(
       { email },
       {
-        stripeAccount: stripeAccountId ? stripeAccountId : null,
+        stripeAccount: stripeAccountId ? stripeAccountId : undefined,
       }
     );
     return newCustomer;

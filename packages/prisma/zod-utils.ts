@@ -17,7 +17,7 @@ import { appDataSchemas } from "@calcom/app-store/apps.schemas.generated";
 import dayjs from "@calcom/dayjs";
 import { fieldsSchema as formBuilderFieldsSchema } from "@calcom/features/form-builder/FormBuilderFieldsSchema";
 import { slugify } from "@calcom/lib/slugify";
-import { EventTypeCustomInputType, UserLevel } from "@calcom/prisma/enums";
+import { EventTypeCustomInputType } from "@calcom/prisma/enums";
 
 // Let's not import 118kb just to get an enum
 export enum Frequency {
@@ -218,7 +218,7 @@ export const buyTokensBodySchema = z.object({
 });
 
 export const upgradePlanBodySchema = z.object({
-  level: UserLevel,
+  level: z.string(),
 });
 
 export const requiredCustomInputSchema = z.union([

@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import type { ReactElement } from "react";
 import { useState } from "react";
 
@@ -166,6 +167,7 @@ const SubscriptionCard = (props: SubscriptionCardProps) => {
 
 const SubscriptionView = () => {
   const { t } = useLocale();
+  const router = useRouter();
   const utils = trpc.useContext();
   const { data: user, isLoading } = trpc.viewer.me.useQuery();
 
@@ -233,6 +235,7 @@ const SubscriptionView = () => {
             onConfirm={(e) => {
               e.preventDefault();
               setUpgradeConfirmOpen(false);
+              upgradeMutation.mutate({ level: upgradeLevel });
             }}>
             <p className="mt-5">{t(`confirm_upgrade_question`)}</p>
           </ConfirmationDialogContent>

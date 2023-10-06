@@ -1,19 +1,13 @@
-import type { Booking, Payment, Prisma, PaymentOption } from "@prisma/client";
+import type { Payment, Prisma } from "@prisma/client";
 import Stripe from "stripe";
 import { v4 as uuidv4 } from "uuid";
 import z from "zod";
 
-import { sendAwaitingPaymentEmail } from "@calcom/emails";
-import { getErrorFromUnknown } from "@calcom/lib/errors";
 import prisma from "@calcom/prisma";
-import { BookingStatus } from "@calcom/prisma/enums";
-import type { CalendarEvent } from "@calcom/types/Calendar";
 import type { IAbstractPaymentService } from "@calcom/types/PaymentService";
 
-import { paymentOptionEnum } from "../zod";
-import { createPaymentLink } from "./client";
 import { retrieveOrCreateStripeCustomerByEmail } from "./customer";
-import type { StripeSetupIntentData, StripePaymentData } from "./server";
+import type { StripePaymentData } from "./server";
 
 const stripeCredentialKeysSchema = z.object({
   stripe_user_id: z.string(),
@@ -57,29 +51,16 @@ export class PaymentService implements IAbstractPaymentService {
         },
       });
 
+      console.log(subscription, "===");
+
       if (!subscription) throw new Error("Subscription not found");
 
-      // Load stripe keys
-      const stripeAppKeys = await prisma?.app.findFirst({
-        select: {
-          keys: true,
-        },
-        where: {
-          slug: "stripe",
-        },
-      });
-
       const amount = 1000;
-
-      // Parse keys with zod
-      const { payment_fee_fixed, payment_fee_percentage } = stripeAppKeysSchema.parse(stripeAppKeys?.keys);
-      const paymentFee = Math.round(amount * payment_fee_percentage + payment_fee_fixed);
 
       const customer = await retrieveOrCreateStripeCustomerByEmail(subscription.user.email, "");
 
       const params: Stripe.PaymentIntentCreateParams = {
         amount: amount,
-        application_fee_amount: paymentFee,
         currency: subscription.user.currency,
         payment_method_types: ["card"],
         customer: customer.id,
@@ -115,7 +96,7 @@ export class PaymentService implements IAbstractPaymentService {
       }
       return paymentData;
     } catch (error) {
-      console.error(`Payment could not be created for level ${level}`, error);
+      console.error(`Payment could not be created for subscription ${subscriptionId}`, error);
       throw new Error("Payment could not be created");
     }
   }
@@ -166,19 +147,19 @@ export class PaymentService implements IAbstractPaymentService {
 
       const customer = await retrieveOrCreateStripeCustomerByEmail(
         wallet?.owner.email,
-        this.credentials.stripe_user_id
+        this.credentials?.stripe_user_id || ""
       );
 
       const params: Stripe.PaymentIntentCreateParams = {
         amount: amount,
         application_fee_amount: amount * 0.1,
-        currency: this.credentials.default_currency,
+        currency: this.credentials?.default_currency || "eur",
         payment_method_types: ["card"],
         customer: customer.id,
       };
 
       const paymentIntent = await this.stripe.paymentIntents.create(params, {
-        stripeAccount: this.credentials.stripe_user_id,
+        stripeAccount: this.credentials?.stripe_user_id,
       });
 
       const paymentData = await prisma?.payment.create({
@@ -195,12 +176,12 @@ export class PaymentService implements IAbstractPaymentService {
             },
           },
           amount: amount,
-          currency: this.credentials.default_currency,
+          currency: this.credentials?.default_currency || "eur",
           externalId: paymentIntent.id,
 
           data: Object.assign({}, paymentIntent, {
-            stripe_publishable_key: this.credentials.stripe_publishable_key,
-            stripeAccount: this.credentials.stripe_user_id,
+            stripe_publishable_key: this.credentials?.stripe_publishable_key || "",
+            stripeAccount: this.credentials?.stripe_user_id || "",
           }) as unknown as Prisma.InputJsonValue,
           fee: 0,
           refunded: false,
@@ -217,415 +198,415 @@ export class PaymentService implements IAbstractPaymentService {
     }
   }
 
-  /* This method is for creating charges at the time of booking */
-  async create(
-    payment: Pick<Prisma.PaymentUncheckedCreateInput, "amount" | "currency">,
-    bookingId: Booking["id"],
-    bookerEmail: string,
-    userId: number,
-    paymentOption: PaymentOption
-  ) {
-    try {
-      // Ensure that the payment service can support the passed payment option
-      if (paymentOptionEnum.parse(paymentOption) !== "ON_BOOKING") {
-        throw new Error("Payment option is not compatible with create method");
-      }
+  // /* This method is for creating charges at the time of booking */
+  // async create(
+  //   payment: Pick<Prisma.PaymentUncheckedCreateInput, "amount" | "currency">,
+  //   bookingId: Booking["id"],
+  //   bookerEmail: string,
+  //   userId: number,
+  //   paymentOption: PaymentOption
+  // ) {
+  //   try {
+  //     // Ensure that the payment service can support the passed payment option
+  //     if (paymentOptionEnum.parse(paymentOption) !== "ON_BOOKING") {
+  //       throw new Error("Payment option is not compatible with create method");
+  //     }
 
-      // Check that user has enough timetokens for booking
-      const booking = await prisma.booking.findFirst({
-        where: {
-          id: bookingId,
-        },
-        select: {
-          user: {
-            select: {
-              id: true,
-              price: true,
-            },
-          },
-          startTime: true,
-          endTime: true,
-        },
-      });
+  //     // Check that user has enough timetokens for booking
+  //     const booking = await prisma.booking.findFirst({
+  //       where: {
+  //         id: bookingId,
+  //       },
+  //       select: {
+  //         user: {
+  //           select: {
+  //             id: true,
+  //             price: true,
+  //           },
+  //         },
+  //         startTime: true,
+  //         endTime: true,
+  //       },
+  //     });
 
-      if (!booking) throw Error("Booking not found");
+  //     if (!booking) throw Error("Booking not found");
 
-      console.log("==== 1 ====", booking);
+  //     console.log("==== 1 ====", booking);
 
-      const timetokens = await prisma.timeTokensWallet.findFirst({
-        where: {
-          emitterId: booking.user?.id,
-          ownerId: userId,
-        },
-        select: {
-          id: true,
-          amount: true,
-        },
-      });
+  //     const timetokens = await prisma.timeTokensWallet.findFirst({
+  //       where: {
+  //         emitterId: booking.user?.id,
+  //         ownerId: userId,
+  //       },
+  //       select: {
+  //         id: true,
+  //         amount: true,
+  //       },
+  //     });
 
-      // if (!timetokens) throw Error("Wallet not found");
+  //     // if (!timetokens) throw Error("Wallet not found");
 
-      const length = (booking.endTime.getTime() - booking.startTime.getTime()) / 60000; // minutes
+  //     const length = (booking.endTime.getTime() - booking.startTime.getTime()) / 60000; // minutes
 
-      if (timetokens?.amount || 0 > Math.ceil(length / 5)) {
-        // user has enough timetokens
-        const updateWallet = prisma.timeTokensWallet.update({
-          where: {
-            id: timetokens?.id,
-          },
-          data: {
-            amount: {
-              decrement: Math.ceil(length / 5),
-            },
-          },
-        });
+  //     if (timetokens?.amount || 0 > Math.ceil(length / 5)) {
+  //       // user has enough timetokens
+  //       const updateWallet = prisma.timeTokensWallet.update({
+  //         where: {
+  //           id: timetokens?.id,
+  //         },
+  //         data: {
+  //           amount: {
+  //             decrement: Math.ceil(length / 5),
+  //           },
+  //         },
+  //       });
 
-        const updateBooking = prisma.booking.update({
-          where: {
-            id: bookingId,
-          },
-          data: {
-            paid: true,
-            status: BookingStatus.ACCEPTED,
-          },
-        });
+  //       const updateBooking = prisma.booking.update({
+  //         where: {
+  //           id: bookingId,
+  //         },
+  //         data: {
+  //           paid: true,
+  //           status: BookingStatus.ACCEPTED,
+  //         },
+  //       });
 
-        await prisma.$transaction([updateWallet, updateBooking]);
+  //       await prisma.$transaction([updateWallet, updateBooking]);
 
-        // payment.amount = 0;
-        const tmpPaymentData = {
-          id: -1,
-          uid: "",
-          appId: null,
-          bookingId: null,
-          walletId: null,
-          amount: 0,
-          fee: 0,
-          currency: "",
-          success: false,
-          refunded: false,
-          data: {},
-          externalId: "",
-          paymentOption: null,
-        };
+  //       // payment.amount = 0;
+  //       const tmpPaymentData = {
+  //         id: -1,
+  //         uid: "",
+  //         appId: null,
+  //         bookingId: null,
+  //         walletId: null,
+  //         amount: 0,
+  //         fee: 0,
+  //         currency: "",
+  //         success: false,
+  //         refunded: false,
+  //         data: {},
+  //         externalId: "",
+  //         paymentOption: null,
+  //       };
 
-        return tmpPaymentData;
-      }
+  //       return tmpPaymentData;
+  //     }
 
-      // user doesn't have enough timetokens
-      const deltaTokens = Math.ceil(length / 5) - (timetokens?.amount || 0);
+  //     // user doesn't have enough timetokens
+  //     const deltaTokens = Math.ceil(length / 5) - (timetokens?.amount || 0);
 
-      const totalTokens = await prisma.user.findUnique({
-        where: {
-          id: booking.user?.id,
-        },
-        select: {
-          tokens: true,
-        },
-      });
+  //     const totalTokens = await prisma.user.findUnique({
+  //       where: {
+  //         id: booking.user?.id,
+  //       },
+  //       select: {
+  //         tokens: true,
+  //       },
+  //     });
 
-      if (!totalTokens) throw new Error("Expert not found");
+  //     if (!totalTokens) throw new Error("Expert not found");
 
-      if (totalTokens.tokens < deltaTokens) throw new Error("Expert doesn't have enough timeTokens");
+  //     if (totalTokens.tokens < deltaTokens) throw new Error("Expert doesn't have enough timeTokens");
 
-      const price =
-        (booking.user?.price ? booking.user?.price[booking.user?.price.length - 1] : 0) * deltaTokens;
-      payment.amount = price * 100;
+  //     const price =
+  //       (booking.user?.price ? booking.user?.price[booking.user?.price.length - 1] : 0) * deltaTokens;
+  //     payment.amount = price * 100;
 
-      // Load stripe keys
-      const stripeAppKeys = await prisma?.app.findFirst({
-        select: {
-          keys: true,
-        },
-        where: {
-          slug: "stripe",
-        },
-      });
+  //     // Load stripe keys
+  //     const stripeAppKeys = await prisma?.app.findFirst({
+  //       select: {
+  //         keys: true,
+  //       },
+  //       where: {
+  //         slug: "stripe",
+  //       },
+  //     });
 
-      // Parse keys with zod
-      const { payment_fee_fixed, payment_fee_percentage } = stripeAppKeysSchema.parse(stripeAppKeys?.keys);
-      const paymentFee = Math.round(payment.amount * payment_fee_percentage + payment_fee_fixed);
+  //     // Parse keys with zod
+  //     const { payment_fee_fixed, payment_fee_percentage } = stripeAppKeysSchema.parse(stripeAppKeys?.keys);
+  //     const paymentFee = Math.round(payment.amount * payment_fee_percentage + payment_fee_fixed);
 
-      const customer = await retrieveOrCreateStripeCustomerByEmail(
-        bookerEmail,
-        this.credentials.stripe_user_id
-      );
+  //     const customer = await retrieveOrCreateStripeCustomerByEmail(
+  //       bookerEmail,
+  //       this.credentials?.stripe_user_id || ""
+  //     );
 
-      console.log(customer.id, paymentFee, "=======");
+  //     console.log(customer.id, paymentFee, "=======");
 
-      const params: Stripe.PaymentIntentCreateParams = {
-        amount: payment.amount,
-        application_fee_amount: payment.amount * 0.1,
-        currency: this.credentials.default_currency,
-        payment_method_types: ["card"],
-        customer: customer.id,
-      };
+  //     const params: Stripe.PaymentIntentCreateParams = {
+  //       amount: payment.amount,
+  //       application_fee_amount: payment.amount * 0.1,
+  //       currency: this.credentials?.default_currency || "eur",
+  //       payment_method_types: ["card"],
+  //       customer: customer.id,
+  //     };
 
-      const paymentIntent = await this.stripe.paymentIntents.create(params, {
-        stripeAccount: this.credentials.stripe_user_id,
-      });
+  //     const paymentIntent = await this.stripe.paymentIntents.create(params, {
+  //       stripeAccount: this.credentials?.stripe_user_id,
+  //     });
 
-      const paymentData = await prisma?.payment.create({
-        data: {
-          uid: uuidv4(),
-          app: {
-            connect: {
-              slug: "stripe",
-            },
-          },
-          booking: {
-            connect: {
-              id: bookingId,
-            },
-          },
-          amount: payment.amount,
-          currency: payment.currency,
-          externalId: paymentIntent.id,
+  //     const paymentData = await prisma?.payment.create({
+  //       data: {
+  //         uid: uuidv4(),
+  //         app: {
+  //           connect: {
+  //             slug: "stripe",
+  //           },
+  //         },
+  //         booking: {
+  //           connect: {
+  //             id: bookingId,
+  //           },
+  //         },
+  //         amount: payment.amount,
+  //         currency: payment.currency,
+  //         externalId: paymentIntent.id,
 
-          data: Object.assign({}, paymentIntent, {
-            stripe_publishable_key: this.credentials.stripe_publishable_key,
-            stripeAccount: this.credentials.stripe_user_id,
-          }) as unknown as Prisma.InputJsonValue,
-          fee: 0,
-          refunded: false,
-          success: false,
-          paymentOption: paymentOption || "ON_BOOKING",
-        },
-      });
-      if (!paymentData) {
-        throw new Error();
-      }
-      return paymentData;
-    } catch (error) {
-      console.error(`Payment could not be created for bookingId ${bookingId}`, error);
-      throw new Error("Payment could not be created");
-    }
-  }
+  //         data: Object.assign({}, paymentIntent, {
+  //           stripe_publishable_key: this.credentials?.stripe_publishable_key || "",
+  //           stripeAccount: this.credentials?.stripe_user_id || "",
+  //         }) as unknown as Prisma.InputJsonValue,
+  //         fee: 0,
+  //         refunded: false,
+  //         success: false,
+  //         paymentOption: paymentOption || "ON_BOOKING",
+  //       },
+  //     });
+  //     if (!paymentData) {
+  //       throw new Error();
+  //     }
+  //     return paymentData;
+  //   } catch (error) {
+  //     console.error(`Payment could not be created for bookingId ${bookingId}`, error);
+  //     throw new Error("Payment could not be created");
+  //   }
+  // }
 
-  async collectCard(
-    payment: Pick<Prisma.PaymentUncheckedCreateInput, "amount" | "currency">,
-    bookingId: Booking["id"],
-    bookerEmail: string,
-    paymentOption: PaymentOption
-  ): Promise<Payment> {
-    try {
-      // Ensure that the payment service can support the passed payment option
-      if (paymentOptionEnum.parse(paymentOption) !== "HOLD") {
-        throw new Error("Payment option is not compatible with create method");
-      }
+  // async collectCard(
+  //   payment: Pick<Prisma.PaymentUncheckedCreateInput, "amount" | "currency">,
+  //   bookingId: Booking["id"],
+  //   bookerEmail: string,
+  //   paymentOption: PaymentOption
+  // ): Promise<Payment> {
+  //   try {
+  //     // Ensure that the payment service can support the passed payment option
+  //     if (paymentOptionEnum.parse(paymentOption) !== "HOLD") {
+  //       throw new Error("Payment option is not compatible with create method");
+  //     }
 
-      // Load stripe keys
-      const stripeAppKeys = await prisma?.app.findFirst({
-        select: {
-          keys: true,
-        },
-        where: {
-          slug: "stripe",
-        },
-      });
+  //     // Load stripe keys
+  //     const stripeAppKeys = await prisma?.app.findFirst({
+  //       select: {
+  //         keys: true,
+  //       },
+  //       where: {
+  //         slug: "stripe",
+  //       },
+  //     });
 
-      // Parse keys with zod
-      const { payment_fee_fixed, payment_fee_percentage } = stripeAppKeysSchema.parse(stripeAppKeys?.keys);
-      const paymentFee = Math.round(payment.amount * payment_fee_percentage + payment_fee_fixed);
+  //     // Parse keys with zod
+  //     const { payment_fee_fixed, payment_fee_percentage } = stripeAppKeysSchema.parse(stripeAppKeys?.keys);
+  //     const paymentFee = Math.round(payment.amount * payment_fee_percentage + payment_fee_fixed);
 
-      const customer = await retrieveOrCreateStripeCustomerByEmail(
-        bookerEmail,
-        this.credentials.stripe_user_id
-      );
+  //     const customer = await retrieveOrCreateStripeCustomerByEmail(
+  //       bookerEmail,
+  //       this.credentials?.stripe_user_id || ""
+  //     );
 
-      const params = {
-        customer: customer.id,
-        payment_method_types: ["card"],
-        metadata: {
-          bookingId,
-        },
-      };
+  //     const params = {
+  //       customer: customer.id,
+  //       payment_method_types: ["card"],
+  //       metadata: {
+  //         bookingId,
+  //       },
+  //     };
 
-      const setupIntent = await this.stripe.setupIntents.create(params, {
-        stripeAccount: this.credentials.stripe_user_id,
-      });
+  //     const setupIntent = await this.stripe.setupIntents.create(params, {
+  //       stripeAccount: this.credentials?.stripe_user_id,
+  //     });
 
-      const paymentData = await prisma?.payment.create({
-        data: {
-          uid: uuidv4(),
-          app: {
-            connect: {
-              slug: "stripe",
-            },
-          },
-          booking: {
-            connect: {
-              id: bookingId,
-            },
-          },
-          amount: payment.amount,
-          currency: payment.currency,
-          externalId: setupIntent.id,
+  //     const paymentData = await prisma?.payment.create({
+  //       data: {
+  //         uid: uuidv4(),
+  //         app: {
+  //           connect: {
+  //             slug: "stripe",
+  //           },
+  //         },
+  //         booking: {
+  //           connect: {
+  //             id: bookingId,
+  //           },
+  //         },
+  //         amount: payment.amount,
+  //         currency: payment.currency,
+  //         externalId: setupIntent.id,
 
-          data: Object.assign(
-            {},
-            {
-              setupIntent,
-              stripe_publishable_key: this.credentials.stripe_publishable_key,
-              stripeAccount: this.credentials.stripe_user_id,
-            }
-          ) as unknown as Prisma.InputJsonValue,
-          fee: paymentFee,
-          refunded: false,
-          success: false,
-          paymentOption: paymentOption || "ON_BOOKING",
-        },
-      });
+  //         data: Object.assign(
+  //           {},
+  //           {
+  //             setupIntent,
+  //             stripe_publishable_key: this.credentials?.stripe_publishable_key || "",
+  //             stripeAccount: this.credentials?.stripe_user_id || "",
+  //           }
+  //         ) as unknown as Prisma.InputJsonValue,
+  //         fee: paymentFee,
+  //         refunded: false,
+  //         success: false,
+  //         paymentOption: paymentOption || "ON_BOOKING",
+  //       },
+  //     });
 
-      return paymentData;
-    } catch (error) {
-      console.error(`Payment method could not be collected for bookingId ${bookingId}`, error);
-      throw new Error("Payment could not be created");
-    }
-  }
+  //     return paymentData;
+  //   } catch (error) {
+  //     console.error(`Payment method could not be collected for bookingId ${bookingId}`, error);
+  //     throw new Error("Payment could not be created");
+  //   }
+  // }
 
-  async chargeCard(payment: Payment, _bookingId?: Booking["id"]): Promise<Payment> {
-    try {
-      const stripeAppKeys = await prisma?.app.findFirst({
-        select: {
-          keys: true,
-        },
-        where: {
-          slug: "stripe",
-        },
-      });
+  // async chargeCard(payment: Payment, _bookingId?: Booking["id"]): Promise<Payment> {
+  //   try {
+  //     const stripeAppKeys = await prisma?.app.findFirst({
+  //       select: {
+  //         keys: true,
+  //       },
+  //       where: {
+  //         slug: "stripe",
+  //       },
+  //     });
 
-      const paymentObject = payment.data as unknown as StripeSetupIntentData;
+  //     const paymentObject = payment.data as unknown as StripeSetupIntentData;
 
-      const setupIntent = paymentObject.setupIntent;
+  //     const setupIntent = paymentObject.setupIntent;
 
-      // Parse keys with zod
-      const { payment_fee_fixed, payment_fee_percentage } = stripeAppKeysSchema.parse(stripeAppKeys?.keys);
+  //     // Parse keys with zod
+  //     const { payment_fee_fixed, payment_fee_percentage } = stripeAppKeysSchema.parse(stripeAppKeys?.keys);
 
-      const paymentFee = Math.round(payment.amount * payment_fee_percentage + payment_fee_fixed);
+  //     const paymentFee = Math.round(payment.amount * payment_fee_percentage + payment_fee_fixed);
 
-      // Ensure that the stripe customer & payment method still exists
-      const customer = await this.stripe.customers.retrieve(setupIntent.customer as string, {
-        stripeAccount: this.credentials.stripe_user_id,
-      });
-      const paymentMethod = await this.stripe.paymentMethods.retrieve(setupIntent.payment_method as string, {
-        stripeAccount: this.credentials.stripe_user_id,
-      });
+  //     // Ensure that the stripe customer & payment method still exists
+  //     const customer = await this.stripe.customers.retrieve(setupIntent.customer as string, {
+  //       stripeAccount: this.credentials?.stripe_user_id,
+  //     });
+  //     const paymentMethod = await this.stripe.paymentMethods.retrieve(setupIntent.payment_method as string, {
+  //       stripeAccount: this.credentials?.stripe_user_id,
+  //     });
 
-      if (!customer) {
-        throw new Error(`Stripe customer does not exist for setupIntent ${setupIntent.id}`);
-      }
+  //     if (!customer) {
+  //       throw new Error(`Stripe customer does not exist for setupIntent ${setupIntent.id}`);
+  //     }
 
-      if (!paymentMethod) {
-        throw new Error(`Stripe paymentMethod does not exist for setupIntent ${setupIntent.id}`);
-      }
+  //     if (!paymentMethod) {
+  //       throw new Error(`Stripe paymentMethod does not exist for setupIntent ${setupIntent.id}`);
+  //     }
 
-      const params = {
-        amount: payment.amount,
-        currency: payment.currency,
-        application_fee_amount: paymentFee,
-        customer: setupIntent.customer as string,
-        payment_method: setupIntent.payment_method as string,
-        off_session: true,
-        confirm: true,
-      };
+  //     const params = {
+  //       amount: payment.amount,
+  //       currency: payment.currency,
+  //       application_fee_amount: paymentFee,
+  //       customer: setupIntent.customer as string,
+  //       payment_method: setupIntent.payment_method as string,
+  //       off_session: true,
+  //       confirm: true,
+  //     };
 
-      const paymentIntent = await this.stripe.paymentIntents.create(params, {
-        stripeAccount: this.credentials.stripe_user_id,
-      });
+  //     const paymentIntent = await this.stripe.paymentIntents.create(params, {
+  //       stripeAccount: this.credentials?.stripe_user_id,
+  //     });
 
-      const paymentData = await prisma.payment.update({
-        where: {
-          id: payment.id,
-        },
-        data: {
-          success: true,
-          data: {
-            ...paymentObject,
-            paymentIntent,
-          } as unknown as Prisma.InputJsonValue,
-        },
-      });
+  //     const paymentData = await prisma.payment.update({
+  //       where: {
+  //         id: payment.id,
+  //       },
+  //       data: {
+  //         success: true,
+  //         data: {
+  //           ...paymentObject,
+  //           paymentIntent,
+  //         } as unknown as Prisma.InputJsonValue,
+  //       },
+  //     });
 
-      if (!paymentData) {
-        throw new Error();
-      }
+  //     if (!paymentData) {
+  //       throw new Error();
+  //     }
 
-      return paymentData;
-    } catch (error) {
-      console.error(`Could not charge card for payment ${payment.id}`, error);
-      throw new Error("Payment could not be created");
-    }
-  }
+  //     return paymentData;
+  //   } catch (error) {
+  //     console.error(`Could not charge card for payment ${payment.id}`, error);
+  //     throw new Error("Payment could not be created");
+  //   }
+  // }
 
-  async update(): Promise<Payment> {
-    throw new Error("Method not implemented.");
-  }
+  // async update(): Promise<Payment> {
+  //   throw new Error("Method not implemented.");
+  // }
 
-  async refund(paymentId: Payment["id"]): Promise<Payment> {
-    try {
-      const payment = await prisma.payment.findFirst({
-        where: {
-          id: paymentId,
-          success: true,
-          refunded: false,
-        },
-      });
-      if (!payment) {
-        throw new Error("Payment not found");
-      }
+  // async refund(paymentId: Payment["id"]): Promise<Payment> {
+  //   try {
+  //     const payment = await prisma.payment.findFirst({
+  //       where: {
+  //         id: paymentId,
+  //         success: true,
+  //         refunded: false,
+  //       },
+  //     });
+  //     if (!payment) {
+  //       throw new Error("Payment not found");
+  //     }
 
-      const refund = await this.stripe.refunds.create(
-        {
-          payment_intent: payment.externalId,
-        },
-        { stripeAccount: (payment.data as unknown as StripePaymentData)["stripeAccount"] }
-      );
+  //     const refund = await this.stripe.refunds.create(
+  //       {
+  //         payment_intent: payment.externalId,
+  //       },
+  //       { stripeAccount: (payment.data as unknown as StripePaymentData)["stripeAccount"] }
+  //     );
 
-      if (!refund || refund.status === "failed") {
-        throw new Error("Refund failed");
-      }
+  //     if (!refund || refund.status === "failed") {
+  //       throw new Error("Refund failed");
+  //     }
 
-      const updatedPayment = await prisma.payment.update({
-        where: {
-          id: payment.id,
-        },
-        data: {
-          refunded: true,
-        },
-      });
-      return updatedPayment;
-    } catch (e) {
-      const err = getErrorFromUnknown(e);
-      throw err;
-    }
-  }
+  //     const updatedPayment = await prisma.payment.update({
+  //       where: {
+  //         id: payment.id,
+  //       },
+  //       data: {
+  //         refunded: true,
+  //       },
+  //     });
+  //     return updatedPayment;
+  //   } catch (e) {
+  //     const err = getErrorFromUnknown(e);
+  //     throw err;
+  //   }
+  // }
 
-  async afterPayment(
-    event: CalendarEvent,
-    booking: {
-      user: { email: string | null; name: string | null; timeZone: string } | null;
-      id: number;
-      startTime: { toISOString: () => string };
-      uid: string;
-    },
-    paymentData: Payment
-  ): Promise<void> {
-    await sendAwaitingPaymentEmail({
-      ...event,
-      paymentInfo: {
-        link: createPaymentLink({
-          paymentUid: paymentData.uid,
-          name: booking.user?.name,
-          email: booking.user?.email,
-          date: booking.startTime.toISOString(),
-        }),
-        paymentOption: paymentData.paymentOption || "ON_BOOKING",
-        amount: paymentData.amount,
-        currency: paymentData.currency,
-      },
-    });
-  }
+  // async afterPayment(
+  //   event: CalendarEvent,
+  //   booking: {
+  //     user: { email: string | null; name: string | null; timeZone: string } | null;
+  //     id: number;
+  //     startTime: { toISOString: () => string };
+  //     uid: string;
+  //   },
+  //   paymentData: Payment
+  // ): Promise<void> {
+  //   await sendAwaitingPaymentEmail({
+  //     ...event,
+  //     paymentInfo: {
+  //       link: createPaymentLink({
+  //         paymentUid: paymentData.uid,
+  //         name: booking.user?.name,
+  //         email: booking.user?.email,
+  //         date: booking.startTime.toISOString(),
+  //       }),
+  //       paymentOption: paymentData.paymentOption || "ON_BOOKING",
+  //       amount: paymentData.amount,
+  //       currency: paymentData.currency,
+  //     },
+  //   });
+  // }
 
   async deletePayment(paymentId: Payment["id"]): Promise<boolean> {
     try {
