@@ -148,7 +148,7 @@ export default function Verify() {
             <Button
               color="secondary"
               disabled={secondsLeft > 0}
-              onClick={async (e) => {
+              onClick={async (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
                 if (!customer) {
                   return;
                 }

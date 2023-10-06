@@ -16,7 +16,7 @@ const EventTypeAppCard: EventTypeAppCardComponent = function EventTypeAppCard({ 
     <AppCard
       setAppData={setAppData}
       app={app}
-      switchOnClick={(e) => {
+      switchOnClick={(e: any) => {
         if (!e) {
           setEnabled(false);
         } else {

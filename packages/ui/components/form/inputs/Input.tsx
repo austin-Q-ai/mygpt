@@ -187,7 +187,7 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(function
           {type === "search" && inputValue?.toString().length > 0 && (
             <X
               className="text-subtle absolute top-2.5 h-4 w-4 cursor-pointer ltr:right-2 rtl:left-2"
-              onClick={(e) => {
+              onClick={(e: any) => {
                 setInputValue("");
                 props.onChange && props.onChange(e as unknown as React.ChangeEvent<HTMLInputElement>);
               }}

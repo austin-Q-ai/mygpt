@@ -568,7 +568,7 @@ const FirstAttendee = ({
       key={user.email}
       className=" hover:text-blue-500"
       href={"mailto:" + user.email}
-      onClick={(e) => e.stopPropagation()}>
+      onClick={(e: any) => e.stopPropagation()}>
       {user.name}
     </a>
   );
@@ -581,7 +581,7 @@ type AttendeeProps = {
 
 const Attendee = ({ email, name }: AttendeeProps) => {
   return (
-    <a className="hover:text-blue-500" href={"mailto:" + email} onClick={(e) => e.stopPropagation()}>
+    <a className="hover:text-blue-500" href={"mailto:" + email} onClick={(e: any) => e.stopPropagation()}>
       {name || email}
     </a>
   );

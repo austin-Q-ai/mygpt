@@ -1,3 +1,4 @@
+import type { ChangeEvent } from "react";
 import { useState } from "react";
 
 import { useLocale } from "@calcom/lib/hooks/useLocale";
@@ -20,7 +21,7 @@ export default function AppSettings() {
         placeholder="San Francisco"
         value={location}
         name="Enter City"
-        onChange={async (e) => {
+        onChange={async (e: ChangeEvent<HTMLInputElement>) => {
           setLocation(e.target.value);
         }}
       />

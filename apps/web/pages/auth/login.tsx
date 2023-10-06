@@ -257,7 +257,7 @@ export default function Login({
                     className="w-full justify-center"
                     data-testid="google"
                     StartIcon={FaGoogle}
-                    onClick={async (e) => {
+                    onClick={async (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
                       e.preventDefault();
                       await signIn("google");
                     }}>

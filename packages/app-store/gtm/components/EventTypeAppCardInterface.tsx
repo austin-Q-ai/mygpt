@@ -17,7 +17,7 @@ const EventTypeAppCard: EventTypeAppCardComponent = function EventTypeAppCard({ 
       app={app}
       disableSwitch={disabled}
       LockedIcon={LockedIcon}
-      switchOnClick={(e) => {
+      switchOnClick={(e: any) => {
         updateEnabled(e);
       }}
       switchChecked={enabled}

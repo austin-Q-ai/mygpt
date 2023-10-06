@@ -364,7 +364,7 @@ const ProfileView = () => {
                 <Button
                   color="primary"
                   data-testid="delete-account-confirm"
-                  onClick={(e) => onConfirmButton(e)}>
+                  onClick={(e: any) => onConfirmButton(e)}>
                   {t("delete_my_account")}
                 </Button>
               </DialogFooter>
@@ -393,7 +393,7 @@ const ProfileView = () => {
               {confirmPasswordErrorMessage && <Alert severity="error" title={confirmPasswordErrorMessage} />}
             </div>
             <DialogFooter showDivider>
-              <Button color="primary" onClick={(e) => onConfirmPassword(e)}>
+              <Button color="primary" onClick={(e: any) => onConfirmPassword(e)}>
                 {t("confirm")}
               </Button>
               <DialogClose />

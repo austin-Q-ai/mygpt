@@ -22,6 +22,7 @@ export type LinkProps = {
   type?: "modal";
 };
 type FooterPropsTypes = {
+  authPage?: boolean;
   items: LinkProps[];
   className?: string;
 };
@@ -57,7 +58,9 @@ export default function Footer(props: FooterPropsTypes) {
       className={classNames(
         windowWidth >= 1024
           ? "text-secondary absolute mt-6 flex w-full flex-row justify-evenly pb-2 font-medium"
-          : "text-secondary align-center absolute grid w-full grid-cols-12 gap-4 bg-[#CFBDDA]  py-6 pb-2 text-sm font-medium",
+          : `text-secondary align-center absolute grid w-full grid-cols-12 gap-4 ${
+              props.authPage ? "bg-[#CFBDDA]" : ""
+            }  py-6 pb-2 text-sm font-medium`,
 
         props.className
       )}>
