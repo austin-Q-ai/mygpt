@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/router";
+import type { ChangeEvent } from "react";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -80,7 +81,7 @@ export const SetPasswordForm = () => {
               <PasswordField
                 value={value || ""}
                 onBlur={onBlur}
-                onChange={async (e) => {
+                onChange={async (e: ChangeEvent<HTMLInputElement>) => {
                   onChange(e.target.value);
                   setPasswordFormMethods.setValue("password", e.target.value);
                   await setPasswordFormMethods.trigger("password");

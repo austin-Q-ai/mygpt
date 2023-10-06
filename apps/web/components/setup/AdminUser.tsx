@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import classNames from "classnames";
 import { signIn } from "next-auth/react";
+import type { ChangeEvent } from "react";
 import React from "react";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import * as z from "zod";
@@ -130,7 +131,7 @@ export const AdminUser = (props: { onSubmit: () => void; onError: () => void; on
                   className={classNames("my-0", longWebsiteUrl && "rounded-t-none")}
                   onBlur={onBlur}
                   name="username"
-                  onChange={async (e) => {
+                  onChange={async (e: ChangeEvent<HTMLInputElement>) => {
                     onChange(e.target.value);
                     formMethods.setValue("username", e.target.value);
                     await formMethods.trigger("username");
@@ -148,7 +149,7 @@ export const AdminUser = (props: { onSubmit: () => void; onError: () => void; on
               <TextField
                 value={value || ""}
                 onBlur={onBlur}
-                onChange={async (e) => {
+                onChange={async (e: ChangeEvent<HTMLInputElement>) => {
                   onChange(e.target.value);
                   formMethods.setValue("full_name", e.target.value);
                   await formMethods.trigger("full_name");
@@ -172,7 +173,7 @@ export const AdminUser = (props: { onSubmit: () => void; onError: () => void; on
               <EmailField
                 value={value || ""}
                 onBlur={onBlur}
-                onChange={async (e) => {
+                onChange={async (e: ChangeEvent<HTMLInputElement>) => {
                   onChange(e.target.value);
                   formMethods.setValue("email_address", e.target.value);
                   await formMethods.trigger("email_address");
@@ -191,7 +192,7 @@ export const AdminUser = (props: { onSubmit: () => void; onError: () => void; on
               <PasswordField
                 value={value || ""}
                 onBlur={onBlur}
-                onChange={async (e) => {
+                onChange={async (e: ChangeEvent<HTMLInputElement>) => {
                   onChange(e.target.value);
                   formMethods.setValue("password", e.target.value);
                   await formMethods.trigger("password");
