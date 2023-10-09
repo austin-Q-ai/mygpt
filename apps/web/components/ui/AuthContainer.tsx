@@ -368,7 +368,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
             </div>
           </div>
           {!props.hideFooter ? (
-            <div className="order-last flex flex-row md:my-auto">
+            <div className="order-last mt-auto flex flex-row ">
               <Footer items={footerLinks} authPage />
             </div>
           ) : null}

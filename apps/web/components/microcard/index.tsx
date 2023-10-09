@@ -53,11 +53,17 @@ const MicroCards: React.FC<MicroCardsProps> = (props: MicroCardsProps) => {
     // Create renderer
     const renderer = new CSS3DRenderer();
     const handleResize = () => {
-      renderer.setSize(window.innerWidth <= 425 ? window.innerWidth - 20 : 500, sizes.height - 20);
+      renderer.setSize(
+        window.innerWidth <= 425 ? window.innerWidth - 20 : window.innerWidth === 1024 ? 450 : 500,
+        sizes.height - 20
+      );
     };
 
     window.addEventListener("resize", handleResize);
-    renderer.setSize(window.innerWidth <= 425 ? window.innerWidth - 20 : 500, sizes.height - 20);
+    renderer.setSize(
+      window.innerWidth <= 425 ? window.innerWidth - 20 : window.innerWidth === 1024 ? 450 : 500,
+      sizes.height - 20
+    );
     sceneElement.appendChild(renderer.domElement);
 
     // Create OrbitControls
