@@ -1,8 +1,9 @@
+import classNames from "classnames";
 import Link from "next/link";
 import React from "react";
 
 import { trpc } from "@calcom/trpc/react";
-import { Badge } from "@calcom/ui";
+import { Badge, ScrollableArea } from "@calcom/ui";
 import { CalendarPlus, Clock } from "@calcom/ui/components/icon";
 
 import { default as Header } from "../header";
@@ -24,7 +25,8 @@ export const ServicesPage = React.forwardRef<HTMLDivElement, ServicesPageProps>(
             <Header title="Events" description={user.username} />
             <div className="h-[75%] px-5 py-5">
               <p className="pb-4 text-center text-lg font-bold">Book Meeting</p>
-              <div className="bg-pink/10 rounded-md">
+              <ScrollableArea
+                className={classNames(user.eventTypes.length > 4 && "h-[85%]", "bg-pink/10 rounded-md")}>
                 {user.eventTypes
                   .filter((event) => !event.hidden)
                   .filter((event) => !event.teamId)
@@ -48,7 +50,7 @@ export const ServicesPage = React.forwardRef<HTMLDivElement, ServicesPageProps>(
                       </div>
                     </div>
                   ))}
-              </div>
+              </ScrollableArea>
               <div className="flex items-center">
                 <Link href={`/${user.username}`}>
                   <button className="bg-pink/50 mx-auto mt-4 rounded px-2 py-1 text-center text-lg text-white">
