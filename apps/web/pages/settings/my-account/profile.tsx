@@ -955,9 +955,9 @@ const ProfileForm = ({
                             </div>
                           ))
                         : skills.map((skill, i) => (
-                            <div className="flex" key={i}>
+                            <div className={classNames("flex", skill.length >= 30 && "w-full")} key={i}>
                               <Input
-                                className="w-[100px] !rounded-full !rounded-r-none border-r-0 focus:ring-0"
+                                className="!rounded-full !rounded-r-none border-r-0 focus:ring-0"
                                 value={skill}
                                 onChange={(event) => {
                                   const formData = [...skills];
