@@ -186,9 +186,9 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
   return (
     <div className="to-darkemphasis bg-gradient-to-b from-gray-100">
       {toggleFlag ? (
-        <div className="z-50 !h-screen !w-full bg-white p-5 transition delay-150 ease-in-out">
+        <div className="z-50 !h-screen !w-full bg-white py-4 transition delay-150 ease-in-out">
           <div className="mb-auto flex justify-between ">
-            <div className="flex-col">
+            <div className="ms-6 flex-col">
               {props.showLogo && (
                 <Image src="/my-gpt-logo.svg" width={130} height={20} className="left-0" alt="logo" />
               )}
@@ -257,7 +257,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
       ) : (
         <div className="bg-[url('/imgpsh_fullsize_anim.png')] bg-cover bg-no-repeat md:grid lg:!max-h-screen lg:grid-rows-[_80px_1fr_1fr_1fr_1fr_1fr_0px]">
           <div className="flex flex-row md:row-span-1">
-            <div className="mx-6 flex flex-1 flex-col justify-center pt-4 sm:px-6 lg:px-4">
+            <div className="ms-6 flex flex-1 flex-col justify-center pt-4 sm:px-6 md:mx-6 lg:px-4">
               <HeadSeo title={props.title} description={props.description} />
               <div className="mb-auto flex justify-between ">
                 <div className="flex-col">
@@ -368,7 +368,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
             </div>
           </div>
           {!props.hideFooter ? (
-            <div className="order-last flex flex-row md:my-auto">
+            <div className="order-last mt-auto flex flex-row ">
               <Footer items={footerLinks} authPage />
             </div>
           ) : null}

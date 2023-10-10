@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { CSS3DRenderer, CSS3DObject } from "three/examples/jsm/renderers/CSS3DRenderer";
@@ -28,23 +28,14 @@ const MicroCards: React.FC<MicroCardsProps> = (props: MicroCardsProps) => {
   const servicesRef = useRef<HTMLDivElement>(null);
   const timetokenRef = useRef<HTMLDivElement>(null);
 
-  const [windowWidth, setWindowWidth] = useState(0);
-
   useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
-    setWindowWidth(window.innerWidth);
-
-    window.addEventListener("resize", handleResize);
-
     const sceneElement = sceneRef.current;
 
     const sizes: {
       width: number;
       height: number;
     } = {
-      width: windowWidth <= 375 ? 374 : sceneElement?.clientWidth || 0,
+      width: sceneElement?.clientWidth || 0,
       height: sceneElement?.clientHeight || 0,
     };
 
@@ -61,7 +52,18 @@ const MicroCards: React.FC<MicroCardsProps> = (props: MicroCardsProps) => {
 
     // Create renderer
     const renderer = new CSS3DRenderer();
-    renderer.setSize(sizes.width, sizes.height);
+    const handleResize = () => {
+      renderer.setSize(
+        window.innerWidth <= 425 ? window.innerWidth - 20 : window.innerWidth === 1024 ? 450 : 500,
+        sizes.height - 20
+      );
+    };
+
+    window.addEventListener("resize", handleResize);
+    renderer.setSize(
+      window.innerWidth <= 425 ? window.innerWidth - 20 : window.innerWidth === 1024 ? 450 : 500,
+      sizes.height - 20
+    );
     sceneElement.appendChild(renderer.domElement);
 
     // Create OrbitControls
