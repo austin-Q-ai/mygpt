@@ -900,7 +900,7 @@ const ProfileForm = ({
                     setFirstRender={setFirstRender}
                   />
                 ) : (
-                  <div className={defaultValues.bio.length ? "m-4" : "w-full p-2 text-center"}>
+                  <div className={defaultValues.bio.length ? "m-4 break-all" : "w-full  p-2 text-center"}>
                     {defaultValues.bio.length ? defaultValues.bio : t("no_data_yet")}
                   </div>
                 )}
@@ -1327,7 +1327,7 @@ const ProfileForm = ({
           title={indexExp === -1 ? t("add_exp") : t("change_exp")}
           description={t("enter_previous_work_exp")}
           type="creation"
-          Icon={AlertTriangle}>
+          Icon={X}>
           <div className="mb-10">
             <TextField
               className="mb-2"
@@ -1362,6 +1362,8 @@ const ProfileForm = ({
                   onChange={(e) => {
                     if (e && (startYearExp < endYearExp || e.value <= endMonthExp)) {
                       setStartMonthExp(e.value);
+                    } else {
+                      showToast(t("start_date_cannot_be_after_end_date"), "error");
                     }
                   }}
                 />
@@ -1384,6 +1386,8 @@ const ProfileForm = ({
                       (e.value < endYearExp || (e.value === endYearExp && startMonthExp <= endMonthExp))
                     ) {
                       setStartYearExp(e.value);
+                    } else {
+                      showToast(t("start_date_cannot_be_after_end_date"), "error");
                     }
                   }}
                 />
@@ -1398,6 +1402,8 @@ const ProfileForm = ({
                       if (!(endYearExp === new Date().getFullYear() && e.value > new Date().getMonth() + 1)) {
                         setEndMonthExp(e.value);
                       }
+                    } else {
+                      showToast(t("end_date_cannot_be_before_start_date"), "error");
                     }
                   }}
                 />
@@ -1420,6 +1426,8 @@ const ProfileForm = ({
                       (e.value > startYearExp || (e.value === startYearExp && startMonthExp <= endMonthExp))
                     ) {
                       setEndYearExp(e.value);
+                    } else {
+                      showToast(t("end_date_cannot_be_before_start_date"), "error");
                     }
                   }}
                 />
