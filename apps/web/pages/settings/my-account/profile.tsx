@@ -576,6 +576,14 @@ const ProfileForm = ({
     }
   };
 
+  const socialRedirectLink = (link: any) => {
+    console.log(link);
+    if (!link || typeof link === "undefined" || editableHeader) {
+      return;
+    }
+    window.open(link, "_blank");
+  };
+
   return (
     <div>
       <Form form={formMethods} handleSubmit={onSubmit}>
@@ -708,6 +716,7 @@ const ProfileForm = ({
                             <Button
                               color="secondary"
                               className="rounded-full border-gray-700 bg-transparent md:rounded-full"
+                              onClick={() => socialRedirectLink(social.telegram)}
                               variant="icon">
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -737,6 +746,7 @@ const ProfileForm = ({
                             <Button
                               color="secondary"
                               StartIcon={Facebook}
+                              onClick={() => socialRedirectLink(social.facebook)}
                               className="rounded-full border-gray-700 bg-transparent md:rounded-full"
                               variant="icon"
                             />
@@ -758,6 +768,7 @@ const ProfileForm = ({
                           <div className={!editableHeader ? "" : "flex w-full flex-row items-center gap-2"}>
                             <Button
                               color="secondary"
+                              onClick={() => socialRedirectLink(social.discord)}
                               className="rounded-full border-gray-700 bg-transparent md:rounded-full"
                               variant="icon">
                               <svg
@@ -786,6 +797,7 @@ const ProfileForm = ({
                           <div className={!editableHeader ? "" : "flex w-full flex-row items-center gap-2"}>
                             <Button
                               color="secondary"
+                              onClick={() => socialRedirectLink(social.instagram)}
                               StartIcon={Instagram}
                               className="rounded-full border-gray-700 bg-transparent md:rounded-full"
                               variant="icon"
@@ -808,6 +820,7 @@ const ProfileForm = ({
                           <div className={!editableHeader ? "" : "flex w-full flex-row items-center gap-2"}>
                             <Button
                               color="secondary"
+                              onClick={() => socialRedirectLink(social.linkedin)}
                               StartIcon={Linkedin}
                               className="rounded-full border-gray-700 bg-transparent md:rounded-full"
                               variant="icon"
