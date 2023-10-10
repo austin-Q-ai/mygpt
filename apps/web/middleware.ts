@@ -11,6 +11,8 @@ const middleware: NextMiddleware = async (req) => {
   const url = req.nextUrl;
   const requestHeaders = new Headers(req.headers);
 
+  console.log("middleware url:", url)
+
   if (isIpInBanlist(req) && url.pathname !== "/api/nope") {
     // DDOS Prevention: Immediately end request with no response - Avoids a redirect as well initiated by NextAuth on invalid callback
     req.nextUrl.pathname = "/api/nope";
