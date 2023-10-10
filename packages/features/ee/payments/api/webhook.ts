@@ -401,9 +401,12 @@ async function handlePaymentSuccess(event: Stripe.Event) {
 
     const transaction = await prisma.$transaction([updateWallet, updateTokens]);
   } else if (payment?.subscriptionId) {
-    const subscription = await prisma.subscription.findUnique({
+    const updatedSubscription = await prisma.subscription.update({
       where: {
         id: payment?.subscriptionId,
+      },
+      data: {
+        paid: true,
       },
       select: {
         userId: true,
@@ -411,14 +414,14 @@ async function handlePaymentSuccess(event: Stripe.Event) {
       },
     });
 
-    if (!subscription) throw new Error("Subscription not found");
+    if (!updatedSubscription) throw new Error("Subscription not found");
 
     await prisma.user.update({
       where: {
-        id: subscription.userId,
+        id: updatedSubscription.userId,
       },
       data: {
-        level: subscription.level,
+        level: updatedSubscription.level,
       },
     });
   } else throw new HttpCode({ statusCode: 204, message: "Payment and Transaction not found" });
