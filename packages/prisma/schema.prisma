@@ -255,6 +255,8 @@ model User {
   twoFactorEnabled             Boolean                 @default(false)
   identityProvider             IdentityProvider        @default(CAL)
   identityProviderId           String?
+  apiKey                       String?
+  expertId                     String?
   availability                 Availability[]
   invitedTo                    Int?
   webhooks                     Webhook[]
