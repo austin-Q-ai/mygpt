@@ -15,7 +15,9 @@ import {
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
+import MessageLoader from "pages/expert-clone/components/MessageLoader";
 import { useEffect, useRef, useState } from "react";
+import { TypeAnimation } from "react-type-animation";
 
 import useGetBrandingColours from "@calcom/lib/getBrandColours";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
@@ -85,6 +87,7 @@ export default function ExpertClone() {
     question: string;
     chat_id?: string;
     answer: string;
+    loading?: boolean;
   };
 
   type historyType = {
@@ -105,7 +108,8 @@ export default function ExpertClone() {
   const [isLoading, setIsLoading] = useState(true);
   const [qaList, setQaList] = useState<qaType[]>([]);
   const [qaHistory, setQaHistory] = useState<historyType[]>([]);
-  const [historyItemDelete, setHistoryItemDelete] = useState("");
+  const [historyItemDelete, setHistoryItemDelete] = useState<string[]>([]);
+  const [historyEdit, setHistoryEdit] = useState("");
   const searchInput = useRef<HTMLInputElement>(null);
   const sideMenuRef = useRef<HTMLDivElement>(null);
   const answersRef = useRef<HTMLDivElement>(null);
@@ -133,6 +137,32 @@ export default function ExpertClone() {
   const [currentChatId, setCurrentChatId] = useState("");
 
   const handleChat = (chatId: string, edit?: boolean) => {
+    if (!edit) {
+      if (qaList.length > 0) {
+        setQaList([
+          ...qaList,
+          {
+            question: searchText,
+            chat_id: currentChatId,
+            answer: "",
+            loading: true,
+          },
+        ]);
+      } else {
+        setQaList([
+          ...qaList,
+          {
+            question: searchText,
+            chat_id: "",
+            answer: "",
+            loading: true,
+          },
+        ]);
+      }
+    }
+    if (searchInput.current) {
+      searchInput.current.value = "";
+    }
     axios
       .post(
         `${BRAIN_SERVICE}/chat/${chatId}/question`,
@@ -149,18 +179,18 @@ export default function ExpertClone() {
       )
       .then((data) => {
         setSearchText("");
-        setIsLoading(false);
-        setSearchResultFlag(false);
         if (searchInput.current) {
           searchInput.current.value = "";
         }
+        console.log(data.data);
         data.data.chat_id
           ? edit
             ? setQaList([
                 {
-                  question: searchText,
+                  question: data.data.user_message,
                   chat_id: data.data.chat_id,
                   answer: data.data.assistant,
+                  loading: false,
                 },
               ])
             : setQaList([
@@ -169,17 +199,18 @@ export default function ExpertClone() {
                   question: searchText,
                   chat_id: data.data.chat_id,
                   answer: data.data.assistant,
+                  loading: false,
                 },
               ])
           : null;
+        setHistoryEdit("");
       });
   };
 
   const handleSearch = (e: any) => {
     e.preventDefault();
     if (searchText && searchText.length > 0) {
-      setSearchResultFlag(true);
-      setIsLoading(true);
+      setLoading(true);
     }
     if (currentChatId === "") {
       // if not started new chat, create new chat
@@ -197,11 +228,19 @@ export default function ExpertClone() {
         )
         .then((data) => {
           setCurrentChatId(data.data.chat_id);
-          handleChat(data.data.chat_id);
+          if (searchInput.current) {
+            if (searchInput.current.value) {
+              handleChat(data.data.chat_id);
+            }
+          }
         });
     } else {
       // if chat id exist, it chats with experts
-      handleChat(currentChatId);
+      if (searchInput.current) {
+        if (searchInput.current.value) {
+          handleChat(currentChatId);
+        }
+      }
     }
   };
 
@@ -250,6 +289,10 @@ export default function ExpertClone() {
     getChatHistory();
   }, [qaList]);
 
+  const setLoading = (flag: boolean) => {
+    setIsLoading(flag);
+    setSearchResultFlag(flag);
+  };
   const changeSearchValue = (e: any) => {
     setSearchText(e.target.value);
   };
@@ -259,7 +302,7 @@ export default function ExpertClone() {
   };
 
   const deleteHistoryItem = (item: historyType) => {
-    setHistoryItemDelete(item.chat_id);
+    setHistoryItemDelete([...historyItemDelete, item.chat_id]);
     const updatedQas = qaList.filter((qa) => qa.chat_id !== item.chat_id);
     setQaList([...updatedQas]);
     getChatHistory();
@@ -267,9 +310,9 @@ export default function ExpertClone() {
     deleteChatHistory(item.chat_id);
   };
   const editHistoryItem = (item: historyType) => {
+    setHistoryEdit(item.chat_id);
     setCurrentChatId(item.chat_id);
-    setSearchResultFlag(true);
-    setIsLoading(true);
+    setLoading(true);
     setToggleSideMenu(false);
     setQaList([]);
     handleChat(item.chat_id, true);
@@ -292,7 +335,7 @@ export default function ExpertClone() {
     };
   });
   return (
-    <div className="h-[100vh] flex-1">
+    <div className="h-[100vh] flex-1 lg:!max-h-screen">
       <div
         ref={sideMenuRef}
         className={classNames(
@@ -339,7 +382,7 @@ export default function ExpertClone() {
                                 <MessageCircle />
                               </div>
                               <div className="w-fit flex-col">
-                                <span className="ms-2 h-fit text-sm">
+                                <span className="ms-2 h-fit truncate text-sm">
                                   {qa.chat_name.substring(0, windowWidth >= 800 ? 30 : 20)}{" "}
                                   {qa.chat_name.length > (windowWidth >= 800 ? 30 : 20) ? "..." : ""}
                                 </span>
@@ -351,30 +394,40 @@ export default function ExpertClone() {
                               <Button
                                 color="minimal"
                                 variant="icon"
-                                disabled={historyItemDelete === qa.chat_id}
-                                onClick={() => editHistoryItem(qa)}>
+                                disabled={
+                                  historyItemDelete.includes(qa.chat_id) || historyEdit === qa.chat_id
+                                }
+                                loading={historyEdit === qa.chat_id}
+                                onClick={() => editHistoryItem(qa)}
+                                className="bg-transparent hover:bg-transparent">
                                 <Edit2Icon
                                   width={18}
                                   height={18}
                                   className={classNames(
-                                    historyItemDelete === qa.chat_id
+                                    historyItemDelete.includes(qa.chat_id)
                                       ? "disabled text-muted cursor-not-allowed"
-                                      : "text-secondary cursor-pointer"
+                                      : "text-secondary cursor-pointer",
+                                    historyEdit === qa.chat_id && "hidden"
                                   )}
                                 />
                               </Button>
                               <Button
                                 color="minimal"
                                 variant="icon"
-                                loading={historyItemDelete === qa.chat_id}
-                                disabled={historyItemDelete === qa.chat_id}
-                                onClick={() => deleteHistoryItem(qa)}>
+                                loading={historyItemDelete.includes(qa.chat_id)}
+                                disabled={
+                                  historyItemDelete.includes(qa.chat_id) || historyEdit === qa.chat_id
+                                }
+                                onClick={() => deleteHistoryItem(qa)}
+                                className="bg-transparent hover:bg-transparent">
                                 <TrashIcon
                                   width={18}
                                   height={18}
                                   className={classNames(
-                                    historyItemDelete === qa.chat_id
+                                    historyItemDelete.includes(qa.chat_id)
                                       ? "hidden"
+                                      : historyEdit === qa.chat_id
+                                      ? "disabled text-muted cursor-not-allowed"
                                       : "text-secondary cursor-pointer"
                                   )}
                                 />
@@ -491,22 +544,22 @@ export default function ExpertClone() {
       </div>
       <div
         className={classNames(
-          " md:justify-items-start  lg:grid-cols-2",
+          " h-[90%] md:justify-items-start lg:grid-cols-2",
           " grid flex-row flex-wrap justify-items-center"
         )}>
-        <div className="col-span-1 m-6 flex flex-col justify-center gap-6 md:mx-16 md:w-[80%]">
+        <div className="col-span-1 mx-6 flex flex-col justify-center gap-6 pb-6 md:mx-16 md:w-[80%]">
           <div className="flex w-full flex-row">
-            <div className="flex w-full flex-col">
+            <div className="flex h-full w-full flex-col">
               {qaList.length > 0 && (
                 <>
-                  <ScrollableArea className="bg-pink/5 scrollbar-track-emphasis !scrollbar-thin scrollbar-thumb-pink h-[350px] w-full rounded-sm ">
+                  <ScrollableArea className="bg-pink/5 scrollbar-track-emphasis !scrollbar-thin scrollbar-thumb-pink h-[350px] w-full rounded-sm py-4 ">
                     {qaList.map((qa, index) => {
                       return (
                         <div
                           className="mb-6 py-2"
                           key={index}
                           ref={index === qaList.length - 1 ? answersRef : null}>
-                          <div className="text-secondary mx-6 my-auto flex flex-row font-bold">
+                          <div className="text-secondary mx-3 my-auto flex flex-row font-bold md:mx-6">
                             <div>
                               <UserIcon
                                 color="white"
@@ -517,7 +570,7 @@ export default function ExpertClone() {
                             </div>
                             <div className="ms-6">{qa.question}</div>
                           </div>
-                          <div className="text-secondary mx-6 my-auto mt-4 flex flex-row font-medium">
+                          <div className="text-secondary mx-3 my-auto mt-4 flex flex-row font-medium md:mx-6">
                             <Image
                               src="/app-members/1.svg"
                               alt="expert"
@@ -526,7 +579,29 @@ export default function ExpertClone() {
                               height={70}
                               className="h-12 w-12 rounded-full border-2 border-white"
                             />
-                            <p className="ms-6">{qa.answer}</p>
+
+                            <div className="ms-6 text-sm md:text-base">
+                              {qa.loading ? (
+                                <MessageLoader />
+                              ) : (
+                                <span className="typing 2s steps(6), blink 1s infinite">
+                                  <TypeAnimation
+                                    sequence={[
+                                      qa.answer,
+                                      1000,
+                                      () => {
+                                        setLoading(false);
+                                      },
+                                    ]}
+                                    wrapper="span"
+                                    speed={70}
+                                    cursor={false}
+                                    style={{ fontSize: "", display: "inline-block" }}
+                                    repeat={0}
+                                  />
+                                </span>
+                              )}
+                            </div>
                           </div>
                         </div>
                       );
@@ -590,9 +665,9 @@ export default function ExpertClone() {
             )}
           </form>
         </div>
-        <div className={classNames("col-span-1 mb-4 w-full md:mb-0")}>
+        <div className={classNames("col-span-1 mb-4 h-full w-full overflow-hidden md:mb-0")}>
           {/* <Image src="/expert-clone-banner.svg" width={362} height={672} alt="expert-clone-banner" /> */}
-          <div className="mx-auto h-[70vh] flex-row">
+          <div className="mx-auto h-full flex-row">
             <div className="h-full w-full">
               <MicroCards />
             </div>
@@ -600,11 +675,13 @@ export default function ExpertClone() {
         </div>
       </div>
       {windowWidth >= 1024 ? (
-        <div className="flex flex-row">
+        <div className="mt-auto flex flex-row">
           <Footer items={footerLinks} className={classNames("md:absolute md:bottom-0")} />
         </div>
       ) : (
-        <Footer items={footerLinks} />
+        <div className="mt-auto flex flex-row">
+          <Footer items={footerLinks} />
+        </div>
       )}
     </div>
   );
