@@ -519,9 +519,9 @@ const ProfileForm = ({
   });
 
   const {
+    watch,
     formState: { isSubmitting, isDirty },
   } = formMethods;
-
   const isDisabled = isSubmitting || !isDirty;
 
   useEffect(() => {
@@ -569,7 +569,7 @@ const ProfileForm = ({
       !editableHeader
     ) {
       setEditableHeader(!editableHeader);
-      setShowErrorInHeader(false);
+      setShowErrorInHeader(true);
     } else {
       setEditableHeader(!editableHeader);
       setShowErrorInHeader(false);
