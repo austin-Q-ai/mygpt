@@ -340,7 +340,7 @@ export default function ExpertClone() {
         ref={sideMenuRef}
         className={classNames(
           "absolute z-50 !h-[100vh] w-[100%] bg-white transition-all duration-300 ease-in md:w-[450px]",
-          toggleSideMenuFlag ? "" : "hidden"
+          toggleSideMenuFlag ? "transition-transform duration-700" : "hidden"
         )}>
         <div className="flex flex-col ">
           <div className="flex flex-row justify-between gap-4 p-4">
@@ -665,7 +665,7 @@ export default function ExpertClone() {
             )}
           </form>
         </div>
-        <div className={classNames("col-span-1 mb-4 h-full w-full overflow-hidden md:mb-0")}>
+        <div className={classNames("col-span-1 mb-4 h-full w-full overflow-hidden md:mb-0 md:h-[95%]")}>
           {/* <Image src="/expert-clone-banner.svg" width={362} height={672} alt="expert-clone-banner" /> */}
           <div className="mx-auto h-full flex-row">
             <div className="h-full w-full">
@@ -679,9 +679,11 @@ export default function ExpertClone() {
           <Footer items={footerLinks} className={classNames("md:absolute md:bottom-0")} />
         </div>
       ) : (
-        <div className="mt-auto flex flex-row">
-          <Footer items={footerLinks} />
-        </div>
+        !toggleSideMenuFlag && (
+          <div className="mt-auto flex flex-row">
+            <Footer items={footerLinks} />
+          </div>
+        )
       )}
     </div>
   );
