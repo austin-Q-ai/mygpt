@@ -45,6 +45,9 @@ export const deleteMeHandler = async ({ ctx, input }: DeleteMeOptions) => {
     throw new Error(ErrorCode.UserMissingPassword);
   }
 
+  if (!input.password) {
+    throw new Error(ErrorCode.PasswordIsRequired);
+  }
   const isCorrectPassword = await verifyPassword(input.password, user.password);
   if (!isCorrectPassword) {
     throw new Error(ErrorCode.IncorrectPassword);

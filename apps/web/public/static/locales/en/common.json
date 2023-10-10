@@ -2137,5 +2137,6 @@
   "subscription_description": "Manage your settings for your Subscription",
   "read_and_accept_the": "Read and accept the",
   "terms_and_conditions": "terms and conditions",
-  "your_currently_plan": "Your currently plan"
+  "your_currently_plan": "Your currently plan",
+  "password_is_required": "Password field is required"
 }

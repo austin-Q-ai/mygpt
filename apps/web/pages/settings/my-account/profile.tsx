@@ -235,6 +235,7 @@ const ProfileView = () => {
   const errorMessages: { [key: string]: string } = {
     [ErrorCode.SecondFactorRequired]: t("2fa_enabled_instructions"),
     [ErrorCode.IncorrectPassword]: `${t("incorrect_password")} ${t("please_try_again")}`,
+    [ErrorCode.PasswordIsRequired]: `${t("password_is_required")}, ${t("please_try_again")}`,
     [ErrorCode.UserNotFound]: t("no_account_exists"),
     [ErrorCode.IncorrectTwoFactorCode]: `${t("incorrect_2fa_code")} ${t("please_try_again")}`,
     [ErrorCode.InternalServerError]: `${t("something_went_wrong")} ${t("please_try_again_and_contact_us")}`,
@@ -333,7 +334,7 @@ const ProfileView = () => {
             title={t("delete_account_modal_title")}
             description={t("confirm_delete_account_modal", { appName: APP_NAME })}
             type="creation"
-            Icon={AlertTriangle}>
+            Icon={X}>
             <>
               <div className="mb-10">
                 <p className="text-default mb-4">
