@@ -544,7 +544,7 @@ export default function ExpertClone() {
       </div>
       <div
         className={classNames(
-          " h-[90%] md:justify-items-start lg:grid-cols-2",
+          " md:justify-items-start lg:h-[90%] lg:grid-cols-2",
           " grid flex-row flex-wrap justify-items-center"
         )}>
         <div className="col-span-1 mx-6 flex flex-col justify-center gap-6 pb-6 md:mx-16 md:w-[80%]">
