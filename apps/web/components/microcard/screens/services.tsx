@@ -16,7 +16,6 @@ export const ServicesPage = React.forwardRef<HTMLDivElement, ServicesPageProps>(
   (props: ServicesPageProps, ref) => {
     // you need to replace userId with props.id
     const { data: user, isLoading } = trpc.viewer.microcard.user.useQuery({ userId: props.userId });
-    console.log(user?.eventTypes);
 
     return (
       <div className="flex h-[900px] w-[500px] flex-col bg-white" ref={ref}>

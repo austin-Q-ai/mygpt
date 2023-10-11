@@ -38,6 +38,8 @@ import {
   showToast,
 } from "@calcom/ui";
 
+import useMeQuery from "@lib/hooks/useMeQuery";
+
 import PageWrapper from "@components/PageWrapper";
 import Footer from "@components/auth/Footer";
 import MicroCards from "@components/microcard";
@@ -68,6 +70,7 @@ export default function ExpertClone() {
   // const { BRAIN_API_KEY, BRAIN_ID } = user;
   // console.log(user);
   const { t } = useLocale();
+  const { data: user } = useMeQuery();
   const brandTheme = useGetBrandingColours({
     lightVal: "#6d278e",
     darkVal: "#fafafa",
@@ -186,13 +189,13 @@ export default function ExpertClone() {
     }
     axios
       .post(
-        `${BRAIN_SERVICE}/chat/${chatId}/question`,
+        `${process.env.EXPERTGPT_BACKEND_HOST}/chat/${chatId}/question`,
         {
           question: searchText,
         },
         {
           headers: {
-            Authorization: `Bearer ${BRAIN_API_KEY}`,
+            Authorization: `Bearer ${user?.apiKey}`,
             "Content-Type": "application/json",
           },
           params: { brain_id: BRAIN_ID },
@@ -230,19 +233,22 @@ export default function ExpertClone() {
   const handleSearch = (e: any) => {
     e.preventDefault();
     if (searchText && searchText.length > 0) {
-      setLoading(true);
+      setSearchResultFlag(true);
+      setIsLoading(true);
+    } else {
+      return;
     }
     if (currentChatId === "") {
       // if not started new chat, create new chat
       axios
         .post(
-          `${BRAIN_SERVICE}/chat`,
+          `${process.env.EXPERTGPT_BACKEND_HOST}/chat`,
           {
-            name: CREATE_BRAIN_STRING,
+            name: searchText.split(" ").slice(0, 3).join(" "),
           },
           {
             headers: {
-              Authorization: `Bearer ${BRAIN_API_KEY}`,
+              Authorization: `Bearer ${user?.apiKey}`,
             },
           }
         )
@@ -268,9 +274,9 @@ export default function ExpertClone() {
 
   const getChatHistory = () => {
     axios
-      .get(`${BRAIN_SERVICE}/chat`, {
+      .get(`${process.env.EXPERTGPT_BACKEND_HOST}/chat`, {
         headers: {
-          Authorization: `Bearer ${BRAIN_API_KEY}`,
+          Authorization: `Bearer ${user?.apiKey}`,
         },
       })
       .then((data) => {
@@ -291,9 +297,9 @@ export default function ExpertClone() {
   // delete chat history using chat_id
   const deleteChatHistory = (chatId: string) => {
     axios
-      .delete(`${BRAIN_SERVICE}/chat/${chatId}`, {
+      .delete(`${process.env.EXPERTGPT_BACKEND_HOST}/chat/${chatId}`, {
         headers: {
-          Authorization: `Bearer ${BRAIN_API_KEY}`,
+          Authorization: `Bearer ${user?.apiKey}`,
         },
       })
       .then((data) => {

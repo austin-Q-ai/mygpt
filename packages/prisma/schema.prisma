@@ -205,7 +205,7 @@ model Education {
 
 model TokenPrice {
   id          Int      @id @default(autoincrement())
-  price       Int
+  price       Float
   createdDate DateTime @default(now()) @map(name: "created")
   user        User?    @relation(fields: [userId], references: [id])
   userId      Int?
@@ -225,7 +225,7 @@ model User {
   amountsMintedPerMonth        Int                     @default(3000)
   tokens                       Int                     @default(0)
   lastRewardedDate             DateTime                @default(now())
-  price                        Int[]
+  price                        Float[]
   TokenPrice                   TokenPrice[]
   currency                     String                  @default("usd")
   bio                          String?
@@ -255,6 +255,8 @@ model User {
   twoFactorEnabled             Boolean                 @default(false)
   identityProvider             IdentityProvider        @default(CAL)
   identityProviderId           String?
+  apiKey                       String?
+  expertId                     String?
   availability                 Availability[]
   invitedTo                    Int?
   webhooks                     Webhook[]

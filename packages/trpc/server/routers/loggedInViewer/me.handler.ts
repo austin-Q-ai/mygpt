@@ -56,5 +56,6 @@ export const meHandler = async ({ ctx }: MeOptions) => {
     organization: user.organization,
     aiAdvantage: user.aiAdvantage,
     timeTokenAdvantage: user.timeTokenAdvantage,
+    apiKey: user.apiKey,
   };
 };
