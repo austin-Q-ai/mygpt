@@ -88,7 +88,7 @@ const UserSettings = (props: IUserSettingsProps) => {
     console.log(data);
     mutation.mutate({
       name: data.name,
-      price: parseInt(data.price),
+      price: parseFloat(data.price),
       timeZone: selectedTimeZone,
       defaultValue: true,
       currency: currency,
@@ -135,7 +135,7 @@ const UserSettings = (props: IUserSettingsProps) => {
             })}
             id="price"
             name="price"
-            type="number"
+            type="text"
             autoComplete="off"
             autoCorrect="off"
             min="0"
