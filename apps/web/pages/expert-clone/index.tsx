@@ -35,6 +35,8 @@ import {
   showToast,
 } from "@calcom/ui";
 
+import useMeQuery from "@lib/hooks/useMeQuery";
+
 import PageWrapper from "@components/PageWrapper";
 import Footer from "@components/auth/Footer";
 import MicroCards from "@components/microcard";
@@ -42,10 +44,7 @@ import { footerLinks } from "@components/ui/AuthContainer";
 
 import AuthModal from "./components/AuthModal";
 
-const BRAIN_API_KEY = "4cf4d75f4b17c08b0966843d88c8aa9b"; // indicate user
 const BRAIN_ID = "9355e20b-d41d-44af-860b-7cb8505c8af8"; // expert brain id
-const CREATE_BRAIN_STRING = "CREATE_BRAIN_STRING"; // not necessary actually, you can use first chat string as create brain string
-const BRAIN_SERVICE = "http://104.248.16.57:5050"; // backend url for brains
 
 export function DialogContentDiv(props: JSX.IntrinsicElements["div"]) {
   <span>{props.children}</span>;
@@ -53,6 +52,7 @@ export function DialogContentDiv(props: JSX.IntrinsicElements["div"]) {
 
 export default function ExpertClone() {
   const { t } = useLocale();
+  const { data: user } = useMeQuery();
   const brandTheme = useGetBrandingColours({
     lightVal: "#6d278e",
     darkVal: "#fafafa",
@@ -166,13 +166,13 @@ export default function ExpertClone() {
     }
     axios
       .post(
-        `${BRAIN_SERVICE}/chat/${chatId}/question`,
+        `${process.env.EXPERTGPT_BACKEND_HOST}/chat/${chatId}/question`,
         {
           question: searchText,
         },
         {
           headers: {
-            Authorization: `Bearer ${BRAIN_API_KEY}`,
+            Authorization: `Bearer ${user?.apiKey}`,
             "Content-Type": "application/json",
           },
           params: { brain_id: BRAIN_ID },
@@ -210,19 +210,22 @@ export default function ExpertClone() {
   const handleSearch = (e: any) => {
     e.preventDefault();
     if (searchText && searchText.length > 0) {
-      setLoading(true);
+      setSearchResultFlag(true);
+      setIsLoading(true);
+    } else {
+      return;
     }
     if (currentChatId === "") {
       // if not started new chat, create new chat
       axios
         .post(
-          `${BRAIN_SERVICE}/chat`,
+          `${process.env.EXPERTGPT_BACKEND_HOST}/chat`,
           {
-            name: CREATE_BRAIN_STRING,
+            name: searchText.split(" ").slice(0, 3).join(" "),
           },
           {
             headers: {
-              Authorization: `Bearer ${BRAIN_API_KEY}`,
+              Authorization: `Bearer ${user?.apiKey}`,
             },
           }
         )
@@ -248,9 +251,9 @@ export default function ExpertClone() {
 
   const getChatHistory = () => {
     axios
-      .get(`${BRAIN_SERVICE}/chat`, {
+      .get(`${process.env.EXPERTGPT_BACKEND_HOST}/chat`, {
         headers: {
-          Authorization: `Bearer ${BRAIN_API_KEY}`,
+          Authorization: `Bearer ${user?.apiKey}`,
         },
       })
       .then((data) => {
@@ -271,9 +274,9 @@ export default function ExpertClone() {
   // delete chat history using chat_id
   const deleteChatHistory = (chatId: string) => {
     axios
-      .delete(`${BRAIN_SERVICE}/chat/${chatId}`, {
+      .delete(`${process.env.EXPERTGPT_BACKEND_HOST}/chat/${chatId}`, {
         headers: {
-          Authorization: `Bearer ${BRAIN_API_KEY}`,
+          Authorization: `Bearer ${user?.apiKey}`,
         },
       })
       .then((data) => {
