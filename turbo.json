@@ -40,7 +40,8 @@
         "NEXT_PUBLIC_SEARCH_API_KEY",
         "ADMIN_API_KEY",
         "AMOUNT_MINTED_PER_MONTH",
-        "AMOUNT_MINTED_DEFAULT"
+        "AMOUNT_MINTED_DEFAULT",
+        "NEXT_PUBLIC_BRAIN_SERVICE"
       ]
     },
     "@calcom/web#dx": {
@@ -80,7 +81,8 @@
         "NEXT_PUBLIC_SEARCH_API_KEY",
         "ADMIN_API_KEY",
         "AMOUNT_MINTED_PER_MONTH",
-        "AMOUNT_MINTED_DEFAULT"
+        "AMOUNT_MINTED_DEFAULT",
+        "NEXT_PUBLIC_BRAIN_SERVICE"
       ]
     },
     "build": {
@@ -306,6 +308,7 @@
     "NEXT_PUBLIC_SEARCH_API_KEY",
     "ADMIN_API_KEY",
     "AMOUNT_MINTED_PER_MONTH",
-    "AMOUNT_MINTED_DEFAULT"
+    "AMOUNT_MINTED_DEFAULT",
+    "NEXT_PUBLIC_BRAIN_SERVICE"
   ]
 }

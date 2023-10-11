@@ -19,9 +19,10 @@ import MessageLoader from "pages/expert-clone/components/MessageLoader";
 import { useEffect, useRef, useState } from "react";
 import { TypeAnimation } from "react-type-animation";
 
-import { BRAIN_API_KEY, BRAIN_ID, BRAIN_SERVICE } from "@calcom/lib/constants";
+import { BRAIN_SERVICE, BRAIN_API_KEY, BRAIN_ID } from "@calcom/lib/constants";
 import useGetBrandingColours from "@calcom/lib/getBrandColours";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
+import { trpc } from "@calcom/trpc/react";
 import {
   Button,
   HeadSeo,
@@ -50,6 +51,9 @@ export function DialogContentDiv(props: JSX.IntrinsicElements["div"]) {
 }
 
 export default function ExpertClone() {
+  const { data: user } = trpc.viewer.me.useQuery();
+  // const { BRAIN_API_KEY, BRAIN_ID } = user;
+  // console.log(user);
   const { t } = useLocale();
   const brandTheme = useGetBrandingColours({
     lightVal: "#6d278e",
