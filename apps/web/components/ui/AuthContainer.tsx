@@ -100,70 +100,6 @@ const members = [
   },
 ];
 
-const pricesList = [
-  {
-    name: "freemium",
-    features: [
-      "access_to_basic_features",
-      "limit_of_500_messages/month",
-      "email_support_with_a_response_within_48_hours",
-      "data_storage_limited_to_1_gb",
-      "one_active_user_online",
-    ],
-    ipDevice: "",
-    password: "",
-  },
-  {
-    name: "$34/month",
-    features: [
-      "access_to_advanced_features",
-      "limit_of_5,000_messages/month",
-      "email_support_with_a_response_within_24_hours",
-      "data_storage_up_to_10_gb",
-      "two_active_users_online",
-    ],
-    ipDevice: "",
-    password: "",
-  },
-  {
-    name: "$70/month",
-    features: [
-      "access_to_all_premium_features",
-      "limit_of_20,000_messages/month",
-      "priority_support_by_email_and_chat",
-      "data_storage_up_to_50_gb",
-      "ten_active_users_online",
-      "access_to_detailed_analyses_and_reports",
-    ],
-    ipDevice: "",
-    password: "",
-  },
-  {
-    name: "$117/month",
-    features: [
-      "unlimited_access_to_all_features",
-      "limit_of_100,000_messages/month",
-      "24/7_priority_support",
-      "unlimited_data_storage",
-      "twenty_five_active_users_online",
-    ],
-    ipDevice: "",
-    password: "",
-  },
-  {
-    name: "contact_us",
-    features: [
-      "customizable_message_volume",
-      "customizable_data_storage",
-      "customizable_number_of_active_bots",
-      "specific_integrations_or_custom_developments",
-      "access_to_customizable_detailed_analyses_and_reports",
-    ],
-    ipDevice: "",
-    password: "",
-  },
-];
-
 export default function AuthContainer(props: React.PropsWithChildren<Props>) {
   const { t } = useLocale();
   const [toggleFlag, setToggleFlag] = useState(false);
@@ -213,30 +149,6 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
           <div className="align-center flex h-full flex-row justify-center ">
             <div className="flex flex-col self-center">
               <div className="text-secondary flex flex-col gap-8">
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button
-                      variant="icon"
-                      size="lg"
-                      color="secondary"
-                      className="p-none text-secondary mr-1 h-10 w-12 self-center border-0 bg-transparent text-xl">
-                      Prices
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent
-                    className="to-emphasis flex flex-row bg-gradient-to-b from-gray-100"
-                    size="xl"
-                    Icon={X}
-                    title={t("")}>
-                    <div className="mt-5 flex-row ">
-                      <ScrollableArea className="grid h-[600px] gap-5  sm:grid-cols-1 md:h-full md:grid-cols-5">
-                        {pricesList.map((priceItem, index) => {
-                          return <PriceListItem key={index} priceItem={priceItem} />;
-                        })}
-                      </ScrollableArea>
-                    </div>
-                  </DialogContent>
-                </Dialog>
                 <div className="flex flex-row ">
                   <div className="flex flex-row gap-1">
                     <LogOut className="h-12 w-10 flex-col" />
@@ -267,31 +179,6 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                 </div>
                 <div className="text-secondary flex-col">
                   <div className="flex flex-row gap-8">
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button
-                          variant="icon"
-                          size="lg"
-                          color="secondary"
-                          aria-label={t("delete")}
-                          className="p-none text-secondary mr-1 hidden border-0 bg-transparent sm:inline">
-                          Prices
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent
-                        className="to-emphasis bg-gradient-to-b from-gray-100"
-                        size="xl"
-                        Icon={X}
-                        title={t("")}>
-                        <div className="mt-5 flex-row ">
-                          <ScrollableArea className="grid h-[600px] gap-5  sm:grid-cols-1 md:h-full md:grid-cols-5">
-                            {pricesList.map((priceItem, index) => {
-                              return <PriceListItem key={index} priceItem={priceItem} />;
-                            })}
-                          </ScrollableArea>
-                        </div>
-                      </DialogContent>
-                    </Dialog>
                     <div className="hidden flex-col md:contents">
                       <div className="flex flex-row gap-1">
                         <LogOut className="h-8 w-6 flex-col" />
