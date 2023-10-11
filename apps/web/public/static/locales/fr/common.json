@@ -2064,5 +2064,8 @@
   "create_my_free_account": "Créer mon compte gratuit",
   "read_and_accept_the": "Lisez et acceptez le",
   "terms_and_conditions": "termes et conditions",
-  "your_currently_plan": "Votre forfait actuel"
+  "your_currently_plan": "Votre forfait actuel",
+  "password_is_required": "Champ de mot de passe requis.",
+  "start_date_cannot_be_after_end_date": "La date de début ne peut pas être après la date de fin.",
+  "end_date_cannot_be_before_start_date": "La date de fin ne peut pas être avant la date de début."
 }
