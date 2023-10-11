@@ -135,10 +135,11 @@ const UserSettings = (props: IUserSettingsProps) => {
             })}
             id="price"
             name="price"
-            type="text"
+            type="number"
             autoComplete="off"
             autoCorrect="off"
             min="0"
+            step="0.01"
             className="border-default w-full rounded-md border text-sm"
           />
           {errors.price && (

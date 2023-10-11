@@ -347,7 +347,8 @@ function TimeTokensWallet() {
                           label=""
                           addOnLeading={user.currency.toUpperCase() || "EUR"}
                           {...formMethods.register("price")}
-                          type="text"
+                          type="number"
+                          step="0.01"
                         />
                       </>
                     )}
