@@ -84,3 +84,8 @@ export const MINUTES_TO_BOOK = process.env.NEXT_PUBLIC_MINUTES_TO_BOOK || "5";
 // Needed for orgs
 export const ALLOWED_HOSTNAMES = JSON.parse(`[${process.env.ALLOWED_HOSTNAMES || ""}]`) as string[];
 export const RESERVED_SUBDOMAINS = JSON.parse(`[${process.env.RESERVED_SUBDOMAINS || ""}]`) as string[];
+
+//Chatting API
+export const BRAIN_SERVICE = "http://104.248.16.57:5050";
+export const BRAIN_API_KEY = "4cf4d75f4b17c08b0966843d88c8aa9b";
+export const BRAIN_ID = "9355e20b-d41d-44af-860b-7cb8505c8af8";
