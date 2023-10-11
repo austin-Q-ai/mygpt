@@ -83,7 +83,7 @@ function CategoryTab({ selectedCategory, categories, searchText }: CategoryTabPr
       <div className="mt-3 flex flex-row items-center lg:mt-0">
         {leftVisible && (
           <button onClick={handleLeft} className="mx-2 flex">
-            <div className="flex h-12 w-5 items-center justify-end rounded-md bg-white">
+            <div className="flex h-12 w-5 items-center justify-end rounded-md bg-transparent">
               <ChevronLeft className="text-subtle h-5 w-5" />
             </div>
           </button>
@@ -124,7 +124,7 @@ function CategoryTab({ selectedCategory, categories, searchText }: CategoryTabPr
         </ul>
         {rightVisible && (
           <button onClick={handleRight} className="mx-2 flex">
-            <div className="flex h-12 w-5 items-center justify-end rounded-md bg-white">
+            <div className="flex h-12 w-5 items-center justify-end rounded-md bg-transparent">
               <ChevronRight className="text-subtle h-5 w-5 " />
             </div>
           </button>
