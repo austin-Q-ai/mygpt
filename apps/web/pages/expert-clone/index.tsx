@@ -1,4 +1,5 @@
 import { DropdownMenuLabel } from "@radix-ui/react-dropdown-menu";
+import useResizeObserver from "@react-hook/resize-observer";
 import axios from "axios";
 import classNames from "classnames";
 import {
@@ -16,7 +17,7 @@ import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import MessageLoader from "pages/expert-clone/components/MessageLoader";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { TypeAnimation } from "react-type-animation";
 
 import { BRAIN_SERVICE, BRAIN_API_KEY, BRAIN_ID } from "@calcom/lib/constants";
@@ -49,6 +50,18 @@ const CREATE_BRAIN_STRING = "CREATE_BRAIN_STRING"; // not necessary actually, yo
 export function DialogContentDiv(props: JSX.IntrinsicElements["div"]) {
   <span>{props.children}</span>;
 }
+
+const useSize = (target: any) => {
+  const [size, setSize] = useState();
+
+  useLayoutEffect(() => {
+    target && setSize(target.getBoundingClientRect().height);
+  }, [target]);
+
+  // Where the magic happens
+  useResizeObserver(target, (entry: any) => setSize(entry.contentRect));
+  return size;
+};
 
 export default function ExpertClone() {
   const { data: user } = trpc.viewer.me.useQuery();
@@ -116,6 +129,11 @@ export default function ExpertClone() {
   const sideMenuRef = useRef<HTMLDivElement>(null);
   const answersRef = useRef<HTMLDivElement>(null);
   const endOfScrollArea = useRef<HTMLDivElement>(null);
+  const [target, setTarget] = useState<HTMLDivElement | null>(null);
+  const size = useSize(target);
+  useEffect(() => {
+    endOfScrollArea?.current?.scrollIntoView({ behavior: "smooth" });
+  }, [size]);
   const toggleAuthMadal = (flag: boolean, sign: string) => {
     setAuthModalFlag(flag);
     setSelectedTab(sign);
@@ -584,7 +602,9 @@ export default function ExpertClone() {
                                 className="h-12 w-12 rounded-full border-2 border-white"
                               />
 
-                              <div className="my-auto ms-6 text-sm md:text-base">
+                              <div
+                                className="my-auto ms-6 text-sm md:text-base"
+                                ref={index === qaList.length - 1 ? setTarget : undefined}>
                                 {qa.loading ? (
                                   <MessageLoader />
                                 ) : (
