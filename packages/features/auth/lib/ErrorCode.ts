@@ -2,6 +2,7 @@ export enum ErrorCode {
   IncorrectUsernamePassword = "incorrect-username-password",
   UserNotFound = "user-not-found",
   IncorrectPassword = "incorrect-password",
+  PasswordIsRequired = "password-required",
   UserMissingPassword = "missing-password",
   TwoFactorDisabled = "two-factor-disabled",
   TwoFactorAlreadyEnabled = "two-factor-already-enabled",

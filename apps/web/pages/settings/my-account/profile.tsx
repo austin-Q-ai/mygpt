@@ -235,6 +235,7 @@ const ProfileView = () => {
   const errorMessages: { [key: string]: string } = {
     [ErrorCode.SecondFactorRequired]: t("2fa_enabled_instructions"),
     [ErrorCode.IncorrectPassword]: `${t("incorrect_password")} ${t("please_try_again")}`,
+    [ErrorCode.PasswordIsRequired]: `${t("password_is_required")}, ${t("please_try_again")}`,
     [ErrorCode.UserNotFound]: t("no_account_exists"),
     [ErrorCode.IncorrectTwoFactorCode]: `${t("incorrect_2fa_code")} ${t("please_try_again")}`,
     [ErrorCode.InternalServerError]: `${t("something_went_wrong")} ${t("please_try_again_and_contact_us")}`,
@@ -333,7 +334,7 @@ const ProfileView = () => {
             title={t("delete_account_modal_title")}
             description={t("confirm_delete_account_modal", { appName: APP_NAME })}
             type="creation"
-            Icon={AlertTriangle}>
+            Icon={X}>
             <>
               <div className="mb-10">
                 <p className="text-default mb-4">
@@ -519,9 +520,9 @@ const ProfileForm = ({
   });
 
   const {
+    watch,
     formState: { isSubmitting, isDirty },
   } = formMethods;
-
   const isDisabled = isSubmitting || !isDirty;
 
   useEffect(() => {
@@ -569,11 +570,19 @@ const ProfileForm = ({
       !editableHeader
     ) {
       setEditableHeader(!editableHeader);
-      setShowErrorInHeader(false);
+      setShowErrorInHeader(true);
     } else {
       setEditableHeader(!editableHeader);
       setShowErrorInHeader(false);
     }
+  };
+
+  const socialRedirectLink = (link: any) => {
+    console.log(link);
+    if (!link || typeof link === "undefined" || editableHeader) {
+      return;
+    }
+    window.open(link, "_blank");
   };
 
   return (
@@ -708,6 +717,7 @@ const ProfileForm = ({
                             <Button
                               color="secondary"
                               className="rounded-full border-gray-700 bg-transparent md:rounded-full"
+                              onClick={() => socialRedirectLink(social.telegram)}
                               variant="icon">
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -737,6 +747,7 @@ const ProfileForm = ({
                             <Button
                               color="secondary"
                               StartIcon={Facebook}
+                              onClick={() => socialRedirectLink(social.facebook)}
                               className="rounded-full border-gray-700 bg-transparent md:rounded-full"
                               variant="icon"
                             />
@@ -758,6 +769,7 @@ const ProfileForm = ({
                           <div className={!editableHeader ? "" : "flex w-full flex-row items-center gap-2"}>
                             <Button
                               color="secondary"
+                              onClick={() => socialRedirectLink(social.discord)}
                               className="rounded-full border-gray-700 bg-transparent md:rounded-full"
                               variant="icon">
                               <svg
@@ -786,6 +798,7 @@ const ProfileForm = ({
                           <div className={!editableHeader ? "" : "flex w-full flex-row items-center gap-2"}>
                             <Button
                               color="secondary"
+                              onClick={() => socialRedirectLink(social.instagram)}
                               StartIcon={Instagram}
                               className="rounded-full border-gray-700 bg-transparent md:rounded-full"
                               variant="icon"
@@ -808,6 +821,7 @@ const ProfileForm = ({
                           <div className={!editableHeader ? "" : "flex w-full flex-row items-center gap-2"}>
                             <Button
                               color="secondary"
+                              onClick={() => socialRedirectLink(social.linkedin)}
                               StartIcon={Linkedin}
                               className="rounded-full border-gray-700 bg-transparent md:rounded-full"
                               variant="icon"
@@ -886,7 +900,7 @@ const ProfileForm = ({
                     setFirstRender={setFirstRender}
                   />
                 ) : (
-                  <div className={defaultValues.bio.length ? "m-4" : "w-full p-2 text-center"}>
+                  <div className={defaultValues.bio.length ? "m-4 break-all" : "w-full  p-2 text-center"}>
                     {defaultValues.bio.length ? defaultValues.bio : t("no_data_yet")}
                   </div>
                 )}
@@ -942,9 +956,9 @@ const ProfileForm = ({
                             </div>
                           ))
                         : skills.map((skill, i) => (
-                            <div className="flex" key={i}>
+                            <div className={classNames("flex", skill.length >= 30 && "w-full")} key={i}>
                               <Input
-                                className="w-[100px] !rounded-full !rounded-r-none border-r-0 focus:ring-0"
+                                className="!rounded-full !rounded-r-none border-r-0 focus:ring-0"
                                 value={skill}
                                 onChange={(event) => {
                                   const formData = [...skills];
@@ -1313,7 +1327,7 @@ const ProfileForm = ({
           title={indexExp === -1 ? t("add_exp") : t("change_exp")}
           description={t("enter_previous_work_exp")}
           type="creation"
-          Icon={AlertTriangle}>
+          Icon={X}>
           <div className="mb-10">
             <TextField
               className="mb-2"
@@ -1348,6 +1362,8 @@ const ProfileForm = ({
                   onChange={(e) => {
                     if (e && (startYearExp < endYearExp || e.value <= endMonthExp)) {
                       setStartMonthExp(e.value);
+                    } else {
+                      showToast(t("start_date_cannot_be_after_end_date"), "error");
                     }
                   }}
                 />
@@ -1370,6 +1386,8 @@ const ProfileForm = ({
                       (e.value < endYearExp || (e.value === endYearExp && startMonthExp <= endMonthExp))
                     ) {
                       setStartYearExp(e.value);
+                    } else {
+                      showToast(t("start_date_cannot_be_after_end_date"), "error");
                     }
                   }}
                 />
@@ -1384,6 +1402,8 @@ const ProfileForm = ({
                       if (!(endYearExp === new Date().getFullYear() && e.value > new Date().getMonth() + 1)) {
                         setEndMonthExp(e.value);
                       }
+                    } else {
+                      showToast(t("end_date_cannot_be_before_start_date"), "error");
                     }
                   }}
                 />
@@ -1406,6 +1426,8 @@ const ProfileForm = ({
                       (e.value > startYearExp || (e.value === startYearExp && startMonthExp <= endMonthExp))
                     ) {
                       setEndYearExp(e.value);
+                    } else {
+                      showToast(t("end_date_cannot_be_before_start_date"), "error");
                     }
                   }}
                 />
