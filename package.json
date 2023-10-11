@@ -92,6 +92,7 @@
   },
   "dependencies": {
     "@meilisearch/instant-meilisearch": "^0.13.5",
+    "@react-hook/resize-observer": "^1.2.6",
     "@supabase/auth-helpers-nextjs": "^0.8.1",
     "@supabase/supabase-js": "^2.38.0",
     "@types/three": "^0.156.0",
