@@ -20,10 +20,9 @@ import MessageLoader from "pages/expert-clone/components/MessageLoader";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { TypeAnimation } from "react-type-animation";
 
-import { BRAIN_SERVICE, BRAIN_API_KEY, BRAIN_ID } from "@calcom/lib/constants";
+import { BRAIN_ID, BRAIN_SERVICE } from "@calcom/lib/constants";
 import useGetBrandingColours from "@calcom/lib/getBrandColours";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
-import { trpc } from "@calcom/trpc/react";
 import {
   Button,
   HeadSeo,
@@ -66,9 +65,6 @@ const useSize = (target: any) => {
 };
 
 export default function ExpertClone() {
-  const { data: user } = trpc.viewer.me.useQuery();
-  // const { BRAIN_API_KEY, BRAIN_ID } = user;
-  // console.log(user);
   const { t } = useLocale();
   const { data: user } = useMeQuery();
   const brandTheme = useGetBrandingColours({
@@ -189,7 +185,7 @@ export default function ExpertClone() {
     }
     axios
       .post(
-        `${process.env.EXPERTGPT_BACKEND_HOST}/chat/${chatId}/question`,
+        `${BRAIN_SERVICE}/chat/${chatId}/question`,
         {
           question: searchText,
         },
@@ -242,7 +238,7 @@ export default function ExpertClone() {
       // if not started new chat, create new chat
       axios
         .post(
-          `${process.env.EXPERTGPT_BACKEND_HOST}/chat`,
+          `${BRAIN_SERVICE}/chat`,
           {
             name: searchText.split(" ").slice(0, 3).join(" "),
           },
@@ -274,7 +270,7 @@ export default function ExpertClone() {
 
   const getChatHistory = () => {
     axios
-      .get(`${process.env.EXPERTGPT_BACKEND_HOST}/chat`, {
+      .get(`${BRAIN_SERVICE}/chat`, {
         headers: {
           Authorization: `Bearer ${user?.apiKey}`,
         },
@@ -297,7 +293,7 @@ export default function ExpertClone() {
   // delete chat history using chat_id
   const deleteChatHistory = (chatId: string) => {
     axios
-      .delete(`${process.env.EXPERTGPT_BACKEND_HOST}/chat/${chatId}`, {
+      .delete(`${BRAIN_SERVICE}/chat/${chatId}`, {
         headers: {
           Authorization: `Bearer ${user?.apiKey}`,
         },
@@ -312,7 +308,9 @@ export default function ExpertClone() {
   };
   useEffect(() => {
     answersRef?.current?.scrollIntoView({ behavior: "smooth" });
-    getChatHistory();
+    if (status === "authenticated") {
+      getChatHistory();
+    }
   }, [qaList]);
 
   const setLoading = (flag: boolean) => {
