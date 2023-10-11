@@ -145,7 +145,7 @@ const SubscriptionCard = (props: SubscriptionCardProps) => {
 
           <div className="text-pink mt-auto pt-10 text-center text-xl font-bold">{t(props.price)}</div>
         </div>
-        <div className={classNames("text-gray", props.isCurrent ? "hidden" : "flex flex-col")}>
+        {props.isCurrent ? <div className="flex h-1/3"></div>:<div className={classNames("text-gray", "flex flex-col")}>
           <p className="pb-10 text-center text-xs lg:pb-20">
             {t("read_and_accept_the")}{" "}
             <Link className="underline" href="/">
@@ -159,7 +159,8 @@ const SubscriptionCard = (props: SubscriptionCardProps) => {
             {t("upgrade")}
             <ArrowRight className="ml-2 h-4 w-4 self-center" aria-hidden="true" />{" "}
           </Button>
-        </div>
+        </div>}
+        
       </div>
     </div>
   );

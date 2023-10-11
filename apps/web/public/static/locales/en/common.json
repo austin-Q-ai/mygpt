@@ -2137,5 +2137,8 @@
   "subscription_description": "Manage your settings for your Subscription",
   "read_and_accept_the": "Read and accept the",
   "terms_and_conditions": "terms and conditions",
-  "your_currently_plan": "Your currently plan"
+  "your_currently_plan": "Your currently plan",
+  "password_is_required": "Password field is required",
+  "start_date_cannot_be_after_end_date": "Start date cannot be after End date",
+  "end_date_cannot_be_before_start_date": "End date cannot be before Start date"
 }

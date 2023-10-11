@@ -135,7 +135,7 @@ export function ListItemText<TComponent extends keyof JSX.IntrinsicElements = "s
     component,
     {
       ...passThroughProps,
-      className: classNames("text-sm text-subtle truncate", props.className),
+      className: classNames("text-sm text-subtle ", props.className),
     },
     props.children
   );

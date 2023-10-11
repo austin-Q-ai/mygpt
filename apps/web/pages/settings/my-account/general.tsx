@@ -143,6 +143,7 @@ const GeneralView = ({ localeProp, user }: GeneralViewProps) => {
           timeFormat: values.timeFormat.value,
           weekStart: values.weekStart.value,
         });
+        router.reload();
       }}>
       <Meta title={t("general")} description={t("general_description")} />
       <Controller
