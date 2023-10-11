@@ -270,7 +270,7 @@ function TimeTokensWallet() {
     mutation.mutate({
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      price: parseInt(values.price),
+      price: parseFloat(values.price),
     });
   };
 
@@ -348,6 +348,7 @@ function TimeTokensWallet() {
                           addOnLeading={user.currency.toUpperCase() || "EUR"}
                           {...formMethods.register("price")}
                           type="number"
+                          step="0.01"
                         />
                       </>
                     )}
