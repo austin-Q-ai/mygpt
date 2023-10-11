@@ -569,12 +569,12 @@ export default function ExpertClone() {
             " md:justify-items-start lg:h-[90%] lg:grid-cols-5",
             " grid flex-row flex-wrap justify-items-center"
           )}>
-          <div className="col-span-1 mx-6 flex flex-col justify-center gap-6 pb-6 md:mx-16 md:w-[80%] lg:col-span-3">
+          <div className="col-span-1 mx-6 flex flex-col justify-center gap-6 pb-6 md:mx-auto md:w-[90%] lg:col-span-3">
             <div className="flex w-full flex-row">
               <div className="flex h-full w-full flex-col">
                 {qaList.length > 0 && (
                   <>
-                    <ScrollableArea className="bg-pink/5 scrollbar-track-emphasis !scrollbar-thin scrollbar-thumb-pink h-[350px] w-full scroll-auto rounded-sm py-4">
+                    <ScrollableArea className="bg-pink/5 scrollbar-track-emphasis !scrollbar-thin scrollbar-thumb-pink h-[450px] w-full scroll-auto rounded-sm py-4">
                       {qaList.map((qa, index) => {
                         return (
                           <div
