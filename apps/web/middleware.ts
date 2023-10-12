@@ -19,6 +19,14 @@ const middleware: NextMiddleware = async (req) => {
     return NextResponse.redirect(req.nextUrl);
   }
 
+  if (url.pathname.startsWith("/expert-clone")){
+    const temp = url.pathname.split("/")
+    if (temp.length == 3 && temp[2]) {
+      // we have to transfer temp[2] to expert-clone page, temp[2] might be username
+      return NextResponse.redirect(`${url.origin}/expert-clone`)
+    }
+  }
+
   if (!url.pathname.startsWith("/api")) {
     //
     // NOTE: When tRPC hits an error a 500 is returned, when this is received
