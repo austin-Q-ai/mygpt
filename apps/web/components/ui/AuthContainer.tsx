@@ -167,7 +167,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
           </div>
         </div>
       ) : (
-        <div className="bg-[url('/imgpsh_fullsize_anim.png')] bg-cover bg-no-repeat md:grid lg:!max-h-screen lg:grid-rows-[_80px_1fr_1fr_1fr_1fr_1fr_0px]">
+        <div className="min-h-[880px] bg-[url('/imgpsh_fullsize_anim.png')] bg-cover bg-no-repeat md:grid lg:!max-h-screen lg:grid-rows-[_80px_1fr_1fr_1fr_1fr_1fr_0px]">
           <div className="flex flex-row md:row-span-1">
             <div className="ms-6 flex flex-1 flex-col justify-center pt-4 sm:px-6 md:mx-6 lg:px-4">
               <HeadSeo title={props.title} description={props.description} />
@@ -207,8 +207,8 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
               </div>
             </div>
           </div>
-          <div className="grid lg:row-span-4 lg:grid-cols-[minmax(500px,_1fr)_1fr] lg:grid-rows-3 ">
-            <div className="row-start-1 mx-auto h-fit lg:col-span-1 lg:row-span-1 lg:mx-4">
+          <div className="grid lg:grid-cols-2 md:grid-cols-1">
+            <div className="row-start-1 row-end-1 mx-auto h-fit lg:col-span-1 lg:row-span-1 lg:mx-4">
               <div
                 className={classNames(
                   props.showLogo ? "" : "",
@@ -229,7 +229,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                 </div>
               </div>
             </div>
-            <div className="order-last row-end-5 mx-auto my-4 lg:col-start-1 lg:row-start-3 lg:mx-10 lg:mb-0">
+            <div className="hidden lg:block order-last mx-auto my-4 lg:col-start-1 lg:row-start-3 lg:mx-10 lg:mb-0">
               <CarouselDemo />
               <div className="flex flex-row sm:justify-center lg:justify-normal">
                 <p className="mx-3 my-8 break-words text-center text-gray-500 sm:w-full sm:max-w-md  md:mt-5 lg:w-[70%] lg:max-w-[70%] lg:text-left">
@@ -237,8 +237,8 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                 </p>
               </div>
             </div>
-            <div className=" mx-2 flex h-fit flex-1 flex-col justify-center sm:px-6 lg:row-span-3 lg:mx-0 lg:w-[90%] lg:justify-start">
-              <div className="mx-auto my-6 h-[60vh] flex-row md:my-0">
+            <div className="mx-2 flex h-fit flex-1 flex-col justify-center sm:px-6 lg:row-span-3 lg:mx-0 lg:w-[90%] lg:justify-start">
+              <div className="mx-auto my-6 h-fit flex-row md:my-0">
                 <div className="h-full w-full">
                   <MicroCards />
                 </div>
@@ -251,6 +251,14 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
               </div>
               <div className="flew-row mx-auto my-4 justify-center font-sans font-medium text-gray-500 md:my-4 ">
                 {t("more_than_25k_experts_use_myqpt")}
+              </div>
+            </div>
+            <div className="md:hidden block order-last mx-auto my-4 lg:col-start-1 lg:row-start-3 lg:mx-10 lg:mb-0">
+              <CarouselDemo />
+              <div className="flex flex-row sm:justify-center lg:justify-normal">
+                <p className="mx-3 my-8 break-words text-center text-gray-500 sm:w-full sm:max-w-md  md:mt-5 lg:w-[70%] lg:max-w-[70%] lg:text-left">
+                  {t("your_artifitial_footer")}
+                </p>
               </div>
             </div>
           </div>

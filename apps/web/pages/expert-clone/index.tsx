@@ -1,4 +1,5 @@
 import { DropdownMenuLabel } from "@radix-ui/react-dropdown-menu";
+import useResizeObserver from "@react-hook/resize-observer";
 import axios from "axios";
 import classNames from "classnames";
 import {
@@ -16,9 +17,10 @@ import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import MessageLoader from "pages/expert-clone/components/MessageLoader";
-import { useEffect, useRef, useState } from "react";
-import { TypeAnimation } from "react-type-animation";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import Typist from "react-typist";
 
+import { BRAIN_ID, BRAIN_SERVICE } from "@calcom/lib/constants";
 import useGetBrandingColours from "@calcom/lib/getBrandColours";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import {
@@ -44,11 +46,23 @@ import { footerLinks } from "@components/ui/AuthContainer";
 
 import AuthModal from "./components/AuthModal";
 
-const BRAIN_ID = "9355e20b-d41d-44af-860b-7cb8505c8af8"; // expert brain id
+const CREATE_BRAIN_STRING = "CREATE_BRAIN_STRING"; // not necessary actually, you can use first chat string as create brain string
 
 export function DialogContentDiv(props: JSX.IntrinsicElements["div"]) {
   <span>{props.children}</span>;
 }
+
+const useSize = (target: any) => {
+  const [size, setSize] = useState();
+
+  useLayoutEffect(() => {
+    target && setSize(target.getBoundingClientRect().height);
+  }, [target]);
+
+  // Where the magic happens
+  useResizeObserver(target, (entry: any) => setSize(entry.contentRect));
+  return size;
+};
 
 export default function ExpertClone() {
   const { t } = useLocale();
@@ -114,9 +128,20 @@ export default function ExpertClone() {
   const sideMenuRef = useRef<HTMLDivElement>(null);
   const answersRef = useRef<HTMLDivElement>(null);
   const endOfScrollArea = useRef<HTMLDivElement>(null);
+  const [target, setTarget] = useState<HTMLDivElement | null>(null);
+  const size = useSize(target);
+  useEffect(() => {
+    endOfScrollArea?.current?.scrollIntoView({ behavior: "smooth" });
+  }, [size]);
   const toggleAuthMadal = (flag: boolean, sign: string) => {
     setAuthModalFlag(flag);
     setSelectedTab(sign);
+  };
+
+  const formatText = (yourText: string) => {
+    return yourText
+      .split("**")
+      .map((segment, index) => (index % 2 === 0 ? segment : <strong key={index}>{segment}</strong>));
   };
 
   const [windowWidth, setWindowWidth] = useState(0);
@@ -166,7 +191,7 @@ export default function ExpertClone() {
     }
     axios
       .post(
-        `${process.env.EXPERTGPT_BACKEND_HOST}/chat/${chatId}/question`,
+        `${BRAIN_SERVICE}/chat/${chatId}/question`,
         {
           question: searchText,
         },
@@ -219,7 +244,7 @@ export default function ExpertClone() {
       // if not started new chat, create new chat
       axios
         .post(
-          `${process.env.EXPERTGPT_BACKEND_HOST}/chat`,
+          `${BRAIN_SERVICE}/chat`,
           {
             name: searchText.split(" ").slice(0, 3).join(" "),
           },
@@ -251,7 +276,7 @@ export default function ExpertClone() {
 
   const getChatHistory = () => {
     axios
-      .get(`${process.env.EXPERTGPT_BACKEND_HOST}/chat`, {
+      .get(`${BRAIN_SERVICE}/chat`, {
         headers: {
           Authorization: `Bearer ${user?.apiKey}`,
         },
@@ -268,13 +293,16 @@ export default function ExpertClone() {
         //   creation_time: date
         //   user_id: string
         // }
+      })
+      .catch((e) => {
+        console.log(e);
       });
   };
 
   // delete chat history using chat_id
   const deleteChatHistory = (chatId: string) => {
     axios
-      .delete(`${process.env.EXPERTGPT_BACKEND_HOST}/chat/${chatId}`, {
+      .delete(`${BRAIN_SERVICE}/chat/${chatId}`, {
         headers: {
           Authorization: `Bearer ${user?.apiKey}`,
         },
@@ -339,7 +367,7 @@ export default function ExpertClone() {
     };
   });
   return (
-    <div className="to-darkemphasis bg-gradient-to-b from-gray-100">
+    <div className="">
       <div className="h-[100vh] flex-1 bg-[url('/imgpsh_fullsize_anim.png')] bg-cover bg-no-repeat lg:!max-h-screen">
         <div
           ref={sideMenuRef}
@@ -549,15 +577,15 @@ export default function ExpertClone() {
         </div>
         <div
           className={classNames(
-            " md:justify-items-start lg:h-[90%] lg:grid-cols-2",
+            " md:justify-items-start lg:h-[90%] lg:grid-cols-5",
             " grid flex-row flex-wrap justify-items-center"
           )}>
-          <div className="col-span-1 mx-6 flex flex-col justify-center gap-6 pb-6 md:mx-16 md:w-[80%]">
+          <div className="col-span-1 mx-6 flex flex-col justify-center gap-6 pb-6 md:mx-auto md:w-[90%] lg:col-span-3">
             <div className="flex w-full flex-row">
               <div className="flex h-full w-full flex-col">
                 {qaList.length > 0 && (
                   <>
-                    <ScrollableArea className="bg-pink/5 scrollbar-track-emphasis !scrollbar-thin scrollbar-thumb-pink h-[350px] w-full scroll-auto rounded-sm py-4">
+                    <ScrollableArea className="bg-pink/5 scrollbar-track-emphasis !scrollbar-thin scrollbar-thumb-pink h-[450px] w-full scroll-auto rounded-sm py-4">
                       {qaList.map((qa, index) => {
                         return (
                           <div
@@ -585,30 +613,32 @@ export default function ExpertClone() {
                                 className="h-12 w-12 rounded-full border-2 border-white"
                               />
 
-                              <div className="my-auto ms-6 text-sm md:text-base">
+                              <div
+                                className="my-auto ms-6 text-sm md:text-base"
+                                ref={index === qaList.length - 1 ? setTarget : undefined}>
                                 {qa.loading ? (
                                   <MessageLoader />
                                 ) : (
-                                  <span className="">
-                                    <TypeAnimation
-                                      sequence={[
-                                        qa.answer,
-                                        1000,
-                                        () => {
-                                          setLoading(false);
-                                        },
-                                      ]}
-                                      wrapper="div"
-                                      speed={70}
-                                      cursor={false}
+                                  <Typist
+                                    onTypingDone={() => {
+                                      setLoading(false);
+                                    }}
+                                    stdTypingDelay={40}
+                                    cursor={{
+                                      show: false,
+                                      blink: true,
+                                      hideWhenDone: true,
+                                      hideWhenDoneDelay: 0,
+                                    }}>
+                                    <span
                                       style={{
                                         fontSize: "",
                                         display: "inline-block",
                                         whiteSpace: "pre-wrap",
-                                      }}
-                                      repeat={0}
-                                    />
-                                  </span>
+                                      }}>
+                                      {formatText(qa.answer)}
+                                    </span>
+                                  </Typist>
                                 )}
                               </div>
                             </div>
@@ -677,7 +707,10 @@ export default function ExpertClone() {
               )}
             </form>
           </div>
-          <div className={classNames("col-span-1 mb-4 h-full w-full overflow-hidden md:mb-0 md:h-[95%]")}>
+          <div
+            className={classNames(
+              "col-span-1 mb-4 h-full w-full overflow-hidden md:mb-0 md:h-[95%] lg:col-span-2"
+            )}>
             {/* <Image src="/expert-clone-banner.svg" width={362} height={672} alt="expert-clone-banner" /> */}
             <div className="mx-auto h-full flex-row">
               <div className="h-full w-full">
