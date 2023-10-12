@@ -295,7 +295,7 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
   }).then(res => {
     console.log("success")
   }).catch(err => {
-    console.log("error on saving to qdrant: ", error)
+    console.log("error on saving to qdrant: ", err)
   });
   return input;
 };
