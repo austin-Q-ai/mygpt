@@ -11946,6 +11946,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/react-typist@npm:^2.0.4":
+  version: 2.0.4
+  resolution: "@types/react-typist@npm:2.0.4"
+  dependencies:
+    "@types/react": "*"
+  checksum: 6e4f26a4364b28c9e0fb88d2cae0ccd4a70f4f714fca7bca2a2c1c7c5c16dd7a650da0d93ba44489718362b4d3818cb3c8f2e580097626ce4255aeb1ac476bd1
+  languageName: node
+  linkType: hard
+
 "@types/react@npm:18.0.26":
   version: 18.0.26
   resolution: "@types/react@npm:18.0.26"
@@ -15119,6 +15128,7 @@ __metadata:
     "@supabase/auth-helpers-nextjs": ^0.8.1
     "@supabase/supabase-js": ^2.38.0
     "@types/dompurify": ^2.4.0
+    "@types/react-typist": ^2.0.4
     "@types/three": ^0.156.0
     c8: ^7.13.0
     city-timezones: ^1.2.1
@@ -15136,7 +15146,7 @@ __metadata:
     react-responsive-carousel: ^3.2.23
     react-spring: ^9.7.3
     react-spring-carousel: ^2.0.19
-    react-type-animation: ^3.1.0
+    react-typist: ^2.0.5
     react-webcam: ^7.1.1
     tsc-absolute: ^1.0.0
     turbo: ^1.10.1
@@ -28152,7 +28162,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.0.0, prop-types@npm:^15.5.8, prop-types@npm:^15.6.0, prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
+"prop-types@npm:^15.0.0, prop-types@npm:^15.5.10, prop-types@npm:^15.5.8, prop-types@npm:^15.6.0, prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -29391,14 +29401,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-type-animation@npm:^3.1.0":
-  version: 3.1.0
-  resolution: "react-type-animation@npm:3.1.0"
+"react-typist@npm:^2.0.5":
+  version: 2.0.5
+  resolution: "react-typist@npm:2.0.5"
+  dependencies:
+    prop-types: ^15.5.10
   peerDependencies:
-    prop-types: ^15.5.4
-    react: ">= 15.0.0"
-    react-dom: ">= 15.0.0"
-  checksum: c3a9b09c7db93528f57e7cde6dca9ad2c13250eefa3e9514bb8b30c193115f03591d4f66a2d25f37ffc77de1b54183406ed33404da83ecdbce9ee59a27959f0a
+    react: ^0.14 || ^15.0 || ^16.0
+    react-dom: "*"
+  checksum: 6f2e7f8b7c087d87df2cb84c7f80a67021c879dabb67f40feeb8e2f754c9a5bfaab44f757664388c124aec9911151e8e4eee9357789ed3f9af1e6bc5fc0e2f85
   languageName: node
   linkType: hard
 

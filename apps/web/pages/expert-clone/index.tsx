@@ -18,7 +18,7 @@ import Image from "next/image";
 import Link from "next/link";
 import MessageLoader from "pages/expert-clone/components/MessageLoader";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { TypeAnimation } from "react-type-animation";
+import Typist from "react-typist";
 
 import { BRAIN_ID, BRAIN_SERVICE } from "@calcom/lib/constants";
 import useGetBrandingColours from "@calcom/lib/getBrandColours";
@@ -136,6 +136,12 @@ export default function ExpertClone() {
   const toggleAuthMadal = (flag: boolean, sign: string) => {
     setAuthModalFlag(flag);
     setSelectedTab(sign);
+  };
+
+  const formatText = (yourText: string) => {
+    return yourText
+      .split("**")
+      .map((segment, index) => (index % 2 === 0 ? segment : <strong key={index}>{segment}</strong>));
   };
 
   const [windowWidth, setWindowWidth] = useState(0);
@@ -287,6 +293,9 @@ export default function ExpertClone() {
         //   creation_time: date
         //   user_id: string
         // }
+      })
+      .catch((e) => {
+        console.log(e);
       });
   };
 
@@ -308,9 +317,7 @@ export default function ExpertClone() {
   };
   useEffect(() => {
     answersRef?.current?.scrollIntoView({ behavior: "smooth" });
-    if (status === "authenticated") {
-      getChatHistory();
-    }
+    getChatHistory();
   }, [qaList]);
 
   const setLoading = (flag: boolean) => {
@@ -612,26 +619,26 @@ export default function ExpertClone() {
                                 {qa.loading ? (
                                   <MessageLoader />
                                 ) : (
-                                  <span className="">
-                                    <TypeAnimation
-                                      sequence={[
-                                        qa.answer,
-                                        1000,
-                                        () => {
-                                          setLoading(false);
-                                        },
-                                      ]}
-                                      wrapper="div"
-                                      speed={70}
-                                      cursor={false}
+                                  <Typist
+                                    onTypingDone={() => {
+                                      setLoading(false);
+                                    }}
+                                    stdTypingDelay={40}
+                                    cursor={{
+                                      show: false,
+                                      blink: true,
+                                      hideWhenDone: true,
+                                      hideWhenDoneDelay: 0,
+                                    }}>
+                                    <span
                                       style={{
                                         fontSize: "",
                                         display: "inline-block",
                                         whiteSpace: "pre-wrap",
-                                      }}
-                                      repeat={0}
-                                    />
-                                  </span>
+                                      }}>
+                                      {formatText(qa.answer)}
+                                    </span>
+                                  </Typist>
                                 )}
                               </div>
                             </div>
