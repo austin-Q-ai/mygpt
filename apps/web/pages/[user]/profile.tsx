@@ -4,12 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { Toaster } from "react-hot-toast";
 
-import {
-  sdkActionManager,
-  useEmbedNonStylesConfig,
-  useEmbedStyles,
-  useIsEmbed,
-} from "@calcom/embed-core/embed-iframe";
+import { useEmbedNonStylesConfig, useEmbedStyles, useIsEmbed } from "@calcom/embed-core/embed-iframe";
 import { orgDomainConfig } from "@calcom/features/ee/organizations/lib/orgDomains";
 import { EventTypeDescriptionLazy as EventTypeDescription } from "@calcom/features/eventtypes/components";
 import EmptyPage from "@calcom/features/eventtypes/components/EmptyPage";
@@ -34,6 +29,7 @@ import {
   Instagram,
   Linkedin,
   MousePointer2,
+  ArrowLeft,
 } from "@calcom/ui/components/icon";
 
 import type { inferSSRProps } from "@lib/types/inferSSRProps";
@@ -44,20 +40,27 @@ import PageWrapper from "@components/PageWrapper";
 import { ssrInit } from "@server/lib/ssr";
 
 const months = [
-  { value: 1, label: 'Jan' },
-  { value: 2, label: 'Feb' },
-  { value: 3, label: 'Mar' },
-  { value: 4, label: 'Apr' },
-  { value: 5, label: 'May' },
-  { value: 6, label: 'Jun' },
-  { value: 7, label: 'Jul' },
-  { value: 8, label: 'Aug' },
-  { value: 9, label: 'Sep' },
-  { value: 10, label: 'Oct' },
-  { value: 11, label: 'Nov' },
-  { value: 12, label: 'Dec' }
+  { value: 1, label: "Jan" },
+  { value: 2, label: "Feb" },
+  { value: 3, label: "Mar" },
+  { value: 4, label: "Apr" },
+  { value: 5, label: "May" },
+  { value: 6, label: "Jun" },
+  { value: 7, label: "Jul" },
+  { value: 8, label: "Aug" },
+  { value: 9, label: "Sep" },
+  { value: 10, label: "Oct" },
+  { value: 11, label: "Nov" },
+  { value: 12, label: "Dec" },
 ];
 
+type SocialType = {
+  telegram?: string;
+  facebook?: string;
+  discord?: string;
+  instagram?: string;
+  linkedin?: string;
+};
 export type UserPageProps = inferSSRProps<typeof getServerSideProps> & EmbedProps;
 export function UserPage(props: UserPageProps) {
   const {
@@ -71,6 +74,7 @@ export function UserPage(props: UserPageProps) {
     markdownStrippedBio,
   } = props;
   const [user] = users; //To be used when we only have a single user, not dynamic group
+  const social = (user.social as SocialType) || ({} as SocialType);
   useTheme(user.theme);
   const { t } = useLocale();
   const router = useRouter();
@@ -149,42 +153,70 @@ export function UserPage(props: UserPageProps) {
             : [{ username: `${user.username}`, name: `${user.name}` }],
         }}
       />
-
       <div className={classNames(shouldAlignCentrally ? "mx-auto" : "", isEmbed ? "max-w-3xl" : "")}>
+        <Link
+          prefetch={false}
+          href={{
+            pathname: `/${user.username}`,
+          }}
+          className="items-stat flex gap-2 p-4 text-gray-400">
+          <ArrowLeft />
+          Back
+        </Link>
         <main
           className={classNames(
             shouldAlignCentrally ? "mx-auto" : "",
-            isEmbed ? "border-booker border-booker-width  bg-default rounded-md border" : "",
-            "max-w-3xl px-4 py-24"
+            isEmbed ? "border-booker  bg-default rounded-md border" : "",
+            "max-w-4xl px-4 py-[3rem]"
           )}>
           {isSingleUser && ( // When we deal with a single user, not dynamic group
             <div className="flex flex-col justify-center">
               <div className="flex justify-center">
                 <Card
                   title=""
-                  containerProps={{ style: { width: "60%", minWidth: "410px", borderRadius: "20px" } }}
+                  containerProps={{
+                    style: {
+                      width: "60%",
+                      minWidth: "410px",
+                      marginBottom: "32px",
+                      borderRadius: "20px",
+                      padding: "1px",
+                    },
+                  }}
+                  className="!border-0"
                   variant="ProfileCard"
                   description={
-                    <div className="flex items-center">
-                      <div className="flex-grow">
-                        <Avatar imageSrc={user.avatar} size="xl" alt={nameOrUsername} />
-                      </div>
-                      <div className="items-left ms-4 flex flex-col flex-grow">
-                        <div className="text-xl">
+                    <div className="flex items-center px-10 py-4">
+                      <Avatar
+                        imageSrc={user.avatar}
+                        className="border-pink border-2"
+                        size="2xl"
+                        alt={nameOrUsername}
+                      />
+                      <div className="items-left ms-4  flex flex-grow flex-col gap-y-1">
+                        <div className="text-2xl font-bold text-black">
                           {nameOrUsername ? nameOrUsername : t("nameless")}
                           {user.verified && (
                             <Verified className=" mx-1 -mt-1 inline h-6 w-6 fill-blue-500 text-white dark:text-black" />
                           )}
                         </div>
-                        {user.position && <div className="mt-4">
-                          {user.position}
-                        </div>}
-                        {user.address && <div className="flex mt-2">
-                          <MousePointer2 className="rotate-90 transform w-4 h-4" />{user.address}
-                        </div>}
+                        {user.position && <div className=" font-medium">{user.position}</div>}
+                        {user.address && (
+                          <div className="flex font-medium">
+                            <MousePointer2 className="me-2 h-4 w-4 rotate-90 transform" fill="gray" />
+                            {user.address}
+                          </div>
+                        )}
                         <div className="mt-2 flex items-center gap-2">
                           <div>
-                            <Button color="secondary" className="rounded-full text-gray-500" variant="icon">
+                            <Button
+                              color="secondary"
+                              className="hover:border-emphasis hover:bg-subtle border-gray-600 bg-transparent text-gray-600"
+                              variant="icon"
+                              type={social.telegram ? "link" : "button"}
+                              href={social.telegram || undefined}
+                              target="_blank"
+                              rounded>
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 height="1em"
@@ -197,13 +229,24 @@ export function UserPage(props: UserPageProps) {
                           <div>
                             <Button
                               color="secondary"
+                              className="hover:border-emphasis hover:bg-subtle border-gray-600 bg-transparent text-gray-600"
+                              type={social.facebook ? "link" : "button"}
+                              href={social.facebook || undefined}
+                              target="_blank"
                               StartIcon={Facebook}
-                              className="rounded-full"
                               variant="icon"
+                              rounded
                             />
                           </div>
                           <div>
-                            <Button color="secondary" className="rounded-full" variant="icon">
+                            <Button
+                              color="secondary"
+                              className="hover:border-emphasis hover:bg-subtle border-gray-600 bg-transparent text-gray-600"
+                              type={social.discord ? "link" : "button"}
+                              href={social.discord || undefined}
+                              target="_blank"
+                              variant="icon"
+                              rounded>
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 height="1em"
@@ -215,17 +258,25 @@ export function UserPage(props: UserPageProps) {
                           </div>
                           <div>
                             <Button
+                              className="hover:border-emphasis hover:bg-subtle border-gray-600 bg-transparent text-gray-600"
                               color="secondary"
+                              type={social.instagram ? "link" : "button"}
+                              href={social.instagram || undefined}
+                              target="_blank"
                               StartIcon={Instagram}
-                              className="rounded-full"
                               variant="icon"
+                              rounded
                             />
                           </div>
                           <div>
                             <Button
+                              className="hover:border-emphasis hover:bg-subtle border-gray-600 bg-transparent text-gray-600"
+                              rounded
                               color="secondary"
+                              type={social.linkedin ? "link" : "button"}
+                              href={social.linkedin || undefined}
+                              target="_blank"
                               StartIcon={Linkedin}
-                              className="rounded-full"
                               variant="icon"
                             />
                           </div>
@@ -235,44 +286,43 @@ export function UserPage(props: UserPageProps) {
                   }
                 />
               </div>
-              <div className="mt-8">
+              <div className="mt-2">
                 <Card
                   title=""
-                  containerProps={{ style: { width: "100%", borderRadius: "20px" } }}
+                  containerProps={{ style: { width: "100%" } }}
                   variant="ProfileCard"
                   description={
                     <>
-                      <div className="mb-4 flex justify-between">
+                      <div className="mb-4 ms-4 flex justify-between">
                         <Label className="text-lg">{t("about")}</Label>
                       </div>
-                      <div className={user.bio && user.bio.length ? "m-4" : "w-[100%] text-center p-2"}>
-                        {user.bio && user.bio.length ? (
-                          user.bio
-                        ) : (
-                          t("no_data_yet")
-                        )}
+                      <div
+                        className={
+                          user.bio && user.bio.length ? "m-4 break-all" : "w-[100%] p-2 text-center"
+                        }>
+                        {user.bio && user.bio.length ? user.bio : t("no_data_yet")}
                       </div>
                     </>
                   }
                 />
               </div>
-              <div className="mt-8">
+              <div className="mt-2">
                 <Card
                   title=""
-                  containerProps={{ style: { width: "100%", borderRadius: "20px" } }}
+                  containerProps={{ style: { width: "100%" } }}
                   variant="ProfileCard"
                   description={
                     <>
-                      <div className="mb-4 flex justify-between">
+                      <div className="mb-4 ms-4 flex justify-between">
                         <Label className="text-lg">{t("skill")}</Label>
                       </div>
-                      <div className="mb-4 flex gap-2 w-[100%] overflow-x-auto">
+                      <div className="mb-4 ms-4 flex w-[100%] flex-wrap gap-2 overflow-x-auto">
                         {user.skills.length === 0 ? (
-                          <div className="w-[100%] text-center p-2">{t("no_data_yet")}</div>
+                          <div className="w-[100%] p-2 text-center">{t("no_data_yet")}</div>
                         ) : (
                           <>
                             {user.skills.map((skill, i) => (
-                              <div className="w-[100%] border border-solid border-gray-500 text-center p-2 rounded rounded-md" key={i}>
+                              <div className="w-fit  p-2 text-left" key={i}>
                                 {skill}
                               </div>
                             ))}
@@ -283,96 +333,111 @@ export function UserPage(props: UserPageProps) {
                   }
                 />
               </div>
-              <div className="mt-8 flex gap-2">
+              <div className="mt-2 flex gap-2">
                 <Card
                   title=""
-                  containerProps={{ style: { width: "50%", borderRadius: "20px" } }}
+                  containerProps={{ style: { width: "40%" } }}
                   variant="ProfileCard"
                   description={
                     <>
                       <div className="mb-4 flex justify-between">
                         <Label className="text-lg">{t("exp")}</Label>
                       </div>
-                      <div className="flex flex-col pl-4">
-                        {user.experiences.length === 0 ?
-                          (<div className="w-[100%] text-center p-2">{t("no_data_yet")}</div>) :
-                          (<>
+                      <div className="flex flex-col">
+                        {user.experiences.length === 0 ? (
+                          <div className="w-[100%] p-2 text-center">{t("no_data_yet")}</div>
+                        ) : (
+                          <>
                             {user.experiences.map((exp, i) => {
                               return (
                                 <div className="items-left mb-4 flex flex-col" key={`exp-${exp.id}`}>
                                   <div className="mb-4 flex gap-2">
-                                    <div className="mr-4">
-                                      <Avatar alt="" imageSrc="" gravatarFallbackMd5="fallback" size="sm" />
+                                    <div className="mx-2">
+                                      <Avatar
+                                        alt=""
+                                        imageSrc={exp.avatar}
+                                        gravatarFallbackMd5="fallback"
+                                        size="mdLg"
+                                        className=""
+                                      />
                                     </div>
-                                    <div className="flex flex-col justify-start">
-                                      <div className="mb-1">
+                                    <div className="flex w-full flex-col justify-start">
+                                      <div className="mb-1 text-black">
                                         <b>{exp.position}</b>
                                       </div>
-                                      <div>{exp.company}</div>
-                                      <div>{`${months[exp.startMonth - 1]['label']} ${exp.startYear} - ${months[exp.endMonth - 1]['label']} ${exp.endYear}`}</div>
-                                      {exp.address && <div>{exp.address}</div>}
+                                      <div>
+                                        <span>{exp.company}</span>
+                                        {exp.address && (
+                                          <span>
+                                            {" "}
+                                            <b>.</b> {exp.address}
+                                          </span>
+                                        )}
+                                      </div>
+                                      <div>{`${months[exp.startMonth - 1]["label"]} ${exp.startYear} - ${
+                                        months[exp.endMonth - 1]["label"]
+                                      } ${exp.endYear}`}</div>
                                     </div>
                                   </div>
-                                  <hr />
                                 </div>
                               );
                             })}
-                          </>)}
+                          </>
+                        )}
                       </div>
                     </>
                   }
                 />
                 <Card
                   title=""
-                  containerProps={{ style: { width: "50%", borderRadius: "20px" } }}
+                  containerProps={{ style: { width: "60%" } }}
                   variant="ProfileCard"
                   description={
                     <>
                       <div className="mb-4 flex justify-between">
                         <Label className="text-lg">{t("edu")}</Label>
                       </div>
-                      <div className="flex flex-col pl-4">
-                        {user.educations.length === 0 ?
-                          (<div className="w-[100%] text-center p-2">{t("no_data_yet")}</div>) :
-                          (<>
-                          {user.educations.map((edu, i) => {
-                            return (
-                              <div className="items-left mb-4 flex flex-col" key={`edu-${edu.id}`}>
-                                <div className="mb-4 flex gap-2">
-                                  <div className="mr-4">
-                                    <Avatar alt="" imageSrc="" gravatarFallbackMd5="fallback" size="sm" />
-                                  </div>
-                                  <div className="flex flex-col justify-start">
-                                    <div className="mb-1">
-                                      <b>{edu.school}</b>
+                      <div className="flex flex-col">
+                        {user.educations.length === 0 ? (
+                          <div className="w-[100%] p-2 text-center">{t("no_data_yet")}</div>
+                        ) : (
+                          <>
+                            {user.educations.map((edu, i) => {
+                              return (
+                                <div className="items-left mb-4 flex flex-col" key={`edu-${edu.id}`}>
+                                  <div className="mb-4 flex w-full gap-2">
+                                    <div className="mr-4">
+                                      <Avatar alt="" imageSrc="" gravatarFallbackMd5="fallback" size="sm" />
                                     </div>
-                                    {edu.degree && <div>{edu.degree}</div>}
-                                    <div>{`${months[edu.startMonth - 1]['label']} ${edu.startYear} - ${months[edu.endMonth - 1]['label']} ${edu.endYear}`}</div>
-                                    {edu.major && <div>{edu.major}</div>}
+                                    <div className="flex flex-col justify-start">
+                                      <div className="mb-1">
+                                        <b>{edu.school}</b>
+                                      </div>
+                                      {edu.degree && <div>{edu.degree}</div>}
+                                      <div>{`${months[edu.startMonth - 1]["label"]} ${edu.startYear} - ${
+                                        months[edu.endMonth - 1]["label"]
+                                      } ${edu.endYear}`}</div>
+                                      {edu.major && <div>{edu.major}</div>}
+                                    </div>
                                   </div>
+                                  <hr />
                                 </div>
-                                <hr />
-                              </div>
-                            );
-                          })}
-                        </>)}
+                              );
+                            })}
+                          </>
+                        )}
                       </div>
                     </>
                   }
                 />
               </div>
-              <div className="mt-8 flex justify-end">
+              <div className="mt-2 flex justify-end">
                 <Link
                   prefetch={false}
                   href={{
-                    pathname: `/${user.username}`
-                  }}
-                >
-                  <Button
-                    color="secondary"
-                    EndIcon={ArrowRight}
-                    variant="icon"
-                  >
+                    pathname: `/${user.username}`,
+                  }}>
+                  <Button color="secondary" EndIcon={ArrowRight} variant="icon">
                     {t("back")}
                   </Button>
                 </Link>
@@ -467,6 +532,7 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
       organizationId: true,
       theme: true,
       away: true,
+      social: true,
       verified: true,
       allowDynamicBooking: true,
     },
