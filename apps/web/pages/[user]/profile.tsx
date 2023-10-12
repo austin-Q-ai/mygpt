@@ -39,6 +39,9 @@ import PageWrapper from "@components/PageWrapper";
 
 import { ssrInit } from "@server/lib/ssr";
 
+const currentDate = new Date();
+const currentYear = currentDate.getFullYear();
+
 const months = [
   { value: 1, label: "Jan" },
   { value: 2, label: "Feb" },
@@ -53,6 +56,7 @@ const months = [
   { value: 11, label: "Nov" },
   { value: 12, label: "Dec" },
 ];
+const CurrentMonth = months[currentDate.getMonth()];
 
 type SocialType = {
   telegram?: string;
@@ -374,9 +378,14 @@ export function UserPage(props: UserPageProps) {
                                           </span>
                                         )}
                                       </div>
-                                      <div>{`${months[exp.startMonth - 1]["label"]} ${exp.startYear} - ${
-                                        months[exp.endMonth - 1]["label"]
-                                      } ${exp.endYear}`}</div>
+                                      <div>
+                                        {`${months[exp.startMonth - 1]["label"]} ${exp.startYear} - ${
+                                          months[exp.endMonth - 1]["label"] === CurrentMonth["label"] &&
+                                          currentYear === exp.endYear
+                                            ? "Present"
+                                            : `${months[exp.endMonth - 1]["label"]} ${exp.endYear}`
+                                        }`}
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
