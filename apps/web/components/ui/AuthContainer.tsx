@@ -351,7 +351,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
               </div>
             </div>
             <div className="mx-2 flex h-fit flex-1 flex-col justify-center sm:px-6 lg:row-span-3 lg:mx-0 lg:w-[90%] lg:justify-start">
-              <div className="mx-auto my-6 h-[60vh] flex-row md:my-0">
+              <div className="mx-auto my-6 h-fit flex-row md:my-0">
                 <div className="h-full w-full">
                   <MicroCards />
                 </div>
