@@ -1794,6 +1794,7 @@
   "requires_app": "Requires {{dependencyName}}",
   "verification_code": "Verification code",
   "can_you_try_again": "Can you try again with a different time?",
+  "not_enough_timetokens": "You don't have enough timetokens",
   "verify": "Verify",
   "timezone_info": "The timezone of the person receiving",
   "event_end_time_variable": "Event end time",
