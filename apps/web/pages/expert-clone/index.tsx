@@ -391,7 +391,7 @@ export default function ExpertClone() {
     };
   });
   return (
-    <div className="">
+    <div className="to-darkemphasis bg-gradient-to-b from-gray-100">
       <div className="h-[100vh] flex-1 bg-[url('/imgpsh_fullsize_anim.png')] bg-cover bg-no-repeat lg:!max-h-screen">
         <div
           ref={sideMenuRef}
