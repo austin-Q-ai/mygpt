@@ -108,10 +108,9 @@ const UserSettings = (props: IUserSettingsProps) => {
               setConfirmPasswordDeleteErrorMessage(data.error.message);
             }
           } else {
-            console.log(process.env.EXPERTGPT_BACKEND_HOST);
             axios
               .post(
-                `http://104.248.16.57:5050/api-key`,
+                `${process.env.NEXT_PUBLIC_BRAIN_SERVICE}/api-key`,
                 {},
                 {
                   headers: {

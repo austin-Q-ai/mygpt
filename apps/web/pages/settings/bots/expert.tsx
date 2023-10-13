@@ -11,7 +11,7 @@ const ExpertView = () => {
   const mutation = trpc.viewer.updateProfile.useMutation();
   useEffect(() => {
     axios
-      .get(`http://104.248.16.57:5050/brains/default/`, {
+      .get(`${process.env.NEXT_PUBLIC_BRAIN_SERVICE}/brains/default/`, {
         headers: {
           Authorization: `Bearer ${user?.apiKey}`,
         },
