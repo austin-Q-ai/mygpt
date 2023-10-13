@@ -51,6 +51,15 @@ const tabs: VerticalTabItemProps[] = [
     ],
   },
   {
+    name: "my_bots",
+    href: "/settings/bots",
+    icon: Key,
+    children: [
+      { name: "expert", href: "/settings/bots/expert" },
+      { name: "telegram_bot", href: "/settings/bots/telegram-bot" },
+    ],
+  },
+  {
     name: "security",
     href: "/settings/security",
     icon: Key,
@@ -180,7 +189,7 @@ const BackButtonInSidebar = ({ name }: { name: string }) => {
       className="hover:bg-subtle [&[aria-current='page']]:bg-emphasis [&[aria-current='page']]:text-emphasis group-hover:text-default text-emphasis group my-6 flex h-6 max-h-6 w-full flex-row items-center rounded-md px-3 py-2 text-sm font-medium leading-4"
       data-testid={`vertical-tab-${name}`}>
       <ArrowLeft className="h-4 w-4 stroke-[2px] ltr:mr-[10px] rtl:ml-[10px] rtl:rotate-180 md:mt-0" />
-      <Skeleton title={name} as="p" className="truncate max-w-36 min-h-4" loadingClassName="ms-3">
+      <Skeleton title={name} as="p" className="max-w-36 min-h-4 truncate" loadingClassName="ms-3">
         {name}
       </Skeleton>
     </Link>
@@ -243,7 +252,7 @@ const SettingsSidebarContainer = ({
                   )}
                   {!tab.icon && tab?.avatar && (
                     <img
-                      className="w-4 h-4 rounded-full ltr:mr-3 rtl:ml-3"
+                      className="h-4 w-4 rounded-full ltr:mr-3 rtl:ml-3"
                       src={tab?.avatar}
                       alt="User Avatar"
                     />
@@ -251,7 +260,7 @@ const SettingsSidebarContainer = ({
                   <Skeleton
                     title={tab.name}
                     as="p"
-                    className="text-sm font-medium leading-5 truncate"
+                    className="truncate text-sm font-medium leading-5"
                     loadingClassName="ms-3">
                     {t(tab.name)}
                   </Skeleton>
@@ -284,7 +293,7 @@ const SettingsSidebarContainer = ({
                     <Skeleton
                       title={tab.name}
                       as="p"
-                      className="text-sm font-medium leading-5 truncate"
+                      className="truncate text-sm font-medium leading-5"
                       loadingClassName="ms-3">
                       {t(tab.name)}
                     </Skeleton>
@@ -324,9 +333,9 @@ const SettingsSidebarContainer = ({
                               }>
                               <div className="me-3">
                                 {teamMenuState[index].teamMenuOpen ? (
-                                  <ChevronDown className="w-4 h-4" />
+                                  <ChevronDown className="h-4 w-4" />
                                 ) : (
-                                  <ChevronRight className="w-4 h-4" />
+                                  <ChevronRight className="h-4 w-4" />
                                 )}
                               </div>
                               <img
@@ -425,17 +434,17 @@ const MobileSettingsContainer = (props: { onSideContainerOpen?: () => void }) =>
 
   return (
     <>
-      <nav className="sticky top-0 z-20 flex items-center justify-between w-full py-2 border-b bg-muted border-muted sm:relative lg:hidden">
+      <nav className="bg-muted border-muted sticky top-0 z-20 flex w-full items-center justify-between border-b py-2 sm:relative lg:hidden">
         <div className="flex items-center space-x-3 ">
           <Button StartIcon={Menu} color="minimal" variant="icon" onClick={props.onSideContainerOpen}>
             <span className="sr-only">{t("show_navigation")}</span>
           </Button>
 
           <button
-            className="flex items-center px-3 py-1 space-x-2 rounded-md hover:bg-emphasis rtl:space-x-reverse"
+            className="hover:bg-emphasis flex items-center space-x-2 rounded-md px-3 py-1 rtl:space-x-reverse"
             onClick={() => router.back()}>
-            <ArrowLeft className="w-4 h-4 text-default" />
-            <p className="font-semibold text-emphasis">{t("settings")}</p>
+            <ArrowLeft className="text-default h-4 w-4" />
+            <p className="text-emphasis font-semibold">{t("settings")}</p>
           </button>
         </div>
       </nav>
@@ -484,7 +493,7 @@ export default function SettingsLayout({
           {sideContainerOpen && (
             <button
               onClick={() => setSideContainerOpen(false)}
-              className="fixed top-0 left-0 z-10 w-full h-full bg-black/50">
+              className="fixed left-0 top-0 z-10 h-full w-full bg-black/50">
               <span className="sr-only">{t("hide_navigation")}</span>
             </button>
           )}
@@ -514,8 +523,8 @@ function ShellHeader() {
   const { meta } = useMeta();
   const { t, isLocaleReady } = useLocale();
   return (
-    <header className="justify-between block pt-8 mx-auto sm:flex">
-      <div className="flex items-center w-full pb-6 mb-8 border-b border-subtle">
+    <header className="mx-auto block justify-between pt-8 sm:flex">
+      <div className="border-subtle mb-8 flex w-full items-center border-b pb-6">
         {meta.backButton && (
           <a href="javascript:history.back()">
             <ArrowLeft className="mr-7" />
@@ -523,19 +532,19 @@ function ShellHeader() {
         )}
         <div>
           {meta.title && isLocaleReady ? (
-            <h1 className="mb-1 text-xl font-bold leading-5 tracking-wide font-cal text-emphasis">
+            <h1 className="font-cal text-emphasis mb-1 text-xl font-bold leading-5 tracking-wide">
               {t(meta.title)}
             </h1>
           ) : (
-            <div className="w-24 h-5 mb-1 rounded-md bg-emphasis animate-pulse" />
+            <div className="bg-emphasis mb-1 h-5 w-24 animate-pulse rounded-md" />
           )}
           {meta.description && isLocaleReady ? (
-            <p className="text-sm text-default ltr:mr-4 rtl:ml-4">{t(meta.description)}</p>
+            <p className="text-default text-sm ltr:mr-4 rtl:ml-4">{t(meta.description)}</p>
           ) : (
-            <div className="w-32 h-5 rounded-md bg-emphasis animate-pulse" />
+            <div className="bg-emphasis h-5 w-32 animate-pulse rounded-md" />
           )}
         </div>
-        <div className="flex-shrink-0 ms-auto">{meta.CTA}</div>
+        <div className="ms-auto flex-shrink-0">{meta.CTA}</div>
       </div>
     </header>
   );

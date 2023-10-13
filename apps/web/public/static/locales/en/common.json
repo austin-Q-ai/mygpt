@@ -2142,5 +2142,12 @@
   "your_currently_plan": "Your currently plan",
   "password_is_required": "Password field is required",
   "start_date_cannot_be_after_end_date": "Start date cannot be after End date",
-  "end_date_cannot_be_before_start_date": "End date cannot be before Start date"
+  "end_date_cannot_be_before_start_date": "End date cannot be before Start date",
+  "telegram_bot": "Telegram Bot",
+  "telegram_bot_description": "Create Telegram Bot for {{appName}}",
+  "expert_clone": "Expert Clone",
+  "expert_description": "Create expert clone for {{appName}}",
+  "successfully_created": "Successfully Created",
+  "verification_email_was_sent_please_check_and_try_again": "Verification Email was sent. Please check and try again.",
+  "email_for_supabase_not_confirmed_click_resend_email_button": "Email for Supabase not confirmed, Click `Resend email` button"
 }

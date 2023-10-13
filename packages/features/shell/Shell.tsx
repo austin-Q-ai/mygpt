@@ -799,31 +799,31 @@ function SideBar({ bannersHeight, user }: SideBarProps) {
   const orgBranding = useOrgBrandingValues();
   const publicPageUrl = orgBranding?.slug ? getOrganizationUrl(orgBranding?.slug) : "";
 
-  const copyToClipboard = async(textToCopy: string) => {
-      // Navigator clipboard api needs a secure context (https)
-      if (navigator.clipboard && window.isSecureContext) {
-          await navigator.clipboard.writeText(textToCopy);
-      } else {
-          // Use the 'out of viewport hidden text area' trick
-          const textArea = document.createElement("textarea");
-          textArea.value = textToCopy;
-              
-          // Move textarea out of the viewport so it's not visible
-          textArea.style.position = "absolute";
-          textArea.style.left = "-999999px";
-              
-          document.body.prepend(textArea);
-          textArea.select();
+  const copyToClipboard = async (textToCopy: string) => {
+    // Navigator clipboard api needs a secure context (https)
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(textToCopy);
+    } else {
+      // Use the 'out of viewport hidden text area' trick
+      const textArea = document.createElement("textarea");
+      textArea.value = textToCopy;
 
-          try {
-              document.execCommand('copy');
-          } catch (error) {
-              console.error(error);
-          } finally {
-              textArea.remove();
-          }
+      // Move textarea out of the viewport so it's not visible
+      textArea.style.position = "absolute";
+      textArea.style.left = "-999999px";
+
+      document.body.prepend(textArea);
+      textArea.select();
+
+      try {
+        document.execCommand("copy");
+      } catch (error) {
+        console.error(error);
+      } finally {
+        textArea.remove();
       }
-  }
+    }
+  };
 
   const bottomNavItems: NavigationItemType[] = [
     {

@@ -289,13 +289,16 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
   }*/
 
   // update data on qdrant db
-  axios.post(`${QDRANT_URL}/collections/${COLLECTION_NAME}/points/payload`, {
-    payload: input,
-    points: [user.id],
-  }).then(res => {
-    console.log("success")
-  }).catch(err => {
-    console.log("error on saving to qdrant: ", err)
-  });
+  axios
+    .post(`${QDRANT_URL}/collections/${COLLECTION_NAME}/points/payload`, {
+      payload: input,
+      points: [user.id],
+    })
+    .then((res) => {
+      console.log("success");
+    })
+    .catch((err) => {
+      console.log("error on saving to qdrant: ", err);
+    });
   return input;
 };

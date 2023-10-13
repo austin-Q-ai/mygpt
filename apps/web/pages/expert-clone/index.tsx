@@ -1,3 +1,4 @@
+// Please replace f548cbf724beffea7fad010367134782 with ${user?.apiKey}
 import { DropdownMenuLabel } from "@radix-ui/react-dropdown-menu";
 import useResizeObserver from "@react-hook/resize-observer";
 import axios from "axios";
@@ -20,7 +21,7 @@ import MessageLoader from "pages/expert-clone/components/MessageLoader";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Typist from "react-typist";
 
-import { BRAIN_ID, BRAIN_SERVICE } from "@calcom/lib/constants";
+import { BRAIN_ID } from "@calcom/lib/constants";
 import useGetBrandingColours from "@calcom/lib/getBrandColours";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import {
@@ -184,13 +185,13 @@ export default function ExpertClone() {
     }
     axios
       .post(
-        `${BRAIN_SERVICE}/chat/${chatId}/question`,
+        `${process.env.NEXT_PUBLIC_BRAIN_SERVICE}/chat/${chatId}/question`,
         {
           question: searchText,
         },
         {
           headers: {
-            Authorization: `Bearer ${user?.apiKey}`,
+            Authorization: `Bearer f548cbf724beffea7fad010367134782`,
             "Content-Type": "application/json",
           },
           params: { brain_id: BRAIN_ID },
@@ -264,13 +265,13 @@ export default function ExpertClone() {
       // if not started new chat, create new chat
       axios
         .post(
-          `${BRAIN_SERVICE}/chat`,
+          `${process.env.NEXT_PUBLIC_BRAIN_SERVICE}/chat`,
           {
             name: searchText.split(" ").slice(0, 3).join(" "),
           },
           {
             headers: {
-              Authorization: `Bearer ${user?.apiKey}`,
+              Authorization: `Bearer f548cbf724beffea7fad010367134782`,
             },
           }
         )
@@ -296,9 +297,9 @@ export default function ExpertClone() {
 
   const getChatHistory = () => {
     axios
-      .get(`${BRAIN_SERVICE}/chat`, {
+      .get(`${process.env.NEXT_PUBLIC_BRAIN_SERVICE}/chat`, {
         headers: {
-          Authorization: `Bearer ${user?.apiKey}`,
+          Authorization: `Bearer f548cbf724beffea7fad010367134782`,
         },
       })
       .then((data) => {
@@ -322,9 +323,9 @@ export default function ExpertClone() {
   // delete chat history using chat_id
   const deleteChatHistory = (chatId: string) => {
     axios
-      .delete(`${BRAIN_SERVICE}/chat/${chatId}`, {
+      .delete(`${process.env.NEXT_PUBLIC_BRAIN_SERVICE}/chat/${chatId}`, {
         headers: {
-          Authorization: `Bearer ${user?.apiKey}`,
+          Authorization: `Bearer f548cbf724beffea7fad010367134782`,
         },
       })
       .then((data) => {
