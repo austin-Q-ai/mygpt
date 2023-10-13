@@ -29,7 +29,7 @@ import {
   Instagram,
   Linkedin,
   MousePointer2,
-  ArrowLeft,
+  ChevronLeft,
 } from "@calcom/ui/components/icon";
 
 import type { inferSSRProps } from "@lib/types/inferSSRProps";
@@ -157,14 +157,19 @@ export function UserPage(props: UserPageProps) {
             : [{ username: `${user.username}`, name: `${user.name}` }],
         }}
       />
-      <div className={classNames(shouldAlignCentrally ? "mx-auto" : "", isEmbed ? "max-w-3xl" : "")}>
+      <div
+        className={classNames(
+          shouldAlignCentrally ? "mx-auto" : "",
+          isEmbed ? "max-w-3xl" : "",
+          "h-screen bg-[url('/background.png')]"
+        )}>
         <Link
           prefetch={false}
           href={{
             pathname: `/${user.username}`,
           }}
-          className="items-stat flex gap-2 p-4 text-gray-400">
-          <ArrowLeft />
+          className="items-stat absolute flex gap-2 p-4 text-gray-500">
+          <ChevronLeft />
           Back
         </Link>
         <main
@@ -382,7 +387,16 @@ export function UserPage(props: UserPageProps) {
                                         {`${months[exp.startMonth - 1]["label"]} ${exp.startYear} - ${
                                           months[exp.endMonth - 1]["label"] === CurrentMonth["label"] &&
                                           currentYear === exp.endYear
-                                            ? "Present"
+                                            ? `Present . ${
+                                                months[exp.endMonth - 1]["value"] -
+                                                months[exp.startMonth - 1]["value"]
+                                              } Month${
+                                                months[exp.endMonth - 1]["value"] -
+                                                  months[exp.startMonth - 1]["value"] >
+                                                1
+                                                  ? "s"
+                                                  : ""
+                                              }`
                                             : `${months[exp.endMonth - 1]["label"]} ${exp.endYear}`
                                         }`}
                                       </div>
@@ -416,20 +430,21 @@ export function UserPage(props: UserPageProps) {
                                 <div className="items-left mb-4 flex flex-col" key={`edu-${edu.id}`}>
                                   <div className="mb-4 flex w-full gap-2">
                                     <div className="mr-4">
-                                      <Avatar alt="" imageSrc="" gravatarFallbackMd5="fallback" size="sm" />
+                                      <Avatar alt="" imageSrc="" gravatarFallbackMd5="fallback" size="mdLg" />
                                     </div>
                                     <div className="flex flex-col justify-start">
                                       <div className="mb-1">
                                         <b>{edu.school}</b>
                                       </div>
-                                      {edu.degree && <div>{edu.degree}</div>}
+                                      <div>
+                                        {edu.degree && <span>{edu.degree}</span>}
+                                        {edu.major && <span> in {edu.major}</span>}
+                                      </div>
                                       <div>{`${months[edu.startMonth - 1]["label"]} ${edu.startYear} - ${
                                         months[edu.endMonth - 1]["label"]
                                       } ${edu.endYear}`}</div>
-                                      {edu.major && <div>{edu.major}</div>}
                                     </div>
                                   </div>
-                                  <hr />
                                 </div>
                               );
                             })}
@@ -440,7 +455,7 @@ export function UserPage(props: UserPageProps) {
                   }
                 />
               </div>
-              <div className="mt-2 flex justify-end">
+              {/* <div className="mt-2 flex justify-end">
                 <Link
                   prefetch={false}
                   href={{
@@ -450,7 +465,7 @@ export function UserPage(props: UserPageProps) {
                     {t("back")}
                   </Button>
                 </Link>
-              </div>
+              </div> */}
             </div>
           )}
           {isEventListEmpty && <EmptyPage name={user.name ?? "User"} />}

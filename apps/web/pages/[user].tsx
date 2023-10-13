@@ -144,7 +144,12 @@ export function UserPage(props: UserPageProps) {
         }}
       />
 
-      <div className={classNames(shouldAlignCentrally ? "mx-auto" : "", isEmbed ? "max-w-3xl" : "")}>
+      <div
+        className={classNames(
+          shouldAlignCentrally ? "mx-auto" : "",
+          isEmbed ? "max-w-3xl" : "",
+          "h-screen bg-[url('/background.png')]"
+        )}>
         <main
           className={classNames(
             shouldAlignCentrally ? "mx-auto" : "",
@@ -298,10 +303,7 @@ export function UserPage(props: UserPageProps) {
                 <div
                   key={type.id}
                   style={{ display: "flex", ...eventTypeListItemEmbedStyles }}
-                  className="bg-default dark:bg-muted dark:hover:bg-emphasis hover:bg-pink/5 group relative border-b border-gray-100 first:rounded-t-md last:rounded-b-md last:border-b-0">
-                  <div className="absolute right-4 flex h-full justify-center">
-                    <ArrowRight className=" my-auto h-6 w-6 text-gray-600 opacity-0 transition-opacity group-hover:opacity-100" />
-                  </div>
+                  className="bg-default dark:bg-muted dark:hover:bg-emphasis group relative border-b border-gray-100 first:rounded-t-md last:rounded-b-md last:border-b-0 hover:bg-[#F8F4F9]">
                   {/* Don't prefetch till the time we drop the amount of javascript in [user][type] page which is impacting score for [user] page */}
                   <div className="block w-full p-5">
                     <Link
@@ -321,11 +323,9 @@ export function UserPage(props: UserPageProps) {
                         <h2 className=" text-default pr-2 text-sm font-semibold">{type.title}</h2>
                         <span className="text-sm text-gray-500">{`/${user.username}/${type.slug}`}</span>
                       </div>
-                      {type.description ? (
-                        <div className="flex flex-wrap items-center">
-                          <h2 className=" pr-2 pt-1 text-sm text-gray-500 ">{type.description}</h2>
-                        </div>
-                      ) : null}
+                      <div className="absolute right-4 flex justify-center">
+                        <ArrowRight className=" my-auto h-6 w-6 text-gray-600 opacity-0 transition-opacity group-hover:opacity-100" />
+                      </div>
                       <EventTypeDescription eventType={type} isPublic={true} />
                     </Link>
                   </div>
