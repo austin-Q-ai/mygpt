@@ -103,7 +103,9 @@ const UserSettings = (props: IUserSettingsProps) => {
           if (data.error) {
             if (data.error.message === "Email not confirmed") {
               setNotConfirmed(true);
-              setConfirmPasswordDeleteErrorMessage("Email for Supabase not confirmed, Click resend button");
+              setConfirmPasswordDeleteErrorMessage(
+                t("email_for_supabase_not_confirmed_click_resend_email_button")
+              );
             } else {
               setConfirmPasswordDeleteErrorMessage(data.error.message);
             }
@@ -270,12 +272,12 @@ const UserSettings = (props: IUserSettingsProps) => {
                 })
                 .then(() => {
                   setConfirmPasswordDeleteErrorMessage(
-                    "Verification Email was sent. Plz check and try again."
+                    t("verification_email_was_sent_please_check_and_try_again")
                   );
                 })
                 .catch((e) => setConfirmPasswordDeleteErrorMessage(e));
             }}>
-            {t("resend")}
+            {t("resend_email")}
           </Button>
         )}
       </div>

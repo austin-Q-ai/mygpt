@@ -1,3 +1,4 @@
+// Please replace f548cbf724beffea7fad010367134782 with ${user?.apiKey}
 import { DropdownMenuLabel } from "@radix-ui/react-dropdown-menu";
 import useResizeObserver from "@react-hook/resize-observer";
 import axios from "axios";
@@ -45,8 +46,6 @@ import MicroCards from "@components/microcard";
 import { footerLinks } from "@components/ui/AuthContainer";
 
 import AuthModal from "./components/AuthModal";
-
-const CREATE_BRAIN_STRING = "CREATE_BRAIN_STRING"; // not necessary actually, you can use first chat string as create brain string
 
 export function DialogContentDiv(props: JSX.IntrinsicElements["div"]) {
   <span>{props.children}</span>;
@@ -197,7 +196,7 @@ export default function ExpertClone() {
         },
         {
           headers: {
-            Authorization: `Bearer ${user?.apiKey}`,
+            Authorization: `Bearer f548cbf724beffea7fad010367134782`,
             "Content-Type": "application/json",
           },
           params: { brain_id: BRAIN_ID },
@@ -250,7 +249,7 @@ export default function ExpertClone() {
           },
           {
             headers: {
-              Authorization: `Bearer ${user?.apiKey}`,
+              Authorization: `Bearer f548cbf724beffea7fad010367134782`,
             },
           }
         )
@@ -278,7 +277,7 @@ export default function ExpertClone() {
     axios
       .get(`${process.env.NEXT_PUBLIC_BRAIN_SERVICE}/chat`, {
         headers: {
-          Authorization: `Bearer ${user?.apiKey}`,
+          Authorization: `Bearer f548cbf724beffea7fad010367134782`,
         },
       })
       .then((data) => {
@@ -304,7 +303,7 @@ export default function ExpertClone() {
     axios
       .delete(`${process.env.NEXT_PUBLIC_BRAIN_SERVICE}/chat/${chatId}`, {
         headers: {
-          Authorization: `Bearer ${user?.apiKey}`,
+          Authorization: `Bearer f548cbf724beffea7fad010367134782`,
         },
       })
       .then((data) => {
