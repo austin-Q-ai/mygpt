@@ -168,7 +168,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
       ) : (
         // <div className="bg-[url('/imgpsh_fullsize_anim.png')] bg-cover bg-no-repeat md:grid lg:!max-h-screen lg:grid-rows-[_80px_1fr_1fr_1fr_1fr_1fr_0px]">
         <div className="relative min-h-[880px] md:grid lg:!max-h-screen lg:grid-rows-[_80px_1fr_1fr_1fr_1fr_1fr_0px]">
-          <div className="absolute inset-0 bg-cover bg-no-repeat opacity-50 bg-[url('/imgpsh_fullsize_anim.png')]" />
+          <div className="absolute inset-0 bg-cover bg-no-repeat opacity-50 bg-[url('/imgpsh_fullsize_anim.png')] -z-1" />
           <div className="flex flex-row md:row-span-1">
             <div className="ms-6 flex flex-1 flex-col justify-center pt-4 sm:px-6 md:mx-6 lg:px-4">
               <HeadSeo title={props.title} description={props.description} />
