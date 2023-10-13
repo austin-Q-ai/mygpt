@@ -227,9 +227,9 @@ export default function ExpertClone() {
       searchInput.current.value = "";
     }
     axios
-      .get(`${BRAIN_SERVICE}/chat/${chatId}/history`, {
+      .get(`${process.env.NEXT_PUBLIC_BRAIN_SERVICE}/chat/${chatId}/history`, {
         headers: {
-          Authorization: `Bearer ${user?.apiKey}`,
+          Authorization: `Bearer f548cbf724beffea7fad010367134782`, // ${user?.apiKey}`,
 
           "Content-Type": "application/json",
         },
