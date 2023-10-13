@@ -166,7 +166,9 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
           </div>
         </div>
       ) : (
-        <div className="min-h-[880px] bg-[url('/imgpsh_fullsize_anim.png')] bg-cover bg-no-repeat md:grid lg:!max-h-screen lg:grid-rows-[_80px_1fr_1fr_1fr_1fr_1fr_0px]">
+        // <div className="bg-[url('/imgpsh_fullsize_anim.png')] bg-cover bg-no-repeat md:grid lg:!max-h-screen lg:grid-rows-[_80px_1fr_1fr_1fr_1fr_1fr_0px]">
+        <div className="relative min-h-[880px] md:grid lg:!max-h-screen lg:grid-rows-[_80px_1fr_1fr_1fr_1fr_1fr_0px]">
+          <div className="absolute inset-0 bg-cover bg-no-repeat opacity-50 bg-[url('/imgpsh_fullsize_anim.png')]" />
           <div className="flex flex-row md:row-span-1">
             <div className="ms-6 flex flex-1 flex-col justify-center pt-4 sm:px-6 md:mx-6 lg:px-4">
               <HeadSeo title={props.title} description={props.description} />
@@ -237,7 +239,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
               </div>
             </div>
             <div className="mx-2 flex h-fit flex-1 flex-col justify-center sm:px-6 lg:row-span-3 lg:mx-0 lg:w-[90%] lg:justify-start">
-              <div className="mx-auto my-6 h-[60vh] flex-row md:my-0">
+              <div className="mx-auto my-6 h-[65vh] flex-row md:my-0">
                 <div className="h-full w-full">
                   <MicroCards />
                 </div>
