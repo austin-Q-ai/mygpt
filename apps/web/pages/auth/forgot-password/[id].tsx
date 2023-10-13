@@ -140,7 +140,7 @@ export default function Page({ requestId, isRequestExpired, csrfToken }: Props) 
   );
 }
 
-Page.isThemeSupported = false;
+// Page.isThemeSupported = false;
 Page.PageWrapper = PageWrapper;
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context.params?.id as string;

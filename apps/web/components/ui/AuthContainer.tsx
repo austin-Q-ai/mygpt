@@ -4,14 +4,13 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { useLocale } from "@calcom/lib/hooks/useLocale";
-import { Button, Dialog, HeadSeo, DialogContent, DialogTrigger, ScrollableArea } from "@calcom/ui";
+import { Button, HeadSeo } from "@calcom/ui";
 import { LogOut, Menu, MessageSquare, Share2, X } from "@calcom/ui/components/icon";
 
 import Loader from "@components/Loader";
 import Footer from "@components/auth/Footer";
 import type { LinkProps } from "@components/auth/Footer";
 import MicroCards from "@components/microcard";
-import PriceListItem from "@components/prices/PriceListItem";
 import CarouselAvatarComponentN from "@components/ui/CarouselAvatarsComponentN";
 // import CarouselAvatars from "@components/ui/CarouselAvatars";
 // import CarouselAvatarsComponent from "@components/ui/CarouselAvatarsComponent";
@@ -207,7 +206,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
               </div>
             </div>
           </div>
-          <div className="grid lg:grid-cols-2 md:grid-cols-1">
+          <div className="grid md:grid-cols-1 lg:grid-cols-2">
             <div className="row-start-1 row-end-1 mx-auto h-fit lg:col-span-1 lg:row-span-1 lg:mx-4">
               <div
                 className={classNames(
@@ -229,7 +228,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                 </div>
               </div>
             </div>
-            <div className="hidden lg:block order-last mx-auto my-4 lg:col-start-1 lg:row-start-3 lg:mx-10 lg:mb-0">
+            <div className="order-last mx-auto my-4 hidden lg:col-start-1 lg:row-start-3 lg:mx-10 lg:mb-0 lg:block">
               <CarouselDemo />
               <div className="flex flex-row sm:justify-center lg:justify-normal">
                 <p className="mx-3 my-8 break-words text-center text-gray-500 sm:w-full sm:max-w-md  md:mt-5 lg:w-[70%] lg:max-w-[70%] lg:text-left">
@@ -238,7 +237,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
               </div>
             </div>
             <div className="mx-2 flex h-fit flex-1 flex-col justify-center sm:px-6 lg:row-span-3 lg:mx-0 lg:w-[90%] lg:justify-start">
-              <div className="mx-auto my-6 h-fit flex-row md:my-0">
+              <div className="mx-auto my-6 h-[60vh] flex-row md:my-0">
                 <div className="h-full w-full">
                   <MicroCards />
                 </div>
@@ -253,7 +252,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                 {t("more_than_25k_experts_use_myqpt")}
               </div>
             </div>
-            <div className="md:hidden block order-last mx-auto my-4 lg:col-start-1 lg:row-start-3 lg:mx-10 lg:mb-0">
+            <div className="order-last mx-auto my-4 block md:hidden lg:col-start-1 lg:row-start-3 lg:mx-10 lg:mb-0">
               <CarouselDemo />
               <div className="flex flex-row sm:justify-center lg:justify-normal">
                 <p className="mx-3 my-8 break-words text-center text-gray-500 sm:w-full sm:max-w-md  md:mt-5 lg:w-[70%] lg:max-w-[70%] lg:text-left">
