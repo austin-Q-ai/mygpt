@@ -6,7 +6,7 @@ import useIsAppEnabled from "@calcom/app-store/_utils/useIsAppEnabled";
 import type { EventTypeAppCardComponent } from "@calcom/app-store/types";
 import { WEBAPP_URL } from "@calcom/lib/constants";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
-import { Alert, TextField, Select } from "@calcom/ui";
+import { Alert } from "@calcom/ui";
 
 import { paymentOptions } from "../lib/constants";
 import type { appDataSchema } from "../zod";
@@ -45,6 +45,8 @@ const EventTypeAppCard: EventTypeAppCardComponent = function EventTypeAppCard({ 
       switchChecked={requirePayment}
       switchOnClick={(enabled) => {
         setRequirePayment(enabled);
+        if (enabled) setAppData("price", 100);
+        else setAppData("price", 0);
       }}
       description={
         <>
@@ -63,7 +65,7 @@ const EventTypeAppCard: EventTypeAppCardComponent = function EventTypeAppCard({ 
         )}
         {!recurringEventDefined && requirePayment && (
           <>
-            <div className="mt-2 block items-center justify-start sm:flex sm:space-x-2">
+            {/* <div className="mt-2 block items-center justify-start sm:flex sm:space-x-2">
               <TextField
                 label=""
                 className="h-[38px]"
@@ -95,7 +97,8 @@ const EventTypeAppCard: EventTypeAppCardComponent = function EventTypeAppCard({ 
                 className="mb-1 h-[38px] w-full"
                 isDisabled={seatsEnabled || disabled}
               />
-            </div>
+            </div> */}
+            <Alert className="mt-2" severity="info" title={t("users_must_use_timetokens")} />
             {seatsEnabled && paymentOption === "HOLD" && (
               <Alert className="mt-2" severity="warning" title={t("seats_and_no_show_fee_error")} />
             )}

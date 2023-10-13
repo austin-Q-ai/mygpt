@@ -27,7 +27,7 @@ const Header = (props: headerProps) => {
           {isAI ? (
             <Image
               className="absolute -bottom-[4px] -left-[18px]"
-              src="apps/AI-chip.png"
+              src="/apps/AI-chip.png"
               width={52}
               height={52}
               alt="AI Chip image"

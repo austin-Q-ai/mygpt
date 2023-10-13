@@ -239,6 +239,8 @@ export const updateHandler = async ({ ctx, input }: UpdateOptions) => {
     }
   }
 
+  console.log("price", input.metadata?.apps?.stripe?.price);
+
   if (input?.price || input.metadata?.apps?.stripe?.price) {
     data.price = input.price || input.metadata?.apps?.stripe?.price;
     const paymentCredential = await ctx.prisma.credential.findFirst({

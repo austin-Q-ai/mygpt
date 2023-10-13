@@ -74,6 +74,8 @@ export const ZUpdateProfileInputSchema = z.object({
   aiAdvantage: z.array(z.string()).optional(),
   timeTokenAdvantage: z.array(z.string()).optional(),
   defaultValue: z.boolean().optional(),
+  apiKey: z.string().optional(),
+  expertId: z.string().optional(),
 });
 
 export type TUpdateProfileInputSchema = z.infer<typeof ZUpdateProfileInputSchema>;

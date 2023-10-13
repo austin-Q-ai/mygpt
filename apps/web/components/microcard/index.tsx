@@ -49,6 +49,7 @@ const MicroCards: React.FC<MicroCardsProps> = (props: MicroCardsProps) => {
     // Create camera
     const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 1000);
     camera.position.z = 1000;
+    camera.position.x = 500;
 
     // Create renderer
     const renderer = new CSS3DRenderer();

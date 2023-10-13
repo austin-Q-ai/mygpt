@@ -58,7 +58,7 @@ class MyDocument extends Document<Props> {
         </Head>
 
         <body
-          className="dark:bg-darkgray-50 desktop-transparent bg-subtle antialiased"
+          className="dark:bg-darkgray-50 desktop-transparent antialiased"
           style={
             isEmbed
               ? {
