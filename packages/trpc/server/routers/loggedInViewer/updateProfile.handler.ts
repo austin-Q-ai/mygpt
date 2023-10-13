@@ -289,9 +289,13 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
   }*/
 
   // update data on qdrant db
-  await axios.post(`${QDRANT_URL}/collections/${COLLECTION_NAME}/points/payload`, {
+  axios.post(`${QDRANT_URL}/collections/${COLLECTION_NAME}/points/payload`, {
     payload: input,
     points: [user.id],
+  }).then(res => {
+    console.log("success")
+  }).catch(err => {
+    console.log("error on saving to qdrant: ", err)
   });
   return input;
 };

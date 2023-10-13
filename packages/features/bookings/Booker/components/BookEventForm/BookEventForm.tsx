@@ -400,7 +400,11 @@ const getError = (
   const error = bookingMutation.error || recurringBookingMutation.error;
 
   return error instanceof HttpError || error instanceof Error ? (
-    <>{t("can_you_try_again")}</>
+    error.message === "Not enough timetokens" ? (
+      <>{t("not_enough_timetokens")}</>
+    ) : (
+      <>{t("can_you_try_again")}</>
+    )
   ) : (
     "Unknown error"
   );

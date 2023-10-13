@@ -18,7 +18,7 @@ import Image from "next/image";
 import Link from "next/link";
 import MessageLoader from "pages/expert-clone/components/MessageLoader";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { TypeAnimation } from "react-type-animation";
+import Typist from "react-typist";
 
 import { BRAIN_ID, BRAIN_SERVICE } from "@calcom/lib/constants";
 import useGetBrandingColours from "@calcom/lib/getBrandColours";
@@ -45,8 +45,6 @@ import MicroCards from "@components/microcard";
 import { footerLinks } from "@components/ui/AuthContainer";
 
 import AuthModal from "./components/AuthModal";
-
-const CREATE_BRAIN_STRING = "CREATE_BRAIN_STRING"; // not necessary actually, you can use first chat string as create brain string
 
 export function DialogContentDiv(props: JSX.IntrinsicElements["div"]) {
   <span>{props.children}</span>;
@@ -98,10 +96,13 @@ export default function ExpertClone() {
     },
   ];
   type qaType = {
-    question: string;
+    user_message: string;
     chat_id?: string;
-    answer: string;
+    assistant: string;
+    brain_id?: string;
     loading?: boolean;
+    message_id?: string;
+    message_time?: string;
   };
 
   type historyType = {
@@ -129,6 +130,7 @@ export default function ExpertClone() {
   const answersRef = useRef<HTMLDivElement>(null);
   const endOfScrollArea = useRef<HTMLDivElement>(null);
   const [target, setTarget] = useState<HTMLDivElement | null>(null);
+  const [noLoadingEdit, setNoLoadingEdit] = useState("");
   const size = useSize(target);
   useEffect(() => {
     endOfScrollArea?.current?.scrollIntoView({ behavior: "smooth" });
@@ -136,6 +138,12 @@ export default function ExpertClone() {
   const toggleAuthMadal = (flag: boolean, sign: string) => {
     setAuthModalFlag(flag);
     setSelectedTab(sign);
+  };
+
+  const formatText = (yourText: string) => {
+    return yourText
+      .split("**")
+      .map((segment, index) => (index % 2 === 0 ? segment : <strong key={index}>{segment}</strong>));
   };
 
   const [windowWidth, setWindowWidth] = useState(0);
@@ -156,30 +164,21 @@ export default function ExpertClone() {
   // current chat id
   const [currentChatId, setCurrentChatId] = useState("");
 
-  const handleChat = (chatId: string, edit?: boolean) => {
-    if (!edit) {
-      if (qaList.length > 0) {
-        setQaList([
-          ...qaList,
-          {
-            question: searchText,
-            chat_id: currentChatId,
-            answer: "",
-            loading: true,
-          },
-        ]);
-      } else {
-        setQaList([
-          ...qaList,
-          {
-            question: searchText,
-            chat_id: "",
-            answer: "",
-            loading: true,
-          },
-        ]);
-      }
-    }
+  const handleChat = (chatId: string) => {
+    setNoLoadingEdit("");
+    setQaList([
+      ...qaList,
+      {
+        user_message: searchText,
+        chat_id: currentChatId,
+        assistant: "",
+        loading: true,
+        brain_id: "",
+        message_id: "",
+        message_time: "",
+      },
+    ]);
+
     if (searchInput.current) {
       searchInput.current.value = "";
     }
@@ -202,27 +201,54 @@ export default function ExpertClone() {
         if (searchInput.current) {
           searchInput.current.value = "";
         }
+        setNoLoadingEdit(data.data.message_id);
+
         data.data.chat_id
-          ? edit
-            ? setQaList([
-                {
-                  question: data.data.user_message,
-                  chat_id: data.data.chat_id,
-                  answer: data.data.assistant,
-                  loading: false,
-                },
-              ])
-            : setQaList([
-                ...qaList,
-                {
-                  question: searchText,
-                  chat_id: data.data.chat_id,
-                  answer: data.data.assistant,
-                  loading: false,
-                },
-              ])
+          ? setQaList([
+              ...qaList,
+              {
+                user_message: data.data.user_message,
+                chat_id: data.data.chat_id,
+                assistant: data.data.assistant,
+                loading: false,
+                brain_id: data.data.brain_id,
+                message_id: data.data.message_id,
+                message_time: data.data.message_time,
+              },
+            ])
           : null;
         setHistoryEdit("");
+      });
+  };
+
+  const handleChatHistory = (chatId: string) => {
+    if (searchInput.current) {
+      searchInput.current.value = "";
+    }
+    axios
+      .get(`${BRAIN_SERVICE}/chat/${chatId}/history`, {
+        headers: {
+          Authorization: `Bearer ${user?.apiKey}`,
+
+          "Content-Type": "application/json",
+        },
+      })
+      .then((data) => {
+        setSearchText("");
+        if (searchInput.current) {
+          searchInput.current.value = "";
+        }
+        const response = [...data.data].map((item) => {
+          item.loading = false;
+          return item;
+        });
+        console.log(response);
+        setQaList(response);
+        setHistoryEdit("");
+        setLoading(false);
+      })
+      .catch((e) => {
+        console.log(e);
       });
   };
 
@@ -287,6 +313,9 @@ export default function ExpertClone() {
         //   creation_time: date
         //   user_id: string
         // }
+      })
+      .catch((e) => {
+        console.log(e);
       });
   };
 
@@ -308,9 +337,8 @@ export default function ExpertClone() {
   };
   useEffect(() => {
     answersRef?.current?.scrollIntoView({ behavior: "smooth" });
-    if (status === "authenticated") {
-      getChatHistory();
-    }
+    console.log(answersRef.current);
+    getChatHistory();
   }, [qaList]);
 
   const setLoading = (flag: boolean) => {
@@ -335,12 +363,14 @@ export default function ExpertClone() {
     deleteChatHistory(item.chat_id);
   };
   const editHistoryItem = (item: historyType) => {
+    setNoLoadingEdit("none");
     setHistoryEdit(item.chat_id);
     setCurrentChatId(item.chat_id);
     setLoading(true);
     setToggleSideMenu(false);
     setQaList([]);
-    handleChat(item.chat_id, true);
+    // handleChat(item.chat_id, true);
+    handleChatHistory(item.chat_id);
   };
   const checkIfAuthenticated = () => {
     if (status !== "authenticated") {
@@ -583,7 +613,7 @@ export default function ExpertClone() {
                         return (
                           <div
                             className="mb-6 py-2"
-                            key={index}
+                            key={qa.message_id}
                             ref={index === qaList.length - 1 ? answersRef : null}>
                             <div className="text-secondary mx-3 my-auto flex flex-row font-bold md:mx-6">
                               <div>
@@ -594,7 +624,7 @@ export default function ExpertClone() {
                                   className="border-subtle bg-brand-default rounded-md border p-2"
                                 />
                               </div>
-                              <div className="my-auto ms-6">{qa.question}</div>
+                              <div className="my-auto ms-6">{qa.user_message}</div>
                             </div>
                             <div className="text-secondary mx-3 my-auto mt-4 flex flex-row font-medium md:mx-6">
                               <Image
@@ -611,27 +641,36 @@ export default function ExpertClone() {
                                 ref={index === qaList.length - 1 ? setTarget : undefined}>
                                 {qa.loading ? (
                                   <MessageLoader />
+                                ) : noLoadingEdit !== qa.message_id ? (
+                                  <span
+                                    style={{
+                                      fontSize: "",
+                                      display: "inline-block",
+                                      whiteSpace: "pre-wrap",
+                                    }}>
+                                    {formatText(qa.assistant)}
+                                  </span>
                                 ) : (
-                                  <span className="">
-                                    <TypeAnimation
-                                      sequence={[
-                                        qa.answer,
-                                        1000,
-                                        () => {
-                                          setLoading(false);
-                                        },
-                                      ]}
-                                      wrapper="div"
-                                      speed={70}
-                                      cursor={false}
+                                  <Typist
+                                    onTypingDone={() => {
+                                      setLoading(false);
+                                    }}
+                                    stdTypingDelay={25}
+                                    cursor={{
+                                      show: false,
+                                      blink: true,
+                                      hideWhenDone: true,
+                                      hideWhenDoneDelay: 0,
+                                    }}>
+                                    <span
                                       style={{
                                         fontSize: "",
                                         display: "inline-block",
                                         whiteSpace: "pre-wrap",
-                                      }}
-                                      repeat={0}
-                                    />
-                                  </span>
+                                      }}>
+                                      {formatText(qa.assistant)}
+                                    </span>
+                                  </Typist>
                                 )}
                               </div>
                             </div>
