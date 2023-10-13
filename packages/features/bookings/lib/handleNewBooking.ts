@@ -1734,50 +1734,68 @@ async function handler(
   const isConfirmedByDefault = (!requiresConfirmation && !paymentAppData.price) || userReschedulingIsOwner;
 
   async function payWithTimeTokens() {
-    const [emitter] = eventType.users;
+    if (typeof paymentAppData.price === "number" && paymentAppData.price > 0) {
+      const [emitter] = eventType.users;
 
-    const wallet = await prisma.timeTokensWallet.findFirst({
-      where: {
-        emitterId: emitter.id,
-        ownerId: userId,
-      },
-      select: {
-        id: true,
-        amount: true,
-      },
-    });
-
-    if (!wallet) return false;
-
-    const requiredTimeTokens = Math.ceil(
-      (dayjs.utc(evt.endTime).unix() * 1000 - dayjs.utc(evt.startTime).unix() * 1000) / 60000 / 5
-    );
-
-    if (wallet?.amount < requiredTimeTokens) return false;
-
-    await prisma.timeTokensWallet.update({
-      where: {
-        id: wallet?.id,
-      },
-      data: {
-        amount: {
-          decrement: requiredTimeTokens,
+      const wallet = await prisma.timeTokensWallet.findFirst({
+        where: {
+          emitterId: emitter.id,
+          ownerId: userId,
         },
-      },
-    });
+        select: {
+          id: true,
+          amount: true,
+        },
+      });
 
-    return true;
+      if (!wallet)
+        return {
+          paid: false,
+          requirePayment: true,
+        };
+
+      const requiredTimeTokens = Math.ceil(
+        (dayjs.utc(evt.endTime).unix() * 1000 - dayjs.utc(evt.startTime).unix() * 1000) / 60000 / 5
+      );
+
+      if (wallet?.amount < requiredTimeTokens)
+        return {
+          paid: false,
+          requirePayment: true,
+        };
+
+      await prisma.timeTokensWallet.update({
+        where: {
+          id: wallet?.id,
+        },
+        data: {
+          amount: {
+            decrement: requiredTimeTokens,
+          },
+        },
+      });
+
+      return {
+        paid: true,
+        requirePayment: true,
+      };
+    } else
+      return {
+        paid: false,
+        requirePayment: false,
+      };
   }
 
   async function createBooking() {
+    let paid, requirePayment;
     if (originalRescheduledBooking) {
       evt.title = originalRescheduledBooking?.title || evt.title;
       evt.description = originalRescheduledBooking?.description || evt.description;
       evt.location = originalRescheduledBooking?.location || evt.location;
     } else {
-      const isPaid = await payWithTimeTokens();
+      ({ paid, requirePayment } = await payWithTimeTokens());
 
-      if (!isPaid) throw new Error("Not enough timetokens");
+      if (!paid && requirePayment) throw new Error("Not enough timetokens");
     }
 
     const eventTypeRel = !eventTypeId
@@ -1837,7 +1855,7 @@ async function handler(
           data: attendeesData,
         },
       },
-      paid: true,
+      paid: paid,
       dynamicEventSlugRef,
       dynamicGroupSlugRef,
       user: {
