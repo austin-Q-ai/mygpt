@@ -44,7 +44,6 @@ import {
   Input,
 } from "@calcom/ui";
 import {
-  AlertTriangle,
   Trash2,
   Edit2,
   Facebook,
@@ -379,7 +378,7 @@ const ProfileView = () => {
             title={t("confirm_password")}
             description={t("confirm_password_change_email")}
             type="creation"
-            Icon={AlertTriangle}>
+            Icon={X}>
             <div className="mb-10">
               <PasswordField
                 data-testid="password"
@@ -570,7 +569,7 @@ const ProfileForm = ({
       !editableHeader
     ) {
       setEditableHeader(!editableHeader);
-      setShowErrorInHeader(true);
+      setShowErrorInHeader(false);
     } else {
       setEditableHeader(!editableHeader);
       setShowErrorInHeader(false);
@@ -596,7 +595,7 @@ const ProfileForm = ({
                 variant="ProfileCard"
                 description={
                   <div className="flex flex-col items-start justify-between md:flex-row">
-                    <div className="flex w-full justify-between md:w-auto md:justify-normal">
+                    <div className="mb-10 flex w-full justify-between md:mb-0 md:w-auto md:justify-normal">
                       {!editableHeader ? (
                         <Avatar
                           alt=""
@@ -644,7 +643,11 @@ const ProfileForm = ({
                             </p>
                           ) : (
                             <>
-                              <TextField label={`${t("full_name")}*`} {...formMethods.register("name")} />
+                              <TextField
+                                required
+                                label={`${t("full_name")}*`}
+                                {...formMethods.register("name")}
+                              />
                               {showErrorInHeader && !formMethods.getValues("name") && (
                                 <Alert
                                   key="error_full_name_required"
@@ -663,7 +666,11 @@ const ProfileForm = ({
                             <>{defaultValues.position}</>
                           ) : (
                             <>
-                              <TextField label={`${t("position")}*`} {...formMethods.register("position")} />
+                              <TextField
+                                required
+                                label={`${t("position")}*`}
+                                {...formMethods.register("position")}
+                              />
                               {showErrorInHeader && !formMethods.getValues("position") && (
                                 <Alert
                                   key="error_current_position_required"
@@ -687,7 +694,11 @@ const ProfileForm = ({
                             </>
                           ) : (
                             <>
-                              <TextField label={`${t("address")}*`} {...formMethods.register("address")} />
+                              <TextField
+                                required
+                                label={`${t("address")}*`}
+                                {...formMethods.register("address")}
+                              />
                               {showErrorInHeader && !formMethods.getValues("address") && (
                                 <Alert
                                   className="mb-2"
@@ -708,7 +719,7 @@ const ProfileForm = ({
                           <div className={!editableHeader ? "" : "flex w-full flex-row items-center gap-2"}>
                             <Button
                               color="secondary"
-                              className="rounded-full border-gray-700 bg-transparent md:rounded-full"
+                              className="mb-2 rounded-full border-gray-700 bg-transparent md:rounded-full"
                               type={social.telegram ? "link" : "button"}
                               href={social.telegram || undefined}
                               target="_blank"
@@ -744,7 +755,7 @@ const ProfileForm = ({
                               type={social.facebook ? "link" : "button"}
                               href={social.facebook || undefined}
                               target="_blank"
-                              className="rounded-full border-gray-700 bg-transparent md:rounded-full"
+                              className="mb-2 rounded-full border-gray-700 bg-transparent md:rounded-full"
                               variant="icon"
                             />
                             <TextField
@@ -768,7 +779,7 @@ const ProfileForm = ({
                               type={social.discord ? "link" : "button"}
                               href={social.discord || undefined}
                               target="_blank"
-                              className="rounded-full border-gray-700 bg-transparent md:rounded-full"
+                              className="mb-2 rounded-full border-gray-700 bg-transparent md:rounded-full"
                               variant="icon">
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -800,7 +811,7 @@ const ProfileForm = ({
                               href={social.instagram || undefined}
                               target="_blank"
                               StartIcon={Instagram}
-                              className="rounded-full border-gray-700 bg-transparent md:rounded-full"
+                              className="mb-2 rounded-full border-gray-700 bg-transparent md:rounded-full"
                               variant="icon"
                             />
                             <TextField
@@ -825,7 +836,7 @@ const ProfileForm = ({
                               href={social.linkedin || undefined}
                               target="_blank"
                               StartIcon={Linkedin}
-                              className="rounded-full border-gray-700 bg-transparent md:rounded-full"
+                              className="mb-2 rounded-full border-gray-700 bg-transparent md:rounded-full"
                               variant="icon"
                             />
                             <TextField
@@ -1532,7 +1543,7 @@ const ProfileForm = ({
           title={indexEdu === -1 ? t("add_edu") : t("change_edu")}
           description={t("enter_edu")}
           type="creation"
-          Icon={AlertTriangle}>
+          Icon={X}>
           <div className="mb-10">
             <TextField
               className="mb-2"
@@ -1564,6 +1575,8 @@ const ProfileForm = ({
                   onChange={(e) => {
                     if (e && (startYearEdu < endYearEdu || e.value <= endMonthEdu)) {
                       setStartMonthEdu(e.value);
+                    } else {
+                      showToast(t("start_date_cannot_be_after_end_date"), "error");
                     }
                   }}
                 />
@@ -1586,6 +1599,8 @@ const ProfileForm = ({
                       (e.value < endYearEdu || (e.value === endYearEdu && startMonthEdu <= endMonthEdu))
                     ) {
                       setStartYearEdu(e.value);
+                    } else {
+                      showToast(t("start_date_cannot_be_after_end_date"), "error");
                     }
                   }}
                 />
@@ -1600,6 +1615,8 @@ const ProfileForm = ({
                       if (!(endYearEdu === new Date().getFullYear() && e.value > new Date().getMonth() + 1)) {
                         setEndMonthEdu(e.value);
                       }
+                    } else {
+                      showToast(t("end_date_cannot_be_before_start_date"), "error");
                     }
                   }}
                 />
@@ -1622,6 +1639,8 @@ const ProfileForm = ({
                       (e.value > startYearEdu || (e.value === startYearEdu && startMonthEdu <= endMonthEdu))
                     ) {
                       setEndYearEdu(e.value);
+                    } else {
+                      showToast(t("end_date_cannot_be_before_start_date"), "error");
                     }
                   }}
                 />

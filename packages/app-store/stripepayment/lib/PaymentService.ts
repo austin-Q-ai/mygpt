@@ -152,7 +152,7 @@ export class PaymentService implements IAbstractPaymentService {
 
       const params: Stripe.PaymentIntentCreateParams = {
         amount: amount,
-        application_fee_amount: amount * 0.1,
+        application_fee_amount: paymentFee,
         currency: this.credentials?.default_currency || "eur",
         payment_method_types: ["card"],
         customer: customer.id,

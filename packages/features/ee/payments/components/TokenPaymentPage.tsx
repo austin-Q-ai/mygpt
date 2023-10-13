@@ -8,7 +8,7 @@ import { APP_NAME } from "@calcom/lib/constants";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { CreditCard } from "@calcom/ui/components/icon";
 
-import type { PaymentPageProps } from "../pages/payment";
+import type { PaymentPageProps } from "../pages/b/payment";
 import TokenPaymentComponent from "./TokenPayment";
 
 const TokenPaymentPage: FC<PaymentPageProps> = (props) => {
@@ -35,6 +35,7 @@ const TokenPaymentPage: FC<PaymentPageProps> = (props) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEmbed]);
+  console.log(props);
 
   return (
     <div className="h-screen">
@@ -70,7 +71,7 @@ const TokenPaymentPage: FC<PaymentPageProps> = (props) => {
                     </h3>
                     <div className="text-default mt-4 grid grid-cols-3 border-b border-t py-4 text-left dark:border-gray-900 dark:text-gray-300">
                       <div className="font-medium">{t("expert")}</div>
-                      <div className="col-span-2 mb-6">{props.payment.wallet?.emitter?.username}</div>
+                      <div className="col-span-2 mb-6">{props.payment.wallet?.emitter?.name}</div>
                       <div className="font-medium">{t("token_price")}</div>
                       <div className="col-span-2 mb-6">
                         {props.payment.wallet?.emitter.price[props.payment.wallet?.emitter.price.length - 1]}
