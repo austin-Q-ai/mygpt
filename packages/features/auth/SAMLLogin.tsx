@@ -38,7 +38,7 @@ export function SAMLLogin({ samlTenantID, samlProductID, setErrorMessage }: Prop
       color="secondary"
       data-testid="saml"
       className="flex w-full justify-center"
-      onClick={async (event) => {
+      onClick={async (event: any) => {
         event.preventDefault();
 
         if (!HOSTED_CAL_FEATURES) {

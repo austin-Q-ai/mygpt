@@ -26,6 +26,8 @@ const userSelect = Prisma.validator<Prisma.UserSelect>()({
   id: true,
   username: true,
   name: true,
+  price: true,
+  currency: true,
 });
 
 const eventTypeSelect = Prisma.validator<Prisma.EventTypeSelect>()({
@@ -48,6 +50,12 @@ const eventTypeSelect = Prisma.validator<Prisma.EventTypeSelect>()({
   metadata: true,
   users: {
     select: userSelect,
+  },
+  owner: {
+    select: {
+      price: true,
+      currency: true,
+    },
   },
   children: {
     include: {

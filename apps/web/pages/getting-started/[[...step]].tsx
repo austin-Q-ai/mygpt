@@ -167,7 +167,7 @@ const OnboardingPage = () => {
                 <Button
                   color="minimal"
                   data-testid="skip-step"
-                  onClick={(event) => {
+                  onClick={(event: any) => {
                     event.preventDefault();
                     goToIndex(currentStepIndex + 1);
                   }}

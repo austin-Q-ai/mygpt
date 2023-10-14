@@ -41,6 +41,7 @@ export const EventTypeDescription = ({
 
   const paymentAppData = getPaymentAppData(eventType);
   const tokenPrice = eventType.owner?.price[eventType.owner?.price.length - 1];
+  const currency = eventType.owner?.currency;
 
   console.log(eventType, "===");
 
@@ -101,7 +102,7 @@ export const EventTypeDescription = ({
               <Badge variant="pink" startIcon={CreditCard}>
                 {new Intl.NumberFormat(i18n.language, {
                   style: "currency",
-                  currency: paymentAppData.currency,
+                  currency: currency,
                 }).format(tokenPrice)}
                 (1 TimeToken)
               </Badge>

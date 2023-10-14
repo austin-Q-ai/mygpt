@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/router";
+import type { ChangeEvent } from "react";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Toaster } from "react-hot-toast";
@@ -85,7 +86,7 @@ export default function SendgridSetup() {
                         disabled={testPassed === true}
                         name="api_key"
                         placeholder="SG.xxxxxx..."
-                        onChange={async (e) => {
+                        onChange={async (e: ChangeEvent<HTMLInputElement>) => {
                           onChange(e.target.value);
                           form.setValue("api_key", e.target.value);
                           await form.trigger("api_key");

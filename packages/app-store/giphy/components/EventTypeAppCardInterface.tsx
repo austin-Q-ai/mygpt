@@ -21,7 +21,7 @@ const EventTypeAppCard: EventTypeAppCardComponent = function EventTypeAppCard({ 
       description={t("confirmation_page_gif")}
       disableSwitch={disabled}
       LockedIcon={LockedIcon}
-      switchOnClick={(e) => {
+      switchOnClick={(e: any) => {
         setShowGifSelection(e);
       }}
       switchChecked={showGifSelection}

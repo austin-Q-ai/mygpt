@@ -30,6 +30,7 @@ import {
 import { Plus } from "@calcom/ui/components/icon";
 
 import { withQuery } from "@lib/QueryCell";
+import type { HttpError } from "@lib/core/http/error";
 
 import PageWrapper from "@components/PageWrapper";
 import CustomExpertTable from "@components/timetokens-wallet/CustomExpertTable";
@@ -174,6 +175,11 @@ function TimeTokensWallet() {
         );
       }
     },
+    onError: (error: HttpError) => {
+      if (error?.message === "Missing payment credentials") {
+        showToast(t("not_able_recieve_payment"), "error");
+      }
+    },
   });
 
   const addExpert = () => {
@@ -270,7 +276,7 @@ function TimeTokensWallet() {
     mutation.mutate({
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      price: parseInt(values.price),
+      price: parseFloat(values.price),
     });
   };
 
@@ -348,6 +354,7 @@ function TimeTokensWallet() {
                           addOnLeading={user.currency.toUpperCase() || "EUR"}
                           {...formMethods.register("price")}
                           type="number"
+                          step="0.01"
                         />
                       </>
                     )}

@@ -204,10 +204,22 @@ export default function ImageUploader({
             size="xl"
             className="border-pink border-2 border-solid bg-white"
           />
-        ) : (
+        ) : buttonMsg ? (
           <Button color="secondary" className="rounded-full " variant="icon">
             {buttonMsg}
           </Button>
+        ) : (
+          <div className="mt-8">
+            <Button color="minimal" className="rounded-full hover:bg-transparent" rounded variant="icon">
+              <Avatar
+                alt=""
+                imageSrc=""
+                gravatarFallbackMd5="fallback"
+                size="xl"
+                className="border-pink border-2 border-solid bg-white"
+              />
+            </Button>
+          </div>
         )}
       </DialogTrigger>
       <DialogContent>

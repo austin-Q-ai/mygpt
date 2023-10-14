@@ -3,6 +3,7 @@ import { cva } from "class-variance-authority";
 import type { LinkProps } from "next/link";
 import Link from "next/link";
 import React, { forwardRef } from "react";
+import type { UrlObject } from "url";
 
 import classNames from "@calcom/lib/classNames";
 import type { SVGComponent } from "@calcom/types/SVGComponent";
@@ -29,9 +30,13 @@ export type ButtonBaseProps = {
     color?: ButtonColor;
   };
 
+interface ButtonLinkProps extends Omit<LinkProps, "href"> {
+  href?: string | UrlObject;
+}
+
 export type ButtonProps = ButtonBaseProps &
   (
-    | (Omit<JSX.IntrinsicElements["a"], "href" | "onClick" | "ref"> & LinkProps)
+    | (Omit<JSX.IntrinsicElements["a"], "href" | "onClick" | "ref"> & ButtonLinkProps)
     | (Omit<JSX.IntrinsicElements["button"], "onClick" | "ref"> & { href?: never })
   );
 

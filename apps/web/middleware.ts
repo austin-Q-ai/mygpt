@@ -11,10 +11,20 @@ const middleware: NextMiddleware = async (req) => {
   const url = req.nextUrl;
   const requestHeaders = new Headers(req.headers);
 
+  // console.log("middleware url:", url)
+
   if (isIpInBanlist(req) && url.pathname !== "/api/nope") {
     // DDOS Prevention: Immediately end request with no response - Avoids a redirect as well initiated by NextAuth on invalid callback
     req.nextUrl.pathname = "/api/nope";
     return NextResponse.redirect(req.nextUrl);
+  }
+
+  if (url.pathname.startsWith("/expert-clone")){
+    const temp = url.pathname.split("/")
+    if (temp.length == 3 && temp[2]) {
+      // we have to transfer temp[2] to expert-clone page, temp[2] might be username
+      return NextResponse.redirect(`${url.origin}/expert-clone`)
+    }
   }
 
   if (!url.pathname.startsWith("/api")) {

@@ -283,7 +283,7 @@ export default function MemberListItem(props: Props) {
         <Dialog open={showImpersonateModal} onOpenChange={() => setShowImpersonateModal(false)}>
           <DialogContent type="creation" title={t("impersonate")} description={t("impersonation_user_tip")}>
             <form
-              onSubmit={async (e) => {
+              onSubmit={async (e: any) => {
                 e.preventDefault();
                 await signIn("impersonation-auth", {
                   username: props.member.username || props.member.email,

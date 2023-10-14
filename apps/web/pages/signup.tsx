@@ -282,5 +282,5 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   };
 };
 
-Signup.isThemeSupported = false;
+// Signup.isThemeSupported = false;
 Signup.PageWrapper = PageWrapper;

@@ -1628,6 +1628,8 @@ async function handler(
 
       const foundBooking = await findBookingQuery(booking.id);
 
+      console.log("I am here - 1");
+
       if (!Number.isNaN(paymentAppData.price) && paymentAppData.price > 0 && !!booking) {
         const credentialPaymentAppCategories = await prisma.credential.findMany({
           where: {
@@ -1662,8 +1664,6 @@ async function handler(
         if (!eventTypePaymentAppCredential?.appId) {
           throw new HttpError({ statusCode: 400, message: "Missing payment app id" });
         }
-
-        console.log(eventTypePaymentAppCredential);
 
         // const payment = await handlePayment(
         //   evt,
@@ -1733,11 +1733,69 @@ async function handler(
   const userReschedulingIsOwner = userId && originalRescheduledBooking?.user?.id === userId;
   const isConfirmedByDefault = (!requiresConfirmation && !paymentAppData.price) || userReschedulingIsOwner;
 
+  async function payWithTimeTokens() {
+    if (typeof paymentAppData.price === "number" && paymentAppData.price > 0) {
+      const [emitter] = eventType.users;
+
+      const wallet = await prisma.timeTokensWallet.findFirst({
+        where: {
+          emitterId: emitter.id,
+          ownerId: userId,
+        },
+        select: {
+          id: true,
+          amount: true,
+        },
+      });
+
+      if (!wallet)
+        return {
+          paid: false,
+          requirePayment: true,
+        };
+
+      const requiredTimeTokens = Math.ceil(
+        (dayjs.utc(evt.endTime).unix() * 1000 - dayjs.utc(evt.startTime).unix() * 1000) / 60000 / 5
+      );
+
+      if (wallet?.amount < requiredTimeTokens)
+        return {
+          paid: false,
+          requirePayment: true,
+        };
+
+      await prisma.timeTokensWallet.update({
+        where: {
+          id: wallet?.id,
+        },
+        data: {
+          amount: {
+            decrement: requiredTimeTokens,
+          },
+        },
+      });
+
+      return {
+        paid: true,
+        requirePayment: true,
+      };
+    } else
+      return {
+        paid: false,
+        requirePayment: false,
+      };
+  }
+
   async function createBooking() {
+    let paid, requirePayment;
     if (originalRescheduledBooking) {
       evt.title = originalRescheduledBooking?.title || evt.title;
       evt.description = originalRescheduledBooking?.description || evt.description;
       evt.location = originalRescheduledBooking?.location || evt.location;
+    } else {
+      ({ paid, requirePayment } = await payWithTimeTokens());
+
+      if (!paid && requirePayment) throw new Error("Not enough timetokens");
     }
 
     const eventTypeRel = !eventTypeId
@@ -1797,6 +1855,7 @@ async function handler(
           data: attendeesData,
         },
       },
+      paid: paid,
       dynamicEventSlugRef,
       dynamicGroupSlugRef,
       user: {
@@ -1922,6 +1981,7 @@ async function handler(
     }
   } catch (_err) {
     const err = getErrorFromUnknown(_err);
+    console.log(err, "===================");
     log.error(`Booking ${eventTypeId} failed`, "Error when saving booking to db", err.message);
     if (err.code === "P2002") {
       throw new HttpError({ statusCode: 409, message: "booking.conflict" });
@@ -2166,6 +2226,8 @@ async function handler(
     }
   }
 
+  console.log("I am here - 2", originalRescheduledBooking, booking);
+
   const bookingRequiresPayment =
     !Number.isNaN(paymentAppData.price) &&
     paymentAppData.price > 0 &&
@@ -2209,7 +2271,7 @@ async function handler(
 
     // Convert type of eventTypePaymentAppCredential to appId: EventTypeAppList
     if (!booking.user) booking.user = organizerUser;
-    console.log(eventTypePaymentAppCredential);
+
     // const payment = await handlePayment(
     //   evt,
     //   eventType,

@@ -1,3 +1,4 @@
+import type { ChangeEvent } from "react";
 import { useState } from "react";
 
 import { useLocale } from "@calcom/lib/hooks/useLocale";
@@ -13,7 +14,7 @@ export default function AppSettings() {
         placeholder="Some Input"
         value={input}
         name="Enter Input"
-        onChange={async (e) => {
+        onChange={async (e: ChangeEvent<HTMLInputElement>) => {
           setInput(e.target.value);
         }}
       />

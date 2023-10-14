@@ -44,7 +44,6 @@ import {
   Input,
 } from "@calcom/ui";
 import {
-  AlertTriangle,
   Trash2,
   Edit2,
   Facebook,
@@ -235,6 +234,7 @@ const ProfileView = () => {
   const errorMessages: { [key: string]: string } = {
     [ErrorCode.SecondFactorRequired]: t("2fa_enabled_instructions"),
     [ErrorCode.IncorrectPassword]: `${t("incorrect_password")} ${t("please_try_again")}`,
+    [ErrorCode.PasswordIsRequired]: `${t("password_is_required")}, ${t("please_try_again")}`,
     [ErrorCode.UserNotFound]: t("no_account_exists"),
     [ErrorCode.IncorrectTwoFactorCode]: `${t("incorrect_2fa_code")} ${t("please_try_again")}`,
     [ErrorCode.InternalServerError]: `${t("something_went_wrong")} ${t("please_try_again_and_contact_us")}`,
@@ -333,7 +333,7 @@ const ProfileView = () => {
             title={t("delete_account_modal_title")}
             description={t("confirm_delete_account_modal", { appName: APP_NAME })}
             type="creation"
-            Icon={AlertTriangle}>
+            Icon={X}>
             <>
               <div className="mb-10">
                 <p className="text-default mb-4">
@@ -364,7 +364,7 @@ const ProfileView = () => {
                 <Button
                   color="primary"
                   data-testid="delete-account-confirm"
-                  onClick={(e) => onConfirmButton(e)}>
+                  onClick={(e: any) => onConfirmButton(e)}>
                   {t("delete_my_account")}
                 </Button>
               </DialogFooter>
@@ -378,7 +378,7 @@ const ProfileView = () => {
             title={t("confirm_password")}
             description={t("confirm_password_change_email")}
             type="creation"
-            Icon={AlertTriangle}>
+            Icon={X}>
             <div className="mb-10">
               <PasswordField
                 data-testid="password"
@@ -393,7 +393,7 @@ const ProfileView = () => {
               {confirmPasswordErrorMessage && <Alert severity="error" title={confirmPasswordErrorMessage} />}
             </div>
             <DialogFooter showDivider>
-              <Button color="primary" onClick={(e) => onConfirmPassword(e)}>
+              <Button color="primary" onClick={(e: any) => onConfirmPassword(e)}>
                 {t("confirm")}
               </Button>
               <DialogClose />
@@ -519,9 +519,9 @@ const ProfileForm = ({
   });
 
   const {
+    watch,
     formState: { isSubmitting, isDirty },
   } = formMethods;
-
   const isDisabled = isSubmitting || !isDirty;
 
   useEffect(() => {
@@ -595,7 +595,7 @@ const ProfileForm = ({
                 variant="ProfileCard"
                 description={
                   <div className="flex flex-col items-start justify-between md:flex-row">
-                    <div className="flex w-full justify-between md:w-auto md:justify-normal">
+                    <div className="mb-10 flex w-full justify-between md:mb-0 md:w-auto md:justify-normal">
                       {!editableHeader ? (
                         <Avatar
                           alt=""
@@ -643,7 +643,11 @@ const ProfileForm = ({
                             </p>
                           ) : (
                             <>
-                              <TextField label={`${t("full_name")}*`} {...formMethods.register("name")} />
+                              <TextField
+                                required
+                                label={`${t("full_name")}*`}
+                                {...formMethods.register("name")}
+                              />
                               {showErrorInHeader && !formMethods.getValues("name") && (
                                 <Alert
                                   key="error_full_name_required"
@@ -662,7 +666,11 @@ const ProfileForm = ({
                             <>{defaultValues.position}</>
                           ) : (
                             <>
-                              <TextField label={`${t("position")}*`} {...formMethods.register("position")} />
+                              <TextField
+                                required
+                                label={`${t("position")}*`}
+                                {...formMethods.register("position")}
+                              />
                               {showErrorInHeader && !formMethods.getValues("position") && (
                                 <Alert
                                   key="error_current_position_required"
@@ -686,7 +694,11 @@ const ProfileForm = ({
                             </>
                           ) : (
                             <>
-                              <TextField label={`${t("address")}*`} {...formMethods.register("address")} />
+                              <TextField
+                                required
+                                label={`${t("address")}*`}
+                                {...formMethods.register("address")}
+                              />
                               {showErrorInHeader && !formMethods.getValues("address") && (
                                 <Alert
                                   className="mb-2"
@@ -707,7 +719,10 @@ const ProfileForm = ({
                           <div className={!editableHeader ? "" : "flex w-full flex-row items-center gap-2"}>
                             <Button
                               color="secondary"
-                              className="rounded-full border-gray-700 bg-transparent md:rounded-full"
+                              className="mb-2 rounded-full border-gray-700 bg-transparent md:rounded-full"
+                              type={social.telegram ? "link" : "button"}
+                              href={social.telegram || undefined}
+                              target="_blank"
                               variant="icon">
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -737,7 +752,10 @@ const ProfileForm = ({
                             <Button
                               color="secondary"
                               StartIcon={Facebook}
-                              className="rounded-full border-gray-700 bg-transparent md:rounded-full"
+                              type={social.facebook ? "link" : "button"}
+                              href={social.facebook || undefined}
+                              target="_blank"
+                              className="mb-2 rounded-full border-gray-700 bg-transparent md:rounded-full"
                               variant="icon"
                             />
                             <TextField
@@ -758,7 +776,10 @@ const ProfileForm = ({
                           <div className={!editableHeader ? "" : "flex w-full flex-row items-center gap-2"}>
                             <Button
                               color="secondary"
-                              className="rounded-full border-gray-700 bg-transparent md:rounded-full"
+                              type={social.discord ? "link" : "button"}
+                              href={social.discord || undefined}
+                              target="_blank"
+                              className="mb-2 rounded-full border-gray-700 bg-transparent md:rounded-full"
                               variant="icon">
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -786,8 +807,11 @@ const ProfileForm = ({
                           <div className={!editableHeader ? "" : "flex w-full flex-row items-center gap-2"}>
                             <Button
                               color="secondary"
+                              type={social.instagram ? "link" : "button"}
+                              href={social.instagram || undefined}
+                              target="_blank"
                               StartIcon={Instagram}
-                              className="rounded-full border-gray-700 bg-transparent md:rounded-full"
+                              className="mb-2 rounded-full border-gray-700 bg-transparent md:rounded-full"
                               variant="icon"
                             />
                             <TextField
@@ -808,8 +832,11 @@ const ProfileForm = ({
                           <div className={!editableHeader ? "" : "flex w-full flex-row items-center gap-2"}>
                             <Button
                               color="secondary"
+                              type={social.linkedin ? "link" : "button"}
+                              href={social.linkedin || undefined}
+                              target="_blank"
                               StartIcon={Linkedin}
-                              className="rounded-full border-gray-700 bg-transparent md:rounded-full"
+                              className="mb-2 rounded-full border-gray-700 bg-transparent md:rounded-full"
                               variant="icon"
                             />
                             <TextField
@@ -886,7 +913,7 @@ const ProfileForm = ({
                     setFirstRender={setFirstRender}
                   />
                 ) : (
-                  <div className={defaultValues.bio.length ? "m-4" : "w-full p-2 text-center"}>
+                  <div className={defaultValues.bio.length ? "m-4 break-all" : "w-full  p-2 text-center"}>
                     {defaultValues.bio.length ? defaultValues.bio : t("no_data_yet")}
                   </div>
                 )}
@@ -942,9 +969,9 @@ const ProfileForm = ({
                             </div>
                           ))
                         : skills.map((skill, i) => (
-                            <div className="flex" key={i}>
+                            <div className={classNames("flex", skill.length >= 30 && "w-full")} key={i}>
                               <Input
-                                className="w-[100px] !rounded-full !rounded-r-none border-r-0 focus:ring-0"
+                                className="!rounded-full !rounded-r-none border-r-0 focus:ring-0"
                                 value={skill}
                                 onChange={(event) => {
                                   const formData = [...skills];
@@ -1313,7 +1340,7 @@ const ProfileForm = ({
           title={indexExp === -1 ? t("add_exp") : t("change_exp")}
           description={t("enter_previous_work_exp")}
           type="creation"
-          Icon={AlertTriangle}>
+          Icon={X}>
           <div className="mb-10">
             <TextField
               className="mb-2"
@@ -1348,6 +1375,8 @@ const ProfileForm = ({
                   onChange={(e) => {
                     if (e && (startYearExp < endYearExp || e.value <= endMonthExp)) {
                       setStartMonthExp(e.value);
+                    } else {
+                      showToast(t("start_date_cannot_be_after_end_date"), "error");
                     }
                   }}
                 />
@@ -1370,6 +1399,8 @@ const ProfileForm = ({
                       (e.value < endYearExp || (e.value === endYearExp && startMonthExp <= endMonthExp))
                     ) {
                       setStartYearExp(e.value);
+                    } else {
+                      showToast(t("start_date_cannot_be_after_end_date"), "error");
                     }
                   }}
                 />
@@ -1384,6 +1415,8 @@ const ProfileForm = ({
                       if (!(endYearExp === new Date().getFullYear() && e.value > new Date().getMonth() + 1)) {
                         setEndMonthExp(e.value);
                       }
+                    } else {
+                      showToast(t("end_date_cannot_be_before_start_date"), "error");
                     }
                   }}
                 />
@@ -1406,6 +1439,8 @@ const ProfileForm = ({
                       (e.value > startYearExp || (e.value === startYearExp && startMonthExp <= endMonthExp))
                     ) {
                       setEndYearExp(e.value);
+                    } else {
+                      showToast(t("end_date_cannot_be_before_start_date"), "error");
                     }
                   }}
                 />
@@ -1508,7 +1543,7 @@ const ProfileForm = ({
           title={indexEdu === -1 ? t("add_edu") : t("change_edu")}
           description={t("enter_edu")}
           type="creation"
-          Icon={AlertTriangle}>
+          Icon={X}>
           <div className="mb-10">
             <TextField
               className="mb-2"
@@ -1540,6 +1575,8 @@ const ProfileForm = ({
                   onChange={(e) => {
                     if (e && (startYearEdu < endYearEdu || e.value <= endMonthEdu)) {
                       setStartMonthEdu(e.value);
+                    } else {
+                      showToast(t("start_date_cannot_be_after_end_date"), "error");
                     }
                   }}
                 />
@@ -1562,6 +1599,8 @@ const ProfileForm = ({
                       (e.value < endYearEdu || (e.value === endYearEdu && startMonthEdu <= endMonthEdu))
                     ) {
                       setStartYearEdu(e.value);
+                    } else {
+                      showToast(t("start_date_cannot_be_after_end_date"), "error");
                     }
                   }}
                 />
@@ -1576,6 +1615,8 @@ const ProfileForm = ({
                       if (!(endYearEdu === new Date().getFullYear() && e.value > new Date().getMonth() + 1)) {
                         setEndMonthEdu(e.value);
                       }
+                    } else {
+                      showToast(t("end_date_cannot_be_before_start_date"), "error");
                     }
                   }}
                 />
@@ -1598,6 +1639,8 @@ const ProfileForm = ({
                       (e.value > startYearEdu || (e.value === startYearEdu && startMonthEdu <= endMonthEdu))
                     ) {
                       setEndYearEdu(e.value);
+                    } else {
+                      showToast(t("end_date_cannot_be_before_start_date"), "error");
                     }
                   }}
                 />
