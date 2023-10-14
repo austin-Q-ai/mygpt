@@ -30,6 +30,7 @@ import {
 import { Plus } from "@calcom/ui/components/icon";
 
 import { withQuery } from "@lib/QueryCell";
+import type { HttpError } from "@lib/core/http/error";
 
 import PageWrapper from "@components/PageWrapper";
 import CustomExpertTable from "@components/timetokens-wallet/CustomExpertTable";
@@ -172,6 +173,11 @@ function TimeTokensWallet() {
             paymentUid,
           })
         );
+      }
+    },
+    onError: (error: HttpError) => {
+      if (error?.message === "Missing payment credentials") {
+        showToast(t("not_able_recieve_payment"), "error");
       }
     },
   });

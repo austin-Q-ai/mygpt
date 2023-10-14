@@ -366,6 +366,7 @@
   "timetokens_wallet": "Portefeuille TimeTokens",
   "buy_sell_timetokens": "Acheter et vendre des TimeTokens",
   "buy_expert_tokens": "Acheter des jetons d'expert.",
+  "not_able_recieve_payment": "Cet expert n'est pas en mesure de recevoir le paiement",
   "added": "ajouté(e)",
   "confirm_buy_question": "Voulez-vous vraiment acheter des jetons ?",
   "confirm_buy_event": "Oui, acheter",
