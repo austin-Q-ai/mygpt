@@ -331,6 +331,7 @@ const getEventTypesWithHiddenFromDB = async (userId: number) => {
         owner: {
           select: {
             price: true,
+            currency: true,
           },
         },
       },
@@ -355,8 +356,8 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
       },
       organization: isValidOrgDomain
         ? {
-            slug: currentOrgDomain,
-          }
+          slug: currentOrgDomain,
+        }
         : null,
     },
     select: {
@@ -402,30 +403,30 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
 
   const dynamicNames = isDynamicGroup
     ? users.map((user) => {
-        return user.name || "";
-      })
+      return user.name || "";
+    })
     : [];
   const [user] = users; //to be used when dealing with single user, not dynamic group
 
   const profile = isDynamicGroup
     ? {
-        name: getGroupName(dynamicNames),
-        image: null,
-        theme: null,
-        weekStart: "Sunday",
-        brandColor: "",
-        darkBrandColor: "",
-        allowDynamicBooking: !users.some((user) => {
-          return !user.allowDynamicBooking;
-        }),
-      }
+      name: getGroupName(dynamicNames),
+      image: null,
+      theme: null,
+      weekStart: "Sunday",
+      brandColor: "",
+      darkBrandColor: "",
+      allowDynamicBooking: !users.some((user) => {
+        return !user.allowDynamicBooking;
+      }),
+    }
     : {
-        name: user.name || user.username,
-        image: user.avatar,
-        theme: user.theme,
-        brandColor: user.brandColor,
-        darkBrandColor: user.darkBrandColor,
-      };
+      name: user.name || user.username,
+      image: user.avatar,
+      theme: user.theme,
+      brandColor: user.brandColor,
+      darkBrandColor: user.darkBrandColor,
+    };
 
   const eventTypesWithHidden = isDynamicGroup ? [] : await getEventTypesWithHiddenFromDB(user.id);
   const dataFetchEnd = Date.now();
@@ -443,8 +444,8 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
   const isSingleUser = users.length === 1;
   const dynamicUsernames = isDynamicGroup
     ? users.map((user) => {
-        return user.username || "";
-      })
+      return user.username || "";
+    })
     : [];
 
   const safeBio = markdownToSafeHTML(user.bio) || "";
@@ -463,9 +464,9 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
       },
       eventTypes: isDynamicGroup
         ? defaultEvents.map((event) => {
-            event.description = getDynamicEventDescription(dynamicUsernames, event.slug);
-            return event;
-          })
+          event.description = getDynamicEventDescription(dynamicUsernames, event.slug);
+          return event;
+        })
         : eventTypes,
       trpcState: ssr.dehydrate(),
       isDynamicGroup,

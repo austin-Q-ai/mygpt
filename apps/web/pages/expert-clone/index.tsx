@@ -1,4 +1,4 @@
-// Please replace f548cbf724beffea7fad010367134782 with ${user?.apiKey}
+// Please replace 671c23c2c10df49b25a37416af14f647 with ${user?.apiKey}
 import { DropdownMenuLabel } from "@radix-ui/react-dropdown-menu";
 import useResizeObserver from "@react-hook/resize-observer";
 import axios from "axios";
@@ -191,7 +191,7 @@ export default function ExpertClone() {
         },
         {
           headers: {
-            Authorization: `Bearer f548cbf724beffea7fad010367134782`,
+            Authorization: `Bearer 671c23c2c10df49b25a37416af14f647`,
             "Content-Type": "application/json",
           },
           params: { brain_id: BRAIN_ID },
@@ -229,7 +229,7 @@ export default function ExpertClone() {
     axios
       .get(`${process.env.NEXT_PUBLIC_BRAIN_SERVICE}/chat/${chatId}/history`, {
         headers: {
-          Authorization: `Bearer f548cbf724beffea7fad010367134782`, // ${user?.apiKey}`,
+          Authorization: `Bearer 671c23c2c10df49b25a37416af14f647`, // ${user?.apiKey}`,
 
           "Content-Type": "application/json",
         },
@@ -271,7 +271,7 @@ export default function ExpertClone() {
           },
           {
             headers: {
-              Authorization: `Bearer f548cbf724beffea7fad010367134782`,
+              Authorization: `Bearer 671c23c2c10df49b25a37416af14f647`,
             },
           }
         )
@@ -299,7 +299,7 @@ export default function ExpertClone() {
     axios
       .get(`${process.env.NEXT_PUBLIC_BRAIN_SERVICE}/chat`, {
         headers: {
-          Authorization: `Bearer f548cbf724beffea7fad010367134782`,
+          Authorization: `Bearer 671c23c2c10df49b25a37416af14f647`,
         },
       })
       .then((data) => {
@@ -325,7 +325,7 @@ export default function ExpertClone() {
     axios
       .delete(`${process.env.NEXT_PUBLIC_BRAIN_SERVICE}/chat/${chatId}`, {
         headers: {
-          Authorization: `Bearer f548cbf724beffea7fad010367134782`,
+          Authorization: `Bearer 671c23c2c10df49b25a37416af14f647`,
         },
       })
       .then((data) => {
