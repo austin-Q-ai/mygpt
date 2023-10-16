@@ -33,7 +33,7 @@ const ExpertView = () => {
     <div className="flex flex-row">
       <div className="flex-1">
         <Meta title={t("expert_clone")} description={t("expert_description", { appName: APP_NAME })} />
-        <Button color="primary" onClick={() => getExpertId()}>
+        <Button color="primary" onClick={() => getExpertId()} disabled>
           {t("create")}
         </Button>
       </div>
