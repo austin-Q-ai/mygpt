@@ -1,6 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { components } from "react-select";
@@ -11,7 +9,7 @@ import { FULL_NAME_LENGTH_MAX_LIMIT } from "@calcom/lib/constants";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { telemetryEventTypes, useTelemetry } from "@calcom/lib/telemetry";
 import { trpc } from "@calcom/trpc/react";
-import { Alert, Button, Select, PasswordField, TimezoneSelect, Tooltip } from "@calcom/ui";
+import { Button, Select, TimezoneSelect, Tooltip } from "@calcom/ui";
 import { ArrowRight, AlertCircle } from "@calcom/ui/components/icon";
 
 import { UsernameAvailabilityField } from "@components/ui/UsernameAvailability";
@@ -43,10 +41,6 @@ const UserSettings = (props: IUserSettingsProps) => {
   const { t } = useLocale();
   const [selectedTimeZone, setSelectedTimeZone] = useState(dayjs.tz.guess());
   const telemetry = useTelemetry();
-  const supabase = createClientComponentClient();
-  const [confirmPassword, setConfirmPassword] = useState<string>("");
-  const [confirmPasswordErrorMessage, setConfirmPasswordDeleteErrorMessage] = useState<string>("");
-  const [notConfirmed, setNotConfirmed] = useState(false);
   const userSettingsSchema = z.object({
     name: z
       .string()
@@ -59,7 +53,6 @@ const UserSettings = (props: IUserSettingsProps) => {
   const {
     register,
     handleSubmit,
-    getValues,
     formState: { errors },
   } = useForm<z.infer<typeof userSettingsSchema>>({
     defaultValues: {
@@ -91,57 +84,15 @@ const UserSettings = (props: IUserSettingsProps) => {
     onSuccess: onSuccess,
   });
 
-  const confirmPasswordMutation = trpc.viewer.auth.verifyPassword.useMutation({
-    onSuccess() {
-      supabase.auth
-        .signInWithPassword({
-          email: user?.email,
-          password: confirmPassword,
-        })
-        .then((data) => {
-          setConfirmPassword("");
-          if (data.error) {
-            if (data.error.message === "Email not confirmed") {
-              setNotConfirmed(true);
-              setConfirmPasswordDeleteErrorMessage(
-                t("email_for_supabase_not_confirmed_click_resend_email_button")
-              );
-            } else {
-              setConfirmPasswordDeleteErrorMessage(data.error.message);
-            }
-          } else {
-            axios
-              .post(
-                `${process.env.NEXT_PUBLIC_BRAIN_SERVICE}/api-key`,
-                {},
-                {
-                  headers: {
-                    Authorization: `Bearer ${data.data.session.access_token}`,
-                  },
-                }
-              )
-              .then((data) => {
-                const formData = getValues();
-                mutation.mutate({
-                  name: formData.name,
-                  price: parseFloat(formData.price),
-                  timeZone: selectedTimeZone,
-                  defaultValue: true,
-                  currency: currency,
-                  apiKey: data.data.api_key,
-                });
-              });
-          }
-        });
-    },
-    onError() {
-      setConfirmPasswordDeleteErrorMessage(t("incorrect_password"));
-      setConfirmPassword("");
-    },
-  });
-
-  const onSubmit = handleSubmit(() => {
-    confirmPasswordMutation.mutate({ passwordInput: confirmPassword });
+  const onSubmit = handleSubmit((data) => {
+    console.log(data);
+    mutation.mutate({
+      name: data.name,
+      price: parseFloat(data.price),
+      timeZone: selectedTimeZone,
+      defaultValue: true,
+      currency: currency,
+    });
   });
 
   return (
@@ -246,40 +197,6 @@ const UserSettings = (props: IUserSettingsProps) => {
             {t("current_time")} {dayjs().tz(selectedTimeZone).format("LT").toString().toLowerCase()}
           </p>
         </div>
-
-        {/* Confirm your password for get API key */}
-        <div className="w-full">
-          <PasswordField
-            name="Confirm Password"
-            className="mb-5"
-            value={confirmPassword}
-            onChange={(e) => {
-              setConfirmPassword(e.target.value);
-            }}
-            required
-          />
-          {confirmPasswordErrorMessage && <Alert severity="error" title={confirmPasswordErrorMessage} />}
-        </div>
-
-        {notConfirmed && (
-          <Button
-            color="secondary"
-            onClick={() => {
-              supabase.auth
-                .resend({
-                  type: "signup",
-                  email: user?.email,
-                })
-                .then(() => {
-                  setConfirmPasswordDeleteErrorMessage(
-                    t("verification_email_was_sent_please_check_and_try_again")
-                  );
-                })
-                .catch((e) => setConfirmPasswordDeleteErrorMessage(e));
-            }}>
-            {t("resend_email")}
-          </Button>
-        )}
       </div>
       <Button
         type="submit"
