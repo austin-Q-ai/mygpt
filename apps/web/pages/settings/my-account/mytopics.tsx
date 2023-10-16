@@ -183,8 +183,8 @@ const TopicsView = () => {
         }
       })
       .catch((err) => {
-        console.log("fetch collection error: ", err);
-        showToast(t("error_topics_save"), "error");
+        // console.log("fetch collection error: ", err);
+        // showToast(t("error_topics_save"), "error");
       })
       .finally(() => setIsSaving(false));
   };
@@ -239,9 +239,7 @@ const TopicsView = () => {
         <div>
           <Button
             color="primary"
-            className={`flex h-[36px] w-[80px] justify-center p-[6.166px] text-[12.332px] leading-[17.264px] ${
-              !topics.length ? "hidden" : ""
-            }`}
+            className={`flex h-[36px] w-[80px] justify-center p-[6.166px] text-[12.332px] leading-[17.264px]`}
             loading={isSaving}
             onClick={handleSave}>
             {t("save")}
