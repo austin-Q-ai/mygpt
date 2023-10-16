@@ -54,7 +54,7 @@ import { schemaWebhookEditBodyParams, schemaWebhookReadPublic } from "~/lib/vali
  *     tags:
  *     - webhooks
  *     externalDocs:
- *        url: https://docs.cal.com/core-features/webhooks
+ *        url: https://docs.mygpt.fi/core-features/webhooks
  *     responses:
  *       201:
  *         description: OK, webhook edited successfully

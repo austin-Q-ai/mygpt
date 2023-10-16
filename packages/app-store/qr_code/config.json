@@ -4,12 +4,12 @@
   "slug": "qr_code",
   "type": "qr_code_other",
   "logo": "icon.svg",
-  "url": "https://cal.com/",
+  "url": "https://mygpt.fi/",
   "variant": "other",
   "categories": ["other"],
   "extendsFeature": "EventType",
-  "publisher": "Cal.com, Inc.",
-  "email": "support@cal.com",
+  "publisher": "MyGPT.fi, Inc.",
+  "email": "support@mygpt.fi",
   "description": "Easily generate a QR code for your links to print, share, or embed.",
   "__createdUsingCli": true
 }

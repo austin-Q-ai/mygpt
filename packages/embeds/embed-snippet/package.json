@@ -8,7 +8,7 @@
   "license": "SEE LICENSE IN LICENSE",
   "repository": {
     "type": "git",
-    "url": "https://github.com/calcom/cal.com",
+    "url": "https://github.com/calcom/mygpt.fi",
     "directory": "packages/embeds/embed-snippet"
   },
   "scripts": {
@@ -16,7 +16,7 @@
     "type-check": "tsc --pretty --noEmit",
     "type-check:ci": "tsc-absolute --pretty --noEmit",
     "lint": "eslint --ext .ts,.js src",
-    "withEmbedPublishEnv": "NEXT_PUBLIC_EMBED_LIB_URL='https://app.cal.com/embed/embed.js' NEXT_PUBLIC_WEBAPP_URL='https://app.cal.com' yarn",
+    "withEmbedPublishEnv": "NEXT_PUBLIC_EMBED_LIB_URL='https://mygpt.fi/embed/embed.js' NEXT_PUBLIC_WEBAPP_URL='https://mygpt.fi' yarn",
     "prepack": "yarn withEmbedPublishEnv build",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },

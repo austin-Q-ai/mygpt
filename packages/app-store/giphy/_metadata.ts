@@ -8,14 +8,14 @@ export const metadata = {
   installed: true,
   categories: ["other"],
   logo: "icon.svg",
-  publisher: "Cal.com",
+  publisher: "MyGPT.fi",
   slug: "giphy",
   title: "Giphy",
   type: "giphy_other",
-  url: "https://cal.com/apps/giphy",
+  url: "https://mygpt.fi/apps/giphy",
   variant: "other",
   extendsFeature: "EventType",
-  email: "help@cal.com",
+  email: "help@mygpt.fi",
   dirName: "giphy",
 } as AppMeta;
 

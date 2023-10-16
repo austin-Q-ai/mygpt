@@ -156,7 +156,7 @@ export default function Signup({ prepopulateFormValues, token, orgSlug }: Signup
                       color="secondary"
                       className="hover:bg-muted w-full justify-center rounded-md border p-2 text-center text-sm"
                       onClick={() =>
-                        signIn("Cal.com", {
+                        signIn("MyGPT.fi", {
                           callbackUrl: router.query.callbackUrl
                             ? `${WEBAPP_URL}/${router.query.callbackUrl}`
                             : `${WEBAPP_URL}/getting-started`,

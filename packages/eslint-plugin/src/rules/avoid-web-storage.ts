@@ -1,6 +1,6 @@
 import { ESLintUtils } from "@typescript-eslint/utils";
 
-const createRule = ESLintUtils.RuleCreator((name) => `https://developer.cal.com/eslint/rule/${name}`);
+const createRule = ESLintUtils.RuleCreator((name) => `https://developer.mygpt.fi/eslint/rule/${name}`);
 const rule = createRule({
   create(context) {
     return {
@@ -34,7 +34,7 @@ const rule = createRule({
       recommended: "warn",
     },
     messages: {
-      "possible-issue-with-embed": `Be aware that accessing localStorage/sessionStorage throws error in Chrome Incognito mode when embed is in cross domain context. If you know what you are doing, \`import {localStorage, sessionStorage} from "@calcom/lib/webstorage"\` for safe usage. See https://github.com/calcom/cal.com/issues/2618`,
+      "possible-issue-with-embed": `Be aware that accessing localStorage/sessionStorage throws error in Chrome Incognito mode when embed is in cross domain context. If you know what you are doing, \`import {localStorage, sessionStorage} from "@calcom/lib/webstorage"\` for safe usage. See https://github.com/calcom/mygpt.fi/issues/2618`,
     },
     type: "suggestion",
     schema: [],

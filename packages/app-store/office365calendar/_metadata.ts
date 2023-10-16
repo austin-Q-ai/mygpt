@@ -11,11 +11,11 @@ export const metadata = {
   category: "calendar",
   categories: ["calendar"],
   logo: "icon.svg",
-  publisher: "Cal.com",
+  publisher: "MyGPT.fi",
   slug: "office365-calendar",
   dirName: "office365calendar",
-  url: "https://cal.com/",
-  email: "help@cal.com",
+  url: "https://mygpt.fi/",
+  email: "help@mygpt.fi",
 } as AppMeta;
 
 export default metadata;

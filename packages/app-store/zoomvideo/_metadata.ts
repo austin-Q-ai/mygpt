@@ -10,12 +10,12 @@ export const metadata = {
   categories: ["conferencing"],
   variant: "conferencing",
   logo: "icon.svg",
-  publisher: "Cal.com",
+  publisher: "MyGPT.fi",
   url: "https://zoom.us/",
   category: "conferencing",
   slug: "zoom",
   title: "Zoom Video",
-  email: "help@cal.com",
+  email: "help@mygpt.fi",
   appData: {
     location: {
       default: false,

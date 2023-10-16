@@ -10,7 +10,7 @@ const { chromium } = require("playwright");
 async function run() {
   const browser = await chromium.launch();
   const page = await browser.newPage();
-  const targetUrl = process.env.ENVIRONMENT_URL || "https://cal.com";
+  const targetUrl = process.env.ENVIRONMENT_URL || "https://mygpt.fi";
   await page.goto(`${targetUrl}/rick/test-location-link`);
 
   await page.waitForSelector('[data-testid="day"][data-disabled="false"]');
@@ -22,9 +22,9 @@ async function run() {
   await page.waitForSelector("#name");
   await page.click("#name");
 
-  await page.type("#name", "Calcom");
+  await page.type("#name", "mygpt");
 
-  await page.type('[name="email"]', "cal@cal.com");
+  await page.type('[name="email"]', "cal@mygpt.fi");
 
   await page.waitForSelector('[data-testid="confirm-book-button"]');
   await page.click('[data-testid="confirm-book-button"]');

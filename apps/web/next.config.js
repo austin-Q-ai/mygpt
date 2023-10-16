@@ -448,7 +448,7 @@ const nextConfig = {
       },
     ];
 
-    if (process.env.NEXT_PUBLIC_WEBAPP_URL === "https://app.cal.com") {
+    if (process.env.NEXT_PUBLIC_WEBAPP_URL === "https://mygpt.fi") {
       redirects.push(
         {
           source: "/apps/dailyvideo",

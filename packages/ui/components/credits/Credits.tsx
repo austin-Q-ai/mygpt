@@ -22,17 +22,17 @@ export default function Credits() {
   return (
     <small className="text-default mx-3 mb-2 mt-1 hidden text-[0.5rem] opacity-50 lg:block">
       &copy; {new Date().getFullYear()}{" "}
-      <Link href="https://go.cal.com/credits" target="_blank" className="hover:underline">
+      <Link href="https://go.mygpt.fi/credits" target="_blank" className="hover:underline">
         {COMPANY_NAME}
       </Link>{" "}
       {hasMounted && (
         <>
-          <Link href="https://go.cal.com/releases" target="_blank" className="hover:underline">
+          <Link href="https://go.mygpt.fi/releases" target="_blank" className="hover:underline">
             {CalComVersion}
           </Link>
           {vercelCommitHash && IS_CALCOM ? (
             <Link
-              href={`https://github.com/calcom/cal.com/commit/${vercelCommitHash}`}
+              href={`https://github.com/calcom/mygpt.fi/commit/${vercelCommitHash}`}
               target="_blank"
               className="hover:underline">
               {commitHash}
