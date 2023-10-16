@@ -111,7 +111,7 @@ function CustomExpertTable(props: CustomExpertTableProps) {
                         // setTokensAmount(tokensAmountData);
                         data.buy_amount = val;
                       }}
-                      className="border-default rounded-r-0 w-10 text-[.5rem] [appearance:textfield] sm:w-24 sm:text-sm"
+                      className="border-default w-10 rounded-none text-[.5rem] [appearance:textfield] sm:w-24 sm:text-sm"
                       defaultValue={Math.min(10, data.expert_token_amount)}
                     />
                     {true && (
