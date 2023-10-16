@@ -11,6 +11,7 @@ type TimeTokensWalletRouterHandlerCache = {
   addExpert?: typeof import("./addExpert.handler").addExpertHandler;
   removeExpert?: typeof import("./removeExpert.handler").removeExpertHandler;
   buyTokens?: typeof import("./buyTokens.handler").buyTokensHandler;
+  revokeToken?: typeof import("./revokeToken.handler").revokeTokenHandler;
 };
 
 const UNSTABLE_HANDLER_CACHE: TimeTokensWalletRouterHandlerCache = {};
@@ -100,6 +101,21 @@ export const timetokenswalletRouter = router({
     return UNSTABLE_HANDLER_CACHE.buyTokens({
       ctx,
       input,
+    });
+  }),
+
+  revokeToken: authedProcedure.mutation(async ({ ctx }) => {
+    if (!UNSTABLE_HANDLER_CACHE.revokeToken) {
+      UNSTABLE_HANDLER_CACHE.revokeToken = await import("./revokeToken.handler").then((mod) => mod.revokeTokenHandler);
+    }
+
+    // Unreachable code but required for type safety
+    if (!UNSTABLE_HANDLER_CACHE.revokeToken) {
+      throw new Error("Failed to load handler");
+    }
+
+    return UNSTABLE_HANDLER_CACHE.revokeToken({
+      ctx
     });
   }),
 });
