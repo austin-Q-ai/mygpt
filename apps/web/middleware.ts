@@ -19,11 +19,15 @@ const middleware: NextMiddleware = async (req) => {
     return NextResponse.redirect(req.nextUrl);
   }
 
-  if (url.pathname.startsWith("/expert-clone")){
-    const temp = url.pathname.split("/")
+  if (url.pathname.startsWith("/expert-clone")) {
+    const temp = url.pathname.split("/");
     if (temp.length == 3 && temp[2]) {
       // we have to transfer temp[2] to expert-clone page, temp[2] might be username
-      return NextResponse.redirect(`${url.origin}/expert-clone`)
+      url.pathname = url.pathname.replace(
+        `${url.origin}/expert-clone/${temp[2]}`,
+        `${url.origin}/expert-clone/${temp[2]}`
+      );
+      return NextResponse.rewrite(url);
     }
   }
 

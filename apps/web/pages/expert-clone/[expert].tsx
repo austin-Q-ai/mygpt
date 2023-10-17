@@ -1,4 +1,4 @@
-// Please replace 671c23c2c10df49b25a37416af14f647 with ${user?.apiKey}
+// Please replace ${user?.apiKey} with ${user?.apiKey}
 import { DropdownMenuLabel } from "@radix-ui/react-dropdown-menu";
 import useResizeObserver from "@react-hook/resize-observer";
 import axios from "axios";
@@ -20,10 +20,12 @@ import Link from "next/link";
 import MessageLoader from "pages/expert-clone/components/MessageLoader";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Typist from "react-typist";
+import { z } from "zod";
 
-import { BRAIN_ID } from "@calcom/lib/constants";
 import useGetBrandingColours from "@calcom/lib/getBrandColours";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
+import { useTypedQuery } from "@calcom/lib/hooks/useTypedQuery";
+import { trpc } from "@calcom/trpc/react";
 import {
   Button,
   HeadSeo,
@@ -38,8 +40,6 @@ import {
   showToast,
 } from "@calcom/ui";
 
-import useMeQuery from "@lib/hooks/useMeQuery";
-
 import PageWrapper from "@components/PageWrapper";
 import Footer from "@components/auth/Footer";
 import MicroCards from "@components/microcard";
@@ -50,11 +50,12 @@ import AuthModal from "./components/AuthModal";
 export function DialogContentDiv(props: JSX.IntrinsicElements["div"]) {
   <span>{props.children}</span>;
 }
+const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 const useSize = (target: any) => {
   const [size, setSize] = useState();
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     target && setSize(target.getBoundingClientRect().height);
   }, [target]);
 
@@ -62,10 +63,16 @@ const useSize = (target: any) => {
   useResizeObserver(target, (entry: any) => setSize(entry.contentRect));
   return size;
 };
-
+const querySchema = z.object({
+  expert: z.string().optional(),
+});
 export default function ExpertClone() {
+  const {
+    data: { expert },
+  } = useTypedQuery(querySchema);
+  const val = expert !== undefined ? expert : "";
+  const { data: user } = trpc.viewer.expert.user.useQuery({ username: val });
   const { t } = useLocale();
-  const { data: user } = useMeQuery();
   const brandTheme = useGetBrandingColours({
     lightVal: "#6d278e",
     darkVal: "#fafafa",
@@ -191,10 +198,10 @@ export default function ExpertClone() {
         },
         {
           headers: {
-            Authorization: `Bearer 671c23c2c10df49b25a37416af14f647`,
+            Authorization: `Bearer ${user?.apiKey}`,
             "Content-Type": "application/json",
           },
-          params: { brain_id: BRAIN_ID },
+          params: { brain_id: user?.expertId },
         }
       )
       .then((data) => {
@@ -206,17 +213,17 @@ export default function ExpertClone() {
 
         data.data.chat_id
           ? setQaList([
-              ...qaList,
-              {
-                user_message: data.data.user_message,
-                chat_id: data.data.chat_id,
-                assistant: data.data.assistant,
-                loading: false,
-                brain_id: data.data.brain_id,
-                message_id: data.data.message_id,
-                message_time: data.data.message_time,
-              },
-            ])
+            ...qaList,
+            {
+              user_message: data.data.user_message,
+              chat_id: data.data.chat_id,
+              assistant: data.data.assistant,
+              loading: false,
+              brain_id: data.data.brain_id,
+              message_id: data.data.message_id,
+              message_time: data.data.message_time,
+            },
+          ])
           : null;
         setHistoryEdit("");
       });
@@ -229,7 +236,7 @@ export default function ExpertClone() {
     axios
       .get(`${process.env.NEXT_PUBLIC_BRAIN_SERVICE}/chat/${chatId}/history`, {
         headers: {
-          Authorization: `Bearer 671c23c2c10df49b25a37416af14f647`, // ${user?.apiKey}`,
+          Authorization: `Bearer ${user?.apiKey}`, // ${user?.apiKey}`,
 
           "Content-Type": "application/json",
         },
@@ -271,7 +278,7 @@ export default function ExpertClone() {
           },
           {
             headers: {
-              Authorization: `Bearer 671c23c2c10df49b25a37416af14f647`,
+              Authorization: `Bearer ${user?.apiKey}`,
             },
           }
         )
@@ -299,7 +306,7 @@ export default function ExpertClone() {
     axios
       .get(`${process.env.NEXT_PUBLIC_BRAIN_SERVICE}/chat`, {
         headers: {
-          Authorization: `Bearer 671c23c2c10df49b25a37416af14f647`,
+          Authorization: `Bearer ${user?.apiKey}`,
         },
       })
       .then((data) => {
@@ -325,7 +332,7 @@ export default function ExpertClone() {
     axios
       .delete(`${process.env.NEXT_PUBLIC_BRAIN_SERVICE}/chat/${chatId}`, {
         headers: {
-          Authorization: `Bearer 671c23c2c10df49b25a37416af14f647`,
+          Authorization: `Bearer ${user?.apiKey}`,
         },
       })
       .then((data) => {
@@ -484,8 +491,8 @@ export default function ExpertClone() {
                                       historyItemDelete.includes(qa.chat_id)
                                         ? "hidden"
                                         : historyEdit === qa.chat_id
-                                        ? "disabled text-muted cursor-not-allowed"
-                                        : "text-secondary cursor-pointer"
+                                          ? "disabled text-muted cursor-not-allowed"
+                                          : "text-secondary cursor-pointer"
                                     )}
                                   />
                                 </Button>
