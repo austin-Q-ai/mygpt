@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import React, { useState, useEffect, ReactElement } from "react";
+import axios from 'axios';
 
 import SettingsLayout from "@calcom/features/settings/layouts/SettingsLayout";
 import { APP_NAME } from "@calcom/lib/constants";
@@ -29,11 +30,27 @@ const TelegramBotView = () => {
   const [username, setUserName] = useState<string>("");
   const [token, setToken] = useState<string>("");
 
+  const VIDEO_SERVICE_URL = process.env.NEXT_PUBLIC_VIDEO_SERVICE
+
   useEffect(() => {
     console.log(voice);
   }, [voice]);
 
+  const getBrainInfo = () => {
+    // get directly from db e.g: data.expertId and api key
+    return { BRAIN_ID: "446457d5-3943-4c25-a4fb-0a68bb7301d2", BRAIN_API_KEY: "671c23c2c10df49b25a37416af14f647" }
+  }
+
+  const getVideoApi = async () => {
+    // get video api using email and password
+  }
+
   const handleSubmit = async () => {
+    // get brain id and api key
+    const { BRAIN_ID, BRAIN_API_KEY } = getBrainInfo()
+
+    // get video api key
+
     // Perform API call using image, voice, and bot data
     const formData = new FormData();
     formData.append("image", image);
@@ -42,16 +59,16 @@ const TelegramBotView = () => {
     formData.append("username", username);
     formData.append("token", token);
 
-    try {
-      const response = await fetch("https://your-api-endpoint", {
-        method: "POST",
-        body: formData,
-      });
+    // try {
+    //   const response = await fetch("https://your-api-endpoint", {
+    //     method: "POST",
+    //     body: formData,
+    //   });
 
-      // Handle response or redirect to another page
-    } catch (error) {
-      // Handle error
-    }
+    //   // Handle response or redirect to another page
+    // } catch (error) {
+    //   // Handle error
+    // }
   };
 
   return (
@@ -69,7 +86,7 @@ const TelegramBotView = () => {
                 </div>
                 <BotDataInput setBotName={setBotName} setUserName={setUserName} setToken={setToken} />
               </div>
-              <div className="mb-4 mt-2 flex items-start justify-start md:my-4">
+              <div className="flex items-start justify-start mt-2 mb-4 md:my-4">
                 <Button onClick={handleSubmit}>Submit</Button>
               </div>
             </div>
