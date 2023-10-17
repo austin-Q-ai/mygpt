@@ -121,7 +121,6 @@ const TopicsView = () => {
         const collections = res.data.result.collections;
         console.log("collections: ", collections);
         if (collections.find((collection: { name: string }) => collection.name === COLLECTION_NAME)) {
-          console.log("collection ", COLLECTION_NAME, " exists");
           axios
             .put(`${QDRANT_URL}/collections/${COLLECTION_NAME}/points`, {
               points: [
@@ -129,8 +128,12 @@ const TopicsView = () => {
                   id: user.id, //Math.floor(Math.random() * Number.MAX_SAFE_INTEGER),
                   vector: [0],
                   payload: {
-                    ...user,
+                    name: user.name,
                     topics: topics,
+                    avatar: user.avatar,
+                    hasBot: user.hasBot,
+                    isOnline: !user.away,
+                    bookingCallLink: user.username
                   },
                 },
               ],
