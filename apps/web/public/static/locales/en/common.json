@@ -2171,5 +2171,8 @@
   "add_a_new_availability_edit_availability_delete_availability_duplicate_availability": "Add a new availability, Edit availability, Delete availability, Duplicate availability",
   "add_a_new_club_deal_edit_club_deal_delete_club_deal_preview_club_deal_invite_club_deal_member": "Add a new club deal, Edit club deal, Delete club deal, Preview club deal, Invite club deal member",
   "add_a_new_app_delete_app": "Add a new app, Delete app",
-  "invalid_address": "You provided an invalid address format"
+  "invalid_address": "You provided an invalid address format",
+  "plan_upgrade_bots": "You need to upgrade your plan to create your bots",
+  "linkedin_scraping": "Linkedin scraping",
+  "input_linkedin_bot": "You need to input your linkedin url in your profile setting page"
 }

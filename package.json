@@ -103,6 +103,7 @@
     "meilisearch": "^0.34.1",
     "mic-recorder-to-mp3": "^2.2.2",
     "react-countdown": "^2.3.5",
+    "react-dropzone": "^14.2.3",
     "react-responsive-carousel": "^3.2.23",
     "react-spring": "^9.7.3",
     "react-spring-carousel": "^2.0.19",

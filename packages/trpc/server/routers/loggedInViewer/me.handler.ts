@@ -59,6 +59,7 @@ export const meHandler = async ({ ctx }: MeOptions) => {
     aiAdvantage: user.aiAdvantage,
     timeTokenAdvantage: user.timeTokenAdvantage,
     apiKey: user.apiKey,
+    expertId: user.expertId,
     videoCloneToken: user.videoCloneToken,
   };
 };

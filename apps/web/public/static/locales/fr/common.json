@@ -2098,5 +2098,8 @@
   "add_a_new_availability_edit_availability_delete_availability_duplicate_availability": "Ajouter une nouvelle disponibilité, Modifier la disponibilité, Supprimer la disponibilité, Disponibilité en double",
   "add_a_new_club_deal_edit_club_deal_delete_club_deal_preview_club_deal_invite_club_deal_member": "Ajouter un nouveau deal de club, Modifier le deal de club, Supprimer le deal de club, Aperçu du deal de club, Inviter un membre du club deal",
   "add_a_new_app_delete_app": "Ajouter une nouvelle application, Supprimer l'application",
-  "invalid_address": "Vous avez fourni un format d'adresse invalide"
+  "invalid_address": "Vous avez fourni un format d'adresse invalide",
+  "plan_upgrade_bots": "Vous devez mettre à niveau votre plan pour créer vos robots",
+  "linkedin_scraping": "Grattage Linkedin",
+  "input_linkedin_bot": "Vous devez saisir votre URL LinkedIn dans la page de configuration de votre profil"
 }
