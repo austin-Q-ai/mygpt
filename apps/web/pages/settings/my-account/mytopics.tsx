@@ -164,8 +164,13 @@ const TopicsView = () => {
                       id: user.id, //Math.floor(Math.random() * Number.MAX_SAFE_INTEGER),
                       vector: [0],
                       payload: {
-                        ...user,
+                        name: user.name,
                         topics: topics,
+                        avatar: user.avatar,
+                        hasBot: user.hasBot,
+                        isOnline: !user.away,
+                        bookingCallLink: user.username,
+                        bio: user.bio
                       },
                     },
                   ],

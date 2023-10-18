@@ -297,6 +297,7 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
       payload: {
         name: input.name,
         avatar: input.avatar,
+        bio: input.bio,
         bookingCallLink: input.username
       },
       points: [user.id],
