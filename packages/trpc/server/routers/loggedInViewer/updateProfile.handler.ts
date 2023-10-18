@@ -41,7 +41,24 @@ const client = new MeiliSearch({
 });
 
 const index = client.index("users");
+async function validateAddress(address: any) {
+  const response = await axios.get("https://maps.googleapis.com/maps/api/geocode/json", {
+    params: {
+      key: "AIzaSyAZ3P9XEHmIMU2UAnfj0hCD2V2i6R3aStA",
+      address: address,
+    },
+  });
 
+  const data = response.data;
+
+  if (data.results.length > 0) {
+    // The address is valid
+    return true;
+  } else {
+    // The address is invalid
+    return false;
+  }
+}
 export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions) => {
   const { user } = ctx;
   const data: Prisma.UserUpdateInput & { defaultValue?: boolean } = {
@@ -98,6 +115,16 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
 
   if (price) {
     delete data.price;
+  }
+
+  if (data.address) {
+    const response = await validateAddress(data.address);
+    if (!response) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "invalid_address",
+      });
+    }
   }
 
   if (input.defaultValue) {
