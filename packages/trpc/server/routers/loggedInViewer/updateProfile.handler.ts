@@ -321,7 +321,12 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
   // update data on qdrant db
   axios
     .post(`${QDRANT_URL}/collections/${COLLECTION_NAME}/points/payload`, {
-      payload: input,
+      payload: {
+        name: input.name,
+        avatar: input.avatar,
+        bio: input.bio,
+        bookingCallLink: input.username
+      },
       points: [user.id],
     })
     .then((res) => {
