@@ -10,7 +10,10 @@ type UploadProfileOptions = {
 };
 
 const client = new MeiliSearch({
-  host: `https://${process.env.MEILISEARCH_HOST}`,
+  host:
+    process.env.NODE_ENV === "production"
+      ? `https://${process.env.MEILISEARCH_HOST}`
+      : `http://${process.env.MEILISEARCH_HOST}`,
   apiKey: process.env.ADMIN_API_KEY, // admin apiKey
 });
 
@@ -22,13 +25,13 @@ export const uploadProfileHandler = async ({ input }: UploadProfileOptions) => {
       ...input,
       experiences: input.experiences
         ? {
-            create: input.experiences,
-          }
+          create: input.experiences,
+        }
         : {},
       educations: input.educations
         ? {
-            create: input.educations,
-          }
+          create: input.educations,
+        }
         : {},
       password: "$2a$12$2Q9uAjv9GHmjmhUNblYWz.Ej1ZHgHVZR9OA9EGDhdvayUfNcPQuIa", //default password : 123456
       emailVerified: new Date(),

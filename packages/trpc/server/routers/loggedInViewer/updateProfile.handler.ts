@@ -33,7 +33,10 @@ type UpdateProfileOptions = {
 };
 
 const client = new MeiliSearch({
-  host: `https://${process.env.MEILISEARCH_HOST}`,
+  host:
+    process.env.NODE_ENV === "production"
+      ? `https://${process.env.MEILISEARCH_HOST}`
+      : `http://${process.env.MEILISEARCH_HOST}`,
   apiKey: process.env.ADMIN_API_KEY, // admin apiKey
 });
 
@@ -45,47 +48,47 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
     ...input,
     experiences: input.experiences
       ? {
-          updateMany: input.experiences
-            .filter((exp) => exp.id !== undefined && !exp.delete)
-            .map((exp) => {
-              const { id, userId, ...data } = exp;
-              delete data.delete;
-              return {
-                where: {
-                  id: exp.id,
-                },
-                data,
-              };
-            }),
-          create: input.experiences.filter((exp) => exp.id === undefined && !exp.delete),
-          deleteMany: input.experiences
-            .filter((exp) => exp.id !== undefined && exp.delete)
-            .map((exp) => ({
-              id: exp.id,
-            })),
-        }
+        updateMany: input.experiences
+          .filter((exp) => exp.id !== undefined && !exp.delete)
+          .map((exp) => {
+            const { id, userId, ...data } = exp;
+            delete data.delete;
+            return {
+              where: {
+                id: exp.id,
+              },
+              data,
+            };
+          }),
+        create: input.experiences.filter((exp) => exp.id === undefined && !exp.delete),
+        deleteMany: input.experiences
+          .filter((exp) => exp.id !== undefined && exp.delete)
+          .map((exp) => ({
+            id: exp.id,
+          })),
+      }
       : {},
     educations: input.educations
       ? {
-          updateMany: input.educations
-            .filter((edu) => edu.id !== undefined && !edu.delete)
-            .map((edu) => {
-              const { id, userId, ...data } = edu;
-              delete data.delete;
-              return {
-                where: {
-                  id: edu.id,
-                },
-                data,
-              };
-            }),
-          create: input.educations.filter((edu) => edu.id === undefined && !edu.delete),
-          deleteMany: input.educations
-            .filter((edu) => edu.id !== undefined && edu.delete)
-            .map((edu) => ({
-              id: edu.id,
-            })),
-        }
+        updateMany: input.educations
+          .filter((edu) => edu.id !== undefined && !edu.delete)
+          .map((edu) => {
+            const { id, userId, ...data } = edu;
+            delete data.delete;
+            return {
+              where: {
+                id: edu.id,
+              },
+              data,
+            };
+          }),
+        create: input.educations.filter((edu) => edu.id === undefined && !edu.delete),
+        deleteMany: input.educations
+          .filter((edu) => edu.id !== undefined && edu.delete)
+          .map((edu) => ({
+            id: edu.id,
+          })),
+      }
       : {},
     metadata: input.metadata as Prisma.InputJsonValue,
     social: input.social,
