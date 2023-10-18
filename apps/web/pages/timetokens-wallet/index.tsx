@@ -184,10 +184,24 @@ function TimeTokensWallet() {
     },
   });
 
+  const revokeTokenMutation = trpc.viewer.timetokenswallet.revokeToken.useMutation({
+    onSuccess: () => {
+      showToast(t("settings_updated_successfully"), "success");
+    },
+    onError: () => {
+      showToast(t("error_updating_settings"), "error");
+    },
+  })
+
   const addExpert = () => {
     console.log(addExpertId, "=====");
     addExpertMutation.mutate({ emitterId: addExpertId });
   };
+
+  const revokeToken = () => {
+    //revoke token action here
+    revokeTokenMutation.mutate();
+  }
 
   const customFilter = (option: any, searchText: string) => {
     return true;
@@ -325,6 +339,12 @@ function TimeTokensWallet() {
                     data-testid=""
                     StartIcon={Plus}>
                     {t("add")}
+                  </Button>
+                  <Button
+                    className="text-[.5rem] sm:text-sm"
+                    onClick={revokeToken}
+                  >
+                    {"Revoke"}
                   </Button>
                 </div>
                 {/* Time Token Price update Graph  */}
