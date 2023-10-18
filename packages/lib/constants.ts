@@ -31,8 +31,8 @@ export const IS_CALCOM =
 
 export const CONSOLE_URL =
   new URL(WEBAPP_URL).hostname.endsWith(".cal.dev") ||
-  new URL(WEBAPP_URL).hostname.endsWith(".cal-staging.com") ||
-  process.env.NODE_ENV !== "production"
+    new URL(WEBAPP_URL).hostname.endsWith(".cal-staging.com") ||
+    process.env.NODE_ENV !== "production"
     ? `https://console.cal.dev`
     : `https://console.cal.com`;
 export const IS_SELF_HOSTED = !(
@@ -84,5 +84,5 @@ export const ALLOWED_HOSTNAMES = JSON.parse(`[${process.env.ALLOWED_HOSTNAMES ||
 export const RESERVED_SUBDOMAINS = JSON.parse(`[${process.env.RESERVED_SUBDOMAINS || ""}]`) as string[];
 
 //Chatting API
-export const BRAIN_API_KEY = "671c23c2c10df49b25a37416af14f647";
-export const BRAIN_ID = "446457d5-3943-4c25-a4fb-0a68bb7301d2";
+// export const BRAIN_API_KEY = "671c23c2c10df49b25a37416af14f647";
+// export const BRAIN_ID = "446457d5-3943-4c25-a4fb-0a68bb7301d2";
