@@ -366,6 +366,7 @@
   "timetokens_wallet": "Portefeuille TimeTokens",
   "buy_sell_timetokens": "Acheter et vendre des TimeTokens",
   "buy_expert_tokens": "Acheter des jetons d'expert.",
+  "not_able_recieve_payment": "Cet expert n'est pas en mesure de recevoir le paiement",
   "added": "ajouté(e)",
   "confirm_buy_question": "Voulez-vous vraiment acheter des jetons ?",
   "confirm_buy_event": "Oui, acheter",
@@ -2076,5 +2077,6 @@
   "expert_description": "Créer un clone expert pour {{appName}}",
   "successfully_created": "Création réussie",
   "verification_email_was_sent_please_check_and_try_again": "Un e-mail de vérification a été envoyé. S'il vous plaît, vérifiez et essayez à nouveau.",
-  "email_for_supabase_not_confirmed_click_resend_email_button": "E-mail pour Supabase non confirmé, cliquez sur le bouton `Renvoyer l'e-mail`"
+  "email_for_supabase_not_confirmed_click_resend_email_button": "E-mail pour Supabase non confirmé, cliquez sur le bouton `Renvoyer l'e-mail`",
+  "my_bots": "Mes robots"
 }

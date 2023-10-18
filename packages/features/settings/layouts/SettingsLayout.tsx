@@ -55,7 +55,7 @@ const tabs: VerticalTabItemProps[] = [
     href: "/settings/bots",
     icon: Key,
     children: [
-      { name: "expert", href: "/settings/bots/expert" },
+      { name: "expert_clone", href: "/settings/bots/expert-clone" },
       { name: "telegram_bot", href: "/settings/bots/telegram-bot" },
     ],
   },
@@ -274,9 +274,8 @@ const SettingsSidebarContainer = ({
                     isExternalLink={child.isExternalLink}
                     href={child.href || "/"}
                     textClassNames="px-3 text-emphasis font-medium text-sm"
-                    className={`my-0.5 me-5 h-7 ${
-                      tab.children && index === tab.children?.length - 1 && "!mb-3"
-                    }`}
+                    className={`my-0.5 me-5 h-7 ${tab.children && index === tab.children?.length - 1 && "!mb-3"
+                      }`}
                     disableChevron
                   />
                 ))}
@@ -371,41 +370,41 @@ const SettingsSidebarContainer = ({
                               // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                               // @ts-ignore this exists wtf?
                               (team.isOrgAdmin && team.isOrgAdmin)) && (
-                              <>
-                                {/* TODO */}
-                                {/* <VerticalTabItem
+                                <>
+                                  {/* TODO */}
+                                  {/* <VerticalTabItem
                               name={t("general")}
                               href={`${WEBAPP_URL}/settings/my-account/appearance`}
                               textClassNames="px-3 text-emphasis font-medium text-sm"
                               disableChevron
                             /> */}
-                                {/* <VerticalTabItem
+                                  {/* <VerticalTabItem
                                   name={t("appearance")}
                                   href={`/settings/teams/${team.id}/appearance`}
                                   textClassNames="px-3 text-emphasis font-medium text-sm"
                                   disableChevron
                                 /> */}
-                                {/* Hide if there is a parent ID */}
-                                {!team.parentId ? (
-                                  <>
-                                    <VerticalTabItem
-                                      name={t("billing")}
-                                      href={`/settings/teams/${team.id}/billing`}
-                                      textClassNames="px-3 text-emphasis font-medium text-sm"
-                                      disableChevron
-                                    />
-                                    {HOSTED_CAL_FEATURES && (
+                                  {/* Hide if there is a parent ID */}
+                                  {!team.parentId ? (
+                                    <>
                                       <VerticalTabItem
-                                        name={t("saml_config")}
-                                        href={`/settings/teams/${team.id}/sso`}
+                                        name={t("billing")}
+                                        href={`/settings/teams/${team.id}/billing`}
                                         textClassNames="px-3 text-emphasis font-medium text-sm"
                                         disableChevron
                                       />
-                                    )}
-                                  </>
-                                ) : null}
-                              </>
-                            )}
+                                      {HOSTED_CAL_FEATURES && (
+                                        <VerticalTabItem
+                                          name={t("saml_config")}
+                                          href={`/settings/teams/${team.id}/sso`}
+                                          textClassNames="px-3 text-emphasis font-medium text-sm"
+                                          disableChevron
+                                        />
+                                      )}
+                                    </>
+                                  ) : null}
+                                </>
+                              )}
                           </CollapsibleContent>
                         </Collapsible>
                       );

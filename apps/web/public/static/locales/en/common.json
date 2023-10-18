@@ -378,6 +378,7 @@
   "timetokens": "TimeTokens",
   "buy_sell_timetokens": "Buy and sell timetokens",
   "buy_expert_tokens": "Buy expert tokens.",
+  "not_able_recieve_payment": "This expert is not able to receive payment",
   "added": "added",
   "confirm_buy_question": "Do you really want to buy tokens?",
   "confirm_buy_event": "Yes, buy",
@@ -2149,5 +2150,6 @@
   "expert_description": "Create expert clone for {{appName}}",
   "successfully_created": "Successfully Created",
   "verification_email_was_sent_please_check_and_try_again": "Verification Email was sent. Please check and try again.",
-  "email_for_supabase_not_confirmed_click_resend_email_button": "Email for Supabase not confirmed, Click `Resend email` button"
+  "email_for_supabase_not_confirmed_click_resend_email_button": "Email for Supabase not confirmed, Click `Resend email` button",
+  "my_bots": "My Bots"
 }

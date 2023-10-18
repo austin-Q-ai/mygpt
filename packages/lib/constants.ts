@@ -17,8 +17,6 @@ export const SUPPORT_MAIL_ADDRESS = process.env.NEXT_PUBLIC_SUPPORT_MAIL_ADDRESS
 export const COMPANY_NAME = process.env.NEXT_PUBLIC_COMPANY_NAME || "Cal.com, Inc.";
 export const SENDER_ID = process.env.NEXT_PUBLIC_SENDER_ID || "Cal";
 export const SENDER_NAME = process.env.NEXT_PUBLIC_SENDGRID_SENDER_NAME || "Cal.com";
-export const MEILISEARCH_HOST = process.env.NEXT_PUBLIC_MEILISEARCH_HOST || "";
-export const MEILISEARCH_SEARCH_API_KEY = process.env.NEXT_PUBLIC_SEARCH_API_KEY || "";
 
 // This is the URL from which all Cal Links and their assets are served.
 // Use website URL to make links shorter(cal.com and not app.cal.com)
@@ -86,5 +84,5 @@ export const ALLOWED_HOSTNAMES = JSON.parse(`[${process.env.ALLOWED_HOSTNAMES ||
 export const RESERVED_SUBDOMAINS = JSON.parse(`[${process.env.RESERVED_SUBDOMAINS || ""}]`) as string[];
 
 //Chatting API
-export const BRAIN_API_KEY = "4cf4d75f4b17c08b0966843d88c8aa9b";
-export const BRAIN_ID = "9355e20b-d41d-44af-860b-7cb8505c8af8";
+export const BRAIN_API_KEY = "671c23c2c10df49b25a37416af14f647";
+export const BRAIN_ID = "446457d5-3943-4c25-a4fb-0a68bb7301d2";
