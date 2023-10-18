@@ -86,3 +86,4 @@ export const RESERVED_SUBDOMAINS = JSON.parse(`[${process.env.RESERVED_SUBDOMAIN
 //Chatting API
 // export const BRAIN_API_KEY = "671c23c2c10df49b25a37416af14f647";
 // export const BRAIN_ID = "446457d5-3943-4c25-a4fb-0a68bb7301d2";
+export const GOOGLE_MAP_API_KEY = "AIzaSyAZ3P9XEHmIMU2UAnfj0hCD2V2i6R3aStA";

@@ -1,34 +1,36 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 
-function MapComp() {
+import { GOOGLE_MAP_API_KEY } from "@calcom/lib/constants";
+
+function MapComp(props: any) {
   const [location, setLocation] = useState({
-    latitude: null,
-    longitude: null,
+    latitude: 45.764043,
+    longitude: 4.835659,
   });
 
-  const success = (position: any) => {
-    setLocation({
-      latitude: position.coords.latitude,
-      longitude: position.coords.longitude,
-    });
-  };
-
-  const error = () => {
-    console.log("Unable to retrieve your location");
+  const fetchLocation = () => {
+    axios
+      .get("https://maps.googleapis.com/maps/api/geocode/json", {
+        params: {
+          key: GOOGLE_MAP_API_KEY,
+          address: props.address,
+        },
+      })
+      .then((response) => {
+        console.log(response);
+        if (response.statusText === "OK") {
+          setLocation({
+            latitude: response.data.results[0].geometry.location.lat,
+            longitude: response.data.results[0].geometry.location.lng,
+          });
+        }
+      });
   };
 
   useEffect(() => {
-    if (!navigator.geolocation) {
-      console.log("Geolocation is not supported by your browser");
-    } else {
-      navigator.geolocation.getCurrentPosition(success, error, {
-        enableHighAccuracy: true,
-        timeout: 5000,
-        maximumAge: 0,
-      });
-    }
+    fetchLocation();
   }, []);
-
   return (
     <>
       {location.latitude && location.longitude && (

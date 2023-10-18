@@ -99,7 +99,7 @@ export const CoordonneesPage = React.forwardRef<HTMLDivElement, CoordonneesPageP
                   <p>21 August 2023</p>
                 </div>
               </div>
-              <MapComp />
+              <MapComp address={user.address || "Lyon, Auvergne-Rhône-Alpes, France"} />
             </div>
           </>
         )}
