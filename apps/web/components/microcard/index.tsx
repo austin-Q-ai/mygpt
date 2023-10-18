@@ -56,14 +56,14 @@ const MicroCards: React.FC<MicroCardsProps> = (props: MicroCardsProps) => {
     const handleResize = () => {
       renderer.setSize(
         window.innerWidth <= 425 ? window.innerWidth - 20 : window.innerWidth === 1024 ? 450 : 500,
-        sizes.height - 20
+        window.innerWidth <= 1023 ? window.innerHeight * 0.6 : window.innerHeight * 0.8
       );
     };
 
     window.addEventListener("resize", handleResize);
     renderer.setSize(
       window.innerWidth <= 425 ? window.innerWidth - 20 : window.innerWidth === 1024 ? 450 : 500,
-      sizes.height - 20
+      window.innerWidth <= 1023 ? window.innerHeight * 0.6 : window.innerHeight * 0.8
     );
     sceneElement.appendChild(renderer.domElement);
 

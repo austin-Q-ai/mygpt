@@ -81,10 +81,10 @@ function CustomExpertTable(props: CustomExpertTableProps) {
                 <td className="px-1 sm:px-4 sm:py-2">
                   <div className="flex items-center overflow-hidden whitespace-nowrap">
                     <Avatar
-                      className="mr-1 hidden sm:mr-2 sm:block"
+                      className="border-pink/30 mr-1 hidden rounded-full border sm:mr-2 sm:block"
                       alt={data.fullname || "unknown"}
-                      size="sm"
-                      imageSrc=""
+                      size="md"
+                      imageSrc={data.avatar}
                     />
                     {data.fullname}
                     <Link href={`/${data.username}`} target="_blank">
@@ -111,7 +111,7 @@ function CustomExpertTable(props: CustomExpertTableProps) {
                         // setTokensAmount(tokensAmountData);
                         data.buy_amount = val;
                       }}
-                      className="border-default rounded-r-0 w-10 text-[.5rem] [appearance:textfield] sm:w-24 sm:text-sm"
+                      className="border-default w-10 rounded-none text-[.5rem] [appearance:textfield] sm:w-24 sm:text-sm"
                       defaultValue={Math.min(10, data.expert_token_amount)}
                     />
                     {true && (

@@ -33,7 +33,10 @@ type UpdateProfileOptions = {
 };
 
 const client = new MeiliSearch({
-  host: `https://${process.env.MEILISEARCH_HOST}`,
+  host:
+    process.env.NODE_ENV === "production"
+      ? `https://${process.env.MEILISEARCH_HOST}`
+      : `http://${process.env.MEILISEARCH_HOST}`,
   apiKey: process.env.ADMIN_API_KEY, // admin apiKey
 });
 

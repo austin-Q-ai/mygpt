@@ -24,6 +24,7 @@ interface Props {
   heading?: string;
   hideFooter?: boolean;
   loading?: boolean;
+  hidden?: boolean;
 }
 
 export const footerLinks: LinkProps[] = [
@@ -67,6 +68,7 @@ export const footerLinks: LinkProps[] = [
     url: "/",
     Icon: Share2,
     col: 6,
+    hidden: true,
   },
   {
     name: "Comments",
@@ -74,6 +76,7 @@ export const footerLinks: LinkProps[] = [
     Icon: MessageSquare,
     sideLabel: "9 comments",
     col: 6,
+    hidden: true,
   },
 ];
 
@@ -169,7 +172,10 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
       ) : (
         // <div className="bg-[url('/imgpsh_fullsize_anim.png')] bg-cover bg-no-repeat md:grid lg:!max-h-screen lg:grid-rows-[_80px_1fr_1fr_1fr_1fr_1fr_0px]">
         <div className="relative min-h-[880px] md:grid lg:!max-h-screen lg:grid-rows-[_80px_1fr_1fr_1fr_1fr_1fr_0px]">
-          <div className="absolute inset-0 bg-cover bg-no-repeat opacity-50 bg-[url('/imgpsh_fullsize_anim.png')]" style={{ zIndex: -1 }} />
+          <div
+            className="absolute inset-0 bg-[url('/imgpsh_fullsize_anim.png')] bg-cover bg-no-repeat opacity-50"
+            style={{ zIndex: -1 }}
+          />
           <div className="flex flex-row md:row-span-1">
             <div className="flex flex-col justify-center flex-1 pt-4 ms-6 sm:px-6 md:mx-6 lg:px-4">
               <HeadSeo title={props.title} description={props.description} />

@@ -206,17 +206,17 @@ export default function ExpertClone() {
 
         data.data.chat_id
           ? setQaList([
-              ...qaList,
-              {
-                user_message: data.data.user_message,
-                chat_id: data.data.chat_id,
-                assistant: data.data.assistant,
-                loading: false,
-                brain_id: data.data.brain_id,
-                message_id: data.data.message_id,
-                message_time: data.data.message_time,
-              },
-            ])
+            ...qaList,
+            {
+              user_message: data.data.user_message,
+              chat_id: data.data.chat_id,
+              assistant: data.data.assistant,
+              loading: false,
+              brain_id: data.data.brain_id,
+              message_id: data.data.message_id,
+              message_time: data.data.message_time,
+            },
+          ])
           : null;
         setHistoryEdit("");
       });
@@ -392,7 +392,7 @@ export default function ExpertClone() {
   });
   return (
     <div className="to-darkemphasis bg-gradient-to-b from-gray-100">
-      <div className="h-[100vh] flex-1 bg-[url('/imgpsh_fullsize_anim.png')] bg-cover bg-no-repeat lg:!max-h-screen">
+      <div className="h-fit flex-1 bg-[url('/imgpsh_fullsize_anim.png')] bg-cover bg-no-repeat lg:h-[100vh]">
         <div
           ref={sideMenuRef}
           className={classNames(
@@ -484,8 +484,8 @@ export default function ExpertClone() {
                                       historyItemDelete.includes(qa.chat_id)
                                         ? "hidden"
                                         : historyEdit === qa.chat_id
-                                        ? "disabled text-muted cursor-not-allowed"
-                                        : "text-secondary cursor-pointer"
+                                          ? "disabled text-muted cursor-not-allowed"
+                                          : "text-secondary cursor-pointer"
                                     )}
                                   />
                                 </Button>

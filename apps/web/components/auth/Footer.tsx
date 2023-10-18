@@ -21,6 +21,7 @@ export type LinkProps = {
   sideLabel?: string;
   col?: number;
   type?: "modal";
+  hidden?: boolean;
 };
 type FooterPropsTypes = {
   authPage?: boolean;
@@ -60,7 +61,7 @@ export default function Footer(props: FooterPropsTypes) {
       className={classNames(
         windowWidth >= 1024
           ? "text-secondary mx-auto mt-6 flex w-full flex-row justify-evenly pb-2 font-medium"
-          : `text-secondary align-center  mb-3 grid w-full grid-cols-12 gap-4 py-6 pb-2 text-sm font-medium md:mx-[10rem]`,
+          : `text-secondary align-center  mx-[2rem] mb-3 grid w-full grid-cols-12 gap-4 py-6 pb-2 text-sm font-medium md:mx-[10rem]`,
 
         props.className
       )}>
@@ -72,7 +73,8 @@ export default function Footer(props: FooterPropsTypes) {
             className={classNames(
               windowWidth >= 1024
                 ? "my-auto flex-col"
-                : `col-span-${item.col} mx-auto my-auto w-full text-center`
+                : `col-span-${item.col} mx-auto my-auto w-full text-center`,
+              windowWidth >= 1024 && item.hidden ? "hidden" : ""
             )}
             key={item.name}>
             {item.type === "modal" ? (

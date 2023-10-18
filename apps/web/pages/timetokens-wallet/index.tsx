@@ -13,7 +13,7 @@ import { LineChart } from "@calcom/features/insights/components/LineChart";
 import { valueFormatter } from "@calcom/features/insights/lib";
 import Shell from "@calcom/features/shell/Shell";
 import { buyTokens } from "@calcom/features/timetokenswallet";
-import { MEILISEARCH_HOST, MEILISEARCH_SEARCH_API_KEY } from "@calcom/lib/constants";
+import { IS_PRODUCTION } from "@calcom/lib/constants";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { trpc } from "@calcom/trpc/react";
 import {
@@ -69,8 +69,10 @@ function TimeTokensWallet() {
   // const [user, setUser] = useState<any>(null);
 
   const meiliClient = new MeiliSearch({
-    host: `https://${MEILISEARCH_HOST}`,
-    apiKey: MEILISEARCH_SEARCH_API_KEY,
+    host: IS_PRODUCTION
+      ? `https://${process.env.NEXT_PUBLIC_MEILISEARCH_HOST}`
+      : `http://${process.env.NEXT_PUBLIC_MEILISEARCH_HOST}`,
+    apiKey: process.env.NEXT_PUBLIC_SEARCH_API_KEY,
   });
 
   const columns: string[] = ["Expert", "Tokens amount(expert)", "Tokens amount(me)", "Token price", ""];
@@ -182,10 +184,24 @@ function TimeTokensWallet() {
     },
   });
 
+  const revokeTokenMutation = trpc.viewer.timetokenswallet.revokeToken.useMutation({
+    onSuccess: () => {
+      showToast(t("settings_updated_successfully"), "success");
+    },
+    onError: () => {
+      showToast(t("error_updating_settings"), "error");
+    },
+  })
+
   const addExpert = () => {
     console.log(addExpertId, "=====");
     addExpertMutation.mutate({ emitterId: addExpertId });
   };
+
+  const revokeToken = () => {
+    //revoke token action here
+    revokeTokenMutation.mutate();
+  }
 
   const customFilter = (option: any, searchText: string) => {
     return true;
@@ -323,6 +339,12 @@ function TimeTokensWallet() {
                     data-testid=""
                     StartIcon={Plus}>
                     {t("add")}
+                  </Button>
+                  <Button
+                    className="text-[.5rem] sm:text-sm"
+                    onClick={revokeToken}
+                  >
+                    {"Revoke"}
                   </Button>
                 </div>
                 {/* Time Token Price update Graph  */}
