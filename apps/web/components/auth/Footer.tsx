@@ -11,6 +11,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@calcom/ui";
 import Benefits from "@components/auth/Benefits";
 import Features from "@components/auth/Features";
 import UseCases from "@components/auth/UseCases";
+import HowDoesItWork from "@components/auth/HowDoesItWork";
 
 export type LinkProps = {
   name: string;
@@ -35,6 +36,7 @@ const ModalsMap: ModalsMapType = {
   benefits: <Benefits />,
   features: <Features />,
   "use cases": <UseCases />,
+  "how does it work": <HowDoesItWork />,
 } as const;
 useState;
 export default function Footer(props: FooterPropsTypes) {
