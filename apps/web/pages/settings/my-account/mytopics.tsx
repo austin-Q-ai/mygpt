@@ -133,7 +133,7 @@ const TopicsView = () => {
                     avatar: user.avatar,
                     hasBot: user.hasBot,
                     isOnline: !user.away,
-                    bookingCallLink: user.username
+                    bookingCallLink: user.username,
                   },
                 },
               ],
@@ -170,7 +170,7 @@ const TopicsView = () => {
                         hasBot: user.hasBot,
                         isOnline: !user.away,
                         bookingCallLink: user.username,
-                        bio: user.bio
+                        bio: user.bio,
                       },
                     },
                   ],
@@ -247,7 +247,7 @@ const TopicsView = () => {
         <div>
           <Button
             color="primary"
-            className={`flex h-[36px] w-[80px] justify-center p-[6.166px] text-[12.332px] leading-[17.264px]`}
+            className="flex h-[36px] w-[80px] justify-center p-[6.166px] text-[12.332px] leading-[17.264px]"
             loading={isSaving}
             onClick={handleSave}>
             {t("save")}
