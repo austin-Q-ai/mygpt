@@ -389,8 +389,15 @@
   "no_expert_data_description": "There is no expert you added now. You can add any experts you want and buy their tokens for booking interview with them.",
   "expert": "Expert",
   "token_amount": "Token amount",
+  "revoke": "Revoke",
+  "revoke_token": "Revoke Token",
+  "confirm_revoke_question": "Do you really want to revoke tokens?",
+  "confirm_revoke_event": "Yes, revoke tokens",
+  "revoke_token_success": "Rovoked token successfully",
+  "error_revoking_token": "Error revoking tokens",
   "navigate_between_menu_using_cube": "Navigate between menus using the cube",
   "rotate_cube": "Rotate the cube and explore the navigation menus",
+  "upgrade_helper": "From {{fromLevel}} to {{toLevel}}",
   "confirm_upgrade_question": "Do you really want to upgrade your subscription plan?",
   "confirm_upgrade_event": "Yes, upgrade",
   "on": "on",
@@ -2151,5 +2158,6 @@
   "successfully_created": "Successfully Created",
   "verification_email_was_sent_please_check_and_try_again": "Verification Email was sent. Please check and try again.",
   "email_for_supabase_not_confirmed_click_resend_email_button": "Email for Supabase not confirmed, Click `Resend email` button",
-  "my_bots": "My Bots"
+  "my_bots": "My Bots",
+  "invalid_address": "You provided an invalid address format"
 }

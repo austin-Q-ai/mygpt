@@ -17,6 +17,7 @@ export const userHandler = async ({ input }: UserOptions) => {
         username: true,
         apiKey: true,
         expertId: true,
+        id: true,
       },
     });
     if (!user) throw new Error("User not found");

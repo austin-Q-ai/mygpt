@@ -6,6 +6,7 @@ import type { NextApiResponse, GetServerSidePropsContext } from "next";
 
 import stripe from "@calcom/app-store/stripepayment/lib/server";
 import { getPremiumPlanProductId } from "@calcom/app-store/stripepayment/lib/utils";
+import { GOOGLE_MAP_API_KEY } from "@calcom/lib/constants";
 import hasKeyInMetadata from "@calcom/lib/hasKeyInMetadata";
 import { getTranslation } from "@calcom/lib/server";
 import { checkUsername } from "@calcom/lib/server/checkUsername";
@@ -41,7 +42,24 @@ const client = new MeiliSearch({
 });
 
 const index = client.index("users");
+async function validateAddress(address: any) {
+  const response = await axios.get("https://maps.googleapis.com/maps/api/geocode/json", {
+    params: {
+      key: GOOGLE_MAP_API_KEY,
+      address: address,
+    },
+  });
 
+  const data = response.data;
+
+  if (data.results.length > 0) {
+    // The address is valid
+    return true;
+  } else {
+    // The address is invalid
+    return false;
+  }
+}
 export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions) => {
   const { user } = ctx;
   const data: Prisma.UserUpdateInput & { defaultValue?: boolean } = {
@@ -97,6 +115,16 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
 
   if (price) {
     delete data.price;
+  }
+
+  if (data.address) {
+    const response = await validateAddress(data.address);
+    if (!response) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "invalid_address",
+      });
+    }
   }
 
   if (input.defaultValue) {

@@ -147,8 +147,12 @@ const ProfileView = () => {
       utils.viewer.avatar.invalidate();
       setTempFormValues(null);
     },
-    onError: () => {
-      showToast(t("error_updating_settings"), "error");
+    onError: (err) => {
+      if (err.message === "invalid_address") {
+        showToast(t("invalid_address"), "error");
+      } else {
+        showToast(t("error_updating_settings"), "error");
+      }
     },
   });
 

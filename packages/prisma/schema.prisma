@@ -301,6 +301,7 @@ model User {
   aiAdvantage                  String[]
   timeTokenAdvantage           String[]
   Subscription                 Subscription[]
+  videoCloneToken              String?
   hasBot                       Boolean                 @default(false)
 
   @@unique([email])
@@ -492,6 +493,7 @@ model Subscription {
   user    User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId  Int
   level   UserLevel
+  price   Int       @default(0)
   paid    Boolean   @default(false)
   Payment Payment[]
 }
