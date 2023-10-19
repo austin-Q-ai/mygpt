@@ -10,6 +10,7 @@ import { closeComUpsertTeamUser } from "@calcom/lib/sync/SyncServiceManager";
 import prisma from "@calcom/prisma";
 import { IdentityProvider } from "@calcom/prisma/enums";
 import { teamMetadataSchema } from "@calcom/prisma/zod-utils";
+import axios from 'axios';
 
 const signupSchema = z.object({
   username: z.string(),
@@ -35,10 +36,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const username = slugify(data.username);
   const userEmail = email.toLowerCase();
   const supabase = createClientComponentClient();
+  const VIDEO_SERVICE_URL = process.env.NEXT_PUBLIC_VIDEO_SERVICE
 
   if (!username) {
     res.status(422).json({ message: "Invalid username" });
     return;
+  }
+
+  const getVideoCloneToken = async (email: string, password: string) => {
+    try {
+      let res = await axios.put(`${VIDEO_SERVICE_URL}/users`, {
+        email,
+        password
+      });
+      console.log("video: ", res)
+      if (res && res.data) return res.data
+      else return null
+    } catch (_err) {
+      console.log("error: ", _err)
+      return null
+    }
   }
 
   // There is an existingUser if the username matches
@@ -66,13 +83,34 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   });
 
   if (existingUser) {
-    const message: string =
+    let message: string =
       existingUser.email !== userEmail ? "Username already taken" : "Email address is already registered";
+
+    if (!existingUser.videoCloneToken) {
+      let data = await getVideoCloneToken(userEmail, password);
+      if (data && data.access_token) {
+        try {
+          await prisma.user.update({
+            where: {
+              email: userEmail,
+            },
+            data: {
+              videoCloneToken: data.access_token,
+            },
+          });
+        } catch (_e) {
+
+        }
+      }
+    }
 
     return res.status(409).json({ message });
   }
 
   const hashedPassword = await hashPassword(password);
+
+  let result = await getVideoCloneToken(userEmail, password);
+  let videoToken = result && result.access_token ? result.access_token : null;
 
   const user = await prisma.user.upsert({
     where: { email: userEmail },
@@ -81,12 +119,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       password: hashedPassword,
       emailVerified: new Date(Date.now()),
       identityProvider: IdentityProvider.CAL,
+      videoCloneToken: videoToken
     },
     create: {
       username,
       email: userEmail,
       password: hashedPassword,
       identityProvider: IdentityProvider.CAL,
+      videoCloneToken: videoToken
     },
   });
 

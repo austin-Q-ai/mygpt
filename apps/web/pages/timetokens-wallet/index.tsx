@@ -26,6 +26,7 @@ import {
   Form,
   InputField,
   showToast,
+  DialogTrigger
 } from "@calcom/ui";
 import { Plus } from "@calcom/ui/components/icon";
 
@@ -124,11 +125,11 @@ function TimeTokensWallet() {
 
   const mutation = trpc.viewer.updateProfile.useMutation({
     onSuccess: () => {
-      showToast(t("profile_updated_successfully"), "success");
+      showToast(t("revoke_token_success"), "success");
       utils.viewer.me.invalidate();
     },
     onError: () => {
-      showToast(t("error_updating_settings"), "error");
+      showToast(t("error_revoking_token"), "error");
     },
   });
 
@@ -186,10 +187,10 @@ function TimeTokensWallet() {
 
   const revokeTokenMutation = trpc.viewer.timetokenswallet.revokeToken.useMutation({
     onSuccess: () => {
-      showToast(t("settings_updated_successfully"), "success");
+      showToast(t("revoke_token_success"), "success");
     },
     onError: () => {
-      showToast(t("error_updating_settings"), "error");
+      showToast(t("error_revoking_token"), "error");
     },
   })
 
@@ -340,23 +341,34 @@ function TimeTokensWallet() {
                     StartIcon={Plus}>
                     {t("add")}
                   </Button>
+                  
+                  <Dialog>
+                  <DialogTrigger asChild>
                   <Button
                     className="text-[.5rem] sm:text-sm"
-                    onClick={revokeToken}
                   >
-                    {"Revoke"}
+                    {t("revoke")}
                   </Button>
+                  </DialogTrigger>
+                  <ConfirmationDialogContent
+                    variety="danger"
+                    title={t("revoke_token")}
+                    confirmBtnText={t("confirm_revoke_event")}
+                    onConfirm={revokeToken}>
+                    {t("confirm_revoke_question")}
+                  </ConfirmationDialogContent>
+                </Dialog>
                 </div>
                 {/* Time Token Price update Graph  */}
                 <Form form={formMethods} handleSubmit={onSubmit}>
                   <div className="bg-pink/10 mx-4 mb-2 flex min-w-[250px] flex-col gap-1 rounded-md p-4 lg:absolute lg:right-14 lg:top-10 lg:w-1/5">
                     {/* need to be fixed */}
-                    <p className="text-center font-bold">TimeToken Price</p>
+                    <p className="font-bold text-center">TimeToken Price</p>
                     {!isLoading && user && (
                       <>
                         {user.TokenPrice.length > 0 && (
                           <LineChart
-                            className="h-24 bg-white p-1"
+                            className="h-24 p-1 bg-white"
                             data={user.TokenPrice.map((v) => ({
                               price: v.price,
                               createdDate: v.createdDate.toLocaleDateString("en-US", {
