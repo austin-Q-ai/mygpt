@@ -397,6 +397,7 @@
   "error_revoking_token": "Error revoking tokens",
   "navigate_between_menu_using_cube": "Navigate between menus using the cube",
   "rotate_cube": "Rotate the cube and explore the navigation menus",
+  "upgrade_helper": "From {{fromLevel}} to {{toLevel}}",
   "confirm_upgrade_question": "Do you really want to upgrade your subscription plan?",
   "confirm_upgrade_event": "Yes, upgrade",
   "on": "on",

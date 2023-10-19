@@ -385,6 +385,7 @@
   "error_revoking_token": "Erreur lors de la révocation des jetons",
   "navigate_between_menu_using_cube": "Naviguer entre les menus en utilisant le cube",
   "rotate_cube": "Faites tourner le cube et explorez les menus de navigation",
+  "upgrade_helper": "De {{fromLevel}} à {{toLevel}}",
   "confirm_upgrade_question": "Voulez-vous vraiment mettre à niveau votre plan d'abonnement ?",
   "confirm_upgrade_event": "Oui, mettre à niveau",
   "on": "le",

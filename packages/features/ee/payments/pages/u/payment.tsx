@@ -34,6 +34,18 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
       bookingId: true,
       walletId: true,
       subscriptionId: true,
+      subscription: {
+        select: {
+          user: {
+            select: {
+              level: true,
+              currency: true,
+            },
+          },
+          level: true,
+          price: true,
+        },
+      },
     },
   });
 
