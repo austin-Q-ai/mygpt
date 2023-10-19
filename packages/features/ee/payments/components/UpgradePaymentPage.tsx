@@ -47,27 +47,27 @@ const UpgradePaymentPage: FC<PaymentPageProps> = (props) => {
   console.log(props.payment);
 
   const fromLevel =
-    props.payment.subscription.user.level === "FREEMIUM"
+    props.payment.subscription?.user.level === "FREEMIUM"
       ? "Freemium"
       : `${Intl.NumberFormat(i18n.language, {
         style: "currency",
-        currency: props.payment.subscription.user.currency,
+        currency: props.payment.subscription?.user.currency,
         useGrouping: false,
         maximumFractionDigits: 0,
       }).format(
-        SUBSCRIPTION_PRICE[props.payment.subscription.user.level][
-        props.payment.subscription.user.currency.toUpperCase()
+        SUBSCRIPTION_PRICE[props.payment.subscription?.user.level || ""][
+        props.payment.subscription?.user.currency.toUpperCase() || ""
         ]
       )}/${t("monthly_one")}`;
 
   const toLevel = `${Intl.NumberFormat(i18n.language, {
     style: "currency",
-    currency: props.payment.subscription.user.currency,
+    currency: props.payment.subscription?.user.currency,
     useGrouping: false,
     maximumFractionDigits: 0,
   }).format(
-    SUBSCRIPTION_PRICE[props.payment.subscription.level][
-    props.payment.subscription.user.currency.toUpperCase()
+    SUBSCRIPTION_PRICE[props.payment.subscription?.level || ""][
+    props.payment.subscription?.user.currency.toUpperCase() || ""
     ]
   )}/${t("monthly_one")}`;
 
@@ -110,10 +110,10 @@ const UpgradePaymentPage: FC<PaymentPageProps> = (props) => {
                       <div className="col-span-2 mb-6">
                         {Intl.NumberFormat(i18n.language, {
                           style: "currency",
-                          currency: props.payment.subscription.user.currency,
+                          currency: props.payment.subscription?.user.currency,
                           useGrouping: false,
                           maximumFractionDigits: 0,
-                        }).format(props.payment.subscription.price)}
+                        }).format(props.payment.subscription?.price || 0)}
                       </div>
                       {/* <div className="font-medium">{t("token_amount")}</div>
                       <div className="col-span-2 mb-6 font-semibold">{props.payment.wallet?.amount}</div> */}

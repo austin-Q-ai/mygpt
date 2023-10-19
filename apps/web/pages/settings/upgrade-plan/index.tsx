@@ -183,7 +183,7 @@ const SubscriptionView = () => {
   //     showToast(t("error_updating_settings"), "error");
   //   },
   // });
-  const getPrice = (level, currency) => {
+  const getPrice = (level: UserLevel, currency: string) => {
     if (level === UserLevel.FREEMIUM) return t("freemium");
     else if (level === UserLevel.CUSTOM) return t("contact_us");
 

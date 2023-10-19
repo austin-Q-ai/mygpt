@@ -87,7 +87,11 @@ export const RESERVED_SUBDOMAINS = JSON.parse(`[${process.env.RESERVED_SUBDOMAIN
 export const GOOGLE_MAP_API_KEY = "AIzaSyAZ3P9XEHmIMU2UAnfj0hCD2V2i6R3aStA";
 
 // Subscription price
-export const SUBSCRIPTION_PRICE = {
+export const SUBSCRIPTION_PRICE: {
+  [key: string]: {
+    [key: string]: number;
+  };
+} = {
   FREEMIUM: {
     EUR: 0,
     USD: 0,
