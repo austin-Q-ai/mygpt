@@ -15154,6 +15154,7 @@ __metadata:
     typescript: ^4.9.4
     vitest: ^0.31.1
     vitest-mock-extended: ^1.1.3
+    wavesurfer.js: ^7.3.9
   languageName: unknown
   linkType: soft
 
@@ -34743,6 +34744,13 @@ __metadata:
     watchpack-chokidar2:
       optional: true
   checksum: 8b7cb8c8df8f4dd0e8ac47693c0141c4f020a4b031411247d600eca31522fde6f1f9a3a6f6518b46e71f7971b0ed5734c08c60d7fdd2530e7262776286f69236
+  languageName: node
+  linkType: hard
+
+"wavesurfer.js@npm:^7.3.9":
+  version: 7.3.9
+  resolution: "wavesurfer.js@npm:7.3.9"
+  checksum: 293bb4ebd356d635141270e61d2e1421a332a0726186ed53f3a4c86b894eb1280aba9c0c7b0acd2557b7db2e51853e57f26f6d172bc2b041e24a86fe799b8a12
   languageName: node
   linkType: hard
 

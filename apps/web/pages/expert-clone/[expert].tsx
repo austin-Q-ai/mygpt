@@ -18,6 +18,8 @@ import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import MessageLoader from "pages/expert-clone/components/MessageLoader";
+import SecondsCounter from "pages/expert-clone/components/SecondsCounter";
+import VoiceUploader from "pages/expert-clone/components/VoiceUploader";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Typist from "react-typist";
 import { z } from "zod";
@@ -45,6 +47,7 @@ import Footer from "@components/auth/Footer";
 import MicroCards from "@components/microcard";
 import { footerLinks } from "@components/ui/AuthContainer";
 
+import AudioPlayer from "./components/AudioPlayer";
 import AuthModal from "./components/AuthModal";
 
 export function DialogContentDiv(props: JSX.IntrinsicElements["div"]) {
@@ -66,6 +69,18 @@ const useSize = (target: any) => {
 const querySchema = z.object({
   expert: z.string().optional(),
 });
+
+const DurationShow = ({ counter }: { counter: number }) => {
+  const timer = counter * 100;
+  const seconds = Math.floor(timer / 100);
+  const milliseconds = Math.floor(timer % 100);
+  return (
+    <div className="text-md text-secondary mt-3 w-8 items-center font-bold">
+      {seconds < 10 ? "0" + seconds : seconds}:{milliseconds < 10 ? "0" + milliseconds : milliseconds}
+    </div>
+  );
+};
+
 export default function ExpertClone() {
   const {
     data: { expert },
@@ -139,7 +154,26 @@ export default function ExpertClone() {
   const endOfScrollArea = useRef<HTMLDivElement>(null);
   const [target, setTarget] = useState<HTMLDivElement | null>(null);
   const [noLoadingEdit, setNoLoadingEdit] = useState("");
+  const [voice, setVoice] = useState<string>("");
+  const [voiceDuration, setVoiceDuration] = useState<number>(0);
+  const [isRecording, setIsRecording] = useState<boolean>(false);
   const size = useSize(target);
+
+  useEffect(() => {
+    console.log("voice has been recorded", voice);
+    const audio = new Audio();
+    audio.src = voice;
+    audio.addEventListener("loadedmetadata", function () {
+      setVoiceDuration(audio.duration);
+    });
+    audio.load();
+    return () => {
+      audio.removeEventListener("loadedmetadata", function () {
+        console.log("Duration:", audio.duration); // seconds
+      });
+    };
+  }, [voice]);
+
   useEffect(() => {
     endOfScrollArea?.current?.scrollIntoView({ behavior: "smooth" });
   }, [size]);
@@ -703,7 +737,9 @@ export default function ExpertClone() {
                 ref={searchInput}
                 disabled={isLoading && searchResultFlag}
                 autoComplete="off"
-                // addOnLeading={<Search color="#6D278E" />}
+                addOnLeading={
+                  isRecording ? <SecondsCounter /> : voice ? <DurationShow counter={voiceDuration} /> : ""
+                }
                 addOnSuffix={
                   <>
                     <Button
@@ -719,13 +755,20 @@ export default function ExpertClone() {
                     </Button>
                   </>
                 }
-                placeholder="Ask me anything ..."
+                placeholder={isRecording || voice ? "" : "Ask me anything ..."}
                 inputwidth="lg"
                 addOnClassname=" !border-darkemphasis !text-secondary !h-[50px] !bg-transparent"
                 inputMode="search"
                 containerClassName="w-full"
                 className="!border-darkemphasis text-secondary selection:border-secondary placeholder:text-darkemphasis !w-full !bg-transparent py-2 text-2xl"
               />
+              {voice ? (
+                <div className="absolute left-20 top-0 my-auto flex h-[93%] w-[80%] items-center">
+                  <div className="w-full">
+                    <AudioPlayer blobUrl={voice} />
+                  </div>
+                </div>
+              ) : null}
 
               {authModalFlag && (
                 <AuthModal
@@ -745,6 +788,7 @@ export default function ExpertClone() {
                   style={{ top: "-18", right: "-18" }}
                 />
               )}
+              <VoiceUploader setVoice={setVoice} setIsRecordingFlag={setIsRecording} />
             </form>
           </div>
           <div
