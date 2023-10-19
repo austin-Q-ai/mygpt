@@ -115,6 +115,7 @@ export interface BaseCardProps extends CVACardType {
   };
   mediaLink?: string;
   thumbnailUrl?: string;
+  className?: string;
 }
 
 export function Card({
@@ -129,6 +130,7 @@ export function Card({
   mediaLink,
   thumbnailUrl,
   learnMore,
+  className,
 }: BaseCardProps) {
   const LinkComponent = learnMore && learnMore.href.startsWith("https") ? "a" : Link;
   return (
@@ -136,7 +138,8 @@ export function Card({
       className={classNames(
         containerProps?.className,
         cvaCardTypeByVariant({ variant, structure: "card" }),
-        "bg-pink/5 border-subtle text-default flex flex-col justify-between rounded-md border"
+        "bg-pink/5 border-subtle text-default flex flex-col justify-between rounded-md border",
+        className
       )}
       {...containerProps}>
       <div>

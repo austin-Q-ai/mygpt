@@ -302,6 +302,7 @@ model User {
   timeTokenAdvantage           String[]
   Subscription                 Subscription[]
   videoCloneToken              String?
+  hasBot                       Boolean                 @default(false)
 
   @@unique([email])
   @@unique([email, username])

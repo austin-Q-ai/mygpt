@@ -10,18 +10,32 @@ function detectTransport(): SendmailTransport.Options | SMTPConnection.Options |
 
   if (process.env.EMAIL_SERVER_HOST) {
     const port = parseInt(process.env.EMAIL_SERVER_PORT || "");
-    const transport = {
+    const transport: {
+      host: string;
+      port: number;
+      secure: boolean;
+      tls: {
+        rejectUnauthorized: boolean;
+      };
+      auth?: {
+        user: string;
+        pass: string;
+      };
+    } = {
       host: process.env.EMAIL_SERVER_HOST,
       port,
-      auth: {
-        user: process.env.EMAIL_SERVER_USER,
-        pass: process.env.EMAIL_SERVER_PASSWORD,
-      },
       secure: port === 465,
       tls: {
         rejectUnauthorized: isENVDev ? false : true,
       },
     };
+
+    if (process.env.EMAIL_SERVER_USER && process.env.EMAIL_SERVER_PASSWORD) {
+      transport.auth = {
+        user: process.env.EMAIL_SERVER_USER,
+        pass: process.env.EMAIL_SERVER_PASSWORD,
+      };
+    }
 
     return transport;
   }

@@ -15148,6 +15148,7 @@ __metadata:
     react-spring-carousel: ^2.0.19
     react-typist: ^2.0.5
     react-webcam: ^7.1.1
+    swiper: ^10.3.1
     tsc-absolute: ^1.0.0
     turbo: ^1.10.1
     typescript: ^4.9.4
@@ -32368,6 +32369,13 @@ __metadata:
     tar: ^4.0.2
     xhr-request: ^1.0.1
   checksum: 1de56e0cb02c1c80e041efb2bd2cc7250c5451c3016967266c16d5c1e8c74fe5c3aae45dc46065b1f4d77667a8453b967961ec58b3975469522f566aa840a914
+  languageName: node
+  linkType: hard
+
+"swiper@npm:^10.3.1":
+  version: 10.3.1
+  resolution: "swiper@npm:10.3.1"
+  checksum: 9a785930ca0ab0683d7e5e116c25a38e1f8818d6f9e93848125bdf3e1874e12a6c3b9f4e9c54668e4accc2440a6f031de98cfc01a1b0068c77f8de4115034e4d
   languageName: node
   linkType: hard
 
