@@ -83,6 +83,9 @@ export const MINUTES_TO_BOOK = process.env.NEXT_PUBLIC_MINUTES_TO_BOOK || "5";
 export const ALLOWED_HOSTNAMES = JSON.parse(`[${process.env.ALLOWED_HOSTNAMES || ""}]`) as string[];
 export const RESERVED_SUBDOMAINS = JSON.parse(`[${process.env.RESERVED_SUBDOMAINS || ""}]`) as string[];
 
+// Google Map API key for address valication
+export const GOOGLE_MAP_API_KEY = "AIzaSyAZ3P9XEHmIMU2UAnfj0hCD2V2i6R3aStA";
+
 // Subscription price
 export const SUBSCRIPTION_PRICE = {
   FREEMIUM: {
