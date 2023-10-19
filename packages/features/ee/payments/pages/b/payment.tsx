@@ -37,6 +37,7 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
           emitter: {
             select: {
               price: true,
+              currency: true,
               name: true,
             },
           },
