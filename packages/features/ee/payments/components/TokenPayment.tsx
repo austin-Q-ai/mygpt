@@ -49,6 +49,10 @@ const PaymentForm = (props: Props) => {
         return_url: `${CAL_URL}/timetokens-wallet`,
       },
     });
+
+    if (payload.error) {
+      setState({ status: "idle" });
+    }
   };
 
   return (
