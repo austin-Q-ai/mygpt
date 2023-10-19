@@ -1,9 +1,9 @@
-import { PlayIcon } from "lucide-react";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import WaveSurfer from "wavesurfer.js";
 
 const AudioPlayer = ({ blobUrl }: { blobUrl: any }) => {
-  const waveformRef = useRef(null);
+  const waveformRef = React.useRef<HTMLAudioElement>(null);
+
   useEffect(() => {
     if (!waveformRef.current) return;
 
@@ -15,14 +15,26 @@ const AudioPlayer = ({ blobUrl }: { blobUrl: any }) => {
     });
 
     wavesurfer.load(blobUrl);
+    if (waveformRef && waveformRef.current) {
+      waveformRef?.current?.addEventListener(
+        "click",
+        () => {
+          wavesurfer.playPause();
+        },
+        true
+      );
+    }
 
-    // Play the audio
-    const playButton = document.querySelector("#playButton");
-    playButton &&
-      playButton.addEventListener("click", () => {
-        wavesurfer.playPause();
-        wavesurfer.isPlaying();
-      });
+    // // Play the audio
+    // const playButton = document.querySelector("#playButton");
+    // playButton &&
+    //   playButton.addEventListener(
+    //     "click",
+    //     () => {
+    //       wavesurfer.playPause();
+    //     },
+    //     true
+    //   );
 
     return () => {
       // Clean up wave surfer instance
@@ -32,11 +44,11 @@ const AudioPlayer = ({ blobUrl }: { blobUrl: any }) => {
   }, [blobUrl]);
 
   return (
-    <div className="relative">
+    <div className="relative w-full">
       <div id="waveform" ref={waveformRef} />
-      <button id="playButton" className="absolute -left-0 -top-8">
+      {/* <button id="playButton" className="absolute -left-2 -top-6">
         <PlayIcon fill="#6D278E" className="text-pink hover:bg-pink/10  h-6 w-6 rounded-md p-1" />
-      </button>
+      </button> */}
     </div>
   );
 };

@@ -21,7 +21,9 @@ import MessageLoader from "pages/expert-clone/components/MessageLoader";
 import SecondsCounter from "pages/expert-clone/components/SecondsCounter";
 import VoiceUploader from "pages/expert-clone/components/VoiceUploader";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import ReactPlayer from "react-player";
 import Typist from "react-typist";
+import { v4 } from "uuid";
 import { z } from "zod";
 
 import useGetBrandingColours from "@calcom/lib/getBrandColours";
@@ -126,6 +128,7 @@ export default function ExpertClone() {
     loading?: boolean;
     message_id?: string;
     message_time?: string;
+    type?: string;
   };
 
   type historyType = {
@@ -294,41 +297,91 @@ export default function ExpertClone() {
       });
   };
 
+  const handleSearchWithVoice = () => {
+    console.log("handleSearchWithVoice", voice);
+    setNoLoadingEdit("");
+    setQaList([
+      ...qaList,
+      {
+        user_message: voice,
+        chat_id: currentChatId,
+        assistant: "",
+        loading: true,
+        brain_id: "",
+        message_id: "",
+        message_time: "",
+        type: "voice",
+      },
+    ]);
+    const response = {
+      user_message: voice,
+      chat_id: "1",
+      assistant: "https://www.youtube.com/watch?v=LXb3EKWsInQ",
+      brain_id: "20",
+      message_id: v4(),
+      message_time: "",
+    };
+    setVoice("");
+    setIsLoading(true);
+    setSearchResultFlag(true);
+    setTimeout(() => {
+      setQaList([
+        ...qaList,
+        {
+          user_message: response.user_message,
+          chat_id: response.chat_id,
+          assistant: response.assistant,
+          loading: false,
+          brain_id: response.brain_id,
+          message_id: response.message_id,
+          message_time: response.message_time,
+          type: "voice",
+        },
+      ]);
+      setIsLoading(false);
+      setSearchResultFlag(false);
+    }, 2000);
+  };
+
   const handleSearch = (e: any) => {
     e.preventDefault();
-    if (searchText && searchText.length > 0) {
-      setSearchResultFlag(true);
-      setIsLoading(true);
+    if (voice) {
+      handleSearchWithVoice();
     } else {
-      return;
-    }
-    if (currentChatId === "") {
-      // if not started new chat, create new chat
-      axios
-        .post(
-          `${process.env.NEXT_PUBLIC_BRAIN_SERVICE}/chat`,
-          {
-            name: searchText.split(" ").slice(0, 3).join(" "),
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${user?.apiKey}`,
+      if (searchText && searchText.length > 0) {
+        setSearchResultFlag(true);
+        setIsLoading(true);
+      } else {
+        return;
+      }
+      if (currentChatId === "") {
+        // if not started new chat, create new chat
+        axios
+          .post(
+            `${process.env.NEXT_PUBLIC_BRAIN_SERVICE}/chat`,
+            {
+              name: searchText.split(" ").slice(0, 3).join(" "),
             },
-          }
-        )
-        .then((data) => {
-          setCurrentChatId(data.data.chat_id);
-          if (searchInput.current) {
-            if (searchInput.current.value) {
-              handleChat(data.data.chat_id);
+            {
+              headers: {
+                Authorization: `Bearer ${user?.apiKey}`,
+              },
             }
+          )
+          .then((data) => {
+            setCurrentChatId(data.data.chat_id);
+            if (searchInput.current) {
+              if (searchInput.current.value) {
+                handleChat(data.data.chat_id);
+              }
+            }
+          });
+      } else {
+        // if chat id exist, it chats with experts
+        if (searchInput.current) {
+          if (searchInput.current.value) {
+            handleChat(currentChatId);
           }
-        });
-    } else {
-      // if chat id exist, it chats with experts
-      if (searchInput.current) {
-        if (searchInput.current.value) {
-          handleChat(currentChatId);
         }
       }
     }
@@ -657,7 +710,7 @@ export default function ExpertClone() {
                             className="mb-6 py-2"
                             key={qa.message_id}
                             ref={index === qaList.length - 1 ? answersRef : null}>
-                            <div className="text-secondary mx-3 my-auto flex flex-row font-bold md:mx-6">
+                            <div className="text-secondary mx-3 my-auto flex w-[90%] flex-row font-bold md:mx-6">
                               <div>
                                 <UserIcon
                                   color="white"
@@ -666,7 +719,15 @@ export default function ExpertClone() {
                                   className="border-subtle bg-brand-default rounded-md border p-2"
                                 />
                               </div>
-                              <div className="my-auto ms-6">{qa.user_message}</div>
+                              <div className="my-auto ms-6 w-full">
+                                {qa.type === "voice" ? (
+                                  <div className="w-full">
+                                    <AudioPlayer blobUrl={qa.user_message} />
+                                  </div>
+                                ) : (
+                                  qa.user_message
+                                )}
+                              </div>
                             </div>
                             <div className="text-secondary mx-3 my-auto mt-4 flex flex-row font-medium md:mx-6">
                               <Image
@@ -690,7 +751,11 @@ export default function ExpertClone() {
                                       display: "inline-block",
                                       whiteSpace: "pre-wrap",
                                     }}>
-                                    {formatText(qa.assistant)}
+                                    {qa.type === "voice" ? (
+                                      <ReactPlayer url={qa.assistant} />
+                                    ) : (
+                                      formatText(qa.assistant)
+                                    )}
                                   </span>
                                 ) : (
                                   <Typist
