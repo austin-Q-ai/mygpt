@@ -98,7 +98,7 @@ export default function Login({
   callbackUrl = safeCallbackUrl || "";
 
   const LoginFooter = (
-    <a href={`${WEBSITE_URL}/signup`} className="text-brand-500 font-medium">
+    <a href={`${WEBSITE_URL}/signup`} className="font-medium text-brand-500">
       {t("dont_have_an_account")}
     </a>
   );
@@ -135,7 +135,10 @@ export default function Login({
     });
     if (!res) setErrorMessage(errorMessages[ErrorCode.InternalServerError]);
     // we're logged in! let's do a hard refresh to the desired url
-    else if (!res.error) router.push(callbackUrl);
+    else if (!res.error) {
+      console.log("login: ", res)
+      router.push(callbackUrl);
+    }
     // reveal two factor input if required
     else if (res.error === ErrorCode.SecondFactorRequired) setTwoFactorRequired(true);
     // fallback if error not found
@@ -144,15 +147,15 @@ export default function Login({
 
   return (
     <div
-      className="h-fit w-full lg:w-fit"
-      // style={
-      //   {
-      //     "--cal-brand": "#111827",
-      //     "--cal-brand-emphasis": "#101010",
-      //     "--cal-brand-text": "white",
-      //     "--cal-brand-subtle": "#9CA3AF",
-      //   } as CSSProperties
-      // }
+      className="w-full h-fit lg:w-fit"
+    // style={
+    //   {
+    //     "--cal-brand": "#111827",
+    //     "--cal-brand-emphasis": "#101010",
+    //     "--cal-brand-text": "white",
+    //     "--cal-brand-subtle": "#9CA3AF",
+    //   } as CSSProperties
+    // }
     >
       <AuthContainer
         title={t("login")}
@@ -165,8 +168,8 @@ export default function Login({
               ? TwoFactorFooter
               : ExternalTotpFooter
             : process.env.NEXT_PUBLIC_DISABLE_SIGNUP !== "true"
-            ? LoginFooter
-            : null
+              ? LoginFooter
+              : null
         }>
         <FormProvider {...methods}>
           <form
@@ -179,7 +182,7 @@ export default function Login({
             </div>
             <div className="space-y-6">
               <div className={classNames("space-x-4", { hidden: twoFactorRequired }, "flex flex-row")}>
-                <div className="w-full  flex-col">
+                <div className="flex-col w-full">
                   <EmailField
                     floatingLabel
                     id="email"
@@ -191,7 +194,7 @@ export default function Login({
                     inputwidth="lg"
                   />
                 </div>
-                <div className=" w-full flex-col">
+                <div className="flex-col w-full ">
                   <PasswordField
                     floatingLabel
                     id="password"
@@ -205,7 +208,7 @@ export default function Login({
                     <Link
                       href="/auth/forgot-password"
                       tabIndex={-1}
-                      className="text-default text-sm font-medium">
+                      className="text-sm font-medium text-default">
                       {t("forgot")}
                     </Link>
                   </div> */}
@@ -216,21 +219,21 @@ export default function Login({
 
               {errorMessage && <Alert severity="error" title={errorMessage} />}
               <div className="flex flex-row space-x-4">
-                <div className="w-full flex-col">
+                <div className="flex-col w-full">
                   <Button
                     type="submit"
                     color="primary"
                     disabled={formState.isSubmitting}
-                    className="w-full  justify-center p-2 text-lg">
+                    className="justify-center w-full p-2 text-lg">
                     {twoFactorRequired ? t("submit") : t("sign_in")}
                   </Button>
                 </div>
-                <div className="w-full flex-col">
+                <div className="flex-col w-full">
                   <Link
                     href="/signup"
                     type="submit"
                     color="secondary"
-                    className="hover:bg-subtle bg-muted border-subtle w-full justify-center rounded-md border p-1 text-center text-lg font-medium">
+                    className="justify-center w-full p-1 text-lg font-medium text-center border rounded-md hover:bg-subtle bg-muted border-subtle">
                     {t("sign_up")}
                   </Link>
                 </div>
@@ -238,7 +241,7 @@ export default function Login({
             </div>
             <div className="flex flex-row">
               <div className="flex flex-col">
-                <Link href="/auth/forgot-password" className="text-muted flex flex-row px-1 py-2 underline">
+                <Link href="/auth/forgot-password" className="flex flex-row px-1 py-2 underline text-muted">
                   {t("forgot_your_password")}
                 </Link>
               </div>
@@ -249,12 +252,12 @@ export default function Login({
           </form>
           {!twoFactorRequired && (
             <>
-              {(isGoogleLoginEnabled || isSAMLLoginEnabled) && <hr className="border-subtle my-8" />}
+              {(isGoogleLoginEnabled || isSAMLLoginEnabled) && <hr className="my-8 border-subtle" />}
               <div className="space-y-3">
                 {isGoogleLoginEnabled && (
                   <Button
                     color="secondary"
-                    className="w-full justify-center"
+                    className="justify-center w-full"
                     data-testid="google"
                     StartIcon={FaGoogle}
                     onClick={async (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
