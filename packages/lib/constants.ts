@@ -31,8 +31,8 @@ export const IS_CALCOM =
 
 export const CONSOLE_URL =
   new URL(WEBAPP_URL).hostname.endsWith(".cal.dev") ||
-    new URL(WEBAPP_URL).hostname.endsWith(".cal-staging.com") ||
-    process.env.NODE_ENV !== "production"
+  new URL(WEBAPP_URL).hostname.endsWith(".cal-staging.com") ||
+  process.env.NODE_ENV !== "production"
     ? `https://console.cal.dev`
     : `https://console.cal.com`;
 export const IS_SELF_HOSTED = !(
@@ -83,6 +83,22 @@ export const MINUTES_TO_BOOK = process.env.NEXT_PUBLIC_MINUTES_TO_BOOK || "5";
 export const ALLOWED_HOSTNAMES = JSON.parse(`[${process.env.ALLOWED_HOSTNAMES || ""}]`) as string[];
 export const RESERVED_SUBDOMAINS = JSON.parse(`[${process.env.RESERVED_SUBDOMAINS || ""}]`) as string[];
 
-//Chatting API
-// export const BRAIN_API_KEY = "671c23c2c10df49b25a37416af14f647";
-// export const BRAIN_ID = "446457d5-3943-4c25-a4fb-0a68bb7301d2";
+// Subscription price
+export const SUBSCRIPTION_PRICE = {
+  FREEMIUM: {
+    EUR: 0,
+    USD: 0,
+  },
+  LEVEL1: {
+    EUR: 29,
+    USD: 34,
+  },
+  LEVEL2: {
+    EUR: 59,
+    USD: 70,
+  },
+  LEVEL3: {
+    EUR: 99,
+    USD: 117,
+  },
+};

@@ -67,7 +67,7 @@ const PaymentForm = (props: Props) => {
           disabled={["processing", "error"].includes(state.status)}
           loading={state.status === "processing"}
           id="submit"
-          color="secondary">
+          color="primary">
           <span id="button-text">
             {state.status === "processing" ? <div className="spinner" id="spinner" /> : t("pay_now")}
           </span>
@@ -100,6 +100,8 @@ const ELEMENT_STYLES_DARK: stripejs.Appearance = {
 export default function UpgradePaymentComponent(props: Props) {
   const stripePromise = getStripe((props.payment.data as StripePaymentData).stripe_publishable_key);
   const [darkMode, setDarkMode] = useState<boolean>(false);
+
+  console.log(props.payment);
 
   useEffect(() => {
     setDarkMode(window.matchMedia("(prefers-color-scheme: dark)").matches);
