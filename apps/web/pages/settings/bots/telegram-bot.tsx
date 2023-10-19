@@ -41,34 +41,42 @@ const TelegramBotView = () => {
     return { BRAIN_ID: "446457d5-3943-4c25-a4fb-0a68bb7301d2", BRAIN_API_KEY: "671c23c2c10df49b25a37416af14f647" }
   }
 
-  const getVideoApi = async () => {
-    // get video api using email and password
-  }
-
   const handleSubmit = async () => {
-    // get brain id and api key
-    const { BRAIN_ID, BRAIN_API_KEY } = getBrainInfo()
 
     // get video api key
+    const video_api = user?.videoCloneToken;
+    if (!video_api) {
+      console.log("no api key");
+      return;
+    }
 
     // Perform API call using image, voice, and bot data
     const formData = new FormData();
-    formData.append("image", image);
-    formData.append("voice", voice);
-    formData.append("botname", botname);
-    formData.append("username", username);
-    formData.append("token", token);
+    formData.append("source_image", image);
+    formData.append("source_voice", voice);
+    formData.append("visible", "1");
+    formData.append("description", "create awesome bot called " + botname)
 
-    // try {
-    //   const response = await fetch("https://your-api-endpoint", {
-    //     method: "POST",
-    //     body: formData,
-    //   });
+    formData.append('_method', 'PUT');
 
-    //   // Handle response or redirect to another page
-    // } catch (error) {
-    //   // Handle error
-    // }
+    try {
+      const res = await axios.post(`${VIDEO_SERVICE_URL}/clone/create`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${video_api}`
+        }
+      })
+      if (res.data && res.data.clone_id) {
+        console.log("success: ", res.data)
+        const clone_id = res.data.clone_id
+
+      } else {
+        console.log("no clone id");
+        return
+      }
+    } catch (err) {
+      console.log("error", err)
+    }
   };
 
   return (
