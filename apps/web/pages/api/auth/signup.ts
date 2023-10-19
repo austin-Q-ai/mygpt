@@ -1,4 +1,3 @@
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
 
@@ -34,7 +33,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const username = slugify(data.username);
   const userEmail = email.toLowerCase();
-  const supabase = createClientComponentClient();
 
   if (!username) {
     res.status(422).json({ message: "Invalid username" });
@@ -190,12 +188,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     email: userEmail,
     username,
     language,
-  });
-
-  // create supabase signup
-  await supabase.auth.signUp({
-    email,
-    password,
   });
 
   res.status(201).json({ message: "Created user" });
