@@ -53,7 +53,14 @@ const howDoesItWorkContents = [
 export default function HowDoesItWork() {
     return (
         <>
-            <Swiper pagination={true} modules={[Pagination]} className="w-full h-full">
+            <Swiper pagination={true} modules={[Pagination]} className="w-full h-full" style={{
+                //@ts-ignore
+                "--swiper-pagination-color": "#6D278E",
+                "--swiper-pagination-bullet-inactive-color": "#D7C9E0",
+                "--swiper-pagination-bullet-inactive-opacity": "1",
+                "--swiper-pagination-bullet-size": "20px",
+                "--swiper-pagination-bullet-horizontal-gap": "6px"
+            }}>
                 {howDoesItWorkContents.map((item, index) =>
 
                     <SwiperSlide className='!h-auto'>
@@ -63,7 +70,7 @@ export default function HowDoesItWork() {
                                 <p className='text-2xl font-bold text-center text-pink'>{item.header}</p>
                             </div>
                             <img className='my-auto' src={`/app-how-does-it-work/${index + 1}.png`} />
-                            <p className='mt-6 mb-10 text-xl text-center text-pink'>{item.footer}</p>
+                            <p className='mt-6 text-xl text-center mb-14 text-pink'>{item.footer}</p>
                         </div>
                     </SwiperSlide>
 
