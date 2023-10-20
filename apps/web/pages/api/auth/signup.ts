@@ -230,11 +230,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     language,
   });
 
-  // create supabase signup
-  // await supabase.auth.signUp({
-  //   email,
-  //   password,
-  // });
-
   res.status(201).json({ message: "Created user" });
 }

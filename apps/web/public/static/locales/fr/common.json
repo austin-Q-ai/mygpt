@@ -2086,6 +2086,15 @@
   "verification_email_was_sent_please_check_and_try_again": "Un e-mail de vérification a été envoyé. S'il vous plaît, vérifiez et essayez à nouveau.",
   "email_for_supabase_not_confirmed_click_resend_email_button": "E-mail pour Supabase non confirmé, cliquez sur le bouton `Renvoyer l'e-mail`",
   "my_bots": "Mes robots",
+  "registration": "Inscription",
+  "sign_in_on_the_platform": "Connectez-vous sur la plateforme",
+  "fill_all_fields_of_the_getting_started": "Remplissez tous les champs du formulaire de démarrage",
+  "dashboard": "Tableau de bord",
+  "add_a_new_event_type_delete_event_type_and_edit_event_type": "Ajouter un nouveau type d'événement, Supprimer le type d'événement et Modifier le type d'événement",
+  "cancel_booking_reschedule_booking_request_reschedule_edit_location": "Annuler la réservation, reprogrammer la réservation, demander un replanification, modifier l'emplacement",
+  "add_expert_timetoken_buy_timetoken_view_expert_profile_remove_expert_timetoken_and_change_timetoken_price": "Ajouter un timetoken expert, acheter un timetoken, afficher le profil d'un expert, supprimer un timetoken expert et modifier le prix du timetoken",
+  "add_a_new_availability_edit_availability_delete_availability_duplicate_availability": "Ajouter une nouvelle disponibilité, Modifier la disponibilité, Supprimer la disponibilité, Disponibilité en double",
+  "add_a_new_club_deal_edit_club_deal_delete_club_deal_preview_club_deal_invite_club_deal_member": "Ajouter un nouveau deal de club, Modifier le deal de club, Supprimer le deal de club, Aperçu du deal de club, Inviter un membre du club deal",
+  "add_a_new_app_delete_app": "Ajouter une nouvelle application, Supprimer l'application",
   "invalid_address": "Vous avez fourni un format d'adresse invalide"
-
 }
