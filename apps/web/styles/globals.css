@@ -129,6 +129,19 @@ body  {
   opacity: 0.8;
 }
 
+.bg-auth::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-image: url("../public/imgpsh_fullsize_anim.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  opacity: 0.8;
+}
+
 /*
   Desktop App specific CSS
     https://docs.todesktop.com/
