@@ -40,17 +40,18 @@ export const ServicesPage = React.forwardRef<HTMLDivElement, ServicesPageProps>(
                             Link: {CAL_URL?.replace(/^(https?:|)\/\//, "")}/{user.username}/{event.slug}
                           </p>
                           <div className="flex gap-2">
-                            {event.metadata["multipleDuration"] ? (
-                              event.metadata["multipleDuration"].map((duration) => (
-                                <Badge className="w-fit" key={duration} variant="gray" startIcon={Clock}>
-                                  {duration}m
+                            {/* eslint-disable-next-line */}
+                            {/* {event.metadata?.multipleDuration ? (
+                              event.metadata.multipleDuration.map((duration, key) => (
+                                <Badge className="w-fit" key={key} variant="gray" startIcon={Clock}>
+                                  {duration}
                                 </Badge>
                               ))
-                            ) : (
-                              <Badge className="w-fit" variant="gray" startIcon={Clock}>
-                                {event.length}m
-                              </Badge>
-                            )}
+                            ) : ( */}
+                            <Badge className="w-fit" variant="gray" startIcon={Clock}>
+                              {event.length}m
+                            </Badge>
+                            {/* )} */}
                           </div>
                           <span className="bg-pink w-fit rounded px-3 py-1 text-white">
                             <Link href={`/${user.username}/${event.slug}`}>
