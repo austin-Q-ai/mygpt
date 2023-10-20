@@ -7,9 +7,10 @@ import Link from "next/link";
 type PriceListItemProps = {
   priceItem: { name: string; features: string[]; ipDevice: string; password: string };
   handleClick: () => void;
+  disabled?: boolean
 };
 
-export default function PriceListItem({ priceItem: props, handleClick }: PriceListItemProps) {
+export default function PriceListItem({ priceItem: props, handleClick, disabled }: PriceListItemProps) {
   const { t } = useLocale();
   const brandTheme = getBrandColours({
     lightVal: "#6d278e",
@@ -39,7 +40,7 @@ export default function PriceListItem({ priceItem: props, handleClick }: PriceLi
             {t("read_and_accept_the_terms_and_conditions")}
           </div>
           <div className="flex-row text-center">
-            <Link href="/signup"><Button color="primary" EndIcon={ArrowRight} onClick={handleClick}>
+            <Link href="/signup"><Button color="primary" EndIcon={ArrowRight} onClick={handleClick} hidden={disabled}>
               {t("sign_up")}
             </Button></Link>
           </div>
