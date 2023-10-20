@@ -70,7 +70,7 @@ const UserProfile = () => {
 
         await utils.viewer.me.refetch();
 
-        const paymet_level = parseInt(window.localStorage.getItem("price-type"));
+        const paymet_level = parseInt(window.localStorage.getItem("price-type") || '');
         if (paymet_level > 0 && paymet_level < 4) {
           upgradeMutation.mutate({ level: paymetLevel[paymet_level] })
         } else {
