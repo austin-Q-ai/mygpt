@@ -33,7 +33,7 @@ export const testTriggerHandler = async ({ ctx: _ctx, input }: TestTriggerOption
     ],
     organizer: {
       name: "Cal",
-      email: "no-reply@cal.com",
+      email: "no-reply@mygpt.fi",
       timeZone: "Europe/London",
       language,
     },

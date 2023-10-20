@@ -107,7 +107,7 @@ export default function JoinCall(props: JoinCallPageProps) {
         <img
           className="h-5·w-auto fixed z-10 hidden sm:inline-block"
           src={`${WEBSITE_URL}/cal-logo-word-dark.svg`}
-          alt="Cal.com Logo"
+          alt="MyGPT.fi Logo"
           style={{
             top: 46,
             left: 24,
@@ -233,10 +233,10 @@ export function VideoMeetingInfo(props: VideoMeetingInfo) {
 
           {booking.attendees.length
             ? booking.attendees.map((attendee) => (
-                <p key={attendee.id}>
-                  {attendee.name} – <a href={`mailto:${attendee.email}`}>{attendee.email}</a>
-                </p>
-              ))
+              <p key={attendee.id}>
+                {attendee.name} – <a href={`mailto:${attendee.email}`}>{attendee.email}</a>
+              </p>
+            ))
             : null}
 
           {booking.description && (

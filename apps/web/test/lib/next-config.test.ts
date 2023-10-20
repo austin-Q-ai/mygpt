@@ -30,19 +30,19 @@ beforeAll(async () => {
 
 describe("next.config.js - Org Rewrite", () => {
   const orgHostRegExp = (subdomainRegExp: string) =>
-  // RegExp copied from pagesAndRewritePaths.js orgHostPath. Do make the change there as well.
+    // RegExp copied from pagesAndRewritePaths.js orgHostPath. Do make the change there as well.
     new RegExp(`^(?<orgSlug>${subdomainRegExp})\\..*`);
 
   describe("Host matching based on NEXT_PUBLIC_WEBAPP_URL", () => {
-    it("https://app.cal.com", () => {
-      const subdomainRegExp = getSubdomainRegExp("https://app.cal.com");
-      expect(orgHostRegExp(subdomainRegExp).exec("app.cal.com")).toEqual(null);
+    it("https://mygpt.fi", () => {
+      const subdomainRegExp = getSubdomainRegExp("https://mygpt.fi");
+      expect(orgHostRegExp(subdomainRegExp).exec("app.mygpt.fi")).toEqual(null);
       expect(
-        orgHostRegExp(subdomainRegExp).exec("company.app.cal.com")?.groups
+        orgHostRegExp(subdomainRegExp).exec("company.app.mygpt.fi")?.groups
           ?.orgSlug
       ).toEqual("company");
       expect(
-        orgHostRegExp(subdomainRegExp).exec("org.cal.com")?.groups?.orgSlug
+        orgHostRegExp(subdomainRegExp).exec("org.mygpt.fi")?.groups?.orgSlug
       ).toEqual("org");
 
       expect(
@@ -50,11 +50,11 @@ describe("next.config.js - Org Rewrite", () => {
       ).toEqual(null);
     });
 
-    it("app.cal.com", () => {
-      const subdomainRegExp = getSubdomainRegExp("app.cal.com");
-      expect(orgHostRegExp(subdomainRegExp).exec("app.cal.com")).toEqual(null);
+    it("app.mygpt.fi", () => {
+      const subdomainRegExp = getSubdomainRegExp("app.mygpt.fi");
+      expect(orgHostRegExp(subdomainRegExp).exec("app.mygpt.fi")).toEqual(null);
       expect(
-        orgHostRegExp(subdomainRegExp).exec("company.app.cal.com")?.groups
+        orgHostRegExp(subdomainRegExp).exec("company.app.mygpt.fi")?.groups
           ?.orgSlug
       ).toEqual("company");
     });

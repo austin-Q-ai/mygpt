@@ -159,7 +159,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
       const locale =
         reminder.workflowStep.action === WorkflowActions.EMAIL_ATTENDEE ||
-        reminder.workflowStep.action === WorkflowActions.SMS_ATTENDEE
+          reminder.workflowStep.action === WorkflowActions.SMS_ATTENDEE
           ? reminder.booking.attendees[0].locale
           : reminder.booking.user?.locale;
 
@@ -234,7 +234,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
             to: sendTo,
             from: {
               email: senderEmail,
-              name: reminder.workflowStep.sender || "Cal.com",
+              name: reminder.workflowStep.sender || "MyGPT.fi",
             },
             subject: emailContent.emailSubject,
             html: emailContent.emailBody,

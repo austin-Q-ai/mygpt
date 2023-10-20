@@ -62,7 +62,7 @@ import { schemaQueryIdParseInt } from "~/lib/validations/shared/queryIdTransform
  *     tags:
  *     - availabilities
  *     externalDocs:
- *        url: https://docs.cal.com/availability
+ *        url: https://docs.mygpt.fi/availability
  *     responses:
  *       201:
  *         description: OK, availability edited successfully

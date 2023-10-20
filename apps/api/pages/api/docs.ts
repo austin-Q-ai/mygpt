@@ -8,11 +8,11 @@ const swaggerHandler = withSwagger({
     servers: [
       { url: "http://localhost:3002/v1" },
       { url: "https://api.cal.dev/v1" },
-      { url: "https://api.cal.com/v1" },
+      { url: "https://api.mygpt.fi/v1" },
     ],
     externalDocs: {
-      url: "https://docs.cal.com",
-      description: "Find more info at our main docs: https://docs.cal.com/",
+      url: "https://docs.mygpt.fi",
+      description: "Find more info at our main docs: https://docs.mygpt.fi/",
     },
     info: {
       title: `${pjson.name}: ${pjson.description}`,
@@ -63,7 +63,7 @@ const swaggerHandler = withSwagger({
                 properties: {
                   email: {
                     type: "string",
-                    example: "example@cal.com",
+                    example: "example@mygpt.fi",
                   },
                   name: {
                     type: "string",
@@ -83,7 +83,7 @@ const swaggerHandler = withSwagger({
               properties: {
                 email: {
                   type: "string",
-                  example: "example@cal.com",
+                  example: "example@mygpt.fi",
                 },
                 name: {
                   type: "string",

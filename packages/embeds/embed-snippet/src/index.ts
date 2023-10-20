@@ -41,7 +41,7 @@ export default function EmbedSnippet(url = EMBED_LIB_URL) {
           api.q = api.q || [];
           typeof namespace === "string"
             ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              (cal.ns![namespace] = api) && p(api, ar)
+            (cal.ns![namespace] = api) && p(api, ar)
             : p(cal as GlobalCal, ar);
           return;
         }
@@ -52,7 +52,7 @@ export default function EmbedSnippet(url = EMBED_LIB_URL) {
       // Make 'ns' and 'q' optional as they are set through the snippet above
       Cal: Optional<GlobalCal, "ns" | "q">;
     },
-    //! Replace it with "https://cal.com/embed.js" or the URL where you have embed.js installed
+    //! Replace it with "https://mygpt.fi/embed.js" or the URL where you have embed.js installed
     url,
     "init"
   );

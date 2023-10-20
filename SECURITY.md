@@ -1,10 +1,10 @@
 # Security
 
-Contact: [security@cal.com](mailto:security@cal.com)
+Contact: [security@mygpt.fi](mailto:security@mygpt.fi)
 
 Based on [https://supabase.com/.well-known/security.txt](https://supabase.com/.well-known/security.txt)
 
-At Cal.com, we consider the security of our systems a top priority. But no
+At mygpt.fi, we consider the security of our systems a top priority. But no
 matter how much effort we put into system security, there can still be
 vulnerabilities present.
 
@@ -27,7 +27,7 @@ better protect our clients and our systems.
 
 ## Please do the following
 
-- E-mail your findings to [security@cal.com](mailto:security@cal.com).
+- E-mail your findings to [security@mygpt.fi](mailto:security@mygpt.fi).
 - Do not run automated scanners on our infrastructure or dashboard. If you wish
   to do this, contact us and we will set up a sandbox for you.
 - Do not take advantage of the vulnerability or problem you have discovered,

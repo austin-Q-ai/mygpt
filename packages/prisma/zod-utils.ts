@@ -490,8 +490,8 @@ type DeepWriteable<T> = T extends Readonly<{
   -readonly [K in keyof T]: T[K];
 }>
   ? {
-      -readonly [K in keyof T]: DeepWriteable<T[K]>;
-    }
+    -readonly [K in keyof T]: DeepWriteable<T[K]>;
+  }
   : T; /* Make it work with readonly types (this is not strictly necessary) */
 
 type FromEntries<T> = T extends [infer Keys, unknown][]
@@ -534,12 +534,12 @@ export const optionToValueSchema = <T extends z.ZodTypeAny>(valueSchema: T) =>
  */
 export const getParserWithGeneric =
   <T extends z.ZodTypeAny>(valueSchema: T) =>
-  <Data>(data: Data) => {
-    type Output = z.infer<typeof valueSchema>;
-    return valueSchema.parse(data) as {
-      [key in keyof Data]: key extends keyof Output ? Output[key] : Data[key];
+    <Data>(data: Data) => {
+      type Output = z.infer<typeof valueSchema>;
+      return valueSchema.parse(data) as {
+        [key in keyof Data]: key extends keyof Output ? Output[key] : Data[key];
+      };
     };
-  };
 export const sendDailyVideoRecordingEmailsSchema = z.object({
   recordingId: z.string(),
   bookingUID: z.string(),

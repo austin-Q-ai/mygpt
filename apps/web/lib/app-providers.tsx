@@ -79,7 +79,7 @@ const enum ThemeSupport {
 
 type CalcomThemeProps = PropsWithChildren<
   Pick<AppProps["pageProps"], "nonce" | "themeBasis"> &
-    Pick<AppProps["Component"], "isBookingPage" | "isThemeSupported">
+  Pick<AppProps["Component"], "isBookingPage" | "isThemeSupported">
 >;
 const CalcomThemeProvider = (props: CalcomThemeProps) => {
   const router = useRouter();
@@ -115,8 +115,8 @@ const CalcomThemeProvider = (props: CalcomThemeProps) => {
  * So, we handle all the cases here namely,
  * - Both Booking Pages, /free/30min and /pro/30min but configured with different themes but being operated together.
  * - Embeds using different namespace. They can be completely themed different on the same page.
- * - Embeds using the same namespace but showing different cal.com links with different themes
- * - Embeds using the same namespace and showing same cal.com links with different themes(Different theme is possible for same cal.com link in case of embed because of theme config available in embed)
+ * - Embeds using the same namespace but showing different mygpt.fi links with different themes
+ * - Embeds using the same namespace and showing same mygpt.fi links with different themes(Different theme is possible for same mygpt.fi link in case of embed because of theme config available in embed)
  * - App has different theme then Booking Pages.
  *
  * All the above cases have one thing in common, which is the origin and thus localStorage is shared and thus `storageKey` is critical to avoid theme flickering.
@@ -155,8 +155,8 @@ function getThemeProviderProps({
     ? ThemeSupport.Booking
     : // if isThemeSupported is explicitly false, we don't use theme there
     props.isThemeSupported === false
-    ? ThemeSupport.None
-    : ThemeSupport.App;
+      ? ThemeSupport.None
+      : ThemeSupport.App;
 
   const isBookingPageThemSupportRequired = themeSupport === ThemeSupport.Booking;
   const themeBasis = props.themeBasis;
@@ -180,13 +180,13 @@ function getThemeProviderProps({
 
   const storageKey = isEmbedMode
     ? // Same Namespace, Same Organizer but different themes would still work seamless and not cause theme flicker
-      // Even though it's recommended to use different namespaces when you want to theme differently on the same page but if the embeds are on different pages, the problem can still arise
-      `embed-theme-${embedNamespace}${appearanceIdSuffix}${embedExplicitlySetThemeSuffix}`
+    // Even though it's recommended to use different namespaces when you want to theme differently on the same page but if the embeds are on different pages, the problem can still arise
+    `embed-theme-${embedNamespace}${appearanceIdSuffix}${embedExplicitlySetThemeSuffix}`
     : themeSupport === ThemeSupport.App
-    ? "app-theme"
-    : isBookingPageThemSupportRequired
-    ? `booking-theme${appearanceIdSuffix}`
-    : undefined;
+      ? "app-theme"
+      : isBookingPageThemSupportRequired
+        ? `booking-theme${appearanceIdSuffix}`
+        : undefined;
 
   return {
     storageKey,

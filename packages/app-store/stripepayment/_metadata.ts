@@ -14,14 +14,14 @@ export const metadata = {
   category: "payment",
   categories: ["payment"],
   logo: "icon.svg",
-  publisher: "Cal.com",
+  publisher: "MyGPT.fi",
   title: "Stripe",
   type: "stripe_payment",
-  url: "https://cal.com/",
+  url: "https://mygpt.fi/",
   docsUrl: "https://stripe.com/docs",
   variant: "payment",
   extendsFeature: "EventType",
-  email: "help@cal.com",
+  email: "help@mygpt.fi",
   dirName: "stripepayment",
 } as AppMeta;
 

@@ -5,11 +5,11 @@
   "slug": "routing-forms",
   "type": "routing-forms_other",
   "logo": "icon-dark.svg",
-  "url": "https://cal.com/resources/feature/routing-forms",
+  "url": "https://mygpt.fi/resources/feature/routing-forms",
   "variant": "other",
   "categories": ["automation"],
-  "publisher": "Cal.com, Inc.",
-  "email": "help@cal.com",
+  "publisher": "MyGPT.fi, Inc.",
+  "email": "help@mygpt.fi",
   "licenseRequired": true,
   "teamsPlanRequired": {
     "upgradeUrl": "/apps/routing-forms/forms"

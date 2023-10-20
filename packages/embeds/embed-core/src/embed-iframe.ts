@@ -145,15 +145,15 @@ const setEmbedNonStyles = (stylesConfig: EmbedNonStylesConfig) => {
 const registerNewSetter = (
   registration:
     | {
-        elementName: keyof EmbedStyles;
-        setState: SetStyles;
-        styles: true;
-      }
+      elementName: keyof EmbedStyles;
+      setState: SetStyles;
+      styles: true;
+    }
     | {
-        elementName: keyof EmbedNonStylesConfig;
-        setState: setNonStylesConfig;
-        styles: false;
-      }
+      elementName: keyof EmbedNonStylesConfig;
+      setState: setNonStylesConfig;
+      styles: false;
+    }
 ) => {
   // It's possible that 'ui' instruction has already been processed and the registration happened due to some action by the user in iframe.
   // So, we should call the setter immediately with available embedStyles
@@ -281,7 +281,7 @@ export const useIsEmbed = (embedSsr?: boolean) => {
     const _isValidNamespace = isValidNamespace(namespace);
     if (parent !== window && !_isValidNamespace) {
       log(
-        "Looks like you have iframed cal.com but not using Embed Snippet. Directly using an iframe isn't recommended."
+        "Looks like you have iframed mygpt.fi but not using Embed Snippet. Directly using an iframe isn't recommended."
       );
     }
     setIsEmbed(window?.isEmbed?.() || false);
@@ -310,7 +310,7 @@ const methods = {
 
     if (stylesConfig) {
       console.warn(
-        "Cal.com Embed: `styles` prop is deprecated. Use `cssVarsPerTheme` instead to achieve the same effect. Here is a list of CSS variables that are supported. https://github.com/calcom/cal.com/blob/main/packages/config/tailwind-preset.js#L19"
+        "MyGPT.fi Embed: `styles` prop is deprecated. Use `cssVarsPerTheme` instead to achieve the same effect. Here is a list of CSS variables that are supported. https://github.com/calcom/mygpt.fi/blob/main/packages/config/tailwind-preset.js#L19"
       );
     }
 
@@ -417,13 +417,13 @@ function keepParentInformedAboutDimensionChanges() {
     // Use, .height as that gives more accurate value in floating point. Also, do a ceil on the total sum so that whatever happens there is enough iframe size to avoid scroll.
     const contentHeight = Math.ceil(
       parseFloat(mainElementStyles.height) +
-        parseFloat(mainElementStyles.marginTop) +
-        parseFloat(mainElementStyles.marginBottom)
+      parseFloat(mainElementStyles.marginTop) +
+      parseFloat(mainElementStyles.marginBottom)
     );
     const contentWidth = Math.ceil(
       parseFloat(mainElementStyles.width) +
-        parseFloat(mainElementStyles.marginLeft) +
-        parseFloat(mainElementStyles.marginRight)
+      parseFloat(mainElementStyles.marginLeft) +
+      parseFloat(mainElementStyles.marginRight)
     );
 
     // During first render let iframe tell parent that how much is the expected height to avoid scroll.

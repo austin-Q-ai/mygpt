@@ -480,7 +480,7 @@ export default abstract class BaseCalendarService implements Calendar {
 
         newCalendars.push({
           externalId: calendar.url,
-          /** @url https://github.com/calcom/cal.com/issues/7186 */
+          /** @url https://github.com/calcom/mygpt.fi/issues/7186 */
           name: typeof calendar.displayName === "string" ? calendar.displayName : "",
           primary: event?.destinationCalendar?.externalId
             ? event.destinationCalendar.externalId === calendar.url
@@ -587,9 +587,9 @@ export default abstract class BaseCalendarService implements Calendar {
         timeRange:
           dateFrom && dateTo
             ? {
-                start: dayjs(dateFrom).utc().format(TIMEZONE_FORMAT),
-                end: dayjs(dateTo).utc().format(TIMEZONE_FORMAT),
-              }
+              start: dayjs(dateFrom).utc().format(TIMEZONE_FORMAT),
+              end: dayjs(dateTo).utc().format(TIMEZONE_FORMAT),
+            }
             : undefined,
         headers: this.headers,
       });

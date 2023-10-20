@@ -63,7 +63,7 @@ async function getHandler(req: NextApiRequest, res: NextApiResponse) {
       console.error(error);
       return {
         message:
-          "We have received your payment. Your premium username could still not be reserved. Please contact support@cal.com and mention your premium username",
+          "We have received your payment. Your premium username could still not be reserved. Please contact support@mygpt.fi and mention your premium username",
       };
     }
   }

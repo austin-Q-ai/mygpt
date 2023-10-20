@@ -6,7 +6,7 @@ export const mockEvent: RouterOutputs["viewer"]["public"]["event"] = {
   slug: "quick-check-in",
   eventName: "Quick check-in",
   description:
-    "Use this event for a quick 15 minute catchup. Visit this long url to test the component https://cal.com/averylongurlwithoutspacesthatshouldntbreaklayout",
+    "Use this event for a quick 15 minute catchup. Visit this long url to test the component https://mygpt.fi/averylongurlwithoutspacesthatshouldntbreaklayout",
   users: [{ name: "Pro Example", username: "pro" }],
   schedulingType: null,
   length: 30,

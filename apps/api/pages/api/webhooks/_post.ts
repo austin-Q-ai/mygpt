@@ -52,7 +52,7 @@ import { schemaWebhookCreateBodyParams, schemaWebhookReadPublic } from "~/lib/va
  *     tags:
  *     - webhooks
  *     externalDocs:
- *        url: https://docs.cal.com/core-features/webhooks
+ *        url: https://docs.mygpt.fi/core-features/webhooks
  *     responses:
  *       201:
  *         description: OK, webhook created

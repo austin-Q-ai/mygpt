@@ -1256,7 +1256,7 @@ async function addBookings(bookings: InputBooking[], eventTypes: InputEventType[
              * A user is considered busy within a given time period if there
              * is a booking they own OR host. This function mocks some of the logic
              * for each condition. For details see the following ticket:
-             * https://github.com/calcom/cal.com/issues/6374
+             * https://github.com/calcom/mygpt.fi/issues/6374
              */
 
             // ~~ FIRST CONDITION ensures that this booking is owned by this user
