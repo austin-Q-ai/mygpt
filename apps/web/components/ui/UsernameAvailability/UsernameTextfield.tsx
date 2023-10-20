@@ -108,7 +108,10 @@ const UsernameTextfield = (props: ICustomUsernameProps & Partial<React.Component
       username: inputUsernameValue,
     });
   };
-
+  function ltrim(str: string) {
+    if (!str) return str;
+    return str.replace(/^\s+/g, "");
+  }
   return (
     <div>
       <div className="flex rounded-md">
@@ -128,7 +131,7 @@ const UsernameTextfield = (props: ICustomUsernameProps & Partial<React.Component
             )}
             onChange={(event) => {
               event.preventDefault();
-              setInputUsernameValue(event.target.value);
+              setInputUsernameValue(ltrim(event.target.value));
             }}
             data-testid="username-input"
             {...rest}

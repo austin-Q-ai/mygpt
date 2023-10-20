@@ -150,9 +150,8 @@ const Item = ({ type, group, readOnly }: { type: EventType; group: EventTypeGrou
         <small
           className="text-subtle hidden font-normal leading-4 sm:inline"
           data-testid={"event-type-slug-" + type.id}>
-          {`/${
-            type.schedulingType !== SchedulingType.MANAGED ? group.profile.slug : t("username_placeholder")
-          }/${type.slug}`}
+          {`/${type.schedulingType !== SchedulingType.MANAGED ? group.profile.slug : t("username_placeholder")
+            }/${type.slug}`}
         </small>
       ) : null}
       {readOnly && (
@@ -413,9 +412,8 @@ export const EventTypeList = ({ group, groupIndex, readOnly, types }: EventTypeL
                           items={type.users.map(
                             (organizer: { name: string | null; username: string | null }) => ({
                               alt: organizer.name || "",
-                              image: `${orgBranding?.fullDomain ?? WEBAPP_URL}/${
-                                organizer.username
-                              }/avatar.png`,
+                              image: `${orgBranding?.fullDomain ?? WEBAPP_URL}/${organizer.username
+                                }/avatar.png`,
                               title: organizer.name || "",
                             })
                           )}
@@ -911,7 +909,8 @@ const EventTypesPage = () => {
         hideHeadingOnMobile
         subtitle={t("event_types_page_subtitle")}
         afterHeading={showProfileBanner && <SetupProfileBanner closeAction={closeBanner} />}
-        beforeCTAactions={<Actions />}
+        // this can be showed in the future
+        // beforeCTAactions={<Actions />}
         CTA={<CTA />}>
         <WithQuery
           customLoader={<SkeletonLoader />}

@@ -47,12 +47,16 @@ const PaymentForm = (props: Props) => {
         return_url: `${CAL_URL}/settings/upgrade-plan`,
       },
     });
+
+    if (payload.error) {
+      setState({ status: "idle" });
+    }
   };
 
   return (
     <form id="payment-form" className="bg-subtle mt-4 rounded-md p-6" onSubmit={handleSubmit}>
       <div>
-        <PaymentElement onChange={() => setState({ status: "idle" })} />
+        <PaymentElement onChange={(event) => console.log(event)} />
       </div>
       <div className="mt-2 flex justify-end space-x-2">
         <Button
@@ -67,7 +71,7 @@ const PaymentForm = (props: Props) => {
           disabled={["processing", "error"].includes(state.status)}
           loading={state.status === "processing"}
           id="submit"
-          color="secondary">
+          color="primary">
           <span id="button-text">
             {state.status === "processing" ? <div className="spinner" id="spinner" /> : t("pay_now")}
           </span>
@@ -100,6 +104,8 @@ const ELEMENT_STYLES_DARK: stripejs.Appearance = {
 export default function UpgradePaymentComponent(props: Props) {
   const stripePromise = getStripe((props.payment.data as StripePaymentData).stripe_publishable_key);
   const [darkMode, setDarkMode] = useState<boolean>(false);
+
+  console.log(props.payment);
 
   useEffect(() => {
     setDarkMode(window.matchMedia("(prefers-color-scheme: dark)").matches);

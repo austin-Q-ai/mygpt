@@ -5,7 +5,9 @@ import { useEffect } from "react";
 
 import { sdkActionManager, useIsEmbed } from "@calcom/embed-core/embed-iframe";
 import { APP_NAME } from "@calcom/lib/constants";
+import getBrandColours from "@calcom/lib/getBrandColours";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
+import { useCalcomTheme } from "@calcom/ui";
 import { CreditCard } from "@calcom/ui/components/icon";
 
 import type { PaymentPageProps } from "../pages/b/payment";
@@ -13,6 +15,12 @@ import TokenPaymentComponent from "./TokenPayment";
 
 const TokenPaymentPage: FC<PaymentPageProps> = (props) => {
   const { t, i18n } = useLocale();
+
+  const brandTheme = getBrandColours({
+    lightVal: "#6d278e",
+    darkVal: "#fafafa",
+  });
+  useCalcomTheme(brandTheme);
 
   const isEmbed = useIsEmbed();
   useEffect(() => {
@@ -38,7 +46,7 @@ const TokenPaymentPage: FC<PaymentPageProps> = (props) => {
   console.log(props);
 
   return (
-    <div className="h-screen">
+    <div className={classNames(isEmbed ? "max-w-3xl" : "", "h-screen bg-[url('/background.png')]")}>
       <Head>
         <title>
           {t("payment")} | {APP_NAME}
@@ -54,7 +62,7 @@ const TokenPaymentPage: FC<PaymentPageProps> = (props) => {
               </span>
               <div
                 className={classNames(
-                  "main bg-default border-subtle inline-block transform overflow-hidden rounded-lg border px-8 pb-4 pt-5 text-left align-bottom transition-all  sm:w-full sm:max-w-lg sm:py-6 sm:align-middle",
+                  "main bg-pink/5 border-subtle inline-block transform overflow-hidden rounded-lg border px-8 pb-4 pt-5 text-left align-bottom transition-all  sm:w-full sm:max-w-lg sm:py-6 sm:align-middle",
                   isEmbed ? "" : "sm:my-8"
                 )}
                 role="dialog"
@@ -74,7 +82,15 @@ const TokenPaymentPage: FC<PaymentPageProps> = (props) => {
                       <div className="col-span-2 mb-6">{props.payment.wallet?.emitter?.name}</div>
                       <div className="font-medium">{t("token_price")}</div>
                       <div className="col-span-2 mb-6">
-                        {props.payment.wallet?.emitter.price[props.payment.wallet?.emitter.price.length - 1]}
+                        {Intl.NumberFormat(i18n.language, {
+                          style: "currency",
+                          currency: props.payment.wallet?.emitter.currency,
+                          useGrouping: false,
+                        }).format(
+                          props.payment.wallet?.emitter.price[
+                            props.payment.wallet?.emitter.price.length - 1
+                          ] || 0
+                        )}
                       </div>
                       <div className="font-medium">{t("token_amount")}</div>
                       <div className="col-span-2 mb-6 font-semibold">{props.payment.wallet?.amount}</div>
