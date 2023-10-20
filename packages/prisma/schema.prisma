@@ -303,6 +303,7 @@ model User {
   Subscription                 Subscription[]
   videoCloneToken              String?
   hasBot                       Boolean                 @default(false)
+  botId                        String?
 
   @@unique([email])
   @@unique([email, username])

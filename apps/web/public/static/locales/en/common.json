@@ -2153,6 +2153,8 @@
   "end_date_cannot_be_before_start_date": "End date cannot be before Start date",
   "telegram_bot": "Telegram Bot",
   "telegram_bot_description": "Create Telegram Bot for {{appName}}",
+  "telegram_bot_creation_success": "Bot created successfully",
+  "telegram_bot_creation_error": "Error occured on creating telegram bot",
   "expert_clone": "Expert Clone",
   "expert_description": "Create expert clone for {{appName}}",
   "successfully_created": "Successfully Created",
