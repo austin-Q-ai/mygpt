@@ -17,6 +17,7 @@ import useAvatarQuery from "@calcom/trpc/react/hooks/useAvatarQuery";
 import type { VerticalTabItemProps } from "@calcom/ui";
 import { Badge, Button, ErrorBoundary, Skeleton, useMeta, VerticalTabItem } from "@calcom/ui";
 import {
+  Bot,
   User,
   Key,
   CreditCard,
@@ -53,7 +54,7 @@ const tabs: VerticalTabItemProps[] = [
   {
     name: "my_bots",
     href: "/settings/bots",
-    icon: Key,
+    icon: Bot,
     children: [
       { name: "expert_clone", href: "/settings/bots/expert-clone" },
       { name: "telegram_bot", href: "/settings/bots/telegram-bot" },
