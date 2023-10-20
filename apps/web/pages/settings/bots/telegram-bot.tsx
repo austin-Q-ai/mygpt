@@ -121,7 +121,7 @@ const TelegramBotView = () => {
     formData.append('_method', 'PUT');
 
     try {
-      const res = await axios.post(`${VIDEO_SERVICE_URL}/clone/create`, formData, {
+      const res = await axios.put(`${VIDEO_SERVICE_URL}/clone/create`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${video_api}`
