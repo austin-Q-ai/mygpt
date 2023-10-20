@@ -47,12 +47,16 @@ const PaymentForm = (props: Props) => {
         return_url: `${CAL_URL}/settings/upgrade-plan`,
       },
     });
+
+    if (payload.error) {
+      setState({ status: "idle" });
+    }
   };
 
   return (
     <form id="payment-form" className="bg-subtle mt-4 rounded-md p-6" onSubmit={handleSubmit}>
       <div>
-        <PaymentElement onChange={() => setState({ status: "idle" })} />
+        <PaymentElement onChange={(event) => console.log(event)} />
       </div>
       <div className="mt-2 flex justify-end space-x-2">
         <Button

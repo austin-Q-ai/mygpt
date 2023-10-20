@@ -2,6 +2,7 @@ import classNames from "classnames";
 import Link from "next/link";
 import React from "react";
 
+import { CAL_URL } from "@calcom/lib/constants";
 import { trpc } from "@calcom/trpc/react";
 import { Badge, ScrollableArea } from "@calcom/ui";
 import { CalendarPlus, Clock } from "@calcom/ui/components/icon";
@@ -16,6 +17,7 @@ export const ServicesPage = React.forwardRef<HTMLDivElement, ServicesPageProps>(
   (props: ServicesPageProps, ref) => {
     // you need to replace userId with props.id
     const { data: user, isLoading } = trpc.viewer.microcard.user.useQuery({ userId: props.userId });
+    console.log(user?.eventTypes);
 
     return (
       <div className="flex h-[900px] w-[500px] flex-col bg-white" ref={ref}>
@@ -23,7 +25,7 @@ export const ServicesPage = React.forwardRef<HTMLDivElement, ServicesPageProps>(
           <>
             <Header title="Events" description={user.username} />
             <div className="h-[75%] px-5 py-5">
-              <p className="pb-4 text-center text-lg font-bold">Book Meeting</p>
+              <p className="pb-4 text-lg font-bold text-center">Book Meeting</p>
               <ScrollableArea
                 className={classNames(user.eventTypes.length > 4 && "h-[85%]", "bg-pink/10 rounded-md")}>
                 {user.eventTypes
@@ -34,15 +36,24 @@ export const ServicesPage = React.forwardRef<HTMLDivElement, ServicesPageProps>(
                       <div className="flex justify-between p-4">
                         <div className="flex flex-col gap-2">
                           <p className="text-sm font-bold ">{event.title}</p>
-                          <p className="text-xs text-gray-500">lun.29 aug, 9:00 AM - 5:00 PM</p>
                           <p className="text-[10px] text-gray-500">
-                            Link: {user.username}.myGPT.fi/hugo/videoconference
+                            Link: {CAL_URL?.replace(/^(https?:|)\/\//, "")}/{user.username}/{event.slug}
                           </p>
-                          <Badge className="w-fit" variant="gray" startIcon={Clock}>
-                            {event.slug}
-                          </Badge>
-                          <span className="bg-pink w-fit rounded px-3 py-1 text-white">
-                            <CalendarPlus className="h-4" />
+                          <div className="flex gap-2">
+                            {event.metadata?.multipleDuration ? event.metadata.multipleDuration.map((duration) => (
+                              <Badge className="w-fit" variant="gray" startIcon={Clock}>
+                                {duration}m
+                              </Badge>
+                            )) : (
+                              <Badge className="w-fit" variant="gray" startIcon={Clock}>
+                                {event.length}m
+                              </Badge>
+                            )}
+                          </div>
+                          <span className="px-3 py-1 text-white rounded bg-pink w-fit">
+                            <Link href={`/${user.username}/${event.slug}`}>
+                              <CalendarPlus className="h-4" />
+                            </Link>
                           </span>
                         </div>
                         {event.logo && <img alt={event.title} src={event.logo} width={90} height={110} />}
@@ -52,7 +63,7 @@ export const ServicesPage = React.forwardRef<HTMLDivElement, ServicesPageProps>(
               </ScrollableArea>
               <div className="flex items-center">
                 <Link href={`/${user.username}`}>
-                  <button className="bg-pink/50 mx-auto mt-4 rounded px-2 py-1 text-center text-lg text-white">
+                  <button className="px-2 py-1 mx-auto mt-4 text-lg text-center text-white rounded bg-pink/50">
                     All events
                   </button>
                 </Link>

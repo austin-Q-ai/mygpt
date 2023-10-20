@@ -1,5 +1,5 @@
 import { ImageIcon } from "lucide-react";
-import type { ChangeEvent, DragEvent } from "react";
+import type { ChangeEvent, DragEvent, FormEvent } from "react";
 import React, { useState, useRef, useEffect } from "react";
 import Webcam from "react-webcam";
 
