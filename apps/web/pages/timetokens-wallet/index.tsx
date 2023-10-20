@@ -13,7 +13,7 @@ import { LineChart } from "@calcom/features/insights/components/LineChart";
 import { valueFormatter } from "@calcom/features/insights/lib";
 import Shell from "@calcom/features/shell/Shell";
 import { buyTokens } from "@calcom/features/timetokenswallet";
-import { MEILISEARCH_HOST, MEILISEARCH_SEARCH_API_KEY } from "@calcom/lib/constants";
+import { IS_PRODUCTION } from "@calcom/lib/constants";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { trpc } from "@calcom/trpc/react";
 import {
@@ -26,6 +26,7 @@ import {
   Form,
   InputField,
   showToast,
+  DialogTrigger
 } from "@calcom/ui";
 import { Plus } from "@calcom/ui/components/icon";
 
@@ -69,8 +70,10 @@ function TimeTokensWallet() {
   // const [user, setUser] = useState<any>(null);
 
   const meiliClient = new MeiliSearch({
-    host: `https://${MEILISEARCH_HOST}`,
-    apiKey: MEILISEARCH_SEARCH_API_KEY,
+    host: IS_PRODUCTION
+      ? `https://${process.env.NEXT_PUBLIC_MEILISEARCH_HOST}`
+      : `http://${process.env.NEXT_PUBLIC_MEILISEARCH_HOST}`,
+    apiKey: process.env.NEXT_PUBLIC_SEARCH_API_KEY,
   });
 
   const columns: string[] = ["Expert", "Tokens amount(expert)", "Tokens amount(me)", "Token price", ""];
@@ -122,11 +125,11 @@ function TimeTokensWallet() {
 
   const mutation = trpc.viewer.updateProfile.useMutation({
     onSuccess: () => {
-      showToast(t("profile_updated_successfully"), "success");
+      showToast(t("revoke_token_success"), "success");
       utils.viewer.me.invalidate();
     },
     onError: () => {
-      showToast(t("error_updating_settings"), "error");
+      showToast(t("error_revoking_token"), "error");
     },
   });
 
@@ -182,10 +185,24 @@ function TimeTokensWallet() {
     },
   });
 
+  const revokeTokenMutation = trpc.viewer.timetokenswallet.revokeToken.useMutation({
+    onSuccess: () => {
+      showToast(t("revoke_token_success"), "success");
+    },
+    onError: () => {
+      showToast(t("error_revoking_token"), "error");
+    },
+  })
+
   const addExpert = () => {
     console.log(addExpertId, "=====");
     addExpertMutation.mutate({ emitterId: addExpertId });
   };
+
+  const revokeToken = () => {
+    //revoke token action here
+    revokeTokenMutation.mutate();
+  }
 
   const customFilter = (option: any, searchText: string) => {
     return true;
@@ -324,17 +341,34 @@ function TimeTokensWallet() {
                     StartIcon={Plus}>
                     {t("add")}
                   </Button>
+                  
+                  <Dialog>
+                  <DialogTrigger asChild>
+                  <Button
+                    className="text-[.5rem] sm:text-sm"
+                  >
+                    {t("revoke")}
+                  </Button>
+                  </DialogTrigger>
+                  <ConfirmationDialogContent
+                    variety="danger"
+                    title={t("revoke_token")}
+                    confirmBtnText={t("confirm_revoke_event")}
+                    onConfirm={revokeToken}>
+                    {t("confirm_revoke_question")}
+                  </ConfirmationDialogContent>
+                </Dialog>
                 </div>
                 {/* Time Token Price update Graph  */}
                 <Form form={formMethods} handleSubmit={onSubmit}>
                   <div className="bg-pink/10 mx-4 mb-2 flex min-w-[250px] flex-col gap-1 rounded-md p-4 lg:absolute lg:right-14 lg:top-10 lg:w-1/5">
                     {/* need to be fixed */}
-                    <p className="text-center font-bold">TimeToken Price</p>
+                    <p className="font-bold text-center">TimeToken Price</p>
                     {!isLoading && user && (
                       <>
                         {user.TokenPrice.length > 0 && (
                           <LineChart
-                            className="h-24 bg-white p-1"
+                            className="h-24 p-1 bg-white"
                             data={user.TokenPrice.map((v) => ({
                               price: v.price,
                               createdDate: v.createdDate.toLocaleDateString("en-US", {

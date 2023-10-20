@@ -55,7 +55,7 @@ export const Day = ({
         active
           ? "bg-brand-default text-brand"
           : !disabled
-          ? " hover:border-brand-default text-emphasis bg-emphasis"
+          ? " hover:border-brand-default text-emphasis bg-pink/5"
           : "text-muted"
       )}
       data-testid="day"

@@ -108,7 +108,7 @@ function isValidLogoType(type: string): type is LogoType {
 async function getTeamLogos(subdomain: string, isValidOrgDomain: boolean) {
   try {
     if (
-      // if not cal.com
+      // if not mygpt.fi
       IS_SELF_HOSTED ||
       // missing subdomain (empty string)
       !subdomain ||
@@ -164,7 +164,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const [subdomain] = domains;
   const teamLogos = await getTeamLogos(subdomain, isValidOrgDomain);
 
-  // Resolve all icon types to team logos, falling back to Cal.com defaults.
+  // Resolve all icon types to team logos, falling back to mygpt.fi defaults.
   const type: LogoType = parsedQuery?.type && isValidLogoType(parsedQuery.type) ? parsedQuery.type : "logo";
   const logoDefinition = logoDefinitions[type];
   const filteredLogo = teamLogos[logoDefinition.source] ?? logoDefinition.fallback;

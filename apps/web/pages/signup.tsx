@@ -62,6 +62,7 @@ export default function Signup({ prepopulateFormValues, token, orgSlug }: Signup
   };
 
   const signUp: SubmitHandler<FormValues> = async (data) => {
+    console.log("")
     await fetch("/api/auth/signup", {
       body: JSON.stringify({
         ...data,
@@ -91,7 +92,7 @@ export default function Signup({ prepopulateFormValues, token, orgSlug }: Signup
 
   return (
     <>
-      <div className="h-fit w-full lg:w-fit">
+      <div className="w-full h-fit lg:w-fit">
         <HeadSeo title={t("sign_up")} description={t("sign_up")} />
         <div className="">
           <AuthContainer title={t("login")} description={t("login")} showLogo>
@@ -106,10 +107,10 @@ export default function Signup({ prepopulateFormValues, token, orgSlug }: Signup
                   }
                   methods.handleSubmit(signUp)(event);
                 }}
-                className=" mt-6 space-y-6">
+                className="mt-6 space-y-6 ">
                 {errors.apiError && <Alert severity="error" message={errors.apiError?.message} />}
                 <div className="flex flex-row gap-4">
-                  <div className="w-full  flex-col">
+                  <div className="flex-col w-full">
                     <TextField
                       floatingLabel
                       inputwidth="lg"
@@ -118,14 +119,14 @@ export default function Signup({ prepopulateFormValues, token, orgSlug }: Signup
                         orgSlug ? (
                           getOrgFullDomain(orgSlug, { protocol: false })
                         ) : (
-                          <div className="text-secondary font-sans font-bold">.myGPT.fi</div>
+                          <div className="font-sans font-bold text-secondary">.myGPT.fi</div>
                         )
                       }
                       {...register("username")}
                       required
                     />
                   </div>
-                  <div className="w-full  flex-col">
+                  <div className="flex-col w-full">
                     <EmailField
                       floatingLabel
                       inputwidth="lg"
@@ -135,7 +136,7 @@ export default function Signup({ prepopulateFormValues, token, orgSlug }: Signup
                     />
                   </div>
                 </div>
-                <div className="w-full  flex-col">
+                <div className="flex-col w-full">
                   <PasswordField
                     floatingLabel
                     inputwidth="lg"
@@ -144,19 +145,19 @@ export default function Signup({ prepopulateFormValues, token, orgSlug }: Signup
                     }}
                     {...register("password")}
                     hintErrors={["caplow", "min", "num"]}
-                    className="border-default mt-1 block w-full rounded-md border px-3 py-2 shadow-sm sm:text-sm"
+                    className="block w-full px-3 py-2 mt-1 border rounded-md shadow-sm border-default sm:text-sm"
                   />
                 </div>
                 <div className="flex space-x-2 rtl:space-x-reverse">
-                  <Button type="submit" loading={isSubmitting} className="w-full justify-center">
+                  <Button type="submit" loading={isSubmitting} className="justify-center w-full">
                     {t("create_account")}
                   </Button>
                   {!token && (
                     <Button
                       color="secondary"
-                      className="hover:bg-muted w-full justify-center rounded-md border p-2 text-center text-sm"
+                      className="justify-center w-full p-2 text-sm text-center border rounded-md hover:bg-muted"
                       onClick={() =>
-                        signIn("Cal.com", {
+                        signIn("MyGPT.fi", {
                           callbackUrl: router.query.callbackUrl
                             ? `${WEBAPP_URL}/${router.query.callbackUrl}`
                             : `${WEBAPP_URL}/getting-started`,

@@ -132,7 +132,7 @@ export default function Custom404() {
       />
       <div className="bg-default min-h-screen px-4" data-testid="404-page">
         <main className="mx-auto max-w-xl pb-6 pt-16 sm:pt-24">
-          {isSignup && process.env.NEXT_PUBLIC_WEBAPP_URL !== "https://app.cal.com" ? (
+          {isSignup && process.env.NEXT_PUBLIC_WEBAPP_URL !== "https://mygpt.fi" ? (
             <div>
               <div>
                 <p className="text-emphasis text-sm font-semibold uppercase tracking-wide">
@@ -141,7 +141,7 @@ export default function Custom404() {
                 <h1 className="font-cal text-emphasis mt-2 text-3xl font-extrabold">
                   {t("signup_requires")}
                 </h1>
-                <p className="mt-4">{t("signup_requires_description", { companyName: "Cal.com" })}</p>
+                <p className="mt-4">{t("signup_requires_description", { companyName: "MyGPT.fi" })}</p>
               </div>
               <div className="mt-12">
                 <h2 className="text-subtle text-sm font-semibold uppercase tracking-wide">
@@ -150,7 +150,7 @@ export default function Custom404() {
                 <ul role="list" className="mt-4">
                   <li className="border-2 border-green-500 px-4 py-2">
                     <a
-                      href="https://console.cal.com"
+                      href="https://console.mygpt.fi"
                       className="relative flex items-start space-x-4 py-6 rtl:space-x-reverse">
                       <div className="flex-shrink-0">
                         <span className="flex h-12 w-12 items-center justify-center rounded-lg bg-green-50">
@@ -178,7 +178,7 @@ export default function Custom404() {
                 <ul role="list" className="border-subtle divide-subtle divide-y">
                   <li className="px-4 py-2">
                     <Link
-                      href="https://cal.com/self-hosting/installation"
+                      href="https://mygpt.fi/self-hosting/installation"
                       className="relative flex items-start space-x-4 py-6 rtl:space-x-reverse">
                       <div className="flex-shrink-0">
                         <span className="bg-muted flex h-12 w-12 items-center justify-center rounded-lg">
@@ -274,45 +274,43 @@ export default function Custom404() {
                 {((!isSubpage && IS_CALCOM) ||
                   currentPageType === pageType.ORG ||
                   currentPageType === pageType.TEAM) && (
-                  <ul role="list" className="my-4">
-                    <li className="border-2 border-green-500 px-4 py-2">
-                      <a
-                        href={url}
-                        target="_blank"
-                        className="relative flex items-start space-x-4 py-6 rtl:space-x-reverse"
-                        rel="noreferrer">
-                        <div className="flex-shrink-0">
-                          <span className="flex h-12 w-12 items-center justify-center rounded-lg bg-green-50">
-                            <Check className="h-6 w-6 text-green-500" aria-hidden="true" />
-                          </span>
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <h3 className="text-emphasis text-base font-medium">
-                            <span className="focus-within:ring-empthasis rounded-sm focus-within:ring-2 focus-within:ring-offset-2">
-                              <span className="focus:outline-none">
-                                <span className="absolute inset-0" aria-hidden="true" />
-                                {t("register")}{" "}
-                                <strong className="text-green-500">{`${
-                                  currentPageType === pageType.TEAM
+                    <ul role="list" className="my-4">
+                      <li className="border-2 border-green-500 px-4 py-2">
+                        <a
+                          href={url}
+                          target="_blank"
+                          className="relative flex items-start space-x-4 py-6 rtl:space-x-reverse"
+                          rel="noreferrer">
+                          <div className="flex-shrink-0">
+                            <span className="flex h-12 w-12 items-center justify-center rounded-lg bg-green-50">
+                              <Check className="h-6 w-6 text-green-500" aria-hidden="true" />
+                            </span>
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <h3 className="text-emphasis text-base font-medium">
+                              <span className="focus-within:ring-empthasis rounded-sm focus-within:ring-2 focus-within:ring-offset-2">
+                                <span className="focus:outline-none">
+                                  <span className="absolute inset-0" aria-hidden="true" />
+                                  {t("register")}{" "}
+                                  <strong className="text-green-500">{`${currentPageType === pageType.TEAM
                                     ? `${new URL(WEBSITE_URL).host}/team/`
                                     : ""
-                                }${username}${
-                                  currentPageType === pageType.ORG ? `.${subdomainSuffix()}` : ""
-                                }`}</strong>
+                                    }${username}${currentPageType === pageType.ORG ? `.${subdomainSuffix()}` : ""
+                                    }`}</strong>
+                                </span>
                               </span>
-                            </span>
-                          </h3>
-                          <p className="text-subtle text-base">
-                            {t(`404_claim_entity_${currentPageType.toLowerCase()}`)}
-                          </p>
-                        </div>
-                        <div className="flex-shrink-0 self-center">
-                          <ChevronRight className="text-muted h-5 w-5" aria-hidden="true" />
-                        </div>
-                      </a>
-                    </li>
-                  </ul>
-                )}
+                            </h3>
+                            <p className="text-subtle text-base">
+                              {t(`404_claim_entity_${currentPageType.toLowerCase()}`)}
+                            </p>
+                          </div>
+                          <div className="flex-shrink-0 self-center">
+                            <ChevronRight className="text-muted h-5 w-5" aria-hidden="true" />
+                          </div>
+                        </a>
+                      </li>
+                    </ul>
+                  )}
                 <h2 className="text-subtle text-sm font-semibold uppercase tracking-wide">
                   {t("popular_pages")}
                 </h2>

@@ -2,8 +2,8 @@
   "name": "@calcom/features",
   "sideEffects": false,
   "private": true,
-  "description": "Cal.com's main collocation of features",
-  "authors": "Cal.com, Inc.",
+  "description": "MyGPT.fi's main collocation of features",
+  "authors": "MyGPT.fi, Inc.",
   "version": "1.0.0",
   "main": "index.ts",
   "dependencies": {

@@ -4,12 +4,16 @@ import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { useLocale } from "@calcom/lib/hooks/useLocale";
+import { createUpgradePaymentLink } from "@calcom/app-store/stripepayment/lib/client";
 import { md } from "@calcom/lib/markdownIt";
 import { telemetryEventTypes, useTelemetry } from "@calcom/lib/telemetry";
 import turndown from "@calcom/lib/turndownService";
 import { trpc } from "@calcom/trpc/react";
+import { upgradePlan } from "@calcom/features/upgrade-plan";
 import { Avatar, Button, Editor, ImageUploader, Label, showToast } from "@calcom/ui";
 import { ArrowRight } from "@calcom/ui/components/icon";
+import { UserLevel } from "@calcom/prisma/enums";
+import { useMutation } from "@tanstack/react-query";
 
 type FormData = {
   bio: string;
@@ -18,6 +22,7 @@ type FormData = {
 const UserProfile = () => {
   const [user] = trpc.viewer.me.useSuspenseQuery();
   const { t } = useLocale();
+  const router = useRouter();
   const avatarRef = useRef<HTMLInputElement>(null);
   const { setValue, handleSubmit, getValues } = useForm<FormData>({
     defaultValues: { bio: user?.bio || "" },
@@ -26,10 +31,24 @@ const UserProfile = () => {
   const { data: eventTypes } = trpc.viewer.eventTypes.list.useQuery();
   const [imageSrc, setImageSrc] = useState<string>(user?.avatar || "");
   const utils = trpc.useContext();
-  const router = useRouter();
   const createEventType = trpc.viewer.eventTypes.create.useMutation();
   const telemetry = useTelemetry();
   const [firstRender, setFirstRender] = useState(true);
+
+  const paymetLevel = [UserLevel.FREEMIUM, UserLevel.LEVEL1, UserLevel.LEVEL2, UserLevel.LEVEL3, UserLevel.CUSTOM]
+
+  const upgradeMutation = useMutation(upgradePlan, {
+    onSuccess: async (responseData) => {
+      const { paymentUid } = responseData;
+      if (paymentUid) {
+        return await router.push(
+          createUpgradePaymentLink({
+            paymentUid,
+          })
+        );
+      }
+    },
+  });
 
   const mutation = trpc.viewer.updateProfile.useMutation({
     onSuccess: async (_data, context) => {
@@ -50,7 +69,13 @@ const UserProfile = () => {
         }
 
         await utils.viewer.me.refetch();
-        router.push("/");
+
+        const paymet_level = parseInt(window.localStorage.getItem("price-type") || '');
+        if (paymet_level > 0 && paymet_level < 4) {
+          upgradeMutation.mutate({ level: paymetLevel[paymet_level] })
+        } else {
+          router.push("/");
+        }
       }
     },
     onError: () => {
@@ -112,7 +137,7 @@ const UserProfile = () => {
           name="avatar"
           id="avatar"
           placeholder="URL"
-          className="border-default focus:ring-empthasis mt-1 block w-full rounded-sm border px-3 py-2 text-sm focus:border-gray-800 focus:outline-none"
+          className="block w-full px-3 py-2 mt-1 text-sm border rounded-sm border-default focus:ring-empthasis focus:border-gray-800 focus:outline-none"
           defaultValue={imageSrc}
         />
         <div className="flex items-center px-4">
@@ -139,7 +164,7 @@ const UserProfile = () => {
         </div>
       </div>
       <fieldset className="mt-8">
-        <Label className="text-default mb-2 block text-sm font-medium">{t("about")}</Label>
+        <Label className="block mb-2 text-sm font-medium text-default">{t("about")}</Label>
         <Editor
           getText={() => md.render(getValues("bio") || user?.bio || "")}
           setText={(value: string) => setValue("bio", turndown(value))}
@@ -147,15 +172,15 @@ const UserProfile = () => {
           firstRender={firstRender}
           setFirstRender={setFirstRender}
         />
-        <p className="dark:text-inverted text-default mt-2 font-sans text-sm font-normal">
+        <p className="mt-2 font-sans text-sm font-normal dark:text-inverted text-default">
           {t("few_sentences_about_yourself")}
         </p>
       </fieldset>
       <Button
         type="submit"
-        className="text-inverted border-default bg-brand-default mt-8 flex w-full flex-row justify-center rounded-md border p-2 text-center text-sm">
+        className="flex flex-row justify-center w-full p-2 mt-8 text-sm text-center border rounded-md text-inverted border-default bg-brand-default">
         {t("finish")}
-        <ArrowRight className="ml-2 h-4 w-4 self-center" aria-hidden="true" />
+        <ArrowRight className="self-center w-4 h-4 ml-2" aria-hidden="true" />
       </Button>
     </form>
   );

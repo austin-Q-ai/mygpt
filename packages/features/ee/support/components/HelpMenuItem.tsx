@@ -50,7 +50,7 @@ export default function HelpMenuItem({ onHelpItemSelect }: HelpMenuItemProps) {
         <p className="text-subtle mb-1 px-5">{t("resources").toUpperCase()}</p>
         <a
           onClick={() => onHelpItemSelect()}
-          href="https://cal.com/docs/"
+          href="https://mygpt.fi/docs/"
           target="_blank"
           className="hover:bg-subtle hover:text-emphasis text-default flex w-full px-5 py-2 pr-4 text-sm font-medium"
           rel="noreferrer">
@@ -205,7 +205,7 @@ export default function HelpMenuItem({ onHelpItemSelect }: HelpMenuItemProps) {
         <a
           onClick={() => onHelpItemSelect()}
           className="hover:text-emphasis text-defualt font-medium underline"
-          href="https://cal.com/docs"
+          href="https://mygpt.fi/docs"
           target="_blank"
           rel="noreferrer">
           {t("browse_our_docs")}

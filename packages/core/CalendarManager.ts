@@ -78,7 +78,7 @@ export const getConnectedCalendars = async (
             },
           };
         }
-        // HACK https://github.com/calcom/cal.com/pull/7644/files#r1131508414
+        // HACK https://github.com/calcom/mygpt.fi/pull/7644/files#r1131508414
         if (destinationCalendar && !Object.isFrozen(destinationCalendar)) {
           destinationCalendar.primaryEmail = primary.email;
           destinationCalendar.integrationTitle = integration.title;
@@ -232,23 +232,23 @@ export const createEvent = async (
   // TODO: Surface success/error messages coming from apps to improve end user visibility
   const creationResult = calendar
     ? await calendar.createEvent(calEvent).catch(async (error: { code: number; calError: string }) => {
-        success = false;
-        /**
-         * There is a time when selectedCalendar externalId doesn't match witch certain credential
-         * so google returns 404.
-         * */
-        if (error?.code === 404) {
-          return undefined;
-        }
-        if (error?.calError) {
-          calError = error.calError;
-        }
-        log.error("createEvent failed", JSON.stringify(error), calEvent);
-        // @TODO: This code will be off till we can investigate an error with it
-        //https://github.com/calcom/cal.com/issues/3949
-        // await sendBrokenIntegrationEmail(calEvent, "calendar");
+      success = false;
+      /**
+       * There is a time when selectedCalendar externalId doesn't match witch certain credential
+       * so google returns 404.
+       * */
+      if (error?.code === 404) {
         return undefined;
-      })
+      }
+      if (error?.calError) {
+        calError = error.calError;
+      }
+      log.error("createEvent failed", JSON.stringify(error), calEvent);
+      // @TODO: This code will be off till we can investigate an error with it
+      //https://github.com/calcom/mygpt.fi/issues/3949
+      // await sendBrokenIntegrationEmail(calEvent, "calendar");
+      return undefined;
+    })
     : undefined;
 
   return {
@@ -282,21 +282,21 @@ export const updateEvent = async (
   const updatedResult: NewCalendarEventType | NewCalendarEventType[] | undefined =
     calendar && bookingRefUid
       ? await calendar
-          .updateEvent(bookingRefUid, calEvent, externalCalendarId)
-          .then((event: NewCalendarEventType | NewCalendarEventType[]) => {
-            success = true;
-            return event;
-          })
-          .catch(async (e: { calError: string }) => {
-            // @TODO: This code will be off till we can investigate an error with it
-            // @see https://github.com/calcom/cal.com/issues/3949
-            // await sendBrokenIntegrationEmail(calEvent, "calendar");
-            log.error("updateEvent failed", e, calEvent);
-            if (e?.calError) {
-              calError = e.calError;
-            }
-            return undefined;
-          })
+        .updateEvent(bookingRefUid, calEvent, externalCalendarId)
+        .then((event: NewCalendarEventType | NewCalendarEventType[]) => {
+          success = true;
+          return event;
+        })
+        .catch(async (e: { calError: string }) => {
+          // @TODO: This code will be off till we can investigate an error with it
+          // @see https://github.com/calcom/mygpt.fi/issues/3949
+          // await sendBrokenIntegrationEmail(calEvent, "calendar");
+          log.error("updateEvent failed", e, calEvent);
+          if (e?.calError) {
+            calError = e.calError;
+          }
+          return undefined;
+        })
       : undefined;
 
   if (Array.isArray(updatedResult)) {

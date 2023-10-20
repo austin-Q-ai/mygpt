@@ -26,7 +26,7 @@ import { schemaQueryIdAsString } from "~/lib/validations/shared/queryIdString";
  *     tags:
  *     - webhooks
  *     externalDocs:
- *        url: https://docs.cal.com/core-features/webhooks
+ *        url: https://docs.mygpt.fi/core-features/webhooks
  *     responses:
  *       201:
  *         description: OK, hook removed successfully

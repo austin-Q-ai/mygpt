@@ -48,6 +48,7 @@ export class PaymentService implements IAbstractPaymentService {
             },
           },
           level: true,
+          price: true,
         },
       });
 
@@ -55,7 +56,8 @@ export class PaymentService implements IAbstractPaymentService {
 
       if (!subscription) throw new Error("Subscription not found");
 
-      const amount = 1000;
+      const amount = subscription.price * 100.0;
+      console.log(amount);
 
       const customer = await retrieveOrCreateStripeCustomerByEmail(subscription.user.email, "");
 

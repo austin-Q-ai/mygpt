@@ -296,7 +296,9 @@ export default function Success(props: SuccessProps) {
   const providerName = guessEventLocationType(location)?.label;
 
   return (
-    <div className={isEmbed ? "" : "h-screen"} data-testid="success-page">
+    <div
+      className={classNames(isEmbed ? "" : "h-fit", "bg-[url('/background.png')]")}
+      data-testid="success-page">
       {!isEmbed && (
         <EventReservationSchema
           reservationId={bookingInfo.uid}
@@ -311,11 +313,11 @@ export default function Success(props: SuccessProps) {
         />
       )}
       {isLoggedIn && !isEmbed && (
-        <div className="-mb-4 ml-4 mt-2">
+        <div className="absolute left-0 top-0 mx-4">
           <Link
             href={allRemainingBookings ? "/bookings/recurring" : "/bookings/upcoming"}
-            className="hover:bg-subtle text-subtle hover:text-default mt-2 inline-flex px-1 py-2 text-sm dark:hover:bg-transparent">
-            <ChevronLeft className="h-5 w-5" /> {t("back_to_bookings")}
+            className="absolute left-0 top-0 flex items-start gap-2 p-4 text-gray-500">
+            <ChevronLeft /> {t("back")}
           </Link>
         </div>
       )}
@@ -344,7 +346,7 @@ export default function Success(props: SuccessProps) {
                   className={classNames(
                     "mx-auto flex items-center justify-center",
                     !giphyImage && !isCancelled && !needsConfirmation
-                      ? "bg-success h-12 w-12 rounded-full"
+                      ? "bg-emphasis h-12 w-12 rounded-full"
                       : "",
                     !giphyImage && !isCancelled && needsConfirmation
                       ? "bg-subtle h-12 w-12 rounded-full"
@@ -356,7 +358,7 @@ export default function Success(props: SuccessProps) {
                     <img src={giphyImage} alt="Gif from Giphy" />
                   )}
                   {!giphyImage && !needsConfirmation && !isCancelled && (
-                    <Check className="h-5 w-5 text-green-600" />
+                    <Check className="text-secondary h-5 w-5" />
                   )}
                   {needsConfirmation && !isCancelled && <Calendar className="text-emphasis h-5 w-5" />}
                   {isCancelled && <X className="h-5 w-5 text-red-600" />}
@@ -371,12 +373,12 @@ export default function Success(props: SuccessProps) {
                         ? t("booking_submitted_recurring")
                         : t("booking_submitted")
                       : isCancelled
-                      ? seatReferenceUid
-                        ? t("no_longer_attending")
-                        : t("event_cancelled")
-                      : props.recurringBookings
-                      ? t("meeting_is_scheduled_recurring")
-                      : t("meeting_is_scheduled")}
+                        ? seatReferenceUid
+                          ? t("no_longer_attending")
+                          : t("event_cancelled")
+                        : props.recurringBookings
+                          ? t("meeting_is_scheduled_recurring")
+                          : t("meeting_is_scheduled")}
                   </h3>
                   <div className="mt-3">
                     <p className="text-default">{getTitle()}</p>
@@ -441,9 +443,9 @@ export default function Success(props: SuccessProps) {
                             <div className="mb-3">
                               <div>
                                 <span className="mr-2">{bookingInfo.user.name}</span>
-                                <Badge variant="blue">{t("Host")}</Badge>
+                                <Badge variant="pink">{t("Host")}</Badge>
                               </div>
-                              <p className="text-default">{bookingInfo.user.email}</p>
+                              <p className="text-gray-400">{bookingInfo.user.email}</p>
                             </div>
                           )}
                           {bookingInfo?.attendees.map((attendee) => (
@@ -451,7 +453,9 @@ export default function Success(props: SuccessProps) {
                               {attendee.name && (
                                 <p data-testid={`attendee-name-${attendee.name}`}>{attendee.name}</p>
                               )}
-                              <p data-testid={`attendee-email-${attendee.email}`}>{attendee.email}</p>
+                              <p className="text-gray-400" data-testid={`attendee-email-${attendee.email}`}>
+                                {attendee.email}
+                              </p>
                             </div>
                           ))}
                         </div>
@@ -578,17 +582,16 @@ export default function Success(props: SuccessProps) {
                               `https://calendar.google.com/calendar/r/eventedit?dates=${date
                                 .utc()
                                 .format("YYYYMMDDTHHmmss[Z]")}/${date
-                                .add(calculatedDuration, "minute")
-                                .utc()
-                                .format("YYYYMMDDTHHmmss[Z]")}&text=${eventName}&details=${
-                                props.eventType.description
+                                  .add(calculatedDuration, "minute")
+                                  .utc()
+                                  .format("YYYYMMDDTHHmmss[Z]")}&text=${eventName}&details=${props.eventType.description
                               }` +
                               (typeof locationVideoCallUrl === "string"
                                 ? "&location=" + encodeURIComponent(locationVideoCallUrl)
                                 : "") +
                               (props.eventType.recurringEvent
                                 ? "&recur=" +
-                                  encodeURIComponent(new RRule(props.eventType.recurringEvent).toString())
+                                encodeURIComponent(new RRule(props.eventType.recurringEvent).toString())
                                 : "")
                             }
                             className="text-default border-subtle h-10 w-10 rounded-sm border px-3 py-2 ltr:mr-2 rtl:ml-2">
@@ -605,13 +608,13 @@ export default function Success(props: SuccessProps) {
                             href={
                               encodeURI(
                                 "https://outlook.live.com/calendar/0/deeplink/compose?body=" +
-                                  props.eventType.description +
-                                  "&enddt=" +
-                                  date.add(calculatedDuration, "minute").utc().format() +
-                                  "&path=%2Fcalendar%2Faction%2Fcompose&rru=addevent&startdt=" +
-                                  date.utc().format() +
-                                  "&subject=" +
-                                  eventName
+                                props.eventType.description +
+                                "&enddt=" +
+                                date.add(calculatedDuration, "minute").utc().format() +
+                                "&path=%2Fcalendar%2Faction%2Fcompose&rru=addevent&startdt=" +
+                                date.utc().format() +
+                                "&subject=" +
+                                eventName
                               ) +
                               (locationVideoCallUrl
                                 ? "&location=" + encodeURIComponent(locationVideoCallUrl)
@@ -632,13 +635,13 @@ export default function Success(props: SuccessProps) {
                             href={
                               encodeURI(
                                 "https://outlook.office.com/calendar/0/deeplink/compose?body=" +
-                                  props.eventType.description +
-                                  "&enddt=" +
-                                  date.add(calculatedDuration, "minute").utc().format() +
-                                  "&path=%2Fcalendar%2Faction%2Fcompose&rru=addevent&startdt=" +
-                                  date.utc().format() +
-                                  "&subject=" +
-                                  eventName
+                                props.eventType.description +
+                                "&enddt=" +
+                                date.add(calculatedDuration, "minute").utc().format() +
+                                "&path=%2Fcalendar%2Faction%2Fcompose&rru=addevent&startdt=" +
+                                date.utc().format() +
+                                "&subject=" +
+                                eventName
                               ) +
                               (locationVideoCallUrl
                                 ? "&location=" + encodeURIComponent(locationVideoCallUrl)
@@ -678,7 +681,7 @@ export default function Success(props: SuccessProps) {
                   <>
                     <hr className="border-subtle mt-8" />
                     <div className="text-default pt-8 text-center text-xs">
-                      <a href="https://cal.com/signup">
+                      <a href="https://mygpt.fi/signup">
                         {t("create_booking_link_with_calcom", { appName: APP_NAME })}
                       </a>
 
@@ -688,7 +691,7 @@ export default function Success(props: SuccessProps) {
                           const target = e.target as typeof e.target & {
                             email: { value: string };
                           };
-                          router.push(`https://cal.com/signup?email=${target.email.value}`);
+                          router.push(`https://mygpt.fi/signup?email=${target.email.value}`);
                         }}
                         className="mt-4 flex">
                         <EmailInput
@@ -696,7 +699,7 @@ export default function Success(props: SuccessProps) {
                           id="email"
                           defaultValue={email}
                           className="mr- focus:border-brand-default border-default text-default mt-0 block w-full rounded-none rounded-l-md shadow-sm focus:ring-black  sm:text-sm"
-                          placeholder="rick.astley@cal.com"
+                          placeholder="rick.astley@mygpt.fi"
                         />
                         <Button
                           size="lg"
@@ -720,7 +723,7 @@ export default function Success(props: SuccessProps) {
                       <span className="underline">
                         <a
                           target="_blank"
-                          href="https://cal.com/blog/google-s-new-spam-policy-may-be-affecting-your-invitations">
+                          href="https://mygpt.fi/blog/google-s-new-spam-policy-may-be-affecting-your-invitations">
                           {t("resolve")}
                         </a>
                       </span>
@@ -830,7 +833,9 @@ export function RecurringBookings({
       <br />
       {formatToLocalizedTime(date, language, undefined, !is24h, tz)} -{" "}
       {formatToLocalizedTime(dayjs(date).add(duration, "m"), language, undefined, !is24h, tz)}{" "}
-      <span className="text-bookinglight">({formatToLocalizedTimezone(date, language, tz)})</span>
+      <span className="text-bookinglight text-gray-500">
+        ({formatToLocalizedTimezone(date, language, tz)})
+      </span>
     </div>
   );
 }

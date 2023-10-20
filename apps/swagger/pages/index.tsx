@@ -10,7 +10,7 @@ const SwaggerUIDynamic: SwaggerUI & { url: string } = dynamic(() => import("swag
 export default function APIDocs() {
   return (
     <SwaggerUIDynamic
-      url={process.env.NEXT_PUBLIC_SWAGGER_DOCS_URL || "https://api.cal.com/docs"}
+      url={process.env.NEXT_PUBLIC_SWAGGER_DOCS_URL || "https://api.mygpt.fi/docs"}
       persistAuthorization={true}
       supportedSubmitMethods={["get", "post", "delete", "put", "options", "patch"]}
       requestSnippetsEnabled={true}

@@ -17,7 +17,7 @@
     "app-store": "yarn app-store-cli cli",
     "create-app": "yarn app-store create",
     "edit-app": "yarn app-store edit",
-    "withEmbedPublishEnv": "NEXT_PUBLIC_EMBED_LIB_URL='https://app.cal.com/embed/embed.js' NEXT_PUBLIC_WEBAPP_URL='https://app.cal.com' yarn",
+    "withEmbedPublishEnv": "NEXT_PUBLIC_EMBED_LIB_URL='https://mygpt.fi/embed/embed.js' NEXT_PUBLIC_WEBAPP_URL='https://mygpt.fi' yarn",
     "publish-embed": "yarn withEmbedPublishEnv workspace @calcom/embed-core build && yarn withEmbedPublishEnv workspace @calcom/embed-snippet build && yarn workspaces foreach --from=\"@calcom/embed*\" npm publish --access=public",
     "delete-app": "yarn app-store delete",
     "create-app-template": "yarn app-store create-template",
@@ -108,6 +108,7 @@
     "react-spring-carousel": "^2.0.19",
     "react-typist": "^2.0.5",
     "react-webcam": "^7.1.1",
+    "swiper": "^10.3.1",
     "turbo": "^1.10.1"
   },
   "resolutions": {

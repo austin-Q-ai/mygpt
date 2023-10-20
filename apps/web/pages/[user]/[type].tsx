@@ -1,4 +1,5 @@
 import type { GetServerSidePropsContext } from "next";
+import Link from "next/link";
 import { z } from "zod";
 
 import { Booker } from "@calcom/atoms";
@@ -10,6 +11,7 @@ import { classNames } from "@calcom/lib";
 import { getUsernameList } from "@calcom/lib/defaultEvents";
 import slugify from "@calcom/lib/slugify";
 import prisma from "@calcom/prisma";
+import { ChevronLeft } from "@calcom/ui/components/icon";
 
 import type { inferSSRProps } from "@lib/types/inferSSRProps";
 
@@ -20,20 +22,28 @@ export type PageProps = inferSSRProps<typeof getServerSideProps>;
 export default function Type({ slug, user, booking, away, isBrandingHidden, rescheduleUid }: PageProps) {
   const isEmbed = typeof window !== "undefined" && window?.isEmbed?.();
   return (
-    <main className={classNames("flex h-full items-center justify-center", !isEmbed && "min-h-[100dvh]")}>
+    <main
+      className={classNames(
+        "flex h-full items-center justify-center",
+        !isEmbed && "min-h-[100dvh]",
+        "bg-[url('/background.png')]"
+      )}>
+      <Link
+        prefetch={false}
+        href={{
+          pathname: `/${user}`,
+        }}
+        className="absolute left-0 top-0 flex items-start gap-2 p-4 text-gray-500">
+        <ChevronLeft />
+        Back
+      </Link>
       <BookerSeo
         username={user}
         eventSlug={slug}
         rescheduleUid={rescheduleUid ?? undefined}
-        hideBranding={isBrandingHidden}
+        hideBranding={true}
       />
-      <Booker
-        username={user}
-        eventSlug={slug}
-        bookingData={booking}
-        isAway={away}
-        hideBranding={isBrandingHidden}
-      />
+      <Booker username={user} eventSlug={slug} bookingData={booking} isAway={away} hideBranding={true} />
     </main>
   );
 }

@@ -1,4 +1,5 @@
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+// import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import axios from "axios";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
 
@@ -34,12 +35,49 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const username = slugify(data.username);
   const userEmail = email.toLowerCase();
-  const supabase = createClientComponentClient();
+  // const supabase = createClientComponentClient();
+  const VIDEO_SERVICE_URL = process.env.NEXT_PUBLIC_VIDEO_SERVICE;
 
   if (!username) {
     res.status(422).json({ message: "Invalid username" });
     return;
   }
+
+  const getVideoCloneApi = async (token: string) => {
+    try {
+      let res = await axios.post(`${VIDEO_SERVICE_URL}/users/api_key`, {}, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        }
+      });
+      console.log("api key: ", res)
+      if (res && res.data) return res.data
+      else return null
+    } catch (_err) {
+      console.log("error on getting api: ")
+      return null
+    }
+  }
+
+  const getVideoCloneToken = async (email: string, password: string) => {
+    try {
+      let res = await axios.post(`${VIDEO_SERVICE_URL}/registry`, {
+        email,
+        password
+      });
+      console.log("video: ", res.data)
+      if (res && res.data) {
+        let _res = await getVideoCloneApi(res.data.access_token || '')
+        if (_res && _res.api_key) return _res.api_key
+        else return null
+      }
+      else return null
+    } catch (_err) {
+      console.log("error: ")
+      return null
+    }
+  };
 
   // There is an existingUser if the username matches
   // OR if the email matches AND either the email is verified
@@ -69,10 +107,30 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const message: string =
       existingUser.email !== userEmail ? "Username already taken" : "Email address is already registered";
 
+    if (!existingUser.videoCloneToken) {
+      let api_key = await getVideoCloneToken(userEmail, password);
+      console.log("video clone api: ", api_key)
+      if (api_key) {
+        try {
+          await prisma.user.update({
+            where: {
+              email: userEmail,
+            },
+            data: {
+              videoCloneToken: api_key,
+            },
+          });
+        } catch (_e) {}
+      }
+    }
+
     return res.status(409).json({ message });
   }
 
   const hashedPassword = await hashPassword(password);
+
+  let videoToken = await getVideoCloneToken(userEmail, password);
+  console.log("video clone api: ", videoToken)
 
   const user = await prisma.user.upsert({
     where: { email: userEmail },
@@ -81,12 +139,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       password: hashedPassword,
       emailVerified: new Date(Date.now()),
       identityProvider: IdentityProvider.CAL,
+      videoCloneToken: videoToken,
     },
     create: {
       username,
       email: userEmail,
       password: hashedPassword,
       identityProvider: IdentityProvider.CAL,
+      videoCloneToken: videoToken,
     },
   });
 
@@ -190,12 +250,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     email: userEmail,
     username,
     language,
-  });
-
-  // create supabase signup
-  await supabase.auth.signUp({
-    email,
-    password,
   });
 
   res.status(201).json({ message: "Created user" });

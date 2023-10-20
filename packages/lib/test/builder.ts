@@ -197,6 +197,8 @@ export const buildUser = <T extends Partial<UserPayload>>(user?: T): UserPayload
     avatar: "",
     away: false,
     bio: null,
+    hasBot: false,
+    botId: null,
     brandColor: "#292929",
     bufferTime: 0,
     completedOnboarding: false,
@@ -233,6 +235,7 @@ export const buildUser = <T extends Partial<UserPayload>>(user?: T): UserPayload
     aiAdvantage: [],
     timeTokenAdvantage: [],
     apiKey: "",
+    videoCloneToken: null,
     expertId: "",
     ...user,
   };
