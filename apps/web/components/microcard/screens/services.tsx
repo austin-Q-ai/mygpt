@@ -25,7 +25,7 @@ export const ServicesPage = React.forwardRef<HTMLDivElement, ServicesPageProps>(
           <>
             <Header title="Events" description={user.username} />
             <div className="h-[75%] px-5 py-5">
-              <p className="pb-4 text-lg font-bold text-center">Book Meeting</p>
+              <p className="pb-4 text-center text-lg font-bold">Book Meeting</p>
               <ScrollableArea
                 className={classNames(user.eventTypes.length > 4 && "h-[85%]", "bg-pink/10 rounded-md")}>
                 {user.eventTypes
@@ -40,17 +40,19 @@ export const ServicesPage = React.forwardRef<HTMLDivElement, ServicesPageProps>(
                             Link: {CAL_URL?.replace(/^(https?:|)\/\//, "")}/{user.username}/{event.slug}
                           </p>
                           <div className="flex gap-2">
-                            {event.metadata?.multipleDuration ? event.metadata.multipleDuration.map((duration) => (
-                              <Badge className="w-fit" variant="gray" startIcon={Clock}>
-                                {duration}m
-                              </Badge>
-                            )) : (
+                            {event.metadata["multipleDuration"] ? (
+                              event.metadata["multipleDuration"].map((duration) => (
+                                <Badge className="w-fit" key={duration} variant="gray" startIcon={Clock}>
+                                  {duration}m
+                                </Badge>
+                              ))
+                            ) : (
                               <Badge className="w-fit" variant="gray" startIcon={Clock}>
                                 {event.length}m
                               </Badge>
                             )}
                           </div>
-                          <span className="px-3 py-1 text-white rounded bg-pink w-fit">
+                          <span className="bg-pink w-fit rounded px-3 py-1 text-white">
                             <Link href={`/${user.username}/${event.slug}`}>
                               <CalendarPlus className="h-4" />
                             </Link>
@@ -63,7 +65,7 @@ export const ServicesPage = React.forwardRef<HTMLDivElement, ServicesPageProps>(
               </ScrollableArea>
               <div className="flex items-center">
                 <Link href={`/${user.username}`}>
-                  <button className="px-2 py-1 mx-auto mt-4 text-lg text-center text-white rounded bg-pink/50">
+                  <button className="bg-pink/50 mx-auto mt-4 rounded px-2 py-1 text-center text-lg text-white">
                     All events
                   </button>
                 </Link>

@@ -118,15 +118,15 @@ const SubscriptionCard = (props: SubscriptionCardProps) => {
 
   return (
     <div className="flex flex-col">
-      <div className="text-pink h-10 pb-16 text-center text-xl font-bold">
+      <div className="text-pink mb-4  h-10 text-center text-xl font-bold">
         {props.isCurrent ? t("your_currently_plan") : ""}
       </div>
       <div
         className={classNames(
-          "border-pink flex h-full flex-col justify-between gap-10 rounded-3xl border px-8 pb-16 pt-12",
+          "border-pink container col-span-1 h-full rounded-md border px-8 py-8",
           props.isCurrent ? "bg-pink/10" : "bg-white"
         )}>
-        <div className="flex h-2/3 flex-col">
+        <div className="flex h-1/2 flex-col">
           <div className="flex flex-col gap-4">
             {props.advantageList.map((item, key) => (
               <div className="flex items-center" key={key}>
@@ -137,28 +137,26 @@ const SubscriptionCard = (props: SubscriptionCardProps) => {
               </div>
             ))}
           </div>
-
-          <div className="text-pink mt-auto pt-10 text-center text-xl font-bold">{props.price}</div>
         </div>
-        {props.isCurrent ? (
-          <div className="flex h-1/3" />
-        ) : (
-          <div className={classNames("text-gray", "flex flex-col")}>
-            <p className="pb-10 text-center text-xs lg:pb-20">
-              {t("read_and_accept_the")}{" "}
-              <Link className="underline" href="/">
-                {t("terms_and_conditions")}
-              </Link>
-            </p>
-            <Button
-              className="mt-auto flex w-full justify-center"
-              disabled={props?.isDisabled}
-              onClick={() => props.handleUpgrade()}>
-              {t("upgrade")}
-              <ArrowRight className="ml-2 h-4 w-4 self-center" aria-hidden="true" />{" "}
-            </Button>
-          </div>
-        )}
+        <div className="text-secondary my-14 flex-row  text-center font-sans text-xl font-bold md:my-10 md:py-10">
+          {props.price}
+        </div>
+
+        <div className={classNames("text-gray", " flex flex-col", props.isCurrent ? "hidden" : "mb-20")}>
+          <p className=" pb-8 text-center text-xs">
+            {t("read_and_accept_the")}{" "}
+            <Link className="underline" href="/">
+              {t("terms_and_conditions")}
+            </Link>
+          </p>
+          <Button
+            className="mt-auto flex w-full justify-center"
+            disabled={props?.isDisabled}
+            onClick={() => props.handleUpgrade()}>
+            {t("upgrade")}
+            <ArrowRight className="ml-2 h-4 w-4 self-center" aria-hidden="true" />{" "}
+          </Button>
+        </div>
       </div>
     </div>
   );
@@ -225,7 +223,7 @@ const SubscriptionView = () => {
           title={t("your_subscription")}
           description={t("subscription_description", { appName: APP_NAME })}
         />
-        <ScrollableArea className="grid grid-cols-1 gap-4 md:h-[100vh] md:grid-cols-2 lg:grid-cols-3 2xl:h-[70vh] 2xl:grid-cols-5">
+        <ScrollableArea className="grid grid-cols-1 gap-4 md:h-full md:grid-cols-2 lg:grid-cols-3  2xl:grid-cols-5">
           {data.map((e, key) => (
             <SubscriptionCard
               isCurrent={e.level === user.level}
