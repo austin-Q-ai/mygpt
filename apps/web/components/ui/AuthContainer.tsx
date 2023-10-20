@@ -44,6 +44,7 @@ export const footerLinks: LinkProps[] = [
   {
     name: "How does it work",
     url: "/",
+    type: "modal",
     col: 6,
   },
   {
