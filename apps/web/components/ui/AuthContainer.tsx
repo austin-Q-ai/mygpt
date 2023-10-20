@@ -209,6 +209,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                       variant="icon"
                       size="lg"
                       color="secondary"
+                      onClick={() => setIsOpen(true)}
                       className="self-center w-12 h-10 mr-1 text-xl bg-transparent border-0 p-none text-secondary">
                       Prices
                     </Button>
@@ -265,6 +266,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                           size="lg"
                           color="secondary"
                           aria-label={t("delete")}
+                          onClick={() => setIsOpen(true)}
                           className="hidden mr-1 bg-transparent border-0 p-none text-secondary sm:inline">
                           Prices
                         </Button>
@@ -294,7 +296,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                             {t("sign_up")}
                           </Link>
                         </div>
-                      </div>
+                      </div>{/*  */}
                     </div>
                     <div className="flex-col contents md:hidden">
                       <Button
