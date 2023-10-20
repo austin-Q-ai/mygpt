@@ -27,17 +27,16 @@ export const CoordonneesPage = React.forwardRef<HTMLDivElement, CoordonneesPageP
                 <div className="flex flex-col gap-2">
                   <p className="font-bold text-black">Contact Information</p>
                   <p>Full Name : {user.name}</p>
-                  {/* {user.position && <p>Speciality : {user.position}</p>} */}
-                  <p>Speciality : {user.position || "Real estate transaction advisor"}</p>
+                  {user.position && <p>Speciality : {user.position}</p>}
+                  {/* <p>Speciality : {user.position || "Real estate transaction advisor"}</p> */}
                 </div>
                 <div className="flex flex-col gap-2">
-                  <p className="font-bold text-black">Phone</p>
-                  <p>+336 30 30 30 30</p>
-                </div>
-                {/* {user.address && ( */}
-                <div className="flex flex-col gap-2">
-                  <p className="font-bold text-black">Address</p>
-                  <p>{user.address || "Lyon, Auvergne-Rhône-Alpes, France"}</p>
+                  {user.address && (
+                    <>
+                      <p className="font-bold text-black">Address</p>
+                      <p>{user.address}</p>
+                    </>
+                  )}
                   <div className="mt-2 flex items-center gap-2">
                     <div>
                       <Button
@@ -93,7 +92,6 @@ export const CoordonneesPage = React.forwardRef<HTMLDivElement, CoordonneesPageP
                     </div>
                   </div>
                 </div>
-                {/* )} */}
                 <div className="flex flex-col gap-2">
                   <p className="font-bold text-black">Subscribed</p>
                   <p>21 August 2023</p>
