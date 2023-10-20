@@ -2082,6 +2082,7 @@
   "telegram_bot_description": "Créer un robot Telegram pour {{appName}}",
   "telegram_bot_creation_success": "Bot créé avec succès",
   "telegram_bot_creation_error": "Une erreur s'est produite lors de la création du bot de télégramme",
+  "telegram_confirm_password_description": "Pour créer votre bot Telegram, pour des raisons de sécurité, veuillez confirmer à nouveau votre mot de passe",
   "expert_clone": "Expert en clones",
   "expert_description": "Créer un expert en clones pour {{appName}}",
   "successfully_created": "Création réussie",
