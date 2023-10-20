@@ -2155,6 +2155,7 @@
   "telegram_bot_description": "Create Telegram Bot for {{appName}}",
   "telegram_bot_creation_success": "Bot created successfully",
   "telegram_bot_creation_error": "Error occured on creating telegram bot",
+  "telegram_confirm_password_description": "To create your telegram bot, for security measure, please confirm your password again",
   "expert_clone": "Expert Clone",
   "expert_description": "Create expert clone for {{appName}}",
   "successfully_created": "Successfully Created",
