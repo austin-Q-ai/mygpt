@@ -1,6 +1,6 @@
 workflow:
   rules:
-    - if: $CI_PIPELINE_SOURCE == "push" || $CI_PIPELINE_SOURSE == "merge_request_event" || $CI_COMMIT_BRANCH  == "dev"
+    - if: $CI_PIPELINE_SOURCE == "push" || $CI_PIPELINE_SOURSE == "merge_request_event" || $CI_COMMIT_BRANCH  == "main"
       when: always
     - when: never
 
@@ -16,8 +16,8 @@ push_into_walcaldeploy:
     - git config --global user.name "Oliver Cawson"
     - git clone https://cawsonoliver33:$ACCESS_TOKEN@gitlab.com/i2xo/walcaldeploy
     - cd walcaldeploy/
-    - git checkout dev
+    - git checkout main
     - git submodule update --remote --init
     - git add .
-    - git commit -m "update submodule on dev"
+    - git commit -m "update submodule on main"
     - git push
