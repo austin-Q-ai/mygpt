@@ -1,8 +1,8 @@
 workflow:
   rules:
-    - if: $CI_PIPELINE_SOURCE == "push"
-    - if: $CI_PIPELINE_SOURSE == "merge_request_event"
-    - if: $CI_COMMIT_BRANCH  == "dev"
+    - if: $CI_PIPELINE_SOURCE == "push" || $CI_PIPELINE_SOURSE == "merge_request_event" || $CI_COMMIT_BRANCH  == "main"
+      when: always
+    - when: never
 
 stages: # List of stages for jobs, and their order of execution
   - push_into_walcaldeploy
