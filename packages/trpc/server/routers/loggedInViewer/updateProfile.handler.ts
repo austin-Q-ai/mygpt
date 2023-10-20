@@ -111,8 +111,7 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
     metadata: input.metadata as Prisma.InputJsonValue,
     social: input.social,
   };
-
-  const price: number = input.price || 0;
+  const price: number = input.price || 1;
 
   if (price) {
     delete data.price;

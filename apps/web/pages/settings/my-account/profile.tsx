@@ -58,6 +58,10 @@ import PageWrapper from "@components/PageWrapper";
 import TwoFactor from "@components/auth/TwoFactor";
 import { UsernameAvailabilityField } from "@components/ui/UsernameAvailability";
 
+function ltrim(str: string) {
+  if (!str) return str;
+  return str.replace(/^\s+/g, "");
+}
 const SkeletonLoader = ({ title, description }: { title: string; description: string }) => {
   return (
     <SkeletonContainer>
@@ -1348,7 +1352,7 @@ const ProfileForm = ({
               name={t("position")}
               value={positionExp}
               onChange={(e) => {
-                setPositionExp(e.target.value);
+                setPositionExp(ltrim(e.target.value));
               }}
             />
             {showErrorInExp && !positionExp && (
@@ -1360,7 +1364,7 @@ const ProfileForm = ({
               name={t("company")}
               value={companyExp}
               onChange={(e) => {
-                setCompanyExp(e.target.value);
+                setCompanyExp(ltrim(e.target.value));
               }}
             />
             {showErrorInExp && !companyExp && (
@@ -1452,7 +1456,7 @@ const ProfileForm = ({
               name={t("address")}
               value={addressExp}
               onChange={(e) => {
-                setAddressExp(e.target.value);
+                setAddressExp(ltrim(e.target.value));
               }}
             />
             <div className="flex flex-col">
@@ -1551,7 +1555,7 @@ const ProfileForm = ({
               name={t("school")}
               value={schoolEdu}
               onChange={(e) => {
-                setSchoolEdu(e.target.value);
+                setSchoolEdu(ltrim(e.target.value));
               }}
             />
             {showErrorInEdu && !schoolEdu && (
@@ -1563,7 +1567,7 @@ const ProfileForm = ({
               name={t("degree")}
               value={degreeEdu}
               onChange={(e) => {
-                setDegreeEdu(e.target.value);
+                setDegreeEdu(ltrim(e.target.value));
               }}
             />
             <div className="mb-2 flex justify-between">
@@ -1652,7 +1656,7 @@ const ProfileForm = ({
               name={t("major")}
               value={majorEdu}
               onChange={(e) => {
-                setMajorEdu(e.target.value);
+                setMajorEdu(ltrim(e.target.value));
               }}
             />
             <div className="flex flex-col">
