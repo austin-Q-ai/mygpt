@@ -276,7 +276,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                         <div className="flex-row mt-5 ">
                           <ScrollableArea className="grid h-[600px] gap-5  sm:grid-cols-1 md:h-full md:grid-cols-5">
                             {pricesList.map((priceItem, index) => {
-                              return <PriceListItem key={index} priceItem={priceItem} handleClick={() => { window.localStorage.setItem("price-type", `${index}`) }} />;
+                              return <PriceListItem key={index} priceItem={priceItem} disabled={index === 4} handleClick={() => { window.localStorage.setItem("price-type", `${index}`) }} />;
                             })}
                           </ScrollableArea>
                         </div>
