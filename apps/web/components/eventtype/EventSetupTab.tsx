@@ -58,18 +58,18 @@ const getLocationInfo = (props: Pick<EventTypeSetupProps, "eventType" | "locatio
   const locationDetails = props.eventType.locations &&
     props.eventType.locations.length > 0 &&
     !locationAvailable && {
-      slug: props.eventType.locations[0].type
-        .replace("integrations:", "")
-        .replace(":", "-")
-        .replace("_video", ""),
-      name: props.eventType.locations[0].type
-        .replace("integrations:", "")
-        .replace(":", " ")
-        .replace("_video", "")
-        .split(" ")
-        .map((word) => word[0].toUpperCase() + word.slice(1))
-        .join(" "),
-    };
+    slug: props.eventType.locations[0].type
+      .replace("integrations:", "")
+      .replace(":", "-")
+      .replace("_video", ""),
+    name: props.eventType.locations[0].type
+      .replace("integrations:", "")
+      .replace(":", " ")
+      .replace("_video", "")
+      .split(" ")
+      .map((word) => word[0].toUpperCase() + word.slice(1))
+      .join(" "),
+  };
   return { locationAvailable, locationDetails };
 };
 interface DescriptionEditorProps {
@@ -99,7 +99,7 @@ const DescriptionEditor = (props: DescriptionEditorProps) => {
     />
   ) : (
     <SkeletonContainer>
-      <SkeletonText className="block h-24 w-full" />
+      <SkeletonText className="block w-full h-24" />
     </SkeletonContainer>
   );
 };
@@ -259,7 +259,7 @@ export const EventSetupTab = (
               isDisabled={shouldLockDisableProps("locations").disabled}
               defaultValue={defaultValue}
               isSearchable={false}
-              className="block w-full min-w-0 flex-1 rounded-sm text-sm"
+              className="flex-1 block w-full min-w-0 text-sm rounded-sm"
               menuPlacement="auto"
               onChange={(e: SingleValueLocationOption) => {
                 if (e?.value) {
@@ -302,12 +302,12 @@ export const EventSetupTab = (
                           "h-4 w-4",
                           // invert all the icons except app icons
                           eventLocationType.iconUrl &&
-                            !eventLocationType.iconUrl.startsWith("/app-store") &&
-                            "dark:invert"
+                          !eventLocationType.iconUrl.startsWith("/app-store") &&
+                          "dark:invert"
                         )}
                         alt={`${eventLocationType.label} logo`}
                       />
-                      <span className="ms-1 line-clamp-1 text-sm">{eventLabel}</span>
+                      <span className="text-sm ms-1 line-clamp-1">{eventLabel}</span>
                     </div>
                     <div className="flex">
                       <button
@@ -325,11 +325,11 @@ export const EventSetupTab = (
                           openLocationModal(location.type, location.address);
                         }}
                         aria-label={t("edit")}
-                        className="hover:text-emphasis text-subtle mr-1 p-1">
-                        <Edit2 className="h-4 w-4" />
+                        className="p-1 mr-1 hover:text-emphasis text-subtle">
+                        <Edit2 className="w-4 h-4" />
                       </button>
                       <button type="button" onClick={() => removeLocation(location)} aria-label={t("remove")}>
-                        <X className="border-l-1 hover:text-emphasis text-subtle h-6 w-6 pl-1 " />
+                        <X className="w-6 h-6 pl-1 border-l-1 hover:text-emphasis text-subtle " />
                       </button>
                     </div>
                   </div>
@@ -340,21 +340,21 @@ export const EventSetupTab = (
               (location) =>
                 location.type === MeetLocationType && destinationCalendar?.integration !== "google_calendar"
             ) && (
-              <div className="text-default flex text-sm">
-                <Check className="mr-1.5 mt-0.5 h-2 w-2.5" />
-                <Trans i18nKey="event_type_requres_google_cal">
-                  <p>
-                    The “Add to calendar” for this event type needs to be a Google Calendar for Meet to work.
-                    Change it{" "}
-                    <Link
-                      href={`${CAL_URL}/event-types/${eventType.id}?tabName=advanced`}
-                      className="underline">
-                      here.
-                    </Link>{" "}
-                  </p>
-                </Trans>
-              </div>
-            )}
+                <div className="flex text-sm text-default">
+                  <Check className="mr-1.5 mt-0.5 h-2 w-2.5" />
+                  <Trans i18nKey="event_type_requres_google_cal">
+                    <p>
+                      The “Add to calendar” for this event type needs to be a Google Calendar for Meet to work.
+                      Change it{" "}
+                      <Link
+                        href={`${CAL_URL}/event-types/${eventType.id}?tabName=advanced`}
+                        className="underline">
+                        here.
+                      </Link>{" "}
+                    </p>
+                  </Trans>
+                </div>
+              )}
             {isChildrenManagedEventType && !locationAvailable && locationDetails && (
               <p className="pl-1 text-sm leading-none text-red-600">
                 {t("app_not_connected", { appName: locationDetails.name })}{" "}
@@ -553,16 +553,16 @@ export const EventSetupTab = (
           selectedLocation
             ? selectedLocation.address
               ? {
-                  value: selectedLocation.value,
-                  label: t(selectedLocation.label),
-                  icon: selectedLocation.icon,
-                  address: selectedLocation.address,
-                }
+                value: selectedLocation.value,
+                label: t(selectedLocation.label),
+                icon: selectedLocation.icon,
+                address: selectedLocation.address,
+              }
               : {
-                  value: selectedLocation.value,
-                  label: t(selectedLocation.label),
-                  icon: selectedLocation.icon,
-                }
+                value: selectedLocation.value,
+                label: t(selectedLocation.label),
+                icon: selectedLocation.icon,
+              }
             : undefined
         }
         setSelectedLocation={setSelectedLocation}

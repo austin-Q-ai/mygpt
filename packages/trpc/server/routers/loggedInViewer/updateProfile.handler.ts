@@ -6,6 +6,7 @@ import type { NextApiResponse, GetServerSidePropsContext } from "next";
 
 import stripe from "@calcom/app-store/stripepayment/lib/server";
 import { getPremiumPlanProductId } from "@calcom/app-store/stripepayment/lib/utils";
+import { GOOGLE_MAP_API_KEY } from "@calcom/lib/constants";
 import hasKeyInMetadata from "@calcom/lib/hasKeyInMetadata";
 import { getTranslation } from "@calcom/lib/server";
 import { checkUsername } from "@calcom/lib/server/checkUsername";
@@ -33,68 +34,97 @@ type UpdateProfileOptions = {
 };
 
 const client = new MeiliSearch({
-  host: `https://${process.env.MEILISEARCH_HOST}`,
+  host:
+    process.env.NODE_ENV === "production"
+      ? `https://${process.env.MEILISEARCH_HOST}`
+      : `http://${process.env.MEILISEARCH_HOST}`,
   apiKey: process.env.ADMIN_API_KEY, // admin apiKey
 });
 
 const index = client.index("users");
+async function validateAddress(address: any) {
+  const response = await axios.get("https://maps.googleapis.com/maps/api/geocode/json", {
+    params: {
+      key: GOOGLE_MAP_API_KEY,
+      address: address,
+    },
+  });
 
+  const data = response.data;
+
+  if (data.results.length > 0) {
+    // The address is valid
+    return true;
+  } else {
+    // The address is invalid
+    return false;
+  }
+}
 export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions) => {
   const { user } = ctx;
   const data: Prisma.UserUpdateInput & { defaultValue?: boolean } = {
     ...input,
     experiences: input.experiences
       ? {
-          updateMany: input.experiences
-            .filter((exp) => exp.id !== undefined && !exp.delete)
-            .map((exp) => {
-              const { id, userId, ...data } = exp;
-              delete data.delete;
-              return {
-                where: {
-                  id: exp.id,
-                },
-                data,
-              };
-            }),
-          create: input.experiences.filter((exp) => exp.id === undefined && !exp.delete),
-          deleteMany: input.experiences
-            .filter((exp) => exp.id !== undefined && exp.delete)
-            .map((exp) => ({
-              id: exp.id,
-            })),
-        }
+        updateMany: input.experiences
+          .filter((exp) => exp.id !== undefined && !exp.delete)
+          .map((exp) => {
+            const { id, userId, ...data } = exp;
+            delete data.delete;
+            return {
+              where: {
+                id: exp.id,
+              },
+              data,
+            };
+          }),
+        create: input.experiences.filter((exp) => exp.id === undefined && !exp.delete),
+        deleteMany: input.experiences
+          .filter((exp) => exp.id !== undefined && exp.delete)
+          .map((exp) => ({
+            id: exp.id,
+          })),
+      }
       : {},
     educations: input.educations
       ? {
-          updateMany: input.educations
-            .filter((edu) => edu.id !== undefined && !edu.delete)
-            .map((edu) => {
-              const { id, userId, ...data } = edu;
-              delete data.delete;
-              return {
-                where: {
-                  id: edu.id,
-                },
-                data,
-              };
-            }),
-          create: input.educations.filter((edu) => edu.id === undefined && !edu.delete),
-          deleteMany: input.educations
-            .filter((edu) => edu.id !== undefined && edu.delete)
-            .map((edu) => ({
-              id: edu.id,
-            })),
-        }
+        updateMany: input.educations
+          .filter((edu) => edu.id !== undefined && !edu.delete)
+          .map((edu) => {
+            const { id, userId, ...data } = edu;
+            delete data.delete;
+            return {
+              where: {
+                id: edu.id,
+              },
+              data,
+            };
+          }),
+        create: input.educations.filter((edu) => edu.id === undefined && !edu.delete),
+        deleteMany: input.educations
+          .filter((edu) => edu.id !== undefined && edu.delete)
+          .map((edu) => ({
+            id: edu.id,
+          })),
+      }
       : {},
     metadata: input.metadata as Prisma.InputJsonValue,
     social: input.social,
   };
-
-  const price: number = input.price || 0;
+  const price: number = input.price || 1;
 
   if (price) {
     delete data.price;
+  }
+
+  if (data.address) {
+    const response = await validateAddress(data.address);
+    if (!response) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "invalid_address",
+      });
+    }
   }
 
   if (input.defaultValue) {
@@ -291,7 +321,12 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
   // update data on qdrant db
   axios
     .post(`${QDRANT_URL}/collections/${COLLECTION_NAME}/points/payload`, {
-      payload: input,
+      payload: {
+        name: input.name,
+        avatar: input.avatar,
+        bio: input.bio,
+        bookingCallLink: input.username,
+      },
       points: [user.id],
     })
     .then((res) => {

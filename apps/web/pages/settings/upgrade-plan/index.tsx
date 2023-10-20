@@ -8,7 +8,7 @@ import { createUpgradePaymentLink } from "@calcom/app-store/stripepayment/lib/cl
 import SettingsLayout from "@calcom/features/settings/layouts/SettingsLayout";
 import { upgradePlan } from "@calcom/features/upgrade-plan";
 import { classNames } from "@calcom/lib";
-import { APP_NAME } from "@calcom/lib/constants";
+import { APP_NAME, SUBSCRIPTION_PRICE } from "@calcom/lib/constants";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { UserLevel } from "@calcom/prisma/enums";
 import { trpc } from "@calcom/trpc/react";
@@ -37,7 +37,6 @@ interface SubscriptionCardProps {
 
 interface SubscriptionDataType {
   advantageList: string[];
-  price: string;
   level: UserLevel;
 }
 
@@ -50,7 +49,6 @@ const data: SubscriptionDataType[] = [
       "data_storage_limited_to_1_gb",
       "one_active_user_online",
     ],
-    price: "freemium",
     level: UserLevel.FREEMIUM,
   },
   {
@@ -61,7 +59,6 @@ const data: SubscriptionDataType[] = [
       "data_storage_up_to_10_gb",
       "two_active_users_online",
     ],
-    price: "29 €/month",
     level: UserLevel.LEVEL1,
   },
   {
@@ -73,7 +70,6 @@ const data: SubscriptionDataType[] = [
       "ten_active_users_online",
       "access_to_detailed_analysis_and_reports",
     ],
-    price: "59 €/month",
     level: UserLevel.LEVEL2,
   },
   {
@@ -84,7 +80,6 @@ const data: SubscriptionDataType[] = [
       "unlimited_data_storage",
       "twenty_five_active_users_online",
     ],
-    price: "99 €/month",
     level: UserLevel.LEVEL3,
   },
   {
@@ -95,7 +90,6 @@ const data: SubscriptionDataType[] = [
       "specific_integrations_or_custom_developments",
       "Access to customized detailed analysis and reports",
     ],
-    price: "contact_us",
     level: UserLevel.CUSTOM,
   },
 ];
@@ -121,6 +115,7 @@ const SkeletonLoader = ({ title, description }: { title: string; description: st
 
 const SubscriptionCard = (props: SubscriptionCardProps) => {
   const { t } = useLocale();
+
   return (
     <div className="flex flex-col">
       <div className="text-pink h-10 pb-16 text-center text-xl font-bold">
@@ -143,7 +138,7 @@ const SubscriptionCard = (props: SubscriptionCardProps) => {
             ))}
           </div>
 
-          <div className="text-pink mt-auto pt-10 text-center text-xl font-bold">{t(props.price)}</div>
+          <div className="text-pink mt-auto pt-10 text-center text-xl font-bold">{props.price}</div>
         </div>
         {props.isCurrent ? (
           <div className="flex h-1/3" />
@@ -170,7 +165,7 @@ const SubscriptionCard = (props: SubscriptionCardProps) => {
 };
 
 const SubscriptionView = () => {
-  const { t } = useLocale();
+  const { t, i18n } = useLocale();
   const router = useRouter();
   const utils = trpc.useContext();
   const { data: user, isLoading } = trpc.viewer.me.useQuery();
@@ -188,6 +183,17 @@ const SubscriptionView = () => {
   //     showToast(t("error_updating_settings"), "error");
   //   },
   // });
+  const getPrice = (level: UserLevel, currency: string) => {
+    if (level === UserLevel.FREEMIUM) return t("freemium");
+    else if (level === UserLevel.CUSTOM) return t("contact_us");
+
+    return `${Intl.NumberFormat(i18n.language, {
+      style: "currency",
+      currency: currency,
+      useGrouping: false,
+      maximumFractionDigits: 0,
+    }).format(SUBSCRIPTION_PRICE[level][currency.toUpperCase()])}/${t("monthly_one")}`;
+  };
 
   const upgradeMutation = useMutation(upgradePlan, {
     onSuccess: async (responseData) => {
@@ -224,10 +230,11 @@ const SubscriptionView = () => {
             <SubscriptionCard
               isCurrent={e.level === user.level}
               advantageList={e.advantageList}
-              price={e.price}
               key={key}
+              price={getPrice(e.level, user.currency)}
               isDisabled={
-                Object.keys(UserLevel).indexOf(e.level) < Object.keys(UserLevel).indexOf(user.level)
+                Object.keys(UserLevel).indexOf(e.level) < Object.keys(UserLevel).indexOf(user.level) ||
+                e.level === UserLevel.CUSTOM
               }
               handleUpgrade={() => handleUpgrade(e.level)}
             />

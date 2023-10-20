@@ -14,6 +14,7 @@ import { availabilityRouter } from "./availability/_router";
 import { bookingsRouter } from "./bookings/_router";
 import { deploymentSetupRouter } from "./deploymentSetup/_router";
 import { eventTypesRouter } from "./eventTypes/_router";
+import { expertRouter } from "./expert/_router";
 import { googleWorkspaceRouter } from "./googleWorkspace/_router";
 import { microcardRouter } from "./microcard/_router";
 import { viewerOrganizationsRouter } from "./organizations/_router";
@@ -54,5 +55,6 @@ export const viewerRouter = mergeRouters(
     googleWorkspace: googleWorkspaceRouter,
     microcard: microcardRouter,
     admin: adminRouter,
+    expert: expertRouter,
   })
 );

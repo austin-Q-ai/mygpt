@@ -5,7 +5,7 @@ import { Avatar } from "@calcom/ui";
 
 function SkeletonLoader() {
   return (
-    <SkeletonContainer>
+    <SkeletonContainer className="w-full">
       <div className="mx-auto flex w-full flex-col md:w-[80%]">
         <div className="border-emphasis mb-8 flex w-full flex-row rounded-md border border-dotted p-4">
           <div className="flex w-full flex-col">

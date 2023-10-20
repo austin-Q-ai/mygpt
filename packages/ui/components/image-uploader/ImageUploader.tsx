@@ -130,17 +130,20 @@ export default function ImageUploader({
   const { t } = useLocale();
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
-
   const [{ result }, setFile] = useFileReader({
     method: "readAsDataURL",
   });
-
+  const permitedType = ["image/png", "image/gif", "image/jpeg", "image/jpg"];
   useEffect(() => {
     if (props.imageSrc) setImageSrc(props.imageSrc);
   }, [props.imageSrc]);
 
   const onInputFile = (e: FileEvent<HTMLInputElement>) => {
     if (!e.target.files?.length) {
+      return;
+    }
+
+    if (!permitedType.includes(e.target?.files[0].type)) {
       return;
     }
 
@@ -257,7 +260,7 @@ export default function ImageUploader({
                 name={id}
                 placeholder={t("upload_image")}
                 className="text-default pointer-events-none absolute mt-4 opacity-0 "
-                accept="image/*"
+                accept="image/x-png,image/gif,image/jpeg"
               />
               {t("choose_a_file")}
             </label>

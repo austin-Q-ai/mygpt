@@ -377,8 +377,15 @@
   "no_expert_data_description": "Il n'y a aucun expert que vous avez ajouté pour le moment. Vous pouvez ajouter les experts que vous souhaitez et acheter leurs jetons pour réserver une entrevue avec eux.",
   "expert": "Expert",
   "token_amount": "Montant de jetons",
+  "revoke": "Révoquer",
+  "revoke_token": "Révoquer le jeton",
+  "confirm_revoke_question": "Voulez-vous vraiment révoquer les jetons ?",
+  "confirm_revoke_event": "Oui, révoquer les jetons",
+  "revoke_token_success": "Jeton annulé avec succès",
+  "error_revoking_token": "Erreur lors de la révocation des jetons",
   "navigate_between_menu_using_cube": "Naviguer entre les menus en utilisant le cube",
   "rotate_cube": "Faites tourner le cube et explorez les menus de navigation",
+  "upgrade_helper": "De {{fromLevel}} à {{toLevel}}",
   "confirm_upgrade_question": "Voulez-vous vraiment mettre à niveau votre plan d'abonnement ?",
   "confirm_upgrade_event": "Oui, mettre à niveau",
   "on": "le",
@@ -2088,5 +2095,6 @@
   "add_expert_timetoken_buy_timetoken_view_expert_profile_remove_expert_timetoken_and_change_timetoken_price": "Ajouter un timetoken expert, acheter un timetoken, afficher le profil d'un expert, supprimer un timetoken expert et modifier le prix du timetoken",
   "add_a_new_availability_edit_availability_delete_availability_duplicate_availability": "Ajouter une nouvelle disponibilité, Modifier la disponibilité, Supprimer la disponibilité, Disponibilité en double",
   "add_a_new_club_deal_edit_club_deal_delete_club_deal_preview_club_deal_invite_club_deal_member": "Ajouter un nouveau deal de club, Modifier le deal de club, Supprimer le deal de club, Aperçu du deal de club, Inviter un membre du club deal",
-  "add_a_new_app_delete_app": "Ajouter une nouvelle application, Supprimer l'application"
+  "add_a_new_app_delete_app": "Ajouter une nouvelle application, Supprimer l'application",
+  "invalid_address": "Vous avez fourni un format d'adresse invalide"
 }
