@@ -7,6 +7,7 @@ import { Button, Label } from "@calcom/ui";
 
 interface ImageUploaderProps {
   setImage: (image: string) => void;
+  setFile?: (file: any) => void;
 }
 
 function handleDragOver(e: DragEvent) {
@@ -19,6 +20,8 @@ function isImageFile(file?: File) {
 
 const ImageUploader: React.FC<ImageUploaderProps> = (props) => {
   const [image, setImage] = useState("");
+  const [file, setFile] = useState<File>();
+
   const [showSelection, setShowSelection] = useState(false);
   const [showWebcam, setShowWebcam] = useState(false);
   const webcamRef = useRef<Webcam | null>(null);
@@ -26,6 +29,8 @@ const ImageUploader: React.FC<ImageUploaderProps> = (props) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const onImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && isImageFile(event.target.files[0])) {
+      console.log(event.target.files[0].type);
+      setFile(event.target.files[0]);
       setImage(URL.createObjectURL(event.target.files[0]));
     }
   };
@@ -61,6 +66,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = (props) => {
 
   useEffect(() => {
     props.setImage(image);
+    props.setFile != undefined && props.setFile(file);
   }, [image]);
 
   return (
