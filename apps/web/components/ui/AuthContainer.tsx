@@ -203,7 +203,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
           <div className="flex flex-row justify-center h-full align-center ">
             <div className="flex flex-col self-center">
               <div className="flex flex-col gap-8 text-secondary">
-                <Dialog open={isOpen}>
+                <Dialog open={isOpen} onOpenChange={setIsOpen}>
                   <DialogTrigger asChild>
                     <Button
                       variant="icon"
@@ -259,7 +259,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                 </div>
                 <div className="flex-col text-secondary">
                   <div className="flex flex-row gap-8">
-                    <Dialog open={isOpen}>
+                    <Dialog open={isOpen} onOpenChange={setIsOpen}>
                       <DialogTrigger asChild>
                         <Button
                           variant="icon"
