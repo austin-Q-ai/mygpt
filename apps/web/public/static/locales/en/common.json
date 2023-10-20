@@ -2151,5 +2151,15 @@
   "successfully_created": "Successfully Created",
   "verification_email_was_sent_please_check_and_try_again": "Verification Email was sent. Please check and try again.",
   "email_for_supabase_not_confirmed_click_resend_email_button": "Email for Supabase not confirmed, Click `Resend email` button",
-  "my_bots": "My Bots"
+  "my_bots": "My Bots",
+  "registration": "Registration",
+  "sign_in_on_the_platform": "Sign in on the platform",
+  "fill_all_fields_of_the_getting_started": "Fill all fields of the getting started",
+  "dashboard": "Dashboard",
+  "add_a_new_event_type_delete_event_type_and_edit_event_type": "Add a new event type, Delete event type and Edit event type",
+  "cancel_booking_reschedule_booking_request_reschedule_edit_location": "Cancel booking, Reschedule booking, Request Reschedule, Edit location",
+  "add_expert_timetoken_buy_timetoken_view_expert_profile_remove_expert_timetoken_and_change_timetoken_price": "Add expert timetoken, Buy timetoken, View expert profile, Remove expert timetoken and Change Timetoken Price",
+  "add_a_new_availability_edit_availability_delete_availability_duplicate_availability": "Add a new availability, Edit availability, Delete availability, Duplicate availability",
+  "add_a_new_club_deal_edit_club_deal_delete_club_deal_preview_club_deal_invite_club_deal_member": "Add a new club deal, Edit club deal, Delete club deal, Preview club deal, Invite club deal member",
+  "add_a_new_app_delete_app": "Add a new app, Delete app"
 }

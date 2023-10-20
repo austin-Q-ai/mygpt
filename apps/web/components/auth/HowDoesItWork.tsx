@@ -1,6 +1,7 @@
 import React from 'react';
 // Import Swiper React components
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { useLocale } from "@calcom/lib/hooks/useLocale";
 
 // Import Swiper styles
 import 'swiper/css';
@@ -11,46 +12,45 @@ import { Pagination } from 'swiper/modules';
 
 const howDoesItWorkContents = [
     {
-        "header": "Registration",
-        "footer": "Sign in on the platform",
+        "header": "registration",
+        "footer": "sign_in_on_the_platform",
     },
     {
-        "header": "Getting started",
-        "footer": "Fill all fields of the getting started",
+        "header": "getting_started",
+        "footer": "fill_all_fields_of_the_getting_started",
     },
     {
-        "header": "Dashboard",
-        "footer": "Navigate between menus using the cube",
+        "header": "dashboard",
+        "footer": "navigate_between_menu_using_cube",
     },
     {
-        "header": "Events Dashboard",
-        "footer": "Add a new event type, Delete event type and Edit event type",
+        "header": "event_types_page_title",
+        "footer": "add_a_new_event_type_delete_event_type_and_edit_event_type",
     },
     {
-        "header": "Book Meeting",
-        "footer": "Cancel booking, Reschedule booking, Request Reschedule, Edit location",
+        "header": "bookings",
+        "footer": "cancel_booking_reschedule_booking_request_reschedule_edit_location",
     },
     {
-        "header": "Timetokens Wallet",
-        "footer": "Add expert timetoken, Buy timetoken, View expert profile, Remove expert timetoken and Change Timetoken Price",
+        "header": "timetokens_wallet",
+        "footer": "add_expert_timetoken_buy_timetoken_view_expert_profile_remove_expert_timetoken_and_change_timetoken_price",
     },
     {
-        "header": "Time Availability",
-        "footer": "Add a new availability, Edit availability, Delete availability, Duplicate availability",
+        "header": "availability",
+        "footer": "add_a_new_availability_edit_availability_delete_availability_duplicate_availability",
     },
     {
-        "header": "Club deal",
-        "footer": "Add a new club deal, Edit club deal, Delete club deal, Preview club deal, Invite club deal member",
+        "header": "teams",
+        "footer": "add_a_new_club_deal_edit_club_deal_delete_club_deal_preview_club_deal_invite_club_deal_member",
     },
     {
-        "header": "Apps",
-        "footer": "Add a new app, Delete app",
+        "header": "apps",
+        "footer": "add_a_new_app_delete_app",
     },
-
-
 ]
 
 export default function HowDoesItWork() {
+    const { t } = useLocale();
     return (
         <>
             <Swiper pagination={true} modules={[Pagination]} className="w-full h-full" style={{
@@ -67,10 +67,10 @@ export default function HowDoesItWork() {
                         <div className='flex flex-col items-center justify-center h-full'>
                             <div className='flex items-center mb-6'>
                                 <div className='w-6 h-6 mr-4 text-center text-white rounded-full bg-pink'>{index + 1}</div>
-                                <p className='text-2xl font-bold text-center text-pink'>{item.header}</p>
+                                <p className='text-2xl font-bold text-center text-pink'>{t(item.header)}</p>
                             </div>
                             <img className='my-auto' src={`/app-how-does-it-work/${index + 1}.png`} />
-                            <p className='mt-6 text-xl text-center mb-14 text-pink'>{item.footer}</p>
+                            <p className='mt-6 text-xl text-center mb-14 text-pink'>{t(item.footer)}</p>
                         </div>
                     </SwiperSlide>
 
