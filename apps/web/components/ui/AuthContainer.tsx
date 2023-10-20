@@ -156,6 +156,7 @@ const pricesList = [
 export default function AuthContainer(props: React.PropsWithChildren<Props>) {
   const { t } = useLocale();
   const [toggleFlag, setToggleFlag] = useState(false);
+  const [isOpen, setIsOpen] = useState(false)
   const handleToggleNav = () => {
     setToggleFlag(!toggleFlag);
   };
@@ -202,7 +203,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
           <div className="flex flex-row justify-center h-full align-center ">
             <div className="flex flex-col self-center">
               <div className="flex flex-col gap-8 text-secondary">
-                <Dialog>
+                <Dialog open={isOpen}>
                   <DialogTrigger asChild>
                     <Button
                       variant="icon"
@@ -220,7 +221,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                     <div className="flex-row mt-5 ">
                       <ScrollableArea className="grid h-[600px] gap-5  sm:grid-cols-1 md:h-full md:grid-cols-5">
                         {pricesList.map((priceItem, index) => {
-                          return <PriceListItem key={index} priceItem={priceItem} disabled={index === 4} handleClick={() => { window.localStorage.setItem("price-type", `${index}`) }} />;
+                          return <PriceListItem key={index} priceItem={priceItem} disabled={index === 4} handleClick={() => { window.localStorage.setItem("price-type", `${index}`); setIsOpen(false) }} />;
                         })}
                       </ScrollableArea>
                     </div>
@@ -257,7 +258,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                 </div>
                 <div className="flex-col text-secondary">
                   <div className="flex flex-row gap-8">
-                    <Dialog>
+                    <Dialog open={isOpen}>
                       <DialogTrigger asChild>
                         <Button
                           variant="icon"
@@ -276,7 +277,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                         <div className="flex-row mt-5 ">
                           <ScrollableArea className="grid h-[600px] gap-5  sm:grid-cols-1 md:h-full md:grid-cols-5">
                             {pricesList.map((priceItem, index) => {
-                              return <PriceListItem key={index} priceItem={priceItem} disabled={index === 4} handleClick={() => { window.localStorage.setItem("price-type", `${index}`) }} />;
+                              return <PriceListItem key={index} priceItem={priceItem} disabled={index === 4} handleClick={() => { window.localStorage.setItem("price-type", `${index}`); setIsOpen(false) }} />;
                             })}
                           </ScrollableArea>
                         </div>
