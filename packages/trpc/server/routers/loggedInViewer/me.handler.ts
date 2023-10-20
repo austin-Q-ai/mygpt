@@ -45,6 +45,8 @@ export const meHandler = async ({ ctx }: MeOptions) => {
     darkBrandColor: user.darkBrandColor,
     away: user.away,
     bio: user.bio,
+    hasBot: user.hasBot,
+    botId: user.botId,
     weekStart: user.weekStart,
     theme: user.theme,
     hideBranding: user.hideBranding,
@@ -57,5 +59,6 @@ export const meHandler = async ({ ctx }: MeOptions) => {
     aiAdvantage: user.aiAdvantage,
     timeTokenAdvantage: user.timeTokenAdvantage,
     apiKey: user.apiKey,
+    videoCloneToken: user.videoCloneToken,
   };
 };

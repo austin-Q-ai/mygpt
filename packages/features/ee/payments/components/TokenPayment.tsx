@@ -49,6 +49,10 @@ const PaymentForm = (props: Props) => {
         return_url: `${CAL_URL}/timetokens-wallet`,
       },
     });
+
+    if (payload.error) {
+      setState({ status: "idle" });
+    }
   };
 
   return (
@@ -69,7 +73,7 @@ const PaymentForm = (props: Props) => {
           disabled={["processing", "error"].includes(state.status)}
           loading={state.status === "processing"}
           id="submit"
-          color="secondary">
+          color="primary">
           <span id="button-text">
             {state.status === "processing" ? <div className="spinner" id="spinner" /> : t("pay_now")}
           </span>

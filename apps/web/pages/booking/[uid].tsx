@@ -296,7 +296,9 @@ export default function Success(props: SuccessProps) {
   const providerName = guessEventLocationType(location)?.label;
 
   return (
-    <div className={isEmbed ? "" : "h-screen"} data-testid="success-page">
+    <div
+      className={classNames(isEmbed ? "" : "h-fit", "bg-[url('/background.png')]")}
+      data-testid="success-page">
       {!isEmbed && (
         <EventReservationSchema
           reservationId={bookingInfo.uid}
@@ -311,11 +313,11 @@ export default function Success(props: SuccessProps) {
         />
       )}
       {isLoggedIn && !isEmbed && (
-        <div className="-mb-4 ml-4 mt-2">
+        <div className="absolute left-0 top-0 mx-4">
           <Link
             href={allRemainingBookings ? "/bookings/recurring" : "/bookings/upcoming"}
-            className="hover:bg-subtle text-subtle hover:text-default mt-2 inline-flex px-1 py-2 text-sm dark:hover:bg-transparent">
-            <ChevronLeft className="h-5 w-5" /> {t("back_to_bookings")}
+            className="absolute left-0 top-0 flex items-start gap-2 p-4 text-gray-500">
+            <ChevronLeft /> {t("back")}
           </Link>
         </div>
       )}
@@ -344,7 +346,7 @@ export default function Success(props: SuccessProps) {
                   className={classNames(
                     "mx-auto flex items-center justify-center",
                     !giphyImage && !isCancelled && !needsConfirmation
-                      ? "bg-success h-12 w-12 rounded-full"
+                      ? "bg-emphasis h-12 w-12 rounded-full"
                       : "",
                     !giphyImage && !isCancelled && needsConfirmation
                       ? "bg-subtle h-12 w-12 rounded-full"
@@ -356,7 +358,7 @@ export default function Success(props: SuccessProps) {
                     <img src={giphyImage} alt="Gif from Giphy" />
                   )}
                   {!giphyImage && !needsConfirmation && !isCancelled && (
-                    <Check className="h-5 w-5 text-green-600" />
+                    <Check className="text-secondary h-5 w-5" />
                   )}
                   {needsConfirmation && !isCancelled && <Calendar className="text-emphasis h-5 w-5" />}
                   {isCancelled && <X className="h-5 w-5 text-red-600" />}
@@ -441,9 +443,9 @@ export default function Success(props: SuccessProps) {
                             <div className="mb-3">
                               <div>
                                 <span className="mr-2">{bookingInfo.user.name}</span>
-                                <Badge variant="blue">{t("Host")}</Badge>
+                                <Badge variant="pink">{t("Host")}</Badge>
                               </div>
-                              <p className="text-default">{bookingInfo.user.email}</p>
+                              <p className="text-gray-400">{bookingInfo.user.email}</p>
                             </div>
                           )}
                           {bookingInfo?.attendees.map((attendee) => (
@@ -451,7 +453,9 @@ export default function Success(props: SuccessProps) {
                               {attendee.name && (
                                 <p data-testid={`attendee-name-${attendee.name}`}>{attendee.name}</p>
                               )}
-                              <p data-testid={`attendee-email-${attendee.email}`}>{attendee.email}</p>
+                              <p className="text-gray-400" data-testid={`attendee-email-${attendee.email}`}>
+                                {attendee.email}
+                              </p>
                             </div>
                           ))}
                         </div>
@@ -829,7 +833,9 @@ export function RecurringBookings({
       <br />
       {formatToLocalizedTime(date, language, undefined, !is24h, tz)} -{" "}
       {formatToLocalizedTime(dayjs(date).add(duration, "m"), language, undefined, !is24h, tz)}{" "}
-      <span className="text-bookinglight">({formatToLocalizedTimezone(date, language, tz)})</span>
+      <span className="text-bookinglight text-gray-500">
+        ({formatToLocalizedTimezone(date, language, tz)})
+      </span>
     </div>
   );
 }

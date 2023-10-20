@@ -4,8 +4,10 @@ import type { FC } from "react";
 import { useEffect } from "react";
 
 import { sdkActionManager, useIsEmbed } from "@calcom/embed-core/embed-iframe";
-import { APP_NAME } from "@calcom/lib/constants";
+import { APP_NAME, SUBSCRIPTION_PRICE } from "@calcom/lib/constants";
+import getBrandColours from "@calcom/lib/getBrandColours";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
+import { useCalcomTheme } from "@calcom/ui";
 import { CreditCard } from "@calcom/ui/components/icon";
 
 import type { PaymentPageProps } from "../pages/u/payment";
@@ -13,6 +15,12 @@ import UpgradePaymentComponent from "./UpgradePayment";
 
 const UpgradePaymentPage: FC<PaymentPageProps> = (props) => {
   const { t, i18n } = useLocale();
+
+  const brandTheme = getBrandColours({
+    lightVal: "#6d278e",
+    darkVal: "#fafafa",
+  });
+  useCalcomTheme(brandTheme);
 
   const isEmbed = useIsEmbed();
   useEffect(() => {
@@ -36,8 +44,35 @@ const UpgradePaymentPage: FC<PaymentPageProps> = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEmbed]);
 
+  console.log(props.payment);
+
+  const fromLevel =
+    props.payment.subscription?.user.level === "FREEMIUM"
+      ? "Freemium"
+      : `${Intl.NumberFormat(i18n.language, {
+        style: "currency",
+        currency: props.payment.subscription?.user.currency,
+        useGrouping: false,
+        maximumFractionDigits: 0,
+      }).format(
+        SUBSCRIPTION_PRICE[props.payment.subscription?.user.level || ""][
+        props.payment.subscription?.user.currency.toUpperCase() || ""
+        ]
+      )}/${t("monthly_one")}`;
+
+  const toLevel = `${Intl.NumberFormat(i18n.language, {
+    style: "currency",
+    currency: props.payment.subscription?.user.currency,
+    useGrouping: false,
+    maximumFractionDigits: 0,
+  }).format(
+    SUBSCRIPTION_PRICE[props.payment.subscription?.level || ""][
+    props.payment.subscription?.user.currency.toUpperCase() || ""
+    ]
+  )}/${t("monthly_one")}`;
+
   return (
-    <div className="h-screen">
+    <div className={classNames(isEmbed ? "max-w-3xl" : "", "h-screen bg-[url('/background.png')]")}>
       <Head>
         <title>
           {t("payment")} | {APP_NAME}
@@ -53,7 +88,7 @@ const UpgradePaymentPage: FC<PaymentPageProps> = (props) => {
               </span>
               <div
                 className={classNames(
-                  "main bg-default border-subtle inline-block transform overflow-hidden rounded-lg border px-8 pb-4 pt-5 text-left align-bottom transition-all  sm:w-full sm:max-w-lg sm:py-6 sm:align-middle",
+                  "main bg-pink/5 border-subtle inline-block transform overflow-hidden rounded-lg border px-8 pb-4 pt-5 text-left align-bottom transition-all  sm:w-full sm:max-w-lg sm:py-6 sm:align-middle",
                   isEmbed ? "" : "sm:my-8"
                 )}
                 role="dialog"
@@ -69,13 +104,18 @@ const UpgradePaymentPage: FC<PaymentPageProps> = (props) => {
                       {t("payment")}
                     </h3>
                     <div className="text-default mt-4 grid grid-cols-3 border-b border-t py-4 text-left dark:border-gray-900 dark:text-gray-300">
-                      {/* <div className="font-medium">{t("expert")}</div>
-                      <div className="col-span-2 mb-6">{props.payment.wallet?.emitter?.username}</div>
-                      <div className="font-medium">{t("token_price")}</div>
+                      <div className="font-medium">{t("upgrade")}</div>
+                      <div className="col-span-2 mb-6">{t("upgrade_helper", { fromLevel, toLevel })}</div>
+                      <div className="font-medium">{t("price")}</div>
                       <div className="col-span-2 mb-6">
-                        {props.payment.wallet?.emitter.price[props.payment.wallet?.emitter.price.length - 1]}
+                        {Intl.NumberFormat(i18n.language, {
+                          style: "currency",
+                          currency: props.payment.subscription?.user.currency,
+                          useGrouping: false,
+                          maximumFractionDigits: 0,
+                        }).format(props.payment.subscription?.price || 0)}
                       </div>
-                      <div className="font-medium">{t("token_amount")}</div>
+                      {/* <div className="font-medium">{t("token_amount")}</div>
                       <div className="col-span-2 mb-6 font-semibold">{props.payment.wallet?.amount}</div> */}
                     </div>
                   </div>
