@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import type { ChangeEvent } from "react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { components } from "react-select";
@@ -51,6 +52,7 @@ const UserSettings = (props: IUserSettingsProps) => {
     price: z.string(),
   });
   const {
+    setValue,
     register,
     handleSubmit,
     formState: { errors },
@@ -85,15 +87,20 @@ const UserSettings = (props: IUserSettingsProps) => {
   });
 
   const onSubmit = handleSubmit((data) => {
-    console.log(data);
     mutation.mutate({
       name: data.name,
-      price: parseFloat(data.price),
+      price: data.price ? parseFloat(data.price) : 1,
       timeZone: selectedTimeZone,
       defaultValue: true,
       currency: currency,
     });
   });
+
+  const handlePriceChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.value || e.target.value === "0") {
+      setValue("price", "1");
+    }
+  };
 
   return (
     <form onSubmit={onSubmit}>
@@ -133,6 +140,9 @@ const UserSettings = (props: IUserSettingsProps) => {
             {...register("price", {
               required: true,
             })}
+            onChange={(e) => {
+              handlePriceChange(e);
+            }}
             id="price"
             name="price"
             type="number"

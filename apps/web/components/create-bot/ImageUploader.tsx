@@ -1,5 +1,5 @@
 import { ImageIcon } from "lucide-react";
-import type { ChangeEvent, DragEvent } from "react";
+import type { ChangeEvent, DragEvent, FormEvent } from "react";
 import React, { useState, useRef, useEffect } from "react";
 import Webcam from "react-webcam";
 
@@ -9,7 +9,9 @@ interface ImageUploaderProps {
   setImage: (image: string) => void;
   setFile?: (file: any) => void;
 }
-
+interface FileEvent<T = Element> extends FormEvent<T> {
+  target: EventTarget & T;
+}
 function handleDragOver(e: DragEvent) {
   e.preventDefault();
 }
@@ -32,6 +34,17 @@ const ImageUploader: React.FC<ImageUploaderProps> = (props) => {
       console.log(event.target.files[0].type);
       setFile(event.target.files[0]);
       setImage(URL.createObjectURL(event.target.files[0]));
+    }
+  };
+  const permitedType = ["image/png", "image/gif", "image/jpeg", "image/jpg"];
+
+  const onInputFile = (e: FileEvent<HTMLInputElement>) => {
+    if (!e.target.files?.length) {
+      return;
+    }
+
+    if (!permitedType.includes(e.target?.files[0].type)) {
+      return;
     }
   };
 
@@ -99,6 +112,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = (props) => {
               onDragOver={handleDragOver}
               className="mt-5 flex h-60 w-60 cursor-pointer items-center justify-center border-2 border-dashed border-gray-400 ">
               <input
+                onInput={onInputFile}
                 id="file-upload"
                 type="file"
                 accept="image/*"

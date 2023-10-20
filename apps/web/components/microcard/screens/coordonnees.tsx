@@ -4,6 +4,8 @@ import { trpc } from "@calcom/trpc/react";
 import { Button } from "@calcom/ui";
 import { Instagram, Facebook, Linkedin } from "@calcom/ui/components/icon";
 
+import MapComp from "@components/microcard/screens/MapComp";
+
 import { default as Header } from "../header";
 
 interface CoordonneesPageProps {
@@ -25,17 +27,16 @@ export const CoordonneesPage = React.forwardRef<HTMLDivElement, CoordonneesPageP
                 <div className="flex flex-col gap-2">
                   <p className="font-bold text-black">Contact Information</p>
                   <p>Full Name : {user.name}</p>
-                  {/* {user.position && <p>Speciality : {user.position}</p>} */}
-                  <p>Speciality : {user.position || "Real estate transaction advisor"}</p>
+                  {user.position && <p>Speciality : {user.position}</p>}
+                  {/* <p>Speciality : {user.position || "Real estate transaction advisor"}</p> */}
                 </div>
                 <div className="flex flex-col gap-2">
-                  <p className="font-bold text-black">Phone</p>
-                  <p>+336 30 30 30 30</p>
-                </div>
-                {/* {user.address && ( */}
-                <div className="flex flex-col gap-2">
-                  <p className="font-bold text-black">Address</p>
-                  <p>{user.address || "Lyon, Auvergne-Rhône-Alpes, France"}</p>
+                  {user.address && (
+                    <>
+                      <p className="font-bold text-black">Address</p>
+                      <p>{user.address}</p>
+                    </>
+                  )}
                   <div className="mt-2 flex items-center gap-2">
                     <div>
                       <Button
@@ -91,20 +92,12 @@ export const CoordonneesPage = React.forwardRef<HTMLDivElement, CoordonneesPageP
                     </div>
                   </div>
                 </div>
-                {/* )} */}
                 <div className="flex flex-col gap-2">
                   <p className="font-bold text-black">Subscribed</p>
                   <p>21 August 2023</p>
                 </div>
               </div>
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d178269.37518564396!2d4.8172773167968685!3d45.72188930600805!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47f4ea516ae88797%3A0x408ab2ae4bb21f0!2sLyon%2C%20France!5e0!3m2!1sen!2sus!4v1695368080856!5m2!1sen!2sus"
-                style={{ border: 0 } as React.CSSProperties}
-                allowFullScreen={false}
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                height="250px"
-              />
+              <MapComp address={user.address || "Lyon, Auvergne-Rhône-Alpes, France"} />
             </div>
           </>
         )}

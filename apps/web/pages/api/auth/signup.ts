@@ -1,4 +1,5 @@
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+// import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import axios from "axios";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
 
@@ -10,7 +11,6 @@ import { closeComUpsertTeamUser } from "@calcom/lib/sync/SyncServiceManager";
 import prisma from "@calcom/prisma";
 import { IdentityProvider } from "@calcom/prisma/enums";
 import { teamMetadataSchema } from "@calcom/prisma/zod-utils";
-import axios from 'axios';
 
 const signupSchema = z.object({
   username: z.string(),
@@ -35,8 +35,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const username = slugify(data.username);
   const userEmail = email.toLowerCase();
-  const supabase = createClientComponentClient();
-  const VIDEO_SERVICE_URL = process.env.NEXT_PUBLIC_VIDEO_SERVICE
+  // const supabase = createClientComponentClient();
+  const VIDEO_SERVICE_URL = process.env.NEXT_PUBLIC_VIDEO_SERVICE;
 
   if (!username) {
     res.status(422).json({ message: "Invalid username" });
@@ -77,7 +77,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       console.log("error: ")
       return null
     }
-  }
+  };
 
   // There is an existingUser if the username matches
   // OR if the email matches AND either the email is verified
@@ -104,7 +104,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   });
 
   if (existingUser) {
-    let message: string =
+    const message: string =
       existingUser.email !== userEmail ? "Username already taken" : "Email address is already registered";
 
     if (!existingUser.videoCloneToken) {
@@ -120,9 +120,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               videoCloneToken: api_key,
             },
           });
-        } catch (_e) {
-
-        }
+        } catch (_e) {}
       }
     }
 
@@ -141,14 +139,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       password: hashedPassword,
       emailVerified: new Date(Date.now()),
       identityProvider: IdentityProvider.CAL,
-      videoCloneToken: videoToken
+      videoCloneToken: videoToken,
     },
     create: {
       username,
       email: userEmail,
       password: hashedPassword,
       identityProvider: IdentityProvider.CAL,
-      videoCloneToken: videoToken
+      videoCloneToken: videoToken,
     },
   });
 
@@ -252,12 +250,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     email: userEmail,
     username,
     language,
-  });
-
-  // create supabase signup
-  await supabase.auth.signUp({
-    email,
-    password,
   });
 
   res.status(201).json({ message: "Created user" });

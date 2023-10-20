@@ -754,7 +754,7 @@ export default function ExpertClone() {
             {/* <Image src="/expert-clone-banner.svg" width={362} height={672} alt="expert-clone-banner" /> */}
             <div className="mx-auto h-full flex-row">
               <div className="h-full w-full">
-                <MicroCards />
+                <MicroCards userId={user?.id} />
               </div>
             </div>
           </div>

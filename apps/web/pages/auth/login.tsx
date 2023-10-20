@@ -233,6 +233,7 @@ export default function Login({
                     href="/signup"
                     type="submit"
                     color="secondary"
+                    onClick={() => { window.localStorage.setItem("price-type", "-1") }}
                     className="justify-center w-full p-1 text-lg font-medium text-center border rounded-md hover:bg-subtle bg-muted border-subtle">
                     {t("sign_up")}
                   </Link>

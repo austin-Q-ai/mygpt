@@ -8,7 +8,7 @@ import { createUpgradePaymentLink } from "@calcom/app-store/stripepayment/lib/cl
 import SettingsLayout from "@calcom/features/settings/layouts/SettingsLayout";
 import { upgradePlan } from "@calcom/features/upgrade-plan";
 import { classNames } from "@calcom/lib";
-import { APP_NAME } from "@calcom/lib/constants";
+import { APP_NAME, SUBSCRIPTION_PRICE } from "@calcom/lib/constants";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { UserLevel } from "@calcom/prisma/enums";
 import { trpc } from "@calcom/trpc/react";
@@ -37,7 +37,6 @@ interface SubscriptionCardProps {
 
 interface SubscriptionDataType {
   advantageList: string[];
-  price: string;
   level: UserLevel;
 }
 
@@ -50,7 +49,6 @@ const data: SubscriptionDataType[] = [
       "data_storage_limited_to_1_gb",
       "one_active_user_online",
     ],
-    price: "freemium",
     level: UserLevel.FREEMIUM,
   },
   {
@@ -61,7 +59,6 @@ const data: SubscriptionDataType[] = [
       "data_storage_up_to_10_gb",
       "two_active_users_online",
     ],
-    price: "29 €/month",
     level: UserLevel.LEVEL1,
   },
   {
@@ -73,7 +70,6 @@ const data: SubscriptionDataType[] = [
       "ten_active_users_online",
       "access_to_detailed_analysis_and_reports",
     ],
-    price: "59 €/month",
     level: UserLevel.LEVEL2,
   },
   {
@@ -84,7 +80,6 @@ const data: SubscriptionDataType[] = [
       "unlimited_data_storage",
       "twenty_five_active_users_online",
     ],
-    price: "99 €/month",
     level: UserLevel.LEVEL3,
   },
   {
@@ -95,7 +90,6 @@ const data: SubscriptionDataType[] = [
       "specific_integrations_or_custom_developments",
       "Access to customized detailed analysis and reports",
     ],
-    price: "contact_us",
     level: UserLevel.CUSTOM,
   },
 ];
@@ -121,17 +115,18 @@ const SkeletonLoader = ({ title, description }: { title: string; description: st
 
 const SubscriptionCard = (props: SubscriptionCardProps) => {
   const { t } = useLocale();
+
   return (
     <div className="flex flex-col">
-      <div className="text-pink h-10 pb-16 text-center text-xl font-bold">
+      <div className="text-pink mb-4  h-10 text-center text-xl font-bold">
         {props.isCurrent ? t("your_currently_plan") : ""}
       </div>
       <div
         className={classNames(
-          "border-pink flex h-full flex-col justify-between gap-10 rounded-3xl border px-8 pb-16 pt-12",
+          "border-pink container col-span-1 h-full rounded-md border px-8 py-8",
           props.isCurrent ? "bg-pink/10" : "bg-white"
         )}>
-        <div className="flex h-2/3 flex-col">
+        <div className="flex h-1/2 flex-col">
           <div className="flex flex-col gap-4">
             {props.advantageList.map((item, key) => (
               <div className="flex items-center" key={key}>
@@ -142,35 +137,33 @@ const SubscriptionCard = (props: SubscriptionCardProps) => {
               </div>
             ))}
           </div>
-
-          <div className="text-pink mt-auto pt-10 text-center text-xl font-bold">{t(props.price)}</div>
         </div>
-        {props.isCurrent ? (
-          <div className="flex h-1/3" />
-        ) : (
-          <div className={classNames("text-gray", "flex flex-col")}>
-            <p className="pb-10 text-center text-xs lg:pb-20">
-              {t("read_and_accept_the")}{" "}
-              <Link className="underline" href="/">
-                {t("terms_and_conditions")}
-              </Link>
-            </p>
-            <Button
-              className="mt-auto flex w-full justify-center"
-              disabled={props?.isDisabled}
-              onClick={() => props.handleUpgrade()}>
-              {t("upgrade")}
-              <ArrowRight className="ml-2 h-4 w-4 self-center" aria-hidden="true" />{" "}
-            </Button>
-          </div>
-        )}
+        <div className="text-secondary my-14 flex-row  text-center font-sans text-xl font-bold md:my-10 md:py-10">
+          {props.price}
+        </div>
+
+        <div className={classNames("text-gray", " flex flex-col", props.isCurrent ? "hidden" : "mb-20")}>
+          <p className=" pb-8 text-center text-xs">
+            {t("read_and_accept_the")}{" "}
+            <Link className="underline" href="/">
+              {t("terms_and_conditions")}
+            </Link>
+          </p>
+          <Button
+            className="mt-auto flex w-full justify-center"
+            disabled={props?.isDisabled}
+            onClick={() => props.handleUpgrade()}>
+            {t("upgrade")}
+            <ArrowRight className="ml-2 h-4 w-4 self-center" aria-hidden="true" />{" "}
+          </Button>
+        </div>
       </div>
     </div>
   );
 };
 
 const SubscriptionView = () => {
-  const { t } = useLocale();
+  const { t, i18n } = useLocale();
   const router = useRouter();
   const utils = trpc.useContext();
   const { data: user, isLoading } = trpc.viewer.me.useQuery();
@@ -188,6 +181,17 @@ const SubscriptionView = () => {
   //     showToast(t("error_updating_settings"), "error");
   //   },
   // });
+  const getPrice = (level: UserLevel, currency: string) => {
+    if (level === UserLevel.FREEMIUM) return t("freemium");
+    else if (level === UserLevel.CUSTOM) return t("contact_us");
+
+    return `${Intl.NumberFormat(i18n.language, {
+      style: "currency",
+      currency: currency,
+      useGrouping: false,
+      maximumFractionDigits: 0,
+    }).format(SUBSCRIPTION_PRICE[level][currency.toUpperCase()])}/${t("monthly_one")}`;
+  };
 
   const upgradeMutation = useMutation(upgradePlan, {
     onSuccess: async (responseData) => {
@@ -219,15 +223,16 @@ const SubscriptionView = () => {
           title={t("your_subscription")}
           description={t("subscription_description", { appName: APP_NAME })}
         />
-        <ScrollableArea className="grid grid-cols-1 gap-4 md:h-[100vh] md:grid-cols-2 lg:grid-cols-3 2xl:h-[70vh] 2xl:grid-cols-5">
+        <ScrollableArea className="grid grid-cols-1 gap-4 md:h-full md:grid-cols-2 lg:grid-cols-3  2xl:grid-cols-5">
           {data.map((e, key) => (
             <SubscriptionCard
               isCurrent={e.level === user.level}
               advantageList={e.advantageList}
-              price={e.price}
               key={key}
+              price={getPrice(e.level, user.currency)}
               isDisabled={
-                Object.keys(UserLevel).indexOf(e.level) < Object.keys(UserLevel).indexOf(user.level)
+                Object.keys(UserLevel).indexOf(e.level) < Object.keys(UserLevel).indexOf(user.level) ||
+                e.level === UserLevel.CUSTOM
               }
               handleUpgrade={() => handleUpgrade(e.level)}
             />

@@ -5,6 +5,7 @@ import short from "short-uuid";
 
 import type { EventTypeAppsList } from "@calcom/app-store/utils";
 import { checkRateLimitAndThrowError } from "@calcom/lib/checkRateLimitAndThrowError";
+import { SUBSCRIPTION_PRICE } from "@calcom/lib/constants";
 import getIP from "@calcom/lib/getIP";
 import logger from "@calcom/lib/logger";
 import { handleUpgradePayment } from "@calcom/lib/payment/handlePayment";
@@ -41,10 +42,25 @@ async function handler(req: NextApiRequest & { userId?: number | undefined }) {
     identifier: userIp,
   });
 
+  const user = await prisma?.user.findUnique({
+    where: {
+      id: userId,
+    },
+    select: {
+      level: true,
+      currency: true,
+    },
+  });
+
+  if (!user) throw new Error("User not found");
+
   const createSubscription = await prisma?.subscription.create({
     data: {
       user: { connect: { id: userId } },
       level: level,
+      price:
+        SUBSCRIPTION_PRICE[level][user.currency.toUpperCase()] -
+        SUBSCRIPTION_PRICE[user.level][user.currency.toUpperCase()],
     },
     select: {
       id: true,
