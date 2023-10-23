@@ -42,6 +42,7 @@ export async function getUserFromSession(ctx: TRPCContextInner, session: Maybe<S
       emailVerified: true,
       bio: true,
       hasBot: true,
+      priceLevel: true,
       level: true,
       lastRewardedDate: true,
       timeZone: true,
