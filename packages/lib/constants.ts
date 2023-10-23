@@ -108,10 +108,15 @@ export const SUBSCRIPTION_PRICE: {
     EUR: 99,
     USD: 117,
   },
+  CUSTON: {
+    EUR: 0,
+    USD: 0
+  }
 };
 
 interface SubscriptionDataType {
   advantageList: string[];
+  price: { [key: string]: number };
 }
 
 export const SUBSCRIPTION_DATA: SubscriptionDataType[] = [
@@ -122,7 +127,8 @@ export const SUBSCRIPTION_DATA: SubscriptionDataType[] = [
       "email_support_with_a_response_within_48h",
       "data_storage_limited_to_1_gb",
       "one_active_user_online",
-    ]
+    ],
+    price: SUBSCRIPTION_PRICE.FREEMIUM
   },
   {
     advantageList: [
@@ -131,7 +137,8 @@ export const SUBSCRIPTION_DATA: SubscriptionDataType[] = [
       "email_support_with_a_response_within_24h",
       "data_storage_up_to_10_gb",
       "two_active_users_online",
-    ]
+    ],
+    price: SUBSCRIPTION_PRICE.LEVEL1
   },
   {
     advantageList: [
@@ -141,7 +148,8 @@ export const SUBSCRIPTION_DATA: SubscriptionDataType[] = [
       "data_storage_up_to_50_gb",
       "ten_active_users_online",
       "access_to_detailed_analysis_and_reports",
-    ]
+    ],
+    price: SUBSCRIPTION_PRICE.LEVEL2
   },
   {
     advantageList: [
@@ -150,7 +158,8 @@ export const SUBSCRIPTION_DATA: SubscriptionDataType[] = [
       "24/7_priority_support",
       "unlimited_data_storage",
       "twenty_five_active_users_online",
-    ]
+    ],
+    price: SUBSCRIPTION_PRICE.LEVEL3
   },
   {
     advantageList: [
