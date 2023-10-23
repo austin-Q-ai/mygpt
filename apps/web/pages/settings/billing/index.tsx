@@ -53,11 +53,11 @@ const BillingView = () => {
           </Button>
         </CtaRow>
 
-        <CtaRow title={t("need_anything_else")} description={t("further_billing_help")}>
+        {/* <CtaRow title={t("need_anything_else")} description={t("further_billing_help")}>
           <Button color="secondary" onClick={onContactSupportClick}>
             {t("contact_support")}
           </Button>
-        </CtaRow>
+        </CtaRow> */}
       </div>
     </>
   );

@@ -42,6 +42,7 @@ export async function getUserFromSession(ctx: TRPCContextInner, session: Maybe<S
       emailVerified: true,
       bio: true,
       hasBot: true,
+      botId: true,
       priceLevel: true,
       level: true,
       lastRewardedDate: true,
@@ -108,6 +109,7 @@ export async function getUserFromSession(ctx: TRPCContextInner, session: Maybe<S
         },
       },
       apiKey: true,
+      videoCloneToken: true
     },
   });
 

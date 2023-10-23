@@ -10,7 +10,7 @@ export const customPrismaClient: NextMiddleware = async (req, res, next) => {
   const {
     query: { key },
   } = req;
-  // If no custom api Id is provided, attach to request the regular cal.com prisma client.
+  // If no custom api Id is provided, attach to request the regular mygpt.fi prisma client.
   if (!key) {
     req.prisma = new PrismaClient();
     await next();

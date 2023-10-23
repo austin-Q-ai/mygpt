@@ -2,7 +2,7 @@
 
 Embed Cal Link as a React Component
 
-To know how to use it, follow the steps at <https://developer.cal.com/embed/install-with-react>
+To know how to use it, follow the steps at <https://developer.mygpt.fi/embed/install-with-react>
 
 ## Development
 

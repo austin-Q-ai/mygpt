@@ -13,7 +13,7 @@ renderEmail("TeamInviteEmail", */{
   from: "teampro@example.com",
   to: "pro@example.com",
   teamName: "Team Pro",
-  joinLink: "https://cal.com",
+  joinLink: "https://mygpt.fi",
 });
 ```
 

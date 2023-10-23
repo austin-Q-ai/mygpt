@@ -12,10 +12,10 @@ export const metadata = {
   categories: ["calendar"],
   category: "calendar",
   logo: "icon.svg",
-  publisher: "Cal.com",
+  publisher: "MyGPT.fi",
   slug: "apple-calendar",
-  url: "https://cal.com/",
-  email: "help@cal.com",
+  url: "https://mygpt.fi/",
+  email: "help@mygpt.fi",
   dirName: "applecalendar",
 } as AppMeta;
 

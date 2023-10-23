@@ -7,18 +7,18 @@ const log = logger.getChildLogger({ prefix: [`[[LarkTenantCredential]`] });
 
 const msg = {
   en_us: {
-    title: "Welcome to Cal.com!",
+    title: "Welcome to MyGPT.fi!",
     content: [
       [
         {
           tag: "text",
-          text: "Cal.com is an open source scheduling infrastructure.",
+          text: "MyGPT.fi is an open source scheduling infrastructure.",
         },
       ],
       [
         {
           tag: "text",
-          text: 'It allows users to send a unique "cal.com" URL that allows anyone to create bookings on their calendars',
+          text: 'It allows users to send a unique "mygpt.fi" URL that allows anyone to create bookings on their calendars',
         },
       ],
       [
@@ -36,7 +36,7 @@ const msg = {
       [
         {
           tag: "text",
-          text: "1. Visit https://cal.com and sign up for an account.",
+          text: "1. Visit https://mygpt.fi and sign up for an account.",
         },
       ],
       [

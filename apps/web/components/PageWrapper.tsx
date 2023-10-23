@@ -64,10 +64,10 @@ function PageWrapper(props: AppProps) {
         />
       </Head>
       <DefaultSeo
-        // Set canonical to https://cal.com or self-hosted URL
+        // Set canonical to https://mygpt.fi or self-hosted URL
         canonical={
           IS_CALCOM
-            ? buildCanonical({ path, origin: "https://cal.com" }) // cal.com & .dev
+            ? buildCanonical({ path, origin: "https://mygpt.fi" }) // mygpt.fi & .dev
             : buildCanonical({ path, origin: WEBAPP_URL }) // self-hosted
         }
         {...seoConfig.defaultNextSeo}

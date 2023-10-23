@@ -48,15 +48,15 @@ export interface App {
   installed?: boolean;
   /** The app type */
   type:
-    | `${string}_calendar`
-    | `${string}_messaging`
-    | `${string}_payment`
-    | `${string}_video`
-    | `${string}_web3`
-    | `${string}_other`
-    | `${string}_automation`
-    | `${string}_analytics`
-    | `${string}_other_calendar`;
+  | `${string}_calendar`
+  | `${string}_messaging`
+  | `${string}_payment`
+  | `${string}_video`
+  | `${string}_web3`
+  | `${string}_other`
+  | `${string}_automation`
+  | `${string}_analytics`
+  | `${string}_other_calendar`;
 
   /**
    * @deprecated
@@ -70,14 +70,14 @@ export interface App {
   description: string;
   /** TODO determine if we should use this instead of category */
   variant:
-    | "calendar"
-    | "payment"
-    | "conferencing"
-    | "video"
-    | "other"
-    | "other_calendar"
-    | "web3"
-    | "automation";
+  | "calendar"
+  | "payment"
+  | "conferencing"
+  | "video"
+  | "other"
+  | "other_calendar"
+  | "web3"
+  | "automation";
   /** The slug for the app store public page inside `/apps/[slug] */
   slug: string;
 
@@ -102,7 +102,7 @@ export interface App {
   url: string;
   /** Optional documentation website URL */
   docsUrl?: string;
-  /** Wether if the app is verified by Cal.com or not */
+  /** Wether if the app is verified by MyGPT.fi or not */
   verified?: boolean;
   /** Wether the app should appear in the trending section of the app store */
   trending?: boolean;

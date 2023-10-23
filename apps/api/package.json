@@ -1,10 +1,10 @@
 {
   "name": "@calcom/api",
   "version": "1.0.0",
-  "description": "Public API for Cal.com",
+  "description": "Public API for mygpt.fi",
   "main": "index.ts",
   "repository": "git@github.com:calcom/api.git",
-  "author": "Cal.com Inc.",
+  "author": "mygpt.fi Inc.",
   "private": true,
   "scripts": {
     "build": "next build",

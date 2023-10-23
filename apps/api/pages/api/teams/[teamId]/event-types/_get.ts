@@ -31,7 +31,7 @@ const querySchema = z.object({
  *     tags:
  *     - event-types
  *     externalDocs:
- *        url: https://docs.cal.com/core-features/event-types
+ *        url: https://docs.mygpt.fi/core-features/event-types
  *     responses:
  *       200:
  *         description: OK
@@ -49,12 +49,12 @@ async function getHandler(req: NextApiRequest) {
     where: {
       team: isAdmin
         ? {
-            id: teamId,
-          }
+          id: teamId,
+        }
         : {
-            id: teamId,
-            members: { some: { userId } },
-          },
+          id: teamId,
+          members: { some: { userId } },
+        },
     },
   };
 

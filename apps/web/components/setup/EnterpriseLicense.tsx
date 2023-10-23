@@ -92,7 +92,7 @@ const EnterpriseLicense = (
           <Button
             className="w-full justify-center text-lg"
             EndIcon={ExternalLink}
-            href="https://console.cal.com"
+            href="https://console.mygpt.fi"
             target="_blank">
             {t("purchase_license")}
           </Button>

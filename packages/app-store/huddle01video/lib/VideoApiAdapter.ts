@@ -14,7 +14,7 @@ const Huddle01VideoApiAdapter = (): VideoApiAdapter => {
     },
     createMeeting: async (): Promise<VideoCallData> => {
       const res = await fetch(
-        "https://wpss2zlpb9.execute-api.us-east-1.amazonaws.com/new-meeting?utmCampaign=cal.com&utmSource=partner&utmMedium=calendar"
+        "https://wpss2zlpb9.execute-api.us-east-1.amazonaws.com/new-meeting?utmCampaign=mygpt.fi&utmSource=partner&utmMedium=calendar"
       );
 
       const json = await handleErrorsJson<{ url: string }>(res);

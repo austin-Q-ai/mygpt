@@ -14,7 +14,7 @@ const IS_STRIPE_ENABLED = !!(
 );
 
 const IS_SELF_HOSTED = !(
-  new URL(WEBAPP_URL).hostname.endsWith(".cal.dev") || !!new URL(WEBAPP_URL).hostname.endsWith(".cal.com")
+  new URL(WEBAPP_URL).hostname.endsWith(".mygpt.dev") || !!new URL(WEBAPP_URL).hostname.endsWith(".mygpt.fi")
 );
 
 test.describe("Change username on settings", () => {
