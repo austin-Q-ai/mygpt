@@ -142,13 +142,13 @@ const Item = ({ type, group, readOnly }: { type: EventType; group: EventTypeGrou
   const content = () => (
     <div>
       <span
-        className="text-default font-semibold ltr:mr-1 rtl:ml-1"
+        className="font-semibold text-default ltr:mr-1 rtl:ml-1"
         data-testid={"event-type-title-" + type.id}>
         {type.title}
       </span>
       {group.profile.slug ? (
         <small
-          className="text-subtle hidden font-normal leading-4 sm:inline"
+          className="hidden font-normal leading-4 text-subtle sm:inline"
           data-testid={"event-type-slug-" + type.id}>
           {`/${type.schedulingType !== SchedulingType.MANAGED ? group.profile.slug : t("username_placeholder")
             }/${type.slug}`}
@@ -163,7 +163,7 @@ const Item = ({ type, group, readOnly }: { type: EventType; group: EventTypeGrou
   );
 
   return readOnly ? (
-    <div className="flex-1 overflow-hidden pr-4 text-sm">
+    <div className="flex-1 pr-4 overflow-hidden text-sm">
       {content()}
       <EventTypeDescription
         // @ts-expect-error FIXME: We have a type mismatch here @hariombalhara @sean-brydon
@@ -174,17 +174,17 @@ const Item = ({ type, group, readOnly }: { type: EventType; group: EventTypeGrou
   ) : (
     <Link
       href={`/event-types/${type.id}?tabName=setup`}
-      className="flex-1 overflow-hidden pr-4 text-sm"
+      className="flex-1 pr-4 overflow-hidden text-sm"
       title={type.title}>
       <div>
         <span
-          className="text-default font-semibold ltr:mr-1 rtl:ml-1"
+          className="font-semibold text-default ltr:mr-1 rtl:ml-1"
           data-testid={"event-type-title-" + type.id}>
           {type.title}
         </span>
         {group.profile.slug ? (
           <small
-            className="text-subtle hidden font-normal leading-4 sm:inline"
+            className="hidden font-normal leading-4 text-subtle sm:inline"
             data-testid={"event-type-slug-" + type.id}>
             {`/${group.profile.slug}/${type.slug}`}
           </small>
@@ -374,7 +374,7 @@ export const EventTypeList = ({ group, groupIndex, readOnly, types }: EventTypeL
     return deleteDialogTypeSchedulingType === SchedulingType.MANAGED ? "_managed" : "";
   };
   return (
-    <div className="bg-default border-subtle mb-16 flex overflow-hidden rounded-md border">
+    <div className="flex mb-16 overflow-hidden border rounded-md bg-default border-subtle">
       <ul ref={parent} className="divide-subtle !static w-full divide-y" data-testid="event-types">
         {types.map((type, index) => {
           const embedLink = `${group.profile.slug}/${type.slug}`;
@@ -384,13 +384,13 @@ export const EventTypeList = ({ group, groupIndex, readOnly, types }: EventTypeL
             type.metadata?.managedEventConfig !== undefined && type.schedulingType !== SchedulingType.MANAGED;
           return (
             <li key={type.id}>
-              <div className="hover:bg-muted flex w-full items-center justify-between">
-                <div className="group flex w-full max-w-full items-center justify-between overflow-hidden px-4 py-4 sm:px-6">
+              <div className="flex items-center justify-between w-full hover:bg-muted">
+                <div className="flex items-center justify-between w-full max-w-full px-4 py-4 overflow-hidden group sm:px-6">
                   {!(firstItem && firstItem.id === type.id) && (
                     <button
                       className="bg-default text-muted hover:text-emphasis border-default hover:border-emphasis invisible absolute left-[5px] -ml-4 -mt-4 mb-4 hidden h-6 w-6 scale-0 items-center justify-center rounded-md border p-1 transition-all group-hover:visible group-hover:scale-100 sm:ml-0 sm:flex lg:left-[36px]"
                       onClick={() => moveEventType(index, -1)}>
-                      <ArrowUp className="h-5 w-5" />
+                      <ArrowUp className="w-5 h-5" />
                     </button>
                   )}
 
@@ -398,11 +398,11 @@ export const EventTypeList = ({ group, groupIndex, readOnly, types }: EventTypeL
                     <button
                       className="bg-default text-muted border-default hover:text-emphasis hover:border-emphasis invisible absolute left-[5px] -ml-4 mt-8 hidden h-6 w-6  scale-0 items-center justify-center rounded-md border p-1 transition-all  group-hover:visible group-hover:scale-100 sm:ml-0 sm:flex lg:left-[36px]"
                       onClick={() => moveEventType(index, 1)}>
-                      <ArrowDown className="h-5 w-5" />
+                      <ArrowDown className="w-5 h-5" />
                     </button>
                   )}
                   <MemoizedItem type={type} group={group} readOnly={readOnly} />
-                  <div className="mt-4 hidden sm:mt-0 sm:flex">
+                  <div className="hidden mt-4 sm:mt-0 sm:flex">
                     <div className="flex justify-between space-x-2 rtl:space-x-reverse">
                       {type.team && !isManagedEventType && (
                         <AvatarGroup
@@ -439,7 +439,7 @@ export const EventTypeList = ({ group, groupIndex, readOnly, types }: EventTypeL
                             {type.hidden && <Badge variant="gray">{t("hidden")}</Badge>}
                             <Tooltip
                               content={type.hidden ? t("show_eventtype_on_profile") : t("hide_from_profile")}>
-                              <div className="self-center rounded-md p-2">
+                              <div className="self-center p-2 rounded-md">
                                 <Switch
                                   name="Hidden"
                                   checked={!type.hidden}
@@ -553,7 +553,7 @@ export const EventTypeList = ({ group, groupIndex, readOnly, types }: EventTypeL
                     </div>
                   </div>
                 </div>
-                <div className="min-w-9 mx-5 flex sm:hidden">
+                <div className="flex mx-5 min-w-9 sm:hidden">
                   <Dropdown>
                     <DropdownMenuTrigger asChild data-testid={"event-type-options-" + type.id}>
                       <Button type="button" variant="icon" color="secondary" StartIcon={MoreHorizontal} />
@@ -579,7 +579,7 @@ export const EventTypeList = ({ group, groupIndex, readOnly, types }: EventTypeL
                                   showToast(t("link_copied"), "success");
                                 }}
                                 StartIcon={Clipboard}
-                                className="w-full rounded-none text-left">
+                                className="w-full text-left rounded-none">
                                 {t("copy_link")}
                               </DropdownItem>
                             </DropdownMenuItem>
@@ -646,11 +646,11 @@ export const EventTypeList = ({ group, groupIndex, readOnly, types }: EventTypeL
                           )}
                         <DropdownMenuSeparator />
                         {!isManagedEventType && (
-                          <div className="hover:bg-subtle flex h-9 cursor-pointer flex-row items-center justify-between px-4 py-2">
+                          <div className="flex flex-row items-center justify-between px-4 py-2 cursor-pointer hover:bg-subtle h-9">
                             <Skeleton
                               as={Label}
                               htmlFor="hiddenSwitch"
-                              className="mt-2 inline cursor-pointer self-center pr-2 ">
+                              className="self-center inline pr-2 mt-2 cursor-pointer ">
                               {type.hidden ? t("show_eventtype_on_profile") : t("hide_from_profile")}
                             </Skeleton>
                             <Switch
@@ -719,7 +719,7 @@ const EventTypeListHeading = ({
   });
 
   return (
-    <div className="mb-4 flex items-center space-x-2">
+    <div className="flex items-center mb-4 space-x-2">
       <Avatar
         alt={profile?.name || ""}
         href={teamId ? `/settings/teams/${teamId}/profile` : "/settings/my-account/profile"}
@@ -728,26 +728,26 @@ const EventTypeListHeading = ({
           undefined
         }
         size="md"
-        className="mt-1 inline-flex justify-center"
+        className="inline-flex justify-center mt-1"
       />
       <div>
         <Link
           href={teamId ? `/settings/teams/${teamId}/profile` : "/settings/my-account/profile"}
-          className="text-emphasis font-bold">
+          className="font-bold text-emphasis">
           {profile?.name || ""}
         </Link>
         {membershipCount && teamId && (
-          <span className="text-subtle relative -top-px me-2 ms-2 text-xs">
+          <span className="relative text-xs text-subtle -top-px me-2 ms-2">
             <Link href={`/settings/teams/${teamId}/members`}>
               <Badge variant="gray">
-                <Users className="-mt-px mr-1 inline h-3 w-3" />
+                <Users className="inline w-3 h-3 mr-1 -mt-px" />
                 {membershipCount}
               </Badge>
             </Link>
           </span>
         )}
         {profile?.slug && (
-          <Link href={`${CAL_URL}/${profile.slug}`} className="text-subtle block text-xs">
+          <Link href={`${CAL_URL}/${profile.slug}`} className="block text-xs text-subtle">
             {orgBranding
               ? `${orgBranding.fullDomain.replace("https://", "").replace("http://", "")}${profile.slug}`
               : `${CAL_URL?.replace("https://", "").replace("http://", "")}/${profile.slug}`}
@@ -756,7 +756,7 @@ const EventTypeListHeading = ({
       </div>
       {!profile?.slug && !!teamId && (
         <button onClick={() => publishTeamMutation.mutate({ teamId })}>
-          <Badge variant="gray" className="-ml-2 mb-1">
+          <Badge variant="gray" className="mb-1 -ml-2">
             {t("upgrade")}
           </Badge>
         </button>
@@ -812,7 +812,7 @@ const TopItem = (props: topItemProps) => {
   const { StartIcon, label } = props;
   return (
     <div className="flex items-center">
-      <div className="bg-pink/10 m-1 flex h-8 w-8 items-center justify-center rounded-full p-2">
+      <div className="flex items-center justify-center w-8 h-8 p-2 m-1 rounded-full bg-pink/10">
         <StartIcon className="opacity-50" />
       </div>
       <p className="mr-6 text-sm">{t(label)}</p>
@@ -822,8 +822,8 @@ const TopItem = (props: topItemProps) => {
 
 const Actions = () => {
   return (
-    <div className="hidden items-center md:flex">
-      <div className="text-secondary bg-pink/5 mr-2 flex rounded-lg">
+    <div className="items-center hidden md:flex">
+      <div className="flex mr-2 rounded-lg text-secondary bg-pink/5">
         <TopItem StartIcon={Video} label="video_conference" />
         <TopItem StartIcon={Laptop2} label="webinar" />
         <TopItem StartIcon={Phone} label="phone_call" />
