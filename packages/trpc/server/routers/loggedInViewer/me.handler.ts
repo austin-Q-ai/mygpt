@@ -45,6 +45,7 @@ export const meHandler = async ({ ctx }: MeOptions) => {
     darkBrandColor: user.darkBrandColor,
     away: user.away,
     bio: user.bio,
+    priceLevel: user.priceLevel,
     hasBot: user.hasBot,
     weekStart: user.weekStart,
     theme: user.theme,
