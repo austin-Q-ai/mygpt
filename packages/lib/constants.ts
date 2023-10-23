@@ -109,3 +109,56 @@ export const SUBSCRIPTION_PRICE: {
     USD: 117,
   },
 };
+
+interface SubscriptionDataType {
+  advantageList: string[];
+}
+
+export const SUBSCRIPTION_DATA: SubscriptionDataType[] = [
+  {
+    advantageList: [
+      "basic_feature_access",
+      "500_messages/month_limit",
+      "email_support_with_a_response_within_48h",
+      "data_storage_limited_to_1_gb",
+      "one_active_user_online",
+    ]
+  },
+  {
+    advantageList: [
+      "access_to_advanced_features",
+      "5000_messages/month_limit",
+      "email_support_with_a_response_within_24h",
+      "data_storage_up_to_10_gb",
+      "two_active_users_online",
+    ]
+  },
+  {
+    advantageList: [
+      "access_to_all_premium_features",
+      "20000_messages/month_limit",
+      "priority_support_by_email_and_chat",
+      "data_storage_up_to_50_gb",
+      "ten_active_users_online",
+      "access_to_detailed_analysis_and_reports",
+    ]
+  },
+  {
+    advantageList: [
+      "unlimited_access_to_all_features",
+      "100000_messages/month_limit",
+      "24/7_priority_support",
+      "unlimited_data_storage",
+      "twenty_five_active_users_online",
+    ]
+  },
+  {
+    advantageList: [
+      "customized_message_volume",
+      "customized_data_storage",
+      "customized_number_of_active_bots",
+      "specific_integrations_or_custom_developments",
+      "Access to customized detailed analysis and reports",
+    ]
+  },
+];
