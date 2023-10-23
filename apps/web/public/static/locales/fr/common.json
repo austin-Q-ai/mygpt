@@ -2101,5 +2101,6 @@
   "invalid_address": "Vous avez fourni un format d'adresse invalide",
   "plan_upgrade_bots": "Vous devez mettre à niveau votre plan pour créer vos robots",
   "linkedin_scraping": "Grattage Linkedin",
-  "input_linkedin_bot": "Vous devez saisir votre URL LinkedIn dans la page de configuration de votre profil"
+  "input_linkedin_bot": "Vous devez saisir votre URL LinkedIn dans la page de configuration de votre profil",
+  "please_confirm_your_email_for_supabase_signup_and_try_again": "Veuillez confirmer votre adresse e-mail pour l'inscription à Supabase et réessayer"
 }

@@ -17,23 +17,20 @@ import UploadCard from "@components/create-bot/UploadCard";
 const ExpertView = () => {
   const { data: user } = trpc.viewer.me.useQuery();
   const { t } = useLocale();
+  const utils = trpc.useContext();
   const supabase = createClientComponentClient();
   const [confirmPassword, setConfirmPassword] = useState<string>("");
-  const [confirmPasswordErrorMessage, setConfirmPasswordDeleteErrorMessage] = useState<string>("");
+  const [confirmPasswordErrorMessage, setConfirmPasswordErrorMessage] = useState<string>("");
   const [notConfirmed, setNotConfirmed] = useState(false);
+
   const mutation = trpc.viewer.updateProfile.useMutation({
     onSuccess: () => {
       showToast(t("successfully_created"), "success");
+      utils.viewer.me.invalidate();
     },
   });
   const confirmPasswordMutation = trpc.viewer.auth.verifyPassword.useMutation({
     onSuccess() {
-      // // create supabase signup
-      // await supabase.auth.signUp({
-      //   email: user?.email,
-      //   password: confirmPassword,
-      // });
-
       supabase.auth
         .signInWithPassword({
           email: user?.email,
@@ -44,13 +41,25 @@ const ExpertView = () => {
           if (data.error) {
             if (data.error.message === "Email not confirmed") {
               setNotConfirmed(true);
-              setConfirmPasswordDeleteErrorMessage(
+              setConfirmPasswordErrorMessage(
                 t("email_for_supabase_not_confirmed_click_resend_email_button")
               );
+            } else if (data.error.message === "Invalid login credentials") {
+              // email and password is correct, this means that you are not signed up yet to supabase
+              supabase.auth.signUp({
+                email: user?.email,
+                password: confirmPassword,
+              })
+                .then(() => {
+                  setConfirmPasswordErrorMessage(
+                    t("please_confirm_your_email_for_supabase_signup_and_try_again")
+                  )
+                });
             } else {
-              setConfirmPasswordDeleteErrorMessage(data.error.message);
+              setConfirmPasswordErrorMessage(data.error.message);
             }
           } else {
+            setConfirmPasswordErrorMessage("");
             axios
               .post(
                 `${process.env.NEXT_PUBLIC_BRAIN_SERVICE}/api-key`,
@@ -61,33 +70,31 @@ const ExpertView = () => {
                   },
                 }
               )
-              .then((data) => {
-                console.log(data);
+              .then((resp) => {
+                axios
+                  .get(`${process.env.NEXT_PUBLIC_BRAIN_SERVICE}/brains/default/`, {
+                    headers: {
+                      Authorization: `Bearer ${data.data.session.access_token}`,
+                    },
+                  })
+                  .then((response) => {
+                    mutation.mutate({
+                      expertId: response.data.id,
+                      apiKey: resp.data.api_key,
+                    });
+                  });
               });
           }
         });
     },
     onError() {
-      setConfirmPasswordDeleteErrorMessage(t("incorrect_password"));
+      setConfirmPasswordErrorMessage(t("incorrect_password"));
       setConfirmPassword("");
     },
   });
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     confirmPasswordMutation.mutate({ passwordInput: confirmPassword });
-  };
-  const getExpertId = () => {
-    axios
-      .get(`${process.env.NEXT_PUBLIC_BRAIN_SERVICE}/brains/default/`, {
-        headers: {
-          Authorization: `Bearer ${user?.apiKey}`,
-        },
-      })
-      .then((data) => {
-        mutation.mutate({
-          expertId: data.data.id,
-        });
-      });
   };
   return (
     <div className="flex flex-row">
@@ -99,7 +106,7 @@ const ExpertView = () => {
               <>
                 <div className="flex flex-col items-center mb-4">
                   {!user?.social?.linkedin && <Alert className="mb-4" key="info_input_linekdin_bot" severity="info" title={t("input_linkedin_bot")} />}
-                  <Button color="primary" disabled={user?.social?.linkedin ? false : true}>
+                  <Button color="primary" disabled={user?.social?.linkedin ? false : true} onClick={() => showToast(t("successfully_created"), "success")}>
                     {t("linkedin_scraping")}
                   </Button>
                 </div>
@@ -150,11 +157,11 @@ const ExpertView = () => {
                             email: user?.email,
                           })
                           .then(() => {
-                            setConfirmPasswordDeleteErrorMessage(
+                            setConfirmPasswordErrorMessage(
                               t("verification_email_was_sent_please_check_and_try_again")
                             );
                           })
-                          .catch((e) => setConfirmPasswordDeleteErrorMessage(e));
+                          .catch((e) => setConfirmPasswordErrorMessage(e));
                       }}>
                       {t("resend_email")}
                     </Button>

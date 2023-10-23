@@ -2174,5 +2174,6 @@
   "invalid_address": "You provided an invalid address format",
   "plan_upgrade_bots": "You need to upgrade your plan to create your bots",
   "linkedin_scraping": "Linkedin scraping",
-  "input_linkedin_bot": "You need to input your linkedin url in your profile setting page"
+  "input_linkedin_bot": "You need to input your linkedin url in your profile setting page",
+  "please_confirm_your_email_for_supabase_signup_and_try_again": "Please confirm your email for supabase signup and try again"
 }
