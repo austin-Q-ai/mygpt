@@ -891,6 +891,7 @@
   "number_apps_other": "{{count}} applications",
   "trending_apps": "Applications populaires",
   "most_popular": "Les plus populaires",
+  "plan_expire_message": "Le forfait se renouvelle à {{price} €/mois le {{date}}",
   "installed_apps": "Apps installées",
   "free_to_use_apps": "Gratuit",
   "no_category_apps": "Aucune application {{category}}",
