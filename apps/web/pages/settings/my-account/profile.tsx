@@ -2,6 +2,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import classNames from "classnames";
 import { signOut } from "next-auth/react";
+import Link from "next/link";
 import type { BaseSyntheticEvent } from "react";
 import { useRef, useState, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -52,6 +53,7 @@ import {
   Cross,
   X,
   MousePointer2,
+  ExternalLink,
 } from "@calcom/ui/components/icon";
 
 import PageWrapper from "@components/PageWrapper";
@@ -155,6 +157,7 @@ const ProfileView = () => {
       }
     },
   });
+  const [telegramBotLink, setTelegramBotLink] = useState("");
 
   const [confirmPasswordOpen, setConfirmPasswordOpen] = useState(false);
   const [tempFormValues, setTempFormValues] = useState<FormValues | null>(null);
@@ -164,6 +167,10 @@ const ProfileView = () => {
   const [hasDeleteErrors, setHasDeleteErrors] = useState(false);
   const [deleteErrorMessage, setDeleteErrorMessage] = useState("");
   const form = useForm<DeleteAccountValues>();
+
+  useEffect(() => {
+    if (user?.hasBot && user?.botName) setTelegramBotLink(user?.botName);
+  }, [user]);
 
   const onDeleteMeSuccessMutation = async () => {
     await utils.viewer.me.invalidate();
@@ -325,6 +332,8 @@ const ProfileView = () => {
               />
             </div>
           }
+          expertCloneLink={user.username || ""}
+          telegramBotLink={telegramBotLink}
         />
 
         <hr className="border-subtle my-6" />
@@ -418,11 +427,15 @@ const ProfileForm = ({
   onSubmit,
   extraField,
   isLoading = false,
+  expertCloneLink,
+  telegramBotLink,
 }: {
   defaultValues: FormValues;
   onSubmit: (values: FormValues) => void;
   extraField?: React.ReactNode;
   isLoading: boolean;
+  expertCloneLink?: string;
+  telegramBotLink?: string;
 }) => {
   const { t } = useLocale();
   const [firstRender, setFirstRender] = useState(true);
@@ -590,7 +603,7 @@ const ProfileForm = ({
         {!isDisabled && (
           <Alert className="mb-4" key="info_save_change" severity="info" title={t("info_save_change")} />
         )}
-        <div className="flex items-center">
+        <div className="flex flex-col gap-2.5 lg:flex-row">
           <Controller
             control={formMethods.control}
             name="avatar"
@@ -879,6 +892,29 @@ const ProfileForm = ({
               />
             )}
           />
+          <div className="bg-pink/5 hover:bg-pink/10 border-subtle flex flex-1 shrink-0 flex-col items-start gap-2.5 rounded-[20px] border border-solid p-4">
+            <div className="flex flex-col items-start gap-2.5">
+              <p className="text-[20px] font-bold text-black">Expert clone</p>
+              <Link href={`/clone/${expertCloneLink || ""}`}>
+                <p className="flex gap-3 text-[13px] leading-[19.5px] text-[#61677F]">
+                  mygpt.fi/clone/{expertCloneLink || ""}{" "}
+                  <ExternalLink width="15px" height="15px" color="black" />
+                </p>
+              </Link>
+            </div>
+            {telegramBotLink ? (
+              <div className="flex flex-col items-start gap-2.5">
+                <p className="text-[20px] font-bold text-black">Telegram bot</p>
+                <Link href={`https://t.me/${telegramBotLink}`} target="_blank">
+                  <p className="flex gap-3 text-[13px] leading-[19.5px] text-[#61677F]">
+                    telegram.com/@{telegramBotLink} <ExternalLink width="15px" height="15px" color="black" />
+                  </p>
+                </Link>
+              </div>
+            ) : (
+              <></>
+            )}
+          </div>
         </div>
         <div className="mt-8">
           <Card

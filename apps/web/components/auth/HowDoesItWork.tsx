@@ -66,13 +66,17 @@ export default function HowDoesItWork() {
           "--swiper-pagination-bullet-horizontal-gap": "6px",
         }}>
         {howDoesItWorkContents.map((item, index) => (
-          <SwiperSlide className="!h-auto">
+          <SwiperSlide className="!h-auto" key={index}>
             <div className="flex h-full flex-col items-center justify-center">
               <div className="mb-6 flex items-center">
                 <div className="bg-pink mr-4 h-6 w-6 rounded-full text-center text-white">{index + 1}</div>
                 <p className="text-pink text-center text-2xl font-bold">{t(item.header)}</p>
               </div>
-              <img className="my-auto" src={`/app-how-does-it-work/${index + 1}.png`} />
+              <img
+                className="my-auto"
+                alt="how does it work"
+                src={`/app-how-does-it-work/${index + 1}.png`}
+              />
               <p className="text-pink mb-14 mt-6 text-center text-xl">{t(item.footer)}</p>
             </div>
           </SwiperSlide>

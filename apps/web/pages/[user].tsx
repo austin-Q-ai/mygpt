@@ -34,6 +34,7 @@ import {
   Instagram,
   Linkedin,
   MousePointer2,
+  ExternalLink,
 } from "@calcom/ui/components/icon";
 
 import type { inferSSRProps } from "@lib/types/inferSSRProps";
@@ -75,7 +76,7 @@ export function UserPage(props: UserPageProps) {
     <div className="space-y-6" data-testid="event-types">
       <div className="overflow-hidden rounded-sm border ">
         <div className="text-muted p-8 text-center">
-          <h2 className="font-cal text-default  mb-2 text-3xl">{" " + t("unavailable")}</h2>
+          <h2 className="font-cal text-default mb-2 text-3xl">{" " + t("unavailable")}</h2>
           <p className="mx-auto max-w-md">{t("user_dynamic_booking_disabled") as string}</p>
         </div>
       </div>
@@ -85,14 +86,14 @@ export function UserPage(props: UserPageProps) {
       {eventTypes.map((type, index) => (
         <li
           key={index}
-          className=" border-subtle bg-default dark:bg-muted dark:hover:bg-emphasis hover:bg-muted group relative border-b first:rounded-t-md last:rounded-b-md last:border-b-0">
+          className="border-subtle bg-default dark:bg-muted dark:hover:bg-emphasis hover:bg-muted group relative border-b first:rounded-t-md last:rounded-b-md last:border-b-0">
           <ArrowRight className="text-emphasis absolute right-3 top-3 h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100" />
           <Link
             href={getUsernameSlugLink({ users: props.users, slug: type.slug })}
             className="flex justify-between px-6 py-4"
             data-testid="event-type-link">
             <div className="flex-shrink">
-              <p className=" text-emphasis text-sm font-semibold">{type.title}</p>
+              <p className="text-emphasis text-sm font-semibold">{type.title}</p>
               <EventTypeDescription className="text-sm" eventType={type} />
             </div>
             <div className="mt-1 self-center">
@@ -178,7 +179,7 @@ export function UserPage(props: UserPageProps) {
                       href={{
                         pathname: `/${user.username}/profile`,
                       }}>
-                      <ArrowRight className="text-secondary absolute  right-4 top-4 h-6 w-6 font-bold opacity-0 transition-opacity group-hover:opacity-100" />
+                      <ArrowRight className="text-secondary absolute right-4 top-4 h-6 w-6 font-bold opacity-0 transition-opacity group-hover:opacity-100" />
                       <div className="flex-grow ">
                         <Avatar
                           imageSrc={user.avatar}
@@ -188,14 +189,14 @@ export function UserPage(props: UserPageProps) {
                         />
                       </div>
                     </Link>
-                    <div className="items-left ms-4  flex flex-grow flex-col gap-y-1">
+                    <div className="items-left ms-4 flex flex-grow flex-col gap-y-1">
                       <div className="text-2xl font-bold text-black">
                         {nameOrUsername ? nameOrUsername : t("nameless")}
                         {user.verified && (
-                          <Verified className=" mx-1 -mt-1 inline h-6 w-6 fill-blue-500 text-white dark:text-black" />
+                          <Verified className="mx-1 -mt-1 inline h-6 w-6 fill-blue-500 text-white dark:text-black" />
                         )}
                       </div>
-                      {user.position && <div className=" font-medium">{user.position}</div>}
+                      {user.position && <div className="font-medium ">{user.position}</div>}
                       {user.address && (
                         <div className="flex font-medium">
                           <MousePointer2 className="me-2 h-4 w-4 rotate-90 transform" fill="gray" />
@@ -283,6 +284,33 @@ export function UserPage(props: UserPageProps) {
             </div>
           )}
 
+          <div className="mb-5 flex items-center justify-center gap-[9px] self-stretch">
+            <Link
+              prefetch={false}
+              href={{
+                pathname: `/expert-clone/${user.username}`,
+              }}>
+              <Button
+                className="text-pink bg-pink/10 hover:bg-pink/20 flex w-[250px] items-center justify-center gap-2 self-stretch rounded-md px-4 py-2.5 text-[14px] font-bold leading-4"
+                color="secondary">
+                <p>Go to public clone</p>
+                <ExternalLink width="16px" height="16px" />
+              </Button>
+            </Link>
+            <Link
+              prefetch={false}
+              href={{
+                pathname: `/${user.username}/profile`,
+              }}>
+              <Button
+                className="text-pink bg-pink/10 hover:bg-pink/20 flex w-[250px] items-center justify-center gap-2 self-stretch rounded-md px-4 py-2.5 text-[14px] font-bold leading-4"
+                color="secondary">
+                <p>View Public Profile</p>
+                <ArrowRight width="16px" height="16px" />
+              </Button>
+            </Link>
+          </div>
+
           <div
             className={classNames(
               "rounded-md ",
@@ -291,7 +319,7 @@ export function UserPage(props: UserPageProps) {
             data-testid="event-types">
             {user.away ? (
               <div className="overflow-hidden rounded-sm border ">
-                <div className="text-muted  p-8 text-center">
+                <div className="text-muted p-8 text-center">
                   <h2 className="font-cal text-default mb-2 text-3xl">😴{" " + t("user_away")}</h2>
                   <p className="mx-auto max-w-md">{t("user_away_description") as string}</p>
                 </div>
@@ -320,11 +348,11 @@ export function UserPage(props: UserPageProps) {
                       }}
                       data-testid="event-type-link">
                       <div className="flex flex-wrap items-center">
-                        <h2 className=" text-default pr-2 text-sm font-semibold">{type.title}</h2>
+                        <h2 className="text-default pr-2 text-sm font-semibold">{type.title}</h2>
                         <span className="text-sm text-gray-500">{`/${user.username}/${type.slug}`}</span>
                       </div>
                       <div className="absolute right-4 flex justify-center">
-                        <ArrowRight className=" my-auto h-6 w-6 text-gray-600 opacity-0 transition-opacity group-hover:opacity-100" />
+                        <ArrowRight className="my-auto h-6 w-6 text-gray-600 opacity-0 transition-opacity group-hover:opacity-100" />
                       </div>
                       <EventTypeDescription eventType={type} isPublic={true} />
                     </Link>

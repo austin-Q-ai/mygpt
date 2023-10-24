@@ -48,15 +48,15 @@ export const ChargeCardDialog = (props: IRescheduleDialog) => {
       <DialogContent>
         <div className="flex flex-row space-x-3">
           <div className="flex h-10 w-10 flex-shrink-0 justify-center rounded-full bg-[#FAFAFA]">
-            <CreditCard className="m-auto h-6 w-6" />
+            <CreditCard className="w-6 h-6 m-auto" />
           </div>
           <div className="pt-1">
             <DialogHeader title={t("charge_card")} />
             <p>{t("charge_card_dialog_body", currencyStringParams)}</p>
 
             {chargeError && (
-              <div className="mt-4 flex text-red-500">
-                <AlertTriangle className="mr-2 h-5 w-5 " aria-hidden="true" />
+              <div className="flex mt-4 text-red-500">
+                <AlertTriangle className="w-5 h-5 mr-2 " aria-hidden="true" />
                 <p className="text-sm">{t("error_charging_card")}</p>
               </div>
             )}

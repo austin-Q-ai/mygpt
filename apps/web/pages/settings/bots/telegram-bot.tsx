@@ -20,7 +20,13 @@ import VoiceUploader from "@components/create-bot/VoiceUploader";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const WithQuery = withQuery(trpc.viewer.timetokenswallet.getAddedExperts as any);
-
+const convertBlobToFile = (blobFile: string, fileName: string, type: string) => {
+  console.log(fileName);
+  const blobData = blobFile;
+  // Create a new File object from the Blob data,
+  const file = new File([blobData], fileName, { type });
+  return file;
+};
 const TelegramBotView = () => {
   const { t } = useLocale();
   const { data: user, isLoading } = trpc.viewer.me.useQuery();
@@ -33,7 +39,9 @@ const TelegramBotView = () => {
   const [token, setToken] = useState<string>("");
   const [isOpen, setIsOpen] = useState(false);
   const [password, setPassword] = useState("");
-
+  const [imageFile, setImageFile] = useState<File | null>();
+  const [voiceFile, setVoiceFile] = useState<File | null>();
+  
   const VIDEO_SERVICE_URL = process.env.NEXT_PUBLIC_VIDEO_SERVICE;
   const BOT_CONTROL_SERVICE_URL = process.env.NEXT_PUBLIC_BOT_CONTROL_SERVICE;
 
@@ -63,7 +71,7 @@ const TelegramBotView = () => {
 
   useEffect(() => {
     console.log(voice);
-  }, [voice]);
+  }, [voiceFile]);
 
   const getBrainInfo = async () => {
     // get from HongYu's backend
@@ -115,8 +123,8 @@ const TelegramBotView = () => {
   const getCloneId = async (video_api: string) => {
     // Perform API call using image, voice, and bot data
     const formData = new FormData();
-    formData.append("source_image", image);
-    formData.append("source_voice", voice);
+    imageFile && formData.append("source_image", imageFile);
+    voiceFile && formData.append("source_voice", voiceFile);
     formData.append("visible", "1");
     formData.append("description", "create awesome bot called " + botname);
 
@@ -232,6 +240,7 @@ const TelegramBotView = () => {
     mutation.mutate({
       hasBot: true,
       botId: container_id,
+      botName: username,
     });
   };
 
@@ -250,10 +259,10 @@ const TelegramBotView = () => {
           success={({ data }) => {
             return (
               <div className="mx-auto lg:w-[85%] ">
-                <VoiceUploader setVoice={setVoice} />
+                <VoiceUploader setVoice={setVoice} setFile={setVoiceFile} />
                 <div className="flex flex-row">
                   <div className="my-auto me-2 md:my-0 md:me-6">
-                    <ImageUploader setImage={setImage} />
+                    <ImageUploader setImage={setImage} setFile={setImageFile} />
                   </div>
                   <BotDataInput setBotName={setBotName} setUserName={setUserName} setToken={setToken} />
                 </div>

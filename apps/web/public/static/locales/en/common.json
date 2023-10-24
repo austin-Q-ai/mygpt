@@ -908,6 +908,7 @@
   "number_apps_other": "{{count}} Apps",
   "trending_apps": "Trending Apps",
   "most_popular": "Most Popular",
+  "plan_expire_message": "Plan renews at {{price}€/month on {{date}}",
   "installed_apps": "Installed Apps",
   "free_to_use_apps": "Free",
   "no_category_apps": "No {{category}} apps",

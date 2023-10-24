@@ -6,19 +6,20 @@ import { useEffect, useState } from "react";
 import { SUBSCRIPTION_PRICE } from "@calcom/lib/constants";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { Button, Dialog, HeadSeo, DialogContent, DialogTrigger, ScrollableArea } from "@calcom/ui";
-import { LogOut, Menu, MessageSquare, Share2, X } from "@calcom/ui/components/icon";
+import { LogOut, Menu, X } from "@calcom/ui/components/icon";
 
 import Loader from "@components/Loader";
 import Footer from "@components/auth/Footer";
 import type { LinkProps } from "@components/auth/Footer";
 import MicroCards from "@components/microcard";
+import PriceInfo from "@components/price-info";
 import PriceListItem from "@components/prices/PriceListItem";
 import CarouselAvatarComponentN from "@components/ui/CarouselAvatarsComponentN";
 // import CarouselAvatars from "@components/ui/CarouselAvatars";
 // import CarouselAvatarsComponent from "@components/ui/CarouselAvatarsComponent";
 import CarouselDemo from "@components/ui/CarouselDemo";
-
-import { IS_GOOGLE_LOGIN_ENABLED, IS_SAML_LOGIN_ENABLED } from "@server/lib/constants";
+import { SUBSCRIPTION_PRICE } from "@calcom/lib/constants";
+import { usePathname } from "next/navigation";
 
 interface Props {
   title: string;
@@ -58,6 +59,7 @@ export const footerLinks: LinkProps[] = [
   {
     name: "Terms and conditions",
     url: "/",
+    type: "modal",
     col: 6,
   },
   {
@@ -162,6 +164,9 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
   const handleToggleNav = () => {
     setToggleFlag(!toggleFlag);
   };
+  const pathName = usePathname()
+  const [priceLevel, setPriceLevel] = useState(0)
+
   useEffect(() => {
     const handleResize = () => {
       setToggleFlag(false);
@@ -175,6 +180,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
   return (
     <div className="to-darkemphasis bg-auth bg-gradient-to-b from-gray-100">
       {toggleFlag ? (
@@ -224,17 +230,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                     <div className="mt-5 flex-row ">
                       <ScrollableArea className="grid h-[600px] gap-5  sm:grid-cols-1 md:h-full md:grid-cols-5">
                         {pricesList.map((priceItem, index) => {
-                          return (
-                            <PriceListItem
-                              key={index}
-                              priceItem={priceItem}
-                              disabled={index === 4}
-                              handleClick={() => {
-                                window.localStorage.setItem("price-type", `${index}`);
-                                setIsOpen(false);
-                              }}
-                            />
-                          );
+                          return <PriceListItem key={index} priceItem={priceItem} disabled={index === 4} handleClick={() => { window.localStorage.setItem("price-type", `${index}`); setIsOpen(false); setPriceLevel(index) }} />;
                         })}
                       </ScrollableArea>
                     </div>
@@ -247,13 +243,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                       <Link onClick={() => handleToggleNav()} href="/auth/login" className="text-md flex-row">
                         {t("sign_in")}
                       </Link>
-                      <Link
-                        onClick={() => {
-                          handleToggleNav();
-                          window.localStorage.setItem("price-type", "-1");
-                        }}
-                        href="/signup"
-                        className="text-md flex-row">
+                      <Link onClick={() => { handleToggleNav(); window.localStorage.setItem("price-type", "0"); setPriceLevel(0) }} href="/signup" className="flex-row text-md" >
                         {t("sign_up")}
                       </Link>
                     </div>
@@ -297,17 +287,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                         <div className="mt-5 flex-row ">
                           <ScrollableArea className="grid h-[600px] gap-5  sm:grid-cols-1 md:h-full md:grid-cols-5">
                             {pricesList.map((priceItem, index) => {
-                              return (
-                                <PriceListItem
-                                  key={index}
-                                  priceItem={priceItem}
-                                  disabled={index === 4}
-                                  handleClick={() => {
-                                    window.localStorage.setItem("price-type", `${index}`);
-                                    setIsOpen(false);
-                                  }}
-                                />
-                              );
+                              return <PriceListItem key={index} priceItem={priceItem} disabled={index === 4} handleClick={() => { window.localStorage.setItem("price-type", `${index}`); setIsOpen(false); setPriceLevel(index) }} />;
                             })}
                           </ScrollableArea>
                         </div>
@@ -320,12 +300,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                           <Link href="/auth/login" className="flex-row text-xs">
                             {t("sign_in")}
                           </Link>
-                          <Link
-                            href="/signup"
-                            className="flex-row text-xs"
-                            onClick={() => {
-                              window.localStorage.setItem("price-type", "-1");
-                            }}>
+                          <Link href="/signup" className="flex-row text-xs" onClick={() => { window.localStorage.setItem("price-type", "0"); setPriceLevel(0) }}>
                             {t("sign_up")}
                           </Link>
                         </div>
@@ -382,8 +357,8 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
             </div>
             <div className=" mx-2 flex h-fit flex-1 flex-col justify-center sm:px-6 lg:row-span-3 lg:mx-0 lg:w-[90%] lg:justify-start">
               <div className="mx-auto my-6 h-[60vh] flex-row md:my-0">
-                <div className="h-full w-full">
-                  <MicroCards />
+                <div className="flex items-center w-full h-full">
+                  {pathName.includes("signup") && priceLevel > 0 && priceLevel < 4 ? <PriceInfo priceLevel={priceLevel} /> : <MicroCards />}
                 </div>
               </div>
               <div className="mt-4 md:mx-auto md:my-4 lg:mt-2 ">

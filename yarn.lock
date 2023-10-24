@@ -15140,9 +15140,11 @@ __metadata:
     lint-staged: ^12.5.0
     lucide-react: ^0.171.0
     meilisearch: ^0.34.1
+    memoize-one: ^6.0.0
     mic-recorder-to-mp3: ^2.2.2
     prettier: ^2.8.6
     react-countdown: ^2.3.5
+    react-player: ^2.13.0
     react-responsive-carousel: ^3.2.23
     react-spring: ^9.7.3
     react-spring-carousel: ^2.0.19
@@ -15154,6 +15156,7 @@ __metadata:
     typescript: ^4.9.4
     vitest: ^0.31.1
     vitest-mock-extended: ^1.1.3
+    wavesurfer.js: ^7.3.9
   languageName: unknown
   linkType: soft
 
@@ -17070,6 +17073,13 @@ __metadata:
   version: 3.3.0
   resolution: "deepmerge@npm:3.3.0"
   checksum: 4322195389e0170a0443c07b36add19b90249802c4b47b96265fdc5f5d8beddf491d5e50cbc5bfd65f85ccf76598173083863c202f5463b3b667aca8be75d5ac
+  languageName: node
+  linkType: hard
+
+"deepmerge@npm:^4.0.0":
+  version: 4.3.1
+  resolution: "deepmerge@npm:4.3.1"
+  checksum: 2024c6a980a1b7128084170c4cf56b0fd58a63f2da1660dcfe977415f27b17dbe5888668b59d0b063753f3220719d5e400b7f113609489c90160bb9a5518d052
   languageName: node
   linkType: hard
 
@@ -23840,6 +23850,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"load-script@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "load-script@npm:1.0.0"
+  checksum: 8458e3f07b4a86f8d9d66e47a987811491a5d013af23ba7b371c6d3c9dc899885b072ccf65abf7874c10cb197d4975eacd8a7a125bfb38dbbcb267539f5dc1e9
+  languageName: node
+  linkType: hard
+
 "load-yaml-file@npm:^0.2.0":
   version: 0.2.0
   resolution: "load-yaml-file@npm:0.2.0"
@@ -24660,6 +24677,13 @@ __metadata:
   dependencies:
     fs-monkey: ^1.0.3
   checksum: 575dfde73f4105db42ffc2fdcd06efb9037541de095bd4fe9fb29134a1a775dfe922839b30db632de76cb29354d79d8f82a5e4f5f588e21bc47358b6d058a9c6
+  languageName: node
+  linkType: hard
+
+"memoize-one@npm:^5.1.1":
+  version: 5.2.1
+  resolution: "memoize-one@npm:5.2.1"
+  checksum: a3cba7b824ebcf24cdfcd234aa7f86f3ad6394b8d9be4c96ff756dafb8b51c7f71320785fbc2304f1af48a0467cbbd2a409efc9333025700ed523f254cb52e3d
   languageName: node
   linkType: hard
 
@@ -28799,7 +28823,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-fast-compare@npm:^3.0.0":
+"react-fast-compare@npm:^3.0.0, react-fast-compare@npm:^3.0.1":
   version: 3.2.2
   resolution: "react-fast-compare@npm:3.2.2"
   checksum: 2071415b4f76a3e6b55c84611c4d24dcb12ffc85811a2840b5a3f1ff2d1a99be1020d9437ee7c6e024c9f4cbb84ceb35e48cf84f28fcb00265ad2dfdd3947704
@@ -29055,6 +29079,21 @@ __metadata:
     react: ">=16.8"
     react-dom: ">=16.8"
   checksum: 601c27426c84dbff2cd4d3d3c4998adbb5334c3ff7a995b408b46e7be04b2a787fe8da63399dd8dd6c260f1961f7656a7f4f9c5681c72e18d64a05ffc5585a2b
+  languageName: node
+  linkType: hard
+
+"react-player@npm:^2.13.0":
+  version: 2.13.0
+  resolution: "react-player@npm:2.13.0"
+  dependencies:
+    deepmerge: ^4.0.0
+    load-script: ^1.0.0
+    memoize-one: ^5.1.1
+    prop-types: ^15.7.2
+    react-fast-compare: ^3.0.1
+  peerDependencies:
+    react: ">=16.6.0"
+  checksum: 7e0e69e0ac37227ab5bfdda73991d4f5d4741585562f3ad9cfb787ae2c427510b69ddf6ef3f23f319d699b790af852fca57f3e9b1dae94f385d545a3db200d67
   languageName: node
   linkType: hard
 
@@ -34743,6 +34782,13 @@ __metadata:
     watchpack-chokidar2:
       optional: true
   checksum: 8b7cb8c8df8f4dd0e8ac47693c0141c4f020a4b031411247d600eca31522fde6f1f9a3a6f6518b46e71f7971b0ed5734c08c60d7fdd2530e7262776286f69236
+  languageName: node
+  linkType: hard
+
+"wavesurfer.js@npm:^7.3.9":
+  version: 7.3.9
+  resolution: "wavesurfer.js@npm:7.3.9"
+  checksum: 293bb4ebd356d635141270e61d2e1421a332a0726186ed53f3a4c86b894eb1280aba9c0c7b0acd2557b7db2e51853e57f26f6d172bc2b041e24a86fe799b8a12
   languageName: node
   linkType: hard
 

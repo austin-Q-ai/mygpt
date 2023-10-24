@@ -179,6 +179,9 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
   if (input.hasBot) {
     data.hasBot = input.hasBot;
   }
+  if (input.botName) {
+    data.botName = input.botName;
+  }
   if (input.botId) {
     data.botId = input.botId;
   }
@@ -246,6 +249,7 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
       bio: true,
       avatar: true,
       hasBot: true,
+      botName: true,
       botId: true,
     },
   });
@@ -287,6 +291,7 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
       bio: updatedUser.bio,
       avatar: updatedUser.avatar,
       hasBot: updatedUser.hasBot,
+      botName: updatedUser.botName,
       botId: updatedUser.botId,
     };
     await index.updateDocuments([updatedUserInfo]);
@@ -337,6 +342,7 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
         bio: input.bio,
         bookingCallLink: input.username,
         hasBot: input.hasBot,
+        botName: input.botName,
       },
       points: [user.id],
     })
