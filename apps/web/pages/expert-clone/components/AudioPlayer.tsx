@@ -45,7 +45,7 @@ const AudioPlayer = ({ blobUrl }: { blobUrl: any }) => {
 
   return (
     <div className="relative w-full">
-      <div id="waveform" ref={waveformRef} />
+      <audio id="waveform" ref={waveformRef} />
       {/* <button id="playButton" className="absolute -left-2 -top-6">
         <PlayIcon fill="#6D278E" className="text-pink hover:bg-pink/10  h-6 w-6 rounded-md p-1" />
       </button> */}
