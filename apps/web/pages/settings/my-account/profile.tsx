@@ -603,7 +603,7 @@ const ProfileForm = ({
         {!isDisabled && (
           <Alert className="mb-4" key="info_save_change" severity="info" title={t("info_save_change")} />
         )}
-        <div className="flex flex-row gap-2.5">
+        <div className="flex flex-col gap-2.5 lg:flex-row">
           <Controller
             control={formMethods.control}
             name="avatar"
@@ -892,7 +892,7 @@ const ProfileForm = ({
               />
             )}
           />
-          <div className="bg-pink/5 hover:bg-pink/10 border-subtle flex flex-1 shrink-0 flex-col items-start gap-2.5 rounded-[20px] border border-solid px-2.5 py-5">
+          <div className="bg-pink/5 hover:bg-pink/10 border-subtle flex flex-1 shrink-0 flex-col items-start gap-2.5 rounded-[20px] border border-solid p-4">
             <div className="flex flex-col items-start gap-2.5">
               <p className="text-[20px] font-bold text-black">Expert clone</p>
               <Link href={`/clone/${expertCloneLink || ""}`}>
