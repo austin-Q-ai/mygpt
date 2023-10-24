@@ -2156,7 +2156,7 @@
   "telegram_bot_creation_success": "Bot created successfully",
   "telegram_bot_creation_error": "Error occured on creating telegram bot",
   "expert_clone": "Expert Clone",
-  "expert_description": "Create expert clone for {{appName}}",
+  "expert_clone_description": "Create expert clone for {{appName}}",
   "successfully_created": "Successfully Created",
   "verification_email_was_sent_please_check_and_try_again": "Verification Email was sent. Please check and try again.",
   "email_for_supabase_not_confirmed_click_resend_email_button": "Email for Supabase not confirmed, Click `Resend email` button",
@@ -2175,5 +2175,14 @@
   "plan_upgrade_bots": "You need to upgrade your plan to create your bots",
   "linkedin_scraping": "Linkedin scraping",
   "input_linkedin_bot": "You need to input your linkedin url in your profile setting page",
-  "please_confirm_your_email_for_supabase_signup_and_try_again": "Please confirm your email for supabase signup and try again"
+  "please_confirm_your_email_for_supabase_signup_and_try_again": "Please confirm your email for supabase signup and try again",
+  "expertgpt": "ExpertGPT",
+  "bots": "Bots",
+  "explore": "Explore",
+  "settings_bot": "Settings",
+  "expertgpt_bots_description": "Create, view, delete or share your bots",
+  "expertgpt_upload_description": "Upload Knowledge to bot",
+  "expertgpt_explore_title": "Explore uploaded data in Brain",
+  "expertgpt_explore_description": "View or delete stored data used by your brain",
+  "expertgpt_settings_description": "Manage ExpertGPT"
 }

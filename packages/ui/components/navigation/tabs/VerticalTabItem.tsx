@@ -69,19 +69,19 @@ const VerticalTabItem = ({
             )}
             <div className="h-fit">
               <span className="flex items-center space-x-2 rtl:space-x-reverse">
-                <Skeleton title={t(name)} as="p" className="max-w-36 min-h-4 mt-px truncate">
+                <Skeleton title={t(name)} as="p" className="mt-px truncate max-w-36 min-h-4">
                   {t(name)}
                 </Skeleton>
                 {props.isExternalLink ? <ExternalLink /> : null}
               </span>
               {info && (
-                <Skeleton as="p" title={t(info)} className="max-w-44 mt-1 truncate text-xs font-normal">
+                <Skeleton as="p" title={t(info)} className="mt-1 text-xs font-normal truncate max-w-44">
                   {t(info)}
                 </Skeleton>
               )}
             </div>
             {!disableChevron && isCurrent && (
-              <div className="ml-auto self-center">
+              <div className="self-center ml-auto">
                 <ChevronRight
                   width={20}
                   height={20}
@@ -91,7 +91,7 @@ const VerticalTabItem = ({
             )}
           </Link>
           {props.children?.map((child) => (
-            <VerticalTabItem key={child.name} {...child} isChild />
+            <VerticalTabItem key={child.name} {...child} disableChevron isChild className="pl-10" />
           ))}
         </>
       )}
