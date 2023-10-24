@@ -110,8 +110,8 @@ export const SUBSCRIPTION_PRICE: {
   },
   CUSTON: {
     EUR: 0,
-    USD: 0
-  }
+    USD: 0,
+  },
 };
 
 interface SubscriptionDataType {
@@ -128,7 +128,7 @@ export const SUBSCRIPTION_DATA: SubscriptionDataType[] = [
       "data_storage_limited_to_1_gb",
       "one_active_user_online",
     ],
-    price: SUBSCRIPTION_PRICE.FREEMIUM
+    price: SUBSCRIPTION_PRICE.FREEMIUM,
   },
   {
     advantageList: [
@@ -138,7 +138,7 @@ export const SUBSCRIPTION_DATA: SubscriptionDataType[] = [
       "data_storage_up_to_10_gb",
       "two_active_users_online",
     ],
-    price: SUBSCRIPTION_PRICE.LEVEL1
+    price: SUBSCRIPTION_PRICE.LEVEL1,
   },
   {
     advantageList: [
@@ -149,7 +149,7 @@ export const SUBSCRIPTION_DATA: SubscriptionDataType[] = [
       "ten_active_users_online",
       "access_to_detailed_analysis_and_reports",
     ],
-    price: SUBSCRIPTION_PRICE.LEVEL2
+    price: SUBSCRIPTION_PRICE.LEVEL2,
   },
   {
     advantageList: [
@@ -159,7 +159,7 @@ export const SUBSCRIPTION_DATA: SubscriptionDataType[] = [
       "unlimited_data_storage",
       "twenty_five_active_users_online",
     ],
-    price: SUBSCRIPTION_PRICE.LEVEL3
+    price: SUBSCRIPTION_PRICE.LEVEL3,
   },
   {
     advantageList: [
@@ -168,6 +168,7 @@ export const SUBSCRIPTION_DATA: SubscriptionDataType[] = [
       "customized_number_of_active_bots",
       "specific_integrations_or_custom_developments",
       "Access to customized detailed analysis and reports",
-    ]
+    ],
+    price: SUBSCRIPTION_PRICE.CUSTOM,
   },
 ];
