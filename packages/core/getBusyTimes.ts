@@ -170,7 +170,8 @@ export async function getBusyTimes(params: {
     );
     const endConnectedCalendarsGet = performance.now();
     logger.debug(
-      `Connected Calendars get took ${endConnectedCalendarsGet - startConnectedCalendarsGet
+      `Connected Calendars get took ${
+        endConnectedCalendarsGet - startConnectedCalendarsGet
       } ms for user ${username}`
     );
 

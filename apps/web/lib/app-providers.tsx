@@ -79,7 +79,7 @@ const enum ThemeSupport {
 
 type CalcomThemeProps = PropsWithChildren<
   Pick<AppProps["pageProps"], "nonce" | "themeBasis"> &
-  Pick<AppProps["Component"], "isBookingPage" | "isThemeSupported">
+    Pick<AppProps["Component"], "isBookingPage" | "isThemeSupported">
 >;
 const CalcomThemeProvider = (props: CalcomThemeProps) => {
   const router = useRouter();
@@ -155,8 +155,8 @@ function getThemeProviderProps({
     ? ThemeSupport.Booking
     : // if isThemeSupported is explicitly false, we don't use theme there
     props.isThemeSupported === false
-      ? ThemeSupport.None
-      : ThemeSupport.App;
+    ? ThemeSupport.None
+    : ThemeSupport.App;
 
   const isBookingPageThemSupportRequired = themeSupport === ThemeSupport.Booking;
   const themeBasis = props.themeBasis;
@@ -180,13 +180,13 @@ function getThemeProviderProps({
 
   const storageKey = isEmbedMode
     ? // Same Namespace, Same Organizer but different themes would still work seamless and not cause theme flicker
-    // Even though it's recommended to use different namespaces when you want to theme differently on the same page but if the embeds are on different pages, the problem can still arise
-    `embed-theme-${embedNamespace}${appearanceIdSuffix}${embedExplicitlySetThemeSuffix}`
+      // Even though it's recommended to use different namespaces when you want to theme differently on the same page but if the embeds are on different pages, the problem can still arise
+      `embed-theme-${embedNamespace}${appearanceIdSuffix}${embedExplicitlySetThemeSuffix}`
     : themeSupport === ThemeSupport.App
-      ? "app-theme"
-      : isBookingPageThemSupportRequired
-        ? `booking-theme${appearanceIdSuffix}`
-        : undefined;
+    ? "app-theme"
+    : isBookingPageThemSupportRequired
+    ? `booking-theme${appearanceIdSuffix}`
+    : undefined;
 
   return {
     storageKey,

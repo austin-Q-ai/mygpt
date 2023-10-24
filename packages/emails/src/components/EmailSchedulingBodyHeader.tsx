@@ -14,9 +14,7 @@ export const getHeadImage = (headerType: BodyHeadType): string => {
         ? BASE_URL + "/emails/checkCircle@2x.png"
         : "https://mygpt.fi/emails/checkCircle@2x.png";
     case "xCircle":
-      return IS_PRODUCTION
-        ? BASE_URL + "/emails/xCircle@2x.png"
-        : "https://mygpt.fi/emails/xCircle@2x.png";
+      return IS_PRODUCTION ? BASE_URL + "/emails/xCircle@2x.png" : "https://mygpt.fi/emails/xCircle@2x.png";
     case "calendarCircle":
       return IS_PRODUCTION
         ? BASE_URL + "/emails/calendarCircle@2x.png"

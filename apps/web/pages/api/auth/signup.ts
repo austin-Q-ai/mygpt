@@ -47,37 +47,40 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const getVideoCloneApi = async (token: string) => {
     try {
-      let res = await axios.post(`${VIDEO_SERVICE_URL}/users/api_key`, {}, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
+      let res = await axios.post(
+        `${VIDEO_SERVICE_URL}/users/api_key`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
         }
-      });
-      console.log("api key: ", res)
-      if (res && res.data) return res.data
-      else return null
+      );
+      console.log("api key: ", res);
+      if (res && res.data) return res.data;
+      else return null;
     } catch (_err) {
-      console.log("error on getting api: ")
-      return null
+      console.log("error on getting api: ");
+      return null;
     }
-  }
+  };
 
   const getVideoCloneToken = async (email: string, password: string) => {
     try {
       let res = await axios.post(`${VIDEO_SERVICE_URL}/registry`, {
         email,
-        password
+        password,
       });
-      console.log("video: ", res.data)
+      console.log("video: ", res.data);
       if (res && res.data) {
-        let _res = await getVideoCloneApi(res.data.access_token || '')
-        if (_res && _res.api_key) return _res.api_key
-        else return null
-      }
-      else return null
+        let _res = await getVideoCloneApi(res.data.access_token || "");
+        if (_res && _res.api_key) return _res.api_key;
+        else return null;
+      } else return null;
     } catch (_err) {
-      console.log("error: ")
-      return null
+      console.log("error: ");
+      return null;
     }
   };
 
@@ -111,7 +114,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (!existingUser.videoCloneToken) {
       let api_key = await getVideoCloneToken(userEmail, password);
-      console.log("video clone api: ", api_key)
+      console.log("video clone api: ", api_key);
       if (api_key) {
         try {
           await prisma.user.update({
@@ -132,7 +135,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const hashedPassword = await hashPassword(password);
 
   let videoToken = await getVideoCloneToken(userEmail, password);
-  console.log("video clone api: ", videoToken)
+  console.log("video clone api: ", videoToken);
 
   const user = await prisma.user.upsert({
     where: { email: userEmail },

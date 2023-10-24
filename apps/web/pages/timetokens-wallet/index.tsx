@@ -26,7 +26,7 @@ import {
   Form,
   InputField,
   showToast,
-  DialogTrigger
+  DialogTrigger,
 } from "@calcom/ui";
 import { Plus } from "@calcom/ui/components/icon";
 
@@ -192,7 +192,7 @@ function TimeTokensWallet() {
     onError: () => {
       showToast(t("error_revoking_token"), "error");
     },
-  })
+  });
 
   const addExpert = () => {
     console.log(addExpertId, "=====");
@@ -202,7 +202,7 @@ function TimeTokensWallet() {
   const revokeToken = () => {
     //revoke token action here
     revokeTokenMutation.mutate();
-  }
+  };
 
   const customFilter = (option: any, searchText: string) => {
     return true;
@@ -341,34 +341,30 @@ function TimeTokensWallet() {
                     StartIcon={Plus}>
                     {t("add")}
                   </Button>
-                  
+
                   <Dialog>
-                  <DialogTrigger asChild>
-                  <Button
-                    className="text-[.5rem] sm:text-sm"
-                  >
-                    {t("revoke")}
-                  </Button>
-                  </DialogTrigger>
-                  <ConfirmationDialogContent
-                    variety="danger"
-                    title={t("revoke_token")}
-                    confirmBtnText={t("confirm_revoke_event")}
-                    onConfirm={revokeToken}>
-                    {t("confirm_revoke_question")}
-                  </ConfirmationDialogContent>
-                </Dialog>
+                    <DialogTrigger asChild>
+                      <Button className="text-[.5rem] sm:text-sm">{t("revoke")}</Button>
+                    </DialogTrigger>
+                    <ConfirmationDialogContent
+                      variety="danger"
+                      title={t("revoke_token")}
+                      confirmBtnText={t("confirm_revoke_event")}
+                      onConfirm={revokeToken}>
+                      {t("confirm_revoke_question")}
+                    </ConfirmationDialogContent>
+                  </Dialog>
                 </div>
                 {/* Time Token Price update Graph  */}
                 <Form form={formMethods} handleSubmit={onSubmit}>
                   <div className="bg-pink/10 mx-4 mb-2 flex min-w-[250px] flex-col gap-1 rounded-md p-4 lg:absolute lg:right-14 lg:top-10 lg:w-1/5">
                     {/* need to be fixed */}
-                    <p className="font-bold text-center">TimeToken Price</p>
+                    <p className="text-center font-bold">TimeToken Price</p>
                     {!isLoading && user && (
                       <>
                         {user.TokenPrice.length > 0 && (
                           <LineChart
-                            className="h-24 p-1 bg-white"
+                            className="h-24 bg-white p-1"
                             data={user.TokenPrice.map((v) => ({
                               price: v.price,
                               createdDate: v.createdDate.toLocaleDateString("en-US", {

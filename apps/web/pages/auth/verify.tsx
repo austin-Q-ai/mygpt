@@ -110,8 +110,8 @@ export default function Verify() {
           {hasPaymentFailed
             ? "Your payment failed"
             : sessionId
-              ? "Payment successful!"
-              : "Verify your email" + " | " + APP_NAME}
+            ? "Payment successful!"
+            : "Verify your email" + " | " + APP_NAME}
         </title>
       </Head>
       <div className="flex min-h-screen flex-col items-center justify-center px-6">
@@ -129,8 +129,8 @@ export default function Verify() {
             {hasPaymentFailed
               ? "Your payment failed"
               : sessionId
-                ? "Payment successful!"
-                : "Check your Inbox"}
+              ? "Payment successful!"
+              : "Check your Inbox"}
           </h3>
           {hasPaymentFailed && (
             <p className="my-6">Your account has been created, but your premium has not been reserved.</p>

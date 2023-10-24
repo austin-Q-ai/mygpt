@@ -49,12 +49,12 @@ async function getHandler(req: NextApiRequest) {
     where: {
       team: isAdmin
         ? {
-          id: teamId,
-        }
+            id: teamId,
+          }
         : {
-          id: teamId,
-          members: { some: { userId } },
-        },
+            id: teamId,
+            members: { some: { userId } },
+          },
     },
   };
 

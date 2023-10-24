@@ -122,11 +122,11 @@ const updateMeeting = async (
   const updatedMeeting =
     credential && bookingRef
       ? await firstVideoAdapter?.updateMeeting(bookingRef, calEvent).catch(async (e) => {
-        await sendBrokenIntegrationEmail(calEvent, "video");
-        log.error("updateMeeting failed", e, calEvent);
-        success = false;
-        return undefined;
-      })
+          await sendBrokenIntegrationEmail(calEvent, "video");
+          log.error("updateMeeting failed", e, calEvent);
+          success = false;
+          return undefined;
+        })
       : undefined;
 
   if (!updatedMeeting) {

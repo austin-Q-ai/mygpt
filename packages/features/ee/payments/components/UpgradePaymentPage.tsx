@@ -50,15 +50,15 @@ const UpgradePaymentPage: FC<PaymentPageProps> = (props) => {
     props.payment.subscription?.user.level === "FREEMIUM"
       ? "Freemium"
       : `${Intl.NumberFormat(i18n.language, {
-        style: "currency",
-        currency: props.payment.subscription?.user.currency,
-        useGrouping: false,
-        maximumFractionDigits: 0,
-      }).format(
-        SUBSCRIPTION_PRICE[props.payment.subscription?.user.level || ""][
-        props.payment.subscription?.user.currency.toUpperCase() || ""
-        ]
-      )}/${t("monthly_one")}`;
+          style: "currency",
+          currency: props.payment.subscription?.user.currency,
+          useGrouping: false,
+          maximumFractionDigits: 0,
+        }).format(
+          SUBSCRIPTION_PRICE[props.payment.subscription?.user.level || ""][
+            props.payment.subscription?.user.currency.toUpperCase() || ""
+          ]
+        )}/${t("monthly_one")}`;
 
   const toLevel = `${Intl.NumberFormat(i18n.language, {
     style: "currency",
@@ -67,7 +67,7 @@ const UpgradePaymentPage: FC<PaymentPageProps> = (props) => {
     maximumFractionDigits: 0,
   }).format(
     SUBSCRIPTION_PRICE[props.payment.subscription?.level || ""][
-    props.payment.subscription?.user.currency.toUpperCase() || ""
+      props.payment.subscription?.user.currency.toUpperCase() || ""
     ]
   )}/${t("monthly_one")}`;
 

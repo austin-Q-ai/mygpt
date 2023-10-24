@@ -1,36 +1,37 @@
 import { prisma } from "@calcom/prisma";
 
-import type { TrpcSessionUser } from "../../../trpc";
 import { TRPCError } from "@trpc/server";
 
+import type { TrpcSessionUser } from "../../../trpc";
+
 type RevokeTokensOptions = {
-    ctx: {
-        user: NonNullable<TrpcSessionUser>;
-    };
+  ctx: {
+    user: NonNullable<TrpcSessionUser>;
+  };
 };
 
 export const revokeTokenHandler = async ({ ctx }: RevokeTokensOptions) => {
-    const { user } = ctx;
+  const { user } = ctx;
 
-    const currentTokensQuery = await prisma?.user.findFirst({
-        where: {
-            id: user.id,
-        },
-        select: {
-            tokens: true,
-        },
-    });
+  const currentTokensQuery = await prisma?.user.findFirst({
+    where: {
+      id: user.id,
+    },
+    select: {
+      tokens: true,
+    },
+  });
 
-    const currentTokens = currentTokensQuery?.tokens;
+  const currentTokens = currentTokensQuery?.tokens;
 
-    if (!currentTokens) throw new TRPCError({ code: "NOT_FOUND", message: "MISSING_TOKENS" })
+  if (!currentTokens) throw new TRPCError({ code: "NOT_FOUND", message: "MISSING_TOKENS" });
 
-    await prisma.user.update({
-        where: {
-            id: user.id,
-        },
-        data: {
-            tokens: 0
-        }
-    })
+  await prisma.user.update({
+    where: {
+      id: user.id,
+    },
+    data: {
+      tokens: 0,
+    },
+  });
 };

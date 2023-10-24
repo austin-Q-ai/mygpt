@@ -344,7 +344,10 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                 </div>
               </div>
             </div>
-            <div className="order-last row-end-5 mx-auto my-4 lg:col-start-1 lg:row-start-3 lg:mx-10 lg:mb-0">
+            <div
+              className={`order-last row-end-5 mx-auto ${
+                IS_GOOGLE_LOGIN_ENABLED && IS_SAML_LOGIN_ENABLED ? "my-4" : "mt-12"
+              } lg:col-start-1 lg:row-start-3 lg:mx-10 lg:mb-0`}>
               <CarouselDemo />
               <div className="flex flex-row sm:justify-center lg:justify-normal">
                 <p className="mx-3 my-8 break-words text-center text-gray-500 sm:w-full sm:max-w-md  md:mt-5 lg:w-[70%] lg:max-w-[70%] lg:text-left">

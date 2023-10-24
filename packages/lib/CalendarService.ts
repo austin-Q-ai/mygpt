@@ -587,9 +587,9 @@ export default abstract class BaseCalendarService implements Calendar {
         timeRange:
           dateFrom && dateTo
             ? {
-              start: dayjs(dateFrom).utc().format(TIMEZONE_FORMAT),
-              end: dayjs(dateTo).utc().format(TIMEZONE_FORMAT),
-            }
+                start: dayjs(dateFrom).utc().format(TIMEZONE_FORMAT),
+                end: dayjs(dateTo).utc().format(TIMEZONE_FORMAT),
+              }
             : undefined,
         headers: this.headers,
       });

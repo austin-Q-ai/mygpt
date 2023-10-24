@@ -31,8 +31,8 @@ export const IS_CALCOM =
 
 export const CONSOLE_URL =
   new URL(WEBAPP_URL).hostname.endsWith(".cal.dev") ||
-    new URL(WEBAPP_URL).hostname.endsWith(".cal-staging.com") ||
-    process.env.NODE_ENV !== "production"
+  new URL(WEBAPP_URL).hostname.endsWith(".cal-staging.com") ||
+  process.env.NODE_ENV !== "production"
     ? `https://console.cal.dev`
     : `https://console.mygpt.fi`;
 export const IS_SELF_HOSTED = !(
