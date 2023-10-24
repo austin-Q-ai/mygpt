@@ -2158,8 +2158,6 @@
   "expert_clone": "Expert Clone",
   "expert_clone_description": "Create expert clone for {{appName}}",
   "successfully_created": "Successfully Created",
-  "verification_email_was_sent_please_check_and_try_again": "Verification Email was sent. Please check and try again.",
-  "email_for_supabase_not_confirmed_click_resend_email_button": "Email for Supabase not confirmed, Click `Resend email` button",
   "my_bots": "My Bots",
   "registration": "Registration",
   "sign_in_on_the_platform": "Sign in on the platform",
@@ -2175,7 +2173,8 @@
   "plan_upgrade_bots": "You need to upgrade your plan to create your bots",
   "linkedin_scraping": "Linkedin scraping",
   "input_linkedin_bot": "You need to input your linkedin url in your profile setting page",
-  "please_confirm_your_email_for_supabase_signup_and_try_again": "Please confirm your email for supabase signup and try again",
+  "confirm_email_supabase_title": "Confirm Your Email Address!",
+  "confirm_email_supabase_description": "A confirmation email has been sent to your inbox. Please check your inbox (and spam folder) and click the link to activate your bots.",
   "expertgpt": "ExpertGPT",
   "bots": "Bots",
   "explore": "Explore",
@@ -2184,5 +2183,6 @@
   "expertgpt_upload_description": "Upload Knowledge to bot",
   "expertgpt_explore_title": "Explore uploaded data in Brain",
   "expertgpt_explore_description": "View or delete stored data used by your brain",
-  "expertgpt_settings_description": "Manage ExpertGPT"
+  "expertgpt_settings_description": "Manage ExpertGPT",
+  "request_a_resend": "Request a resend"
 }
