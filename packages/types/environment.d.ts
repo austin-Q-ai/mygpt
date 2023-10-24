@@ -49,9 +49,9 @@ declare namespace NodeJS {
      * Set it to "1" if you need to run E2E tests locally
      **/
     readonly NEXT_PUBLIC_IS_E2E: "1" | undefined;
-    readonly NEXT_PUBLIC_APP_NAME: string | "Cal";
-    readonly NEXT_PUBLIC_SUPPORT_MAIL_ADDRESS: string | "help@cal.com";
-    readonly NEXT_PUBLIC_COMPANY_NAME: string | "Cal.com, Inc.";
+    readonly NEXT_PUBLIC_APP_NAME: string | "MyGPT";
+    readonly NEXT_PUBLIC_SUPPORT_MAIL_ADDRESS: string | "help@mygpt.fi";
+    readonly NEXT_PUBLIC_COMPANY_NAME: string | "MyGPT.fi, Inc.";
     /**
      *  "strict" -> Strict CSP
      *  "non-strict" -> Strict CSP except the usage of unsafe-inline for `style-src`

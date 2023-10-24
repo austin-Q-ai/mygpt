@@ -11,10 +11,10 @@ export const _SBApps: App[] = [
     category: "calendar",
     categories: ["calendar"],
     logo: "/api/app-store/googlecalendar/icon.svg",
-    publisher: "Cal.com",
+    publisher: "MyGPT.fi",
     slug: "google-calendar",
-    url: "https://cal.com/",
-    email: "help@cal.com",
+    url: "https://mygpt.fi/",
+    email: "help@mygpt.fi",
     dirName: "googlecalendar",
   },
   {
@@ -24,12 +24,12 @@ export const _SBApps: App[] = [
     categories: ["video"],
     variant: "conferencing",
     logo: "/api/app-store/zoomvideo/icon.svg",
-    publisher: "Cal.com",
+    publisher: "MyGPT.fi",
     url: "https://zoom.us/",
     category: "video",
     slug: "zoom",
     title: "Zoom Video",
-    email: "help@cal.com",
+    email: "help@mygpt.fi",
     appData: {
       location: {
         default: false,

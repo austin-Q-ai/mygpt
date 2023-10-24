@@ -41,6 +41,7 @@ const TelegramBotView = () => {
   const [password, setPassword] = useState("");
   const [imageFile, setImageFile] = useState<File | null>();
   const [voiceFile, setVoiceFile] = useState<File | null>();
+  
   const VIDEO_SERVICE_URL = process.env.NEXT_PUBLIC_VIDEO_SERVICE;
   const BOT_CONTROL_SERVICE_URL = process.env.NEXT_PUBLIC_BOT_CONTROL_SERVICE;
 
@@ -276,7 +277,9 @@ const TelegramBotView = () => {
         <DialogContent title={t("confirm_password")} type="creation">
           <div className="flex flex-col gap-[29.6px] rounded-[6.166px] border-[0.617px] border-solid border-[#E5E7EB] p-[30.83px]">
             <div className="flex flex-col gap-[18.5px]">
-              <div className="text-[14.798px] leading-[17.264px]">{t("confirm_password")}</div>
+              <div className="text-[14.798px] leading-[17.264px]">
+                {t("telegram_confirm_password_description")}
+              </div>
               <PasswordField
                 id="confirm_password"
                 // label

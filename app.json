@@ -1,8 +1,8 @@
 {
-  "name": "Cal.com",
+  "name": "MyGPT.fi",
   "description": "Open Source Scheduling",
-  "repository": "https://github.com/calcom/cal.com",
-  "logo": "https://cal.com/android-chrome-512x512.png",
+  "repository": "https://github.com/calcom/mygpt.fi",
+  "logo": "https://mygpt.fi/android-chrome-512x512.png",
   "keywords": ["react", "typescript", "node", "nextjs", "prisma", "postgres", "trpc"],
   "addons": [
     {

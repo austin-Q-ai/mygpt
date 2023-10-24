@@ -208,7 +208,7 @@ const TopicsView = () => {
       })
       .catch((_err) => {
         console.log("err on fetching existing data: ", _err);
-        showToast(t("error_get_topics"), "error");
+        // showToast(t("error_get_topics"), "error");
       });
   }, [isLoading]);
 

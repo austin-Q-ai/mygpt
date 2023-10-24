@@ -8,7 +8,7 @@ import type { ConsoleUserInfoType, WebUserInfoType } from "@calcom/lib/sync/ISyn
 import type ISyncService from "@calcom/lib/sync/ISyncService";
 import { MembershipRole } from "@calcom/prisma/enums";
 
-// Cal.com Custom Contact Fields
+// MyGPT.fi Custom Contact Fields
 const calComCustomContactFields: CloseComFieldOptions = [
   // Field name, field type, required?, multiple values?
   ["Username", "text", false, false],
@@ -34,7 +34,7 @@ export default class CloseComService extends SyncServiceCore implements ISyncSer
     role?: string
   ) => {
     this.log.debug("sync:closecom:user", { user });
-    // Get Cal.com Lead
+    // Get MyGPT.fi Lead
     const leadId = await getCloseComLeadId(this.service, leadInfo);
     this.log.debug("sync:closecom:user:leadId", { leadId });
     // Get Contacts ids: already creates contacts

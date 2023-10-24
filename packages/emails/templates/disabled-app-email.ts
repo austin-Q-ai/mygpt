@@ -1,4 +1,4 @@
-import { TFunction } from "next-i18next";
+import type { TFunction } from "next-i18next";
 
 import { renderEmail } from "..";
 import BaseEmail from "./_base-email";
@@ -30,7 +30,7 @@ export default class DisabledAppEmail extends BaseEmail {
 
   protected getNodeMailerPayload(): Record<string, unknown> {
     return {
-      from: `Cal.com <${this.getMailerOptions().from}>`,
+      from: `MyGPT.fi <${this.getMailerOptions().from}>`,
       to: this.email,
       subject:
         this.title && this.eventTypeId
@@ -51,7 +51,7 @@ export default class DisabledAppEmail extends BaseEmail {
     return this.appType.some((type) => type === "payment")
       ? this.t("disable_payment_app", { appName: this.appName, title: this.title })
       : this.appType.some((type) => type === "video")
-      ? this.t("app_disabled_video", { appName: this.appName })
-      : this.t("app_disabled", { appName: this.appName });
+        ? this.t("app_disabled_video", { appName: this.appName })
+        : this.t("app_disabled", { appName: this.appName });
   }
 }

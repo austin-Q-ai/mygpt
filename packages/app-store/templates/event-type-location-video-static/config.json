@@ -7,8 +7,8 @@
   "url": "https://example.com/link",
   "variant": "conferencing",
   "categories": ["conferencing"],
-  "publisher": "Cal.com Inc",
-  "email": "support@cal.com",
+  "publisher": "MyGPT.fi Inc",
+  "email": "support@mygpt.fi",
   "appData": {
     "location": {
       "type": "integrations:{SLUG}_video",

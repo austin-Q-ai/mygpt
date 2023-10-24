@@ -5,8 +5,8 @@ export default create({
   colorPrimary: "#111827",
   colorSecondary: "#111827",
   appContentBg: "#F9FAFC",
-  brandTitle: "Cal.com UI",
-  brandUrl: "https://cal.com",
-  brandImage: "https://cal.com/logo.svg",
+  brandTitle: "MyGPT.fi UI",
+  brandUrl: "https://mygpt.fi",
+  brandImage: "https://mygpt.fi/logo.svg",
   brandTarget: "_self",
 });

@@ -187,7 +187,7 @@ import checkTeamEventEditPermission from "../_utils/checkTeamEventEditPermission
  *     tags:
  *     - event-types
  *     externalDocs:
- *        url: https://docs.cal.com/core-features/event-types
+ *        url: https://docs.mygpt.fi/core-features/event-types
  *     responses:
  *       201:
  *         description: OK, eventType edited successfully

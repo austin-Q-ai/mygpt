@@ -24,7 +24,7 @@ import type { TimeRange } from "./Schedule";
 import { DayRanges } from "./Schedule";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
-const noop = () => {};
+const noop = () => { };
 
 const DateOverrideForm = ({
   value,
@@ -43,10 +43,10 @@ const DateOverrideForm = ({
   const { t, i18n, isLocaleReady } = useLocale();
   const [datesUnavailable, setDatesUnavailable] = useState(
     value &&
-      value[0].start.getHours() === 0 &&
-      value[0].start.getMinutes() === 0 &&
-      value[0].end.getHours() === 0 &&
-      value[0].end.getMinutes() === 0
+    value[0].start.getHours() === 0 &&
+    value[0].start.getMinutes() === 0 &&
+    value[0].end.getHours() === 0 &&
+    value[0].end.getMinutes() === 0
   );
 
   const [date, setDate] = useState<Dayjs | null>(value ? dayjs(value[0].start) : null);
@@ -54,14 +54,14 @@ const DateOverrideForm = ({
     () =>
       workingHours
         ? workingHours.reduce((dates, workingHour) => {
-            for (let dNum = 1; dNum <= daysInMonth(browsingDate || dayjs()); dNum++) {
-              const d = browsingDate ? browsingDate.date(dNum) : dayjs.utc().date(dNum);
-              if (workingHour.days.includes(d.day())) {
-                dates.push(yyyymmdd(d));
-              }
+          for (let dNum = 1; dNum <= daysInMonth(browsingDate || dayjs()); dNum++) {
+            const d = browsingDate ? browsingDate.date(dNum) : dayjs.utc().date(dNum);
+            if (workingHour.days.includes(d.day())) {
+              dates.push(yyyymmdd(d));
             }
-            return dates;
-          }, [] as string[])
+          }
+          return dates;
+        }, [] as string[])
         : [],
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [browsingDate]
@@ -71,27 +71,27 @@ const DateOverrideForm = ({
     values: {
       range: value
         ? value.map((range) => ({
-            start: new Date(
-              dayjs
-                .utc()
-                .hour(range.start.getUTCHours())
-                .minute(range.start.getUTCMinutes())
-                .second(0)
-                .format()
-            ),
-            end: new Date(
-              dayjs.utc().hour(range.end.getUTCHours()).minute(range.end.getUTCMinutes()).second(0).format()
-            ),
-          }))
+          start: new Date(
+            dayjs
+              .utc()
+              .hour(range.start.getUTCHours())
+              .minute(range.start.getUTCMinutes())
+              .second(0)
+              .format()
+          ),
+          end: new Date(
+            dayjs.utc().hour(range.end.getUTCHours()).minute(range.end.getUTCMinutes()).second(0).format()
+          ),
+        }))
         : (workingHours || []).reduce((dayRanges, workingHour) => {
-            if (date && workingHour.days.includes(date.day())) {
-              dayRanges.push({
-                start: dayjs.utc().startOf("day").add(workingHour.startTime, "minute").toDate(),
-                end: dayjs.utc().startOf("day").add(workingHour.endTime, "minute").toDate(),
-              });
-            }
-            return dayRanges;
-          }, [] as TimeRange[]),
+          if (date && workingHour.days.includes(date.day())) {
+            dayRanges.push({
+              start: dayjs.utc().startOf("day").add(workingHour.startTime, "minute").toDate(),
+              end: dayjs.utc().startOf("day").add(workingHour.endTime, "minute").toDate(),
+            });
+          }
+          return dayRanges;
+        }, [] as TimeRange[]),
     },
   });
 
@@ -103,11 +103,11 @@ const DateOverrideForm = ({
         onChange(
           (datesUnavailable
             ? [
-                {
-                  start: date.utc(true).startOf("day").toDate(),
-                  end: date.utc(true).startOf("day").add(1, "day").toDate(),
-                },
-              ]
+              {
+                start: date.utc(true).startOf("day").toDate(),
+                end: date.utc(true).startOf("day").add(1, "day").toDate(),
+              },
+            ]
             : values.range
           ).map((item) => ({
             start: date.hour(item.start.getHours()).minute(item.start.getMinutes()).toDate(),
@@ -182,7 +182,7 @@ const DateOverrideInputDialog = ({
   const [open, setOpen] = useState(false);
   {
     /* enableOverflow is used to allow overflow when there are too many overrides to show on mobile.
-       ref:- https://github.com/calcom/cal.com/pull/6215
+       ref:- https://github.com/calcom/mygpt.fi/pull/6215
       */
   }
   const enableOverflow = isMobile;

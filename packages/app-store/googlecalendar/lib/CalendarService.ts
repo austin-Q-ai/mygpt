@@ -303,7 +303,7 @@ export default class GoogleCalendarService implements Calendar {
         function (err: GoogleCalError | null, event) {
           if (err) {
             /**
-             *  410 is when an event is already deleted on the Google cal before on cal.com
+             *  410 is when an event is already deleted on the Google cal before on MyGPT.fi
              *  404 is when the event is on a different calendar
              */
             if (err.code === 410) return resolve();
@@ -339,8 +339,8 @@ export default class GoogleCalendarService implements Calendar {
 
       (selectedCalendarIds.length === 0
         ? calendar.calendarList
-            .list()
-            .then((cals) => cals.data.items?.map((cal) => cal.id).filter(Boolean) || [])
+          .list()
+          .then((cals) => cals.data.items?.map((cal) => cal.id).filter(Boolean) || [])
         : Promise.resolve(selectedCalendarIds)
       )
         .then((calsIds) => {

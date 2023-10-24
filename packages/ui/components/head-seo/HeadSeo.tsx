@@ -72,10 +72,10 @@ export const HeadSeo = (props: HeadSeoProps): JSX.Element => {
   // The below code sets the defaultUrl for our canonical tags
   // Get the router's path
   const path = useRouter().asPath;
-  const selfHostedOrigin = WEBSITE_URL || "https://cal.com";
-  // Set the default URL to either the current URL (if self-hosted) or https://cal.com canonical URL
+  const selfHostedOrigin = WEBSITE_URL || "https://mygpt.fi";
+  // Set the default URL to either the current URL (if self-hosted) or https://mygpt.fi canonical URL
   const defaultUrl = IS_CALCOM
-    ? buildCanonical({ path, origin: "https://cal.com" })
+    ? buildCanonical({ path, origin: "https://mygpt.fi" })
     : buildCanonical({ path, origin: selfHostedOrigin });
 
   const {

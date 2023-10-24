@@ -21,7 +21,7 @@ export default class SlugReplacementEmail extends BaseEmail {
 
   protected getNodeMailerPayload(): Record<string, unknown> {
     return {
-      from: `Cal.com <${this.getMailerOptions().from}>`,
+      from: `MyGPT.fi <${this.getMailerOptions().from}>`,
       to: this.email,
       subject: this.t("email_subject_slug_replacement", { slug: this.slug }),
       html: renderEmail("SlugReplacementEmail", {

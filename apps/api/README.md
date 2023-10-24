@@ -1,19 +1,19 @@
 <!-- PROJECT LOGO -->
 <div align="center">
-  <a href="https://cal.com/docs/enterprise-features/api#api-server-specifications">
+  <a href="https://mygpt.fi/docs/enterprise-features/api#api-server-specifications">
     <img src="https://user-images.githubusercontent.com/8019099/133430653-24422d2a-3c8d-4052-9ad6-0580597151ee.png" alt="Logo">
   </a>
   
-  <a href="https://cal.com/docs/enterprise-features/api#api-server-specifications">Read the API docs</a>
+  <a href="https://mygpt.fi/docs/enterprise-features/api#api-server-specifications">Read the API docs</a>
 </div>
 
-# Commercial Cal.com Public API 
+# Commercial MyGPT.fi Public API
 
-Welcome to the Public API ("/apps/api") of the Cal.com.
+Welcome to the Public API ("/apps/api") of the MyGPT.fi.
 
-This is the public REST api for cal.com.
+This is the public REST api for mygpt.fi.
 It exposes CRUD Endpoints of all our most important resources.
-And it makes it easy for anyone to integrate with Cal.com at the application programming level.
+And it makes it easy for anyone to integrate with MyGPT.fi at the application programming level.
 
 ## Stack
 
@@ -28,13 +28,13 @@ And it makes it easy for anyone to integrate with Cal.com at the application pro
 1. Clone the main repo (NOT THIS ONE)
 
    ```sh
-   git clone --recurse-submodules -j8 https://github.com/calcom/cal.com.git
+   git clone --recurse-submodules -j8 https://github.com/calcom/mygpt.fi.git
    ```
 
 1. Go to the project folder
 
    ```sh
-   cd cal.com
+   cd mygpt.fi
    ```
 
 1. Copy `apps/api/.env.example` to `apps/api/.env`
@@ -61,12 +61,12 @@ And it makes it easy for anyone to integrate with Cal.com at the application pro
 ## API Authentication (API Keys)
 
 The API requires a valid apiKey query param to be passed:
-You can generate them at <https://app.cal.com/settings/security>
+You can generate them at <https://mygpt.fi/settings/security>
 
 For example:
 
 ```sh
-GET https://api.cal.com/v1/users?apiKey={INSERT_YOUR_CAL.COM_API_KEY_HERE}
+GET https://api.mygpt.fi/v1/users?apiKey={INSERT_YOUR_CAL.COM_API_KEY_HERE}
 ```
 
 API Keys optionally may have expiry dates, if they are expired they won't work. If you create an apiKey without a userId relation, it won't work either for now as it relies on it to establish the current authenticated user.
@@ -83,7 +83,7 @@ We don't use the new NextJS 12 Beta Middlewares, mainly because they run on the 
 
 ### Redirects
 
-Since this is an API only project, we don't want to have to type /api/ in all the routes, and so redirect all traffic to api, so a call to `api.cal.com/v1` will resolve to `api.cal.com/api/v1`
+Since this is an API only project, we don't want to have to type /api/ in all the routes, and so redirect all traffic to api, so a call to `api.mygpt.fi/v1` will resolve to `api.mygpt.fi/api/v1`
 
 Likewise, v1 is added as param query called version to final /api call so we don't duplicate endpoints in the future for versioning if needed.
 
@@ -190,15 +190,15 @@ We make sure of this by not using next in dev, but next build && next start, if 
 See <https://github.com/vercel/next.js/blob/canary/packages/next/server/dev/hot-reloader.ts#L79>. Here in dev mode OPTIONS method is hardcoded to return only GET and OPTIONS as allowed method. Running in Production mode would cause this file to be not used. This is hot-reloading logic only.
 To remove this limitation, we need to ensure that on local endpoints are requested by swagger at /api/v1 and not /v1
 
-## Hosted api through cal.com
+## Hosted api through mygpt.fi
 
 > _❗ WARNING: This is still experimental and not fully implemented yet❗_
 
-Go to console.cal.com
+Go to console.mygpt.fi
 Add a deployment or go to an existing one.
 Activate API or Admin addon
 Provide your `DATABASE_URL`
-Now you can call api.cal.com?key=CALCOM_LICENSE_KEY, which will connect to your own databaseUrl.
+Now you can call api.mygpt.fi?key=CALCOM_LICENSE_KEY, which will connect to your own databaseUrl.
 
 ## How to deploy
 
@@ -218,7 +218,7 @@ Add this command: `./scripts/vercel-deploy.sh`
 
 See `scripts/vercel-deploy.sh` for more info on how the deployment is done.
 
-> _❗ IMORTANT: If you're forking the API repo you will need to update the URLs in both the main repo [`.gitmodules`](https://github.com/calcom/cal.com/blob/main/.gitmodules#L7) and this repo [`./scripts/vercel-deploy.sh`](https://github.com/calcom/api/blob/main/scripts/vercel-deploy.sh#L3) ❗_
+> _❗ IMORTANT: If you're forking the API repo you will need to update the URLs in both the main repo [`.gitmodules`](https://github.com/calcom/mygpt.fi/blob/main/.gitmodules#L7) and this repo [`./scripts/vercel-deploy.sh`](https://github.com/calcom/api/blob/main/scripts/vercel-deploy.sh#L3) ❗_
 
 ## Environment variables
 

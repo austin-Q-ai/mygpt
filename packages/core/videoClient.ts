@@ -122,11 +122,11 @@ const updateMeeting = async (
   const updatedMeeting =
     credential && bookingRef
       ? await firstVideoAdapter?.updateMeeting(bookingRef, calEvent).catch(async (e) => {
-          await sendBrokenIntegrationEmail(calEvent, "video");
-          log.error("updateMeeting failed", e, calEvent);
-          success = false;
-          return undefined;
-        })
+        await sendBrokenIntegrationEmail(calEvent, "video");
+        log.error("updateMeeting failed", e, calEvent);
+        success = false;
+        return undefined;
+      })
       : undefined;
 
   if (!updatedMeeting) {
@@ -162,7 +162,7 @@ const deleteMeeting = async (credential: CredentialPayload, uid: string): Promis
   return Promise.resolve({});
 };
 
-// @TODO: This is a temporary solution to create a meeting with cal.com video as fallback url
+// @TODO: This is a temporary solution to create a meeting with MyGPT.fi video as fallback url
 const createMeetingWithCalVideo = async (calEvent: CalendarEvent) => {
   let dailyAppKeys: Awaited<ReturnType<typeof getDailyAppKeys>>;
   try {

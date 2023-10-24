@@ -27,7 +27,7 @@ import { schemaWebhookReadPublic } from "~/lib/validations/webhook";
  *     tags:
  *     - webhooks
  *     externalDocs:
- *        url: https://docs.cal.com/core-features/webhooks
+ *        url: https://docs.mygpt.fi/core-features/webhooks
  *     responses:
  *       200:
  *         description: OK

@@ -44,6 +44,7 @@ export const footerLinks: LinkProps[] = [
   {
     name: "How does it work",
     url: "/",
+    type: "modal",
     col: 6,
   },
   {
@@ -155,6 +156,7 @@ const pricesList = [
 export default function AuthContainer(props: React.PropsWithChildren<Props>) {
   const { t } = useLocale();
   const [toggleFlag, setToggleFlag] = useState(false);
+  const [isOpen, setIsOpen] = useState(false)
   const handleToggleNav = () => {
     setToggleFlag(!toggleFlag);
   };
@@ -201,12 +203,13 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
           <div className="flex flex-row justify-center h-full align-center ">
             <div className="flex flex-col self-center">
               <div className="flex flex-col gap-8 text-secondary">
-                <Dialog>
+                <Dialog open={isOpen} onOpenChange={setIsOpen}>
                   <DialogTrigger asChild>
                     <Button
                       variant="icon"
                       size="lg"
                       color="secondary"
+                      onClick={() => setIsOpen(true)}
                       className="self-center w-12 h-10 mr-1 text-xl bg-transparent border-0 p-none text-secondary">
                       Prices
                     </Button>
@@ -219,7 +222,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                     <div className="flex-row mt-5 ">
                       <ScrollableArea className="grid h-[600px] gap-5  sm:grid-cols-1 md:h-full md:grid-cols-5">
                         {pricesList.map((priceItem, index) => {
-                          return <PriceListItem key={index} priceItem={priceItem} disabled={index === 4} handleClick={() => { window.localStorage.setItem("price-type", `${index}`) }} />;
+                          return <PriceListItem key={index} priceItem={priceItem} disabled={index === 4} handleClick={() => { window.localStorage.setItem("price-type", `${index}`); setIsOpen(false) }} />;
                         })}
                       </ScrollableArea>
                     </div>
@@ -256,13 +259,14 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                 </div>
                 <div className="flex-col text-secondary">
                   <div className="flex flex-row gap-8">
-                    <Dialog>
+                    <Dialog open={isOpen} onOpenChange={setIsOpen}>
                       <DialogTrigger asChild>
                         <Button
                           variant="icon"
                           size="lg"
                           color="secondary"
                           aria-label={t("delete")}
+                          onClick={() => setIsOpen(true)}
                           className="hidden mr-1 bg-transparent border-0 p-none text-secondary sm:inline">
                           Prices
                         </Button>
@@ -275,7 +279,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                         <div className="flex-row mt-5 ">
                           <ScrollableArea className="grid h-[600px] gap-5  sm:grid-cols-1 md:h-full md:grid-cols-5">
                             {pricesList.map((priceItem, index) => {
-                              return <PriceListItem key={index} priceItem={priceItem} handleClick={() => { window.localStorage.setItem("price-type", `${index}`) }} />;
+                              return <PriceListItem key={index} priceItem={priceItem} disabled={index === 4} handleClick={() => { window.localStorage.setItem("price-type", `${index}`); setIsOpen(false) }} />;
                             })}
                           </ScrollableArea>
                         </div>
@@ -292,7 +296,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
                             {t("sign_up")}
                           </Link>
                         </div>
-                      </div>
+                      </div>{/*  */}
                     </div>
                     <div className="flex-col contents md:hidden">
                       <Button

@@ -4,12 +4,12 @@ info:
   description: The open source Calendly alternative.
   contact:
     name: Support
-    email: support@cal.com
+    email: support@mygpt.fi
   license:
     name: MIT License
     url: "https://opensource.org/licenses/MIT"
   version: 1.0.0
-  termsOfService: "https://cal.com/terms"
+  termsOfService: "https://mygpt.fi/terms"
 server:
   url: "http://localhost:{port}"
   description: Local Development Server
@@ -723,7 +723,7 @@ paths:
         required: true
         description: The team which you wish to list members of
 servers:
-  - url: "https://app.cal.com"
+  - url: "https://mygpt.fi"
     description: Production
 components:
   securitySchemes: {}

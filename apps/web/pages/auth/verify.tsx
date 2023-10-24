@@ -18,7 +18,7 @@ async function sendVerificationLogin(email: string, username: string) {
     email: email.toLowerCase(),
     username: username.toLowerCase(),
     redirect: false,
-    callbackUrl: WEBAPP_URL || "https://app.cal.com",
+    callbackUrl: WEBAPP_URL || "https://mygpt.fi",
   })
     .then(() => {
       showToast("Verification email sent", "success");
@@ -110,8 +110,8 @@ export default function Verify() {
           {hasPaymentFailed
             ? "Your payment failed"
             : sessionId
-            ? "Payment successful!"
-            : "Verify your email" + " | " + APP_NAME}
+              ? "Payment successful!"
+              : "Verify your email" + " | " + APP_NAME}
         </title>
       </Head>
       <div className="flex min-h-screen flex-col items-center justify-center px-6">
@@ -129,8 +129,8 @@ export default function Verify() {
             {hasPaymentFailed
               ? "Your payment failed"
               : sessionId
-              ? "Payment successful!"
-              : "Check your Inbox"}
+                ? "Payment successful!"
+                : "Check your Inbox"}
           </h3>
           {hasPaymentFailed && (
             <p className="my-6">Your account has been created, but your premium has not been reserved.</p>
@@ -169,7 +169,7 @@ export default function Verify() {
               }}>
               {secondsLeft > 0 ? `Resend in ${secondsLeft} seconds` : "Send another mail"}
             </Button>
-            <Button color="primary" href={`${WEBAPP_URL || "https://app.cal.com"}/auth/login`}>
+            <Button color="primary" href={`${WEBAPP_URL || "https://mygpt.fi"}/auth/login`}>
               Login using another method
             </Button>
           </div>
