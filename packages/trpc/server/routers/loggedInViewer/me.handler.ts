@@ -47,6 +47,7 @@ export const meHandler = async ({ ctx }: MeOptions) => {
     bio: user.bio,
     priceLevel: user.priceLevel,
     hasBot: user.hasBot,
+    botName: user.botName,
     botId: user.botId,
     weekStart: user.weekStart,
     theme: user.theme,

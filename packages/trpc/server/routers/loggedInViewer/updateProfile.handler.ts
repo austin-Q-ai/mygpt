@@ -177,10 +177,13 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
     data.avatar = await resizeBase64Image(input.avatar);
   }
   if (input.hasBot) {
-    data.hasBot = input.hasBot
+    data.hasBot = input.hasBot;
+  }
+  if (input.botName) {
+    data.botName = input.botName;
   }
   if (input.botId) {
-    data.botId = input.botId
+    data.botId = input.botId;
   }
   const userToUpdate = await prisma.user.findUnique({
     where: {
@@ -246,7 +249,8 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
       bio: true,
       avatar: true,
       hasBot: true,
-      botId: true
+      botName: true,
+      botId: true,
     },
   });
 
@@ -287,7 +291,8 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
       bio: updatedUser.bio,
       avatar: updatedUser.avatar,
       hasBot: updatedUser.hasBot,
-      botId: updatedUser.botId
+      botName: updatedUser.botName,
+      botId: updatedUser.botId,
     };
     await index.updateDocuments([updatedUserInfo]);
   }
@@ -336,7 +341,8 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
         avatar: input.avatar,
         bio: input.bio,
         bookingCallLink: input.username,
-        hasBot: input.hasBot
+        hasBot: input.hasBot,
+        botName: input.botName,
       },
       points: [user.id],
     })

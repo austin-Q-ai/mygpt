@@ -305,6 +305,7 @@ model User {
   priceLevel                   Int                     @default(0)
   hasBot                       Boolean                 @default(false)
   botId                        String?
+  botName                      String?
 
   @@unique([email])
   @@unique([email, username])
