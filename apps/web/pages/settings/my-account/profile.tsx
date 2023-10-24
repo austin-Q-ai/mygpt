@@ -2,6 +2,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import classNames from "classnames";
 import { signOut } from "next-auth/react";
+import Link from "next/link";
 import type { BaseSyntheticEvent } from "react";
 import { useRef, useState, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -52,6 +53,7 @@ import {
   Cross,
   X,
   MousePointer2,
+  ExternalLink,
 } from "@calcom/ui/components/icon";
 
 import PageWrapper from "@components/PageWrapper";
@@ -155,6 +157,7 @@ const ProfileView = () => {
       }
     },
   });
+  const [telegramBotLink, setTelegramBotLink] = useState("");
 
   const [confirmPasswordOpen, setConfirmPasswordOpen] = useState(false);
   const [tempFormValues, setTempFormValues] = useState<FormValues | null>(null);
@@ -164,6 +167,10 @@ const ProfileView = () => {
   const [hasDeleteErrors, setHasDeleteErrors] = useState(false);
   const [deleteErrorMessage, setDeleteErrorMessage] = useState("");
   const form = useForm<DeleteAccountValues>();
+
+  useEffect(() => {
+    if (user?.hasBot && user?.botName) setTelegramBotLink(user?.botName);
+  }, [user]);
 
   const onDeleteMeSuccessMutation = async () => {
     await utils.viewer.me.invalidate();
@@ -264,33 +271,33 @@ const ProfileView = () => {
     address: user.address || "",
     experiences: user.experiences
       ? user.experiences.map((experience) => ({
-        id: experience.id,
-        key: "0",
-        position: experience.position,
-        company: experience.company,
-        address: experience.address || "",
-        startMonth: experience.startMonth,
-        startYear: experience.startYear,
-        endMonth: experience.endMonth,
-        endYear: experience.endYear,
-        avatar: experience.avatar || null,
-        delete: false,
-      }))
+          id: experience.id,
+          key: "0",
+          position: experience.position,
+          company: experience.company,
+          address: experience.address || "",
+          startMonth: experience.startMonth,
+          startYear: experience.startYear,
+          endMonth: experience.endMonth,
+          endYear: experience.endYear,
+          avatar: experience.avatar || null,
+          delete: false,
+        }))
       : ([] as ExperienceInput[]),
     educations: user.educations
       ? user.educations.map((education) => ({
-        id: education.id,
-        key: "0",
-        school: education.school,
-        major: education.major || "",
-        degree: education.degree || "",
-        startMonth: education.startMonth,
-        startYear: education.startYear,
-        endMonth: education.endMonth,
-        endYear: education.endYear,
-        avatar: education.avatar || null,
-        delete: false,
-      }))
+          id: education.id,
+          key: "0",
+          school: education.school,
+          major: education.major || "",
+          degree: education.degree || "",
+          startMonth: education.startMonth,
+          startYear: education.startYear,
+          endMonth: education.endMonth,
+          endYear: education.endYear,
+          avatar: education.avatar || null,
+          delete: false,
+        }))
       : ([] as EducationInput[]),
     skills: user.skills || [],
     social: (user.social as SocialType) || ({} as SocialType),
@@ -325,6 +332,8 @@ const ProfileView = () => {
               />
             </div>
           }
+          expertCloneLink={user.username || ""}
+          telegramBotLink={telegramBotLink}
         />
 
         <hr className="border-subtle my-6" />
@@ -418,11 +427,15 @@ const ProfileForm = ({
   onSubmit,
   extraField,
   isLoading = false,
+  expertCloneLink,
+  telegramBotLink,
 }: {
   defaultValues: FormValues;
   onSubmit: (values: FormValues) => void;
   extraField?: React.ReactNode;
   isLoading: boolean;
+  expertCloneLink?: string;
+  telegramBotLink?: string;
 }) => {
   const { t } = useLocale();
   const [firstRender, setFirstRender] = useState(true);
@@ -590,7 +603,7 @@ const ProfileForm = ({
         {!isDisabled && (
           <Alert className="mb-4" key="info_save_change" severity="info" title={t("info_save_change")} />
         )}
-        <div className="flex items-center">
+        <div className="flex flex-row gap-2.5">
           <Controller
             control={formMethods.control}
             name="avatar"
@@ -879,6 +892,29 @@ const ProfileForm = ({
               />
             )}
           />
+          <div className="bg-pink/5 hover:bg-pink/10 border-subtle flex flex-1 shrink-0 flex-col items-start gap-2.5 rounded-[20px] border border-solid px-2.5 py-5">
+            <div className="flex flex-col items-start gap-2.5">
+              <p className="text-[20px] font-bold text-black">Expert clone</p>
+              <Link href={`/clone/${expertCloneLink || ""}`}>
+                <p className="flex gap-3 text-[13px] leading-[19.5px] text-[#61677F]">
+                  mygpt.fi/clone/{expertCloneLink || ""}{" "}
+                  <ExternalLink width="15px" height="15px" color="black" />
+                </p>
+              </Link>
+            </div>
+            {telegramBotLink ? (
+              <div className="flex flex-col items-start gap-2.5">
+                <p className="text-[20px] font-bold text-black">Telegram bot</p>
+                <Link href={`https://t.me/${telegramBotLink}`} target="_blank">
+                  <p className="flex gap-3 text-[13px] leading-[19.5px] text-[#61677F]">
+                    telegram.com/@{telegramBotLink} <ExternalLink width="15px" height="15px" color="black" />
+                  </p>
+                </Link>
+              </div>
+            ) : (
+              <></>
+            )}
+          </div>
         </div>
         <div className="mt-8">
           <Card
@@ -964,49 +1000,49 @@ const ProfileForm = ({
                 </div>
                 <div className="mb-4 flex w-full flex-wrap gap-2">
                   {(!editableSkill && defaultValues.skills.length === 0) ||
-                    (editableSkill && skills.length === 0) ? (
+                  (editableSkill && skills.length === 0) ? (
                     <div className="p-2 text-center">{t("no_data_yet")}</div>
                   ) : (
                     <>
                       {!editableSkill
                         ? defaultValues.skills.map((skill, i) => (
-                          <div
-                            className="rounded-md border-none border-gray-500 bg-white p-2 text-center"
-                            key={i}>
-                            {skill}
-                          </div>
-                        ))
+                            <div
+                              className="rounded-md border-none border-gray-500 bg-white p-2 text-center"
+                              key={i}>
+                              {skill}
+                            </div>
+                          ))
                         : skills.map((skill, i) => (
-                          <div className={classNames("flex", skill.length >= 30 && "w-full")} key={i}>
-                            <Input
-                              className="!rounded-full !rounded-r-none border-r-0 focus:ring-0"
-                              value={skill}
-                              onChange={(event) => {
-                                const formData = [...skills];
-                                formData[i] = event.target.value;
-                                formMethods.setValue(
-                                  "skills",
-                                  formData.filter((skill) => skill),
-                                  {
-                                    shouldDirty: true,
-                                  }
-                                );
-                                setSkills(formData);
-                              }}
-                            />
-                            <Button
-                              color="secondary"
-                              StartIcon={X}
-                              className="!rounded-full !rounded-l-none border-l-0"
-                              variant="icon"
-                              onClick={() => {
-                                const formData = [...skills.slice(0, i), ...skills.slice(i + 1)];
-                                formMethods.setValue("skills", formData, { shouldDirty: true });
-                                setSkills(formData);
-                              }}
-                            />
-                          </div>
-                        ))}
+                            <div className={classNames("flex", skill.length >= 30 && "w-full")} key={i}>
+                              <Input
+                                className="!rounded-full !rounded-r-none border-r-0 focus:ring-0"
+                                value={skill}
+                                onChange={(event) => {
+                                  const formData = [...skills];
+                                  formData[i] = event.target.value;
+                                  formMethods.setValue(
+                                    "skills",
+                                    formData.filter((skill) => skill),
+                                    {
+                                      shouldDirty: true,
+                                    }
+                                  );
+                                  setSkills(formData);
+                                }}
+                              />
+                              <Button
+                                color="secondary"
+                                StartIcon={X}
+                                className="!rounded-full !rounded-l-none border-l-0"
+                                variant="icon"
+                                onClick={() => {
+                                  const formData = [...skills.slice(0, i), ...skills.slice(i + 1)];
+                                  formMethods.setValue("skills", formData, { shouldDirty: true });
+                                  setSkills(formData);
+                                }}
+                              />
+                            </div>
+                          ))}
                     </>
                   )}
                 </div>
@@ -1079,8 +1115,9 @@ const ProfileForm = ({
                                       <b>{exp.position}</b>
                                     </div>
                                     <div>{exp.company}</div>
-                                    <div>{`${months[exp.startMonth - 1]["label"]} ${exp.startYear} - ${months[exp.endMonth - 1]["label"]
-                                      } ${exp.endYear}`}</div>
+                                    <div>{`${months[exp.startMonth - 1]["label"]} ${exp.startYear} - ${
+                                      months[exp.endMonth - 1]["label"]
+                                    } ${exp.endYear}`}</div>
                                     {exp.address && <div>{exp.address}</div>}
                                   </div>
                                 </div>
@@ -1117,8 +1154,9 @@ const ProfileForm = ({
                                         <b>{exp.position}</b>
                                       </div>
                                       <div>{exp.company}</div>
-                                      <div>{`${months[exp.startMonth - 1]["label"]} ${exp.startYear} - ${months[exp.endMonth - 1]["label"]
-                                        } ${exp.endYear}`}</div>
+                                      <div>{`${months[exp.startMonth - 1]["label"]} ${exp.startYear} - ${
+                                        months[exp.endMonth - 1]["label"]
+                                      } ${exp.endYear}`}</div>
                                       {exp.address && <div>{exp.address}</div>}
                                     </div>
                                     <div className="flex flex-grow justify-end">
@@ -1220,8 +1258,9 @@ const ProfileForm = ({
                                       <b>{edu.school}</b>
                                     </div>
                                     {edu.degree && <div>{edu.degree}</div>}
-                                    <div>{`${months[edu.startMonth - 1]["label"]} ${edu.startYear} - ${months[edu.endMonth - 1]["label"]
-                                      } ${edu.endYear}`}</div>
+                                    <div>{`${months[edu.startMonth - 1]["label"]} ${edu.startYear} - ${
+                                      months[edu.endMonth - 1]["label"]
+                                    } ${edu.endYear}`}</div>
                                     {edu.major && <div>{edu.major}</div>}
                                   </div>
                                 </div>
@@ -1258,8 +1297,9 @@ const ProfileForm = ({
                                         <b>{edu.school}</b>
                                       </div>
                                       {edu.degree && <div>{edu.degree}</div>}
-                                      <div>{`${months[edu.startMonth - 1]["label"]} ${edu.startYear} - ${months[edu.endMonth - 1]["label"]
-                                        } ${edu.endYear}`}</div>
+                                      <div>{`${months[edu.startMonth - 1]["label"]} ${edu.startYear} - ${
+                                        months[edu.endMonth - 1]["label"]
+                                      } ${edu.endYear}`}</div>
                                       {edu.major && <div>{edu.major}</div>}
                                     </div>
                                     <div className="flex flex-grow justify-end">

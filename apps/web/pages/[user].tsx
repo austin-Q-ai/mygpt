@@ -34,7 +34,7 @@ import {
   Instagram,
   Linkedin,
   MousePointer2,
-  ExternalLink
+  ExternalLink,
 } from "@calcom/ui/components/icon";
 
 import type { inferSSRProps } from "@lib/types/inferSSRProps";
@@ -74,10 +74,10 @@ export function UserPage(props: UserPageProps) {
 
   const groupEventTypes = props.users.some((user) => !user.allowDynamicBooking) ? (
     <div className="space-y-6" data-testid="event-types">
-      <div className="overflow-hidden border rounded-sm ">
-        <div className="p-8 text-center text-muted">
-          <h2 className="mb-2 text-3xl font-cal text-default">{" " + t("unavailable")}</h2>
-          <p className="max-w-md mx-auto">{t("user_dynamic_booking_disabled") as string}</p>
+      <div className="overflow-hidden rounded-sm border ">
+        <div className="text-muted p-8 text-center">
+          <h2 className="font-cal text-default mb-2 text-3xl">{" " + t("unavailable")}</h2>
+          <p className="mx-auto max-w-md">{t("user_dynamic_booking_disabled") as string}</p>
         </div>
       </div>
     </div>
@@ -86,17 +86,17 @@ export function UserPage(props: UserPageProps) {
       {eventTypes.map((type, index) => (
         <li
           key={index}
-          className="relative border-b border-subtle bg-default dark:bg-muted dark:hover:bg-emphasis hover:bg-muted group first:rounded-t-md last:rounded-b-md last:border-b-0">
-          <ArrowRight className="absolute w-4 h-4 transition-opacity opacity-0 text-emphasis right-3 top-3 group-hover:opacity-100" />
+          className="border-subtle bg-default dark:bg-muted dark:hover:bg-emphasis hover:bg-muted group relative border-b first:rounded-t-md last:rounded-b-md last:border-b-0">
+          <ArrowRight className="text-emphasis absolute right-3 top-3 h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100" />
           <Link
             href={getUsernameSlugLink({ users: props.users, slug: type.slug })}
             className="flex justify-between px-6 py-4"
             data-testid="event-type-link">
             <div className="flex-shrink">
-              <p className="text-sm font-semibold text-emphasis">{type.title}</p>
+              <p className="text-emphasis text-sm font-semibold">{type.title}</p>
               <EventTypeDescription className="text-sm" eventType={type} />
             </div>
-            <div className="self-center mt-1">
+            <div className="mt-1 self-center">
               <AvatarGroup
                 truncateAfter={4}
                 className="flex flex-shrink-0"
@@ -173,41 +173,41 @@ export function UserPage(props: UserPageProps) {
                 className="!border-0"
                 variant="ProfileCard"
                 description={
-                  <div className="relative flex items-center px-10 py-4 group">
+                  <div className="group relative flex items-center px-10 py-4">
                     <Link
                       prefetch={false}
                       href={{
                         pathname: `/${user.username}/profile`,
                       }}>
-                      <ArrowRight className="absolute w-6 h-6 font-bold transition-opacity opacity-0 text-secondary right-4 top-4 group-hover:opacity-100" />
+                      <ArrowRight className="text-secondary absolute right-4 top-4 h-6 w-6 font-bold opacity-0 transition-opacity group-hover:opacity-100" />
                       <div className="flex-grow ">
                         <Avatar
                           imageSrc={user.avatar}
-                          className="border-2 border-pink"
+                          className="border-pink border-2"
                           size="2xl"
                           alt={nameOrUsername}
                         />
                       </div>
                     </Link>
-                    <div className="flex flex-col flex-grow items-left ms-4 gap-y-1">
+                    <div className="items-left ms-4 flex flex-grow flex-col gap-y-1">
                       <div className="text-2xl font-bold text-black">
                         {nameOrUsername ? nameOrUsername : t("nameless")}
                         {user.verified && (
-                          <Verified className="inline w-6 h-6 mx-1 -mt-1 text-white fill-blue-500 dark:text-black" />
+                          <Verified className="mx-1 -mt-1 inline h-6 w-6 fill-blue-500 text-white dark:text-black" />
                         )}
                       </div>
                       {user.position && <div className="font-medium ">{user.position}</div>}
                       {user.address && (
                         <div className="flex font-medium">
-                          <MousePointer2 className="w-4 h-4 transform rotate-90 me-2" fill="gray" />
+                          <MousePointer2 className="me-2 h-4 w-4 rotate-90 transform" fill="gray" />
                           {user.address}
                         </div>
                       )}
-                      <div className="flex items-center gap-2 mt-2">
+                      <div className="mt-2 flex items-center gap-2">
                         <div>
                           <Button
                             color="secondary"
-                            className="text-gray-600 bg-transparent border-gray-600 hover:border-emphasis hover:bg-subtle"
+                            className="hover:border-emphasis hover:bg-subtle border-gray-600 bg-transparent text-gray-600"
                             variant="icon"
                             type={social.telegram ? "link" : "button"}
                             href={social.telegram || undefined}
@@ -225,7 +225,7 @@ export function UserPage(props: UserPageProps) {
                         <div>
                           <Button
                             color="secondary"
-                            className="text-gray-600 bg-transparent border-gray-600 hover:border-emphasis hover:bg-subtle"
+                            className="hover:border-emphasis hover:bg-subtle border-gray-600 bg-transparent text-gray-600"
                             type={social.facebook ? "link" : "button"}
                             href={social.facebook || undefined}
                             target="_blank"
@@ -237,7 +237,7 @@ export function UserPage(props: UserPageProps) {
                         <div>
                           <Button
                             color="secondary"
-                            className="text-gray-600 bg-transparent border-gray-600 hover:border-emphasis hover:bg-subtle"
+                            className="hover:border-emphasis hover:bg-subtle border-gray-600 bg-transparent text-gray-600"
                             type={social.discord ? "link" : "button"}
                             href={social.discord || undefined}
                             target="_blank"
@@ -254,7 +254,7 @@ export function UserPage(props: UserPageProps) {
                         </div>
                         <div>
                           <Button
-                            className="text-gray-600 bg-transparent border-gray-600 hover:border-emphasis hover:bg-subtle"
+                            className="hover:border-emphasis hover:bg-subtle border-gray-600 bg-transparent text-gray-600"
                             color="secondary"
                             type={social.instagram ? "link" : "button"}
                             href={social.instagram || undefined}
@@ -266,7 +266,7 @@ export function UserPage(props: UserPageProps) {
                         </div>
                         <div>
                           <Button
-                            className="text-gray-600 bg-transparent border-gray-600 hover:border-emphasis hover:bg-subtle"
+                            className="hover:border-emphasis hover:bg-subtle border-gray-600 bg-transparent text-gray-600"
                             rounded
                             color="secondary"
                             type={social.linkedin ? "link" : "button"}
@@ -284,15 +284,17 @@ export function UserPage(props: UserPageProps) {
             </div>
           )}
 
-          <div className="flex justify-center items-center gap-[9px] self-stretch">
+          <div className="mb-5 flex items-center justify-center gap-[9px] self-stretch">
             <Link
               prefetch={false}
               href={{
                 pathname: `/expert-clone/${user.username}`,
               }}>
-              <Button className="flex px-4 py-2.5 justify-center items-center gap-2 self-stretch rounded-md text-pink text-[14px] font-bold leading-4 w-[250px] bg-pink/10 hover:bg-pink/20" color="secondary">
+              <Button
+                className="text-pink bg-pink/10 hover:bg-pink/20 flex w-[250px] items-center justify-center gap-2 self-stretch rounded-md px-4 py-2.5 text-[14px] font-bold leading-4"
+                color="secondary">
                 <p>Go to public clone</p>
-                <ExternalLink width={"16px"} height={"16px"} />
+                <ExternalLink width="16px" height="16px" />
               </Button>
             </Link>
             <Link
@@ -300,10 +302,13 @@ export function UserPage(props: UserPageProps) {
               href={{
                 pathname: `/${user.username}/profile`,
               }}>
-              <Button className="flex px-4 py-2.5 justify-center items-center gap-2 self-stretch rounded-md text-pink text-[14px] font-bold leading-4 w-[250px] bg-pink/10 hover:bg-pink/20" color="secondary">
+              <Button
+                className="text-pink bg-pink/10 hover:bg-pink/20 flex w-[250px] items-center justify-center gap-2 self-stretch rounded-md px-4 py-2.5 text-[14px] font-bold leading-4"
+                color="secondary">
                 <p>View Public Profile</p>
-                <ArrowRight width={"16px"} height={"16px"} />
-              </Button></Link>
+                <ArrowRight width="16px" height="16px" />
+              </Button>
+            </Link>
           </div>
 
           <div
@@ -313,10 +318,10 @@ export function UserPage(props: UserPageProps) {
             )}
             data-testid="event-types">
             {user.away ? (
-              <div className="overflow-hidden border rounded-sm ">
-                <div className="p-8 text-center text-muted">
-                  <h2 className="mb-2 text-3xl font-cal text-default">😴{" " + t("user_away")}</h2>
-                  <p className="max-w-md mx-auto">{t("user_away_description") as string}</p>
+              <div className="overflow-hidden rounded-sm border ">
+                <div className="text-muted p-8 text-center">
+                  <h2 className="font-cal text-default mb-2 text-3xl">😴{" " + t("user_away")}</h2>
+                  <p className="mx-auto max-w-md">{t("user_away_description") as string}</p>
                 </div>
               </div>
             ) : isDynamicGroup ? ( //When we deal with dynamic group (users > 1)
@@ -343,11 +348,11 @@ export function UserPage(props: UserPageProps) {
                       }}
                       data-testid="event-type-link">
                       <div className="flex flex-wrap items-center">
-                        <h2 className="pr-2 text-sm font-semibold text-default">{type.title}</h2>
+                        <h2 className="text-default pr-2 text-sm font-semibold">{type.title}</h2>
                         <span className="text-sm text-gray-500">{`/${user.username}/${type.slug}`}</span>
                       </div>
-                      <div className="absolute flex justify-center right-4">
-                        <ArrowRight className="w-6 h-6 my-auto text-gray-600 transition-opacity opacity-0 group-hover:opacity-100" />
+                      <div className="absolute right-4 flex justify-center">
+                        <ArrowRight className="my-auto h-6 w-6 text-gray-600 opacity-0 transition-opacity group-hover:opacity-100" />
                       </div>
                       <EventTypeDescription eventType={type} isPublic={true} />
                     </Link>

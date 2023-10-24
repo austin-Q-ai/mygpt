@@ -304,6 +304,7 @@ model User {
   videoCloneToken              String?
   hasBot                       Boolean                 @default(false)
   botId                        String?
+  botName                      String?
 
   @@unique([email])
   @@unique([email, username])

@@ -232,6 +232,7 @@ const TelegramBotView = () => {
     mutation.mutate({
       hasBot: true,
       botId: container_id,
+      botName: username,
     });
   };
 

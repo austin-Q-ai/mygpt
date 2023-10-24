@@ -77,7 +77,8 @@ export const ZUpdateProfileInputSchema = z.object({
   apiKey: z.string().optional(),
   expertId: z.string().optional(),
   hasBot: z.boolean().optional(),
-  botId: z.string().optional()
+  botName: z.string().optional(),
+  botId: z.string().optional(),
 });
 
 export type TUpdateProfileInputSchema = z.infer<typeof ZUpdateProfileInputSchema>;
