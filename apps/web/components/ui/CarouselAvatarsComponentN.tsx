@@ -65,7 +65,7 @@ export default function CarouselAvatarComponentN() {
           alt={img.url}
           width={70}
           height={70}
-          className="object-cover mx-auto transition-all duration-500 ease-in rounded-full cursor-pointer"
+          className="mx-auto cursor-pointer rounded-full object-cover transition-all duration-500 ease-in"
           draggable={false}
         />
       ),
@@ -84,17 +84,17 @@ export default function CarouselAvatarComponentN() {
 
   return (
     <div className="relative mx-auto flex w-full !select-none flex-row justify-center gap-2 md:mt-5	lg:mt-2 lg:gap-4">
-      <div className="flex my-auto">
+      <div className="my-auto flex">
         <ChevronLeft
-          className="cursor-pointer text-emphasis h-7 w-7 opacity-60 hover:opacity-100 lg:h-10 lg:w-10"
+          className="text-emphasis h-7 w-7 cursor-pointer opacity-60 hover:opacity-100 lg:h-10 lg:w-10"
           onClick={slideToPrevItem}
         />
       </div>
 
       <div className="max-w-[500px] overflow-hidden">{carouselFragment}</div>
-      <div className="flex my-auto">
+      <div className="my-auto flex">
         <ChevronRight
-          className="cursor-pointer text-emphasis h-7 w-7 opacity-60 hover:opacity-100 lg:h-10 lg:w-10"
+          className="text-emphasis h-7 w-7 cursor-pointer opacity-60 hover:opacity-100 lg:h-10 lg:w-10"
           onClick={slideToNextItem}
         />
       </div>

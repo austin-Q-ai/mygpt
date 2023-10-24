@@ -108,7 +108,7 @@ export async function getUserFromSession(ctx: TRPCContextInner, session: Maybe<S
         },
       },
       apiKey: true,
-      videoCloneToken: true
+      videoCloneToken: true,
     },
   });
 

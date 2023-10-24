@@ -66,47 +66,47 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
     ...input,
     experiences: input.experiences
       ? {
-        updateMany: input.experiences
-          .filter((exp) => exp.id !== undefined && !exp.delete)
-          .map((exp) => {
-            const { id, userId, ...data } = exp;
-            delete data.delete;
-            return {
-              where: {
-                id: exp.id,
-              },
-              data,
-            };
-          }),
-        create: input.experiences.filter((exp) => exp.id === undefined && !exp.delete),
-        deleteMany: input.experiences
-          .filter((exp) => exp.id !== undefined && exp.delete)
-          .map((exp) => ({
-            id: exp.id,
-          })),
-      }
+          updateMany: input.experiences
+            .filter((exp) => exp.id !== undefined && !exp.delete)
+            .map((exp) => {
+              const { id, userId, ...data } = exp;
+              delete data.delete;
+              return {
+                where: {
+                  id: exp.id,
+                },
+                data,
+              };
+            }),
+          create: input.experiences.filter((exp) => exp.id === undefined && !exp.delete),
+          deleteMany: input.experiences
+            .filter((exp) => exp.id !== undefined && exp.delete)
+            .map((exp) => ({
+              id: exp.id,
+            })),
+        }
       : {},
     educations: input.educations
       ? {
-        updateMany: input.educations
-          .filter((edu) => edu.id !== undefined && !edu.delete)
-          .map((edu) => {
-            const { id, userId, ...data } = edu;
-            delete data.delete;
-            return {
-              where: {
-                id: edu.id,
-              },
-              data,
-            };
-          }),
-        create: input.educations.filter((edu) => edu.id === undefined && !edu.delete),
-        deleteMany: input.educations
-          .filter((edu) => edu.id !== undefined && edu.delete)
-          .map((edu) => ({
-            id: edu.id,
-          })),
-      }
+          updateMany: input.educations
+            .filter((edu) => edu.id !== undefined && !edu.delete)
+            .map((edu) => {
+              const { id, userId, ...data } = edu;
+              delete data.delete;
+              return {
+                where: {
+                  id: edu.id,
+                },
+                data,
+              };
+            }),
+          create: input.educations.filter((edu) => edu.id === undefined && !edu.delete),
+          deleteMany: input.educations
+            .filter((edu) => edu.id !== undefined && edu.delete)
+            .map((edu) => ({
+              id: edu.id,
+            })),
+        }
       : {},
     metadata: input.metadata as Prisma.InputJsonValue,
     social: input.social,
@@ -177,10 +177,10 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
     data.avatar = await resizeBase64Image(input.avatar);
   }
   if (input.hasBot) {
-    data.hasBot = input.hasBot
+    data.hasBot = input.hasBot;
   }
   if (input.botId) {
-    data.botId = input.botId
+    data.botId = input.botId;
   }
   const userToUpdate = await prisma.user.findUnique({
     where: {
@@ -246,7 +246,7 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
       bio: true,
       avatar: true,
       hasBot: true,
-      botId: true
+      botId: true,
     },
   });
 
@@ -287,7 +287,7 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
       bio: updatedUser.bio,
       avatar: updatedUser.avatar,
       hasBot: updatedUser.hasBot,
-      botId: updatedUser.botId
+      botId: updatedUser.botId,
     };
     await index.updateDocuments([updatedUserInfo]);
   }
@@ -336,7 +336,7 @@ export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions)
         avatar: input.avatar,
         bio: input.bio,
         bookingCallLink: input.username,
-        hasBot: input.hasBot
+        hasBot: input.hasBot,
       },
       points: [user.id],
     })

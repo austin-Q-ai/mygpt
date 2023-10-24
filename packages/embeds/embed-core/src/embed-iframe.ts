@@ -145,15 +145,15 @@ const setEmbedNonStyles = (stylesConfig: EmbedNonStylesConfig) => {
 const registerNewSetter = (
   registration:
     | {
-      elementName: keyof EmbedStyles;
-      setState: SetStyles;
-      styles: true;
-    }
+        elementName: keyof EmbedStyles;
+        setState: SetStyles;
+        styles: true;
+      }
     | {
-      elementName: keyof EmbedNonStylesConfig;
-      setState: setNonStylesConfig;
-      styles: false;
-    }
+        elementName: keyof EmbedNonStylesConfig;
+        setState: setNonStylesConfig;
+        styles: false;
+      }
 ) => {
   // It's possible that 'ui' instruction has already been processed and the registration happened due to some action by the user in iframe.
   // So, we should call the setter immediately with available embedStyles
@@ -417,13 +417,13 @@ function keepParentInformedAboutDimensionChanges() {
     // Use, .height as that gives more accurate value in floating point. Also, do a ceil on the total sum so that whatever happens there is enough iframe size to avoid scroll.
     const contentHeight = Math.ceil(
       parseFloat(mainElementStyles.height) +
-      parseFloat(mainElementStyles.marginTop) +
-      parseFloat(mainElementStyles.marginBottom)
+        parseFloat(mainElementStyles.marginTop) +
+        parseFloat(mainElementStyles.marginBottom)
     );
     const contentWidth = Math.ceil(
       parseFloat(mainElementStyles.width) +
-      parseFloat(mainElementStyles.marginLeft) +
-      parseFloat(mainElementStyles.marginRight)
+        parseFloat(mainElementStyles.marginLeft) +
+        parseFloat(mainElementStyles.marginRight)
     );
 
     // During first render let iframe tell parent that how much is the expected height to avoid scroll.

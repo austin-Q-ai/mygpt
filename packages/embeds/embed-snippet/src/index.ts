@@ -41,7 +41,7 @@ export default function EmbedSnippet(url = EMBED_LIB_URL) {
           api.q = api.q || [];
           typeof namespace === "string"
             ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            (cal.ns![namespace] = api) && p(api, ar)
+              (cal.ns![namespace] = api) && p(api, ar)
             : p(cal as GlobalCal, ar);
           return;
         }
