@@ -297,7 +297,7 @@ export default function Success(props: SuccessProps) {
 
   return (
     <div
-      className={classNames(isEmbed ? "" : "h-fit", "bg-[url('/background.png')]")}
+      className={classNames(isEmbed ? "" : "h-screen", "bg-[url('/background.png')]")}
       data-testid="success-page">
       {!isEmbed && (
         <EventReservationSchema
