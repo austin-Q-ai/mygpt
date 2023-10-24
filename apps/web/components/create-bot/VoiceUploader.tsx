@@ -9,9 +9,10 @@ const Mp3Recorder = new MicRecorder({ bitRate: 128 });
 
 interface VoiceUploaderProps {
   setVoice: (voiceURL: string) => void;
+  setFile?: (file: any) => void;
 }
 
-const VoiceUploader: React.FC<VoiceUploaderProps> = ({ setVoice }) => {
+const VoiceUploader: React.FC<VoiceUploaderProps> = ({ setVoice, setFile }) => {
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [blobURL, setBlobURL] = useState<string>("");
   const [isBlocked, setIsBlocked] = useState<boolean>(false);
@@ -40,7 +41,12 @@ const VoiceUploader: React.FC<VoiceUploaderProps> = ({ setVoice }) => {
   const stopRecording = () => {
     Mp3Recorder.stop()
       .getMp3()
-      .then(([, blob]: [unknown, Blob]) => {
+      .then(([buffer, blob]: [any, Blob]) => {
+        const file = new File(buffer, "voice.mp3", {
+          type: blob.type,
+          lastModified: Date.now(),
+        });
+        setFile !== undefined && setFile(file);
         const blobURL = URL.createObjectURL(blob);
         setBlobURL(blobURL);
         setVoice(blobURL);
@@ -86,9 +92,8 @@ const VoiceUploader: React.FC<VoiceUploaderProps> = ({ setVoice }) => {
         <Button
           size="lg"
           color="secondary"
-          className={`mt-8 w-full rounded-sm px-8 py-4 text-sm font-medium shadow-lg ${
-            isRecording ? "bg-red-500 text-white hover:text-red-500" : ""
-          }`}
+          className={`mt-8 w-full rounded-sm px-8 py-4 text-sm font-medium shadow-lg ${isRecording ? "bg-red-500 text-white hover:text-red-500" : ""
+            }`}
           onClick={isRecording ? stopRecording : startRecording}>
           {isRecording ? "Stop Recording" : "Start Recording"}
         </Button>

@@ -302,6 +302,7 @@ model User {
   timeTokenAdvantage           String[]
   Subscription                 Subscription[]
   videoCloneToken              String?
+  priceLevel                   Int                     @default(0)
   hasBot                       Boolean                 @default(false)
   botId                        String?
 

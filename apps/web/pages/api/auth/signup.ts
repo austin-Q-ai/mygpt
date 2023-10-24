@@ -16,6 +16,7 @@ const signupSchema = z.object({
   username: z.string(),
   email: z.string().email(),
   password: z.string().min(7),
+  priceLevel: z.string().optional(),
   language: z.string().optional(),
   token: z.string().optional(),
 });
@@ -31,10 +32,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const data = req.body;
-  const { email, password, language, token } = signupSchema.parse(data);
+  const { email, password, language, priceLevel: _priceLevel, token } = signupSchema.parse(data);
 
   const username = slugify(data.username);
   const userEmail = email.toLowerCase();
+  const priceLevel = parseInt(_priceLevel || '0');
   // const supabase = createClientComponentClient();
   const VIDEO_SERVICE_URL = process.env.NEXT_PUBLIC_VIDEO_SERVICE;
 
@@ -120,7 +122,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               videoCloneToken: api_key,
             },
           });
-        } catch (_e) {}
+        } catch (_e) { }
       }
     }
 
@@ -145,6 +147,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       username,
       email: userEmail,
       password: hashedPassword,
+      priceLevel: priceLevel,
       identityProvider: IdentityProvider.CAL,
       videoCloneToken: videoToken,
     },

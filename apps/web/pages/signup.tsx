@@ -66,6 +66,7 @@ export default function Signup({ prepopulateFormValues, token, orgSlug }: Signup
     await fetch("/api/auth/signup", {
       body: JSON.stringify({
         ...data,
+        priceLevel: window.localStorage.getItem('price-type'),
         language: i18n.language,
         token,
       }),
