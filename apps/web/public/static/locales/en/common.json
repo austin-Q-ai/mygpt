@@ -2184,5 +2184,9 @@
   "expertgpt_explore_title": "Explore uploaded data in Brain",
   "expertgpt_explore_description": "View or delete stored data used by your brain",
   "expertgpt_settings_description": "Manage ExpertGPT",
-  "request_a_resend": "Request a resend"
+  "request_a_resend": "Request a resend",
+  "upload_file_bot_description": "Text, document, spreadsheet, presentation, audio, video, and URLs supported",
+  "delete_bot": "Delete Bot",
+  "confirm_delete_bot": "Yes, delete bot",
+  "delete_bot_confirmation_message": "Are you sure you want to delete this bot?"
 }

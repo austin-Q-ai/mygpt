@@ -2111,5 +2111,9 @@
   "expertgpt_explore_title": "Explorez les données téléchargées dans Brain",
   "expertgpt_explore_description": "Afficher ou supprimer les données stockées utilisées par votre cerveau",
   "expertgpt_settings_description": "Gérer ExpertGPT",
-  "request_a_resend": "Demander un renvoi"
+  "request_a_resend": "Demander un renvoi",
+  "upload_file_bot_description": "Texte, document, feuille de calcul, présentation, audio, vidéo et URL pris en charge",
+  "delete_bot": "Supprimer le robot",
+  "confirm_delete_bot": "Oui, supprimer le bot",
+  "delete_bot_confirmation_message": "Êtes-vous sûr de vouloir supprimer ce bot?"
 }

@@ -118,7 +118,7 @@ const ExpertGPTView = () => {
                                                     .resend({
                                                         type: "signup",
                                                         email: user?.email,
-                                                    }).then(() => showToast("Send email", "success"))
+                                                    }).then(() => showToast("Sent email", "success"))
                                             }}>
                                             {t("request_a_resend")}
                                         </Button>
