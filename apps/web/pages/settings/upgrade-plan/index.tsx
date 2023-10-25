@@ -10,6 +10,7 @@ import { upgradePlan } from "@calcom/features/upgrade-plan";
 import { classNames } from "@calcom/lib";
 import { APP_NAME, SUBSCRIPTION_PRICE } from "@calcom/lib/constants";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
+import { localStorage } from "@calcom/lib/webstorage";
 import { UserLevel } from "@calcom/prisma/enums";
 import { trpc } from "@calcom/trpc/react";
 import {
@@ -22,6 +23,7 @@ import {
   Button,
   ConfirmationDialogContent,
   Dialog,
+  showToast,
 } from "@calcom/ui";
 import { Check, ArrowRight } from "@calcom/ui/components/icon";
 
@@ -170,6 +172,17 @@ const SubscriptionView = () => {
 
   const [upgradeConfirmOpen, setUpgradeConfirmOpen] = useState<boolean>(false);
   const [upgradeLevel, setUpgradeLevel] = useState<UserLevel>(UserLevel.FREEMIUM);
+
+  const { redirect_status } = router.query;
+  const toastShown = JSON.parse(localStorage.getItem("upgradeToastShown") ?? "false");
+
+  if (redirect_status === "succeeded" && !toastShown) {
+    showToast(t("upgrade_success"), "success");
+    localStorage.setItem("upgradeToastShown", JSON.stringify(true));
+    router.push("/settings/upgrade-plan");
+  } else if (!redirect_status && toastShown) {
+    localStorage.setItem("upgradeToastShown", JSON.stringify(false));
+  }
 
   // const mutation = trpc.viewer.updateProfile.useMutation({
   //   onSuccess: () => {
