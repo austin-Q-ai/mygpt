@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { MeiliSearch } from "meilisearch";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { components } from "react-select";
 import { z } from "zod";
@@ -15,6 +15,7 @@ import Shell from "@calcom/features/shell/Shell";
 import { buyTokens } from "@calcom/features/timetokenswallet";
 import { IS_PRODUCTION } from "@calcom/lib/constants";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
+import { localStorage } from "@calcom/lib/webstorage";
 import { trpc } from "@calcom/trpc/react";
 import {
   Select,
@@ -68,6 +69,17 @@ function TimeTokensWallet() {
   const [expertOptions, setExpertOptions] = useState<ExpertOptionType[]>([]);
   const [addExpertId, setAddExpertId] = useState<number>(-1);
   // const [user, setUser] = useState<any>(null);
+
+  const { redirect_status } = router.query;
+  const toastShown = JSON.parse(localStorage.getItem("buyToastShown") ?? "false");
+
+  if (redirect_status === "succeeded" && !toastShown) {
+    showToast(t("buy_timetokens_success"), "success");
+    localStorage.setItem("buyToastShown", JSON.stringify(true));
+    router.push("/timetokens-wallet");
+  } else if (!redirect_status && toastShown) {
+    localStorage.setItem("buyToastShown", JSON.stringify(false));
+  }
 
   const meiliClient = new MeiliSearch({
     host: IS_PRODUCTION
@@ -296,6 +308,10 @@ function TimeTokensWallet() {
       price: parseFloat(values.price),
     });
   };
+
+  useEffect(() => {
+    console.log("refreshed");
+  }, [addedExpertsData]);
 
   return (
     <Shell heading={t("timetokens_wallet")} hideHeadingOnMobile subtitle={t("buy_sell_timetokens")}>
