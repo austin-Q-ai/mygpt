@@ -33,6 +33,7 @@ import {
 } from "@calcom/emails";
 import { getBookingFieldsWithSystemFields } from "@calcom/features/bookings/lib/getBookingFields";
 import { getCalEventResponses } from "@calcom/features/bookings/lib/getCalEventResponses";
+import { handleConfirmation } from "@calcom/features/bookings/lib/handleConfirmation";
 import { handleWebhookTrigger } from "@calcom/features/bookings/lib/handleWebhookTrigger";
 import {
   allowDisablingAttendeeConfirmationEmails,
@@ -59,7 +60,7 @@ import { getTranslation } from "@calcom/lib/server/i18n";
 import { slugify } from "@calcom/lib/slugify";
 import { updateWebUser as syncServicesUpdateWebUser } from "@calcom/lib/sync/SyncServiceManager";
 import { TimeFormat } from "@calcom/lib/timeFormat";
-import prisma, { userSelect } from "@calcom/prisma";
+import prisma, { userSelect, bookingMinimalSelect } from "@calcom/prisma";
 import type { BookingReference } from "@calcom/prisma/client";
 import { BookingStatus, SchedulingType, WebhookTriggerEvents, WorkflowMethods } from "@calcom/prisma/enums";
 import { bookingCreateSchemaLegacyPropsForApi } from "@calcom/prisma/zod-utils";
@@ -505,58 +506,58 @@ function getBookingData({
   });
   const bookingDataSchema = isNotAnApiCall
     ? extendedBookingCreateBody.merge(
+      z.object({
+        responses: responsesSchema,
+      })
+    )
+    : bookingCreateBodySchemaForApi
+      .merge(
         z.object({
-          responses: responsesSchema,
+          responses: responsesSchema.optional(),
         })
       )
-    : bookingCreateBodySchemaForApi
-        .merge(
-          z.object({
-            responses: responsesSchema.optional(),
-          })
-        )
-        .superRefine((val, ctx) => {
-          if (val.responses && val.customInputs) {
+      .superRefine((val, ctx) => {
+        if (val.responses && val.customInputs) {
+          ctx.addIssue({
+            code: "custom",
+            message:
+              "Don't use both customInputs and responses. `customInputs` is only there for legacy support.",
+          });
+          return;
+        }
+        const legacyProps = Object.keys(bookingCreateSchemaLegacyPropsForApi.shape);
+
+        if (val.responses) {
+          const unwantedProps: string[] = [];
+          legacyProps.forEach((legacyProp) => {
+            if (typeof val[legacyProp as keyof typeof val] !== "undefined") {
+              console.error(
+                `Deprecated: Unexpected falsy value for: ${unwantedProps.join(
+                  ","
+                )}. They can't be used with \`responses\`. This will become a 400 error in the future.`
+              );
+            }
+            if (val[legacyProp as keyof typeof val]) {
+              unwantedProps.push(legacyProp);
+            }
+          });
+          if (unwantedProps.length) {
             ctx.addIssue({
               code: "custom",
-              message:
-                "Don't use both customInputs and responses. `customInputs` is only there for legacy support.",
+              message: `Legacy Props: ${unwantedProps.join(",")}. They can't be used with \`responses\``,
             });
             return;
           }
-          const legacyProps = Object.keys(bookingCreateSchemaLegacyPropsForApi.shape);
-
-          if (val.responses) {
-            const unwantedProps: string[] = [];
-            legacyProps.forEach((legacyProp) => {
-              if (typeof val[legacyProp as keyof typeof val] !== "undefined") {
-                console.error(
-                  `Deprecated: Unexpected falsy value for: ${unwantedProps.join(
-                    ","
-                  )}. They can't be used with \`responses\`. This will become a 400 error in the future.`
-                );
-              }
-              if (val[legacyProp as keyof typeof val]) {
-                unwantedProps.push(legacyProp);
-              }
+        } else if (val.customInputs) {
+          const { success } = bookingCreateSchemaLegacyPropsForApi.safeParse(val);
+          if (!success) {
+            ctx.addIssue({
+              code: "custom",
+              message: `With \`customInputs\` you must specify legacy props ${legacyProps.join(",")}`,
             });
-            if (unwantedProps.length) {
-              ctx.addIssue({
-                code: "custom",
-                message: `Legacy Props: ${unwantedProps.join(",")}. They can't be used with \`responses\``,
-              });
-              return;
-            }
-          } else if (val.customInputs) {
-            const { success } = bookingCreateSchemaLegacyPropsForApi.safeParse(val);
-            if (!success) {
-              ctx.addIssue({
-                code: "custom",
-                message: `With \`customInputs\` you must specify legacy props ${legacyProps.join(",")}`,
-              });
-            }
           }
-        });
+        }
+      });
 
   const reqBody = bookingDataSchema.parse(req.body);
 
@@ -674,8 +675,8 @@ async function handler(
   }: {
     isNotAnApiCall?: boolean;
   } = {
-    isNotAnApiCall: false,
-  }
+      isNotAnApiCall: false,
+    }
 ) {
   console.log(req, "========================");
   const { userId } = req;
@@ -769,28 +770,28 @@ async function handler(
   const loadUsers = async () =>
     !eventTypeId
       ? await prisma.user.findMany({
-          where: {
-            username: {
-              in: dynamicUserList,
+        where: {
+          username: {
+            in: dynamicUserList,
+          },
+        },
+        select: {
+          ...userSelect.select,
+          credentials: true, // Don't leak to client
+          metadata: true,
+          organization: {
+            select: {
+              slug: true,
             },
           },
-          select: {
-            ...userSelect.select,
-            credentials: true, // Don't leak to client
-            metadata: true,
-            organization: {
-              select: {
-                slug: true,
-              },
-            },
-          },
-        })
+        },
+      })
       : eventType.hosts?.length
-      ? eventType.hosts.map(({ user, isFixed }) => ({
+        ? eventType.hosts.map(({ user, isFixed }) => ({
           ...user,
           isFixed,
         }))
-      : eventType.users || [];
+        : eventType.users || [];
   // loadUsers allows type inferring
   let users: (Awaited<ReturnType<typeof loadUsers>>[number] & {
     isFixed?: boolean;
@@ -969,16 +970,16 @@ async function handler(
   const teamMemberPromises =
     users.length > 1
       ? users.slice(1).map(async function (user) {
-          return {
-            email: user.email || "",
-            name: user.name || "",
-            timeZone: user.timeZone,
-            language: {
-              translate: await getTranslation(user.locale ?? "en", "common"),
-              locale: user.locale ?? "en",
-            },
-          };
-        })
+        return {
+          email: user.email || "",
+          name: user.name || "",
+          timeZone: user.timeZone,
+          language: {
+            translate: await getTranslation(user.locale ?? "en", "common"),
+            locale: user.locale ?? "en",
+          },
+        };
+      })
       : [];
 
   const teamMembers = await Promise.all(teamMemberPromises);
@@ -1136,11 +1137,11 @@ async function handler(
   const handleSeats = async () => {
     let resultBooking:
       | (Partial<Booking> & {
-          appsStatus?: AppsStatus[];
-          seatReferenceUid?: string;
-          paymentUid?: string;
-          message?: string;
-        })
+        appsStatus?: AppsStatus[];
+        seatReferenceUid?: string;
+        paymentUid?: string;
+        message?: string;
+      })
       | null = null;
 
     const booking = await prisma.booking.findFirst({
@@ -1358,8 +1359,8 @@ async function handler(
           if (
             !eventType.seatsPerTimeSlot ||
             attendeesToMove.length +
-              newTimeSlotBooking.attendees.filter((attendee) => attendee.bookingSeat).length >
-              eventType.seatsPerTimeSlot
+            newTimeSlotBooking.attendees.filter((attendee) => attendee.bookingSeat).length >
+            eventType.seatsPerTimeSlot
           ) {
             throw new HttpError({ statusCode: 409, message: "Booking does not have enough available seats" });
           }
@@ -1801,10 +1802,10 @@ async function handler(
     const eventTypeRel = !eventTypeId
       ? {}
       : {
-          connect: {
-            id: eventTypeId,
-          },
-        };
+        connect: {
+          id: eventTypeId,
+        },
+      };
 
     const dynamicEventSlugRef = !eventTypeId ? eventTypeSlug : null;
     const dynamicGroupSlugRef = !eventTypeId ? (reqBody.user as string).toLowerCase() : null;
@@ -1865,8 +1866,8 @@ async function handler(
       },
       destinationCalendar: evt.destinationCalendar
         ? {
-            connect: { id: evt.destinationCalendar.id },
-          }
+          connect: { id: evt.destinationCalendar.id },
+        }
         : undefined,
     };
 
@@ -2280,6 +2281,65 @@ async function handler(
     //   bookerEmail,
     //   userId
     // );
+    try {
+      if (!rescheduleUid) {
+        console.log("====================================================================");
+        // move all events here from webhook
+        const bookingData = await prisma.booking.findUnique({
+          where: {
+            id: booking.id,
+          },
+          select: {
+            ...bookingMinimalSelect,
+            eventType: true,
+            smsReminderNumber: true,
+            location: true,
+            eventTypeId: true,
+            userId: true,
+            uid: true,
+            paid: true,
+            destinationCalendar: true,
+            status: true,
+            responses: true,
+            user: {
+              select: {
+                id: true,
+                username: true,
+                credentials: true,
+                timeZone: true,
+                email: true,
+                name: true,
+                locale: true,
+                destinationCalendar: true,
+              },
+            },
+          },
+        });
+
+        if (bookingData) {
+          const isConfirmed = bookingData.status === BookingStatus.ACCEPTED;
+
+          const { user: userWithCredentials } = bookingData;
+
+          if (userWithCredentials) {
+            if (!isConfirmed && !eventType?.requiresConfirmation) {
+              await handleConfirmation({
+                user: userWithCredentials,
+                evt,
+                prisma,
+                bookingId: booking.id,
+                booking: bookingData,
+                paid: true,
+              });
+            } else {
+              await sendScheduledEmails({ ...evt });
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.log(error, "=====");
+    }
 
     req.statusCode = 201;
     return { ...booking, message: "Payment required", paymentUid: "" }; // payment?.uid };
@@ -2293,8 +2353,8 @@ async function handler(
 
   const metadata = videoCallUrl
     ? {
-        videoCallUrl: getVideoCallUrlFromCalEvent(evt),
-      }
+      videoCallUrl: getVideoCallUrlFromCalEvent(evt),
+    }
     : undefined;
 
   const eventTypeInfo: EventTypeInfo = {
@@ -2427,6 +2487,66 @@ async function handler(
     });
   } catch (error) {
     log.error("Error while scheduling workflow reminders", error);
+  }
+
+  try {
+    if (!rescheduleUid) {
+      console.log("====================================================================");
+      // move all events here from webhook
+      const bookingData = await prisma.booking.findUnique({
+        where: {
+          id: booking.id,
+        },
+        select: {
+          ...bookingMinimalSelect,
+          eventType: true,
+          smsReminderNumber: true,
+          location: true,
+          eventTypeId: true,
+          userId: true,
+          uid: true,
+          paid: true,
+          destinationCalendar: true,
+          status: true,
+          responses: true,
+          user: {
+            select: {
+              id: true,
+              username: true,
+              credentials: true,
+              timeZone: true,
+              email: true,
+              name: true,
+              locale: true,
+              destinationCalendar: true,
+            },
+          },
+        },
+      });
+
+      if (bookingData) {
+        const isConfirmed = bookingData.status === BookingStatus.ACCEPTED;
+
+        const { user: userWithCredentials } = bookingData;
+
+        if (userWithCredentials) {
+          if (!isConfirmed && !eventType?.requiresConfirmation) {
+            await handleConfirmation({
+              user: userWithCredentials,
+              evt,
+              prisma,
+              bookingId: booking.id,
+              booking: bookingData,
+              paid: true,
+            });
+          } else {
+            await sendScheduledEmails({ ...evt });
+          }
+        }
+      }
+    }
+  } catch (error) {
+    console.log(error, "=====");
   }
 
   // booking successful
