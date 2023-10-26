@@ -256,7 +256,7 @@ model User {
   identityProvider             IdentityProvider        @default(CAL)
   identityProviderId           String?
   apiKey                       String?
-  expertId                     String?
+  expertId                     String[]
   availability                 Availability[]
   invitedTo                    Int?
   webhooks                     Webhook[]

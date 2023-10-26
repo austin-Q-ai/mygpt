@@ -77,7 +77,7 @@ const DurationShow = ({ counter }: { counter: number }) => {
   const seconds = Math.floor(timer / 100);
   const milliseconds = Math.floor(timer % 100);
   return (
-    <div className="text-md text-secondary mt-3 w-8 items-center font-bold">
+    <div className="items-center w-8 mt-3 font-bold text-md text-secondary">
       {seconds < 10 ? "0" + seconds : seconds}:{milliseconds < 10 ? "0" + milliseconds : milliseconds}
     </div>
   );
@@ -238,6 +238,7 @@ export default function ExpertClone() {
             Authorization: `Bearer ${user?.apiKey}`,
             "Content-Type": "application/json",
           },
+          // actually expertId is array of brains
           params: { brain_id: user?.expertId },
         }
       )
@@ -508,7 +509,7 @@ export default function ExpertClone() {
               </div>
             </div>
 
-            <div className="mb-8 flex flex-row justify-center">
+            <div className="flex flex-row justify-center mb-8">
               <Image src="/expert-clone-side.svg" alt="" width={270} height={60} />
             </div>
 
@@ -517,23 +518,23 @@ export default function ExpertClone() {
                 "text-secondary flex flex-row p-4 text-xl font-medium",
                 status !== "authenticated" && "hidden"
               )}>
-              <div className="flex w-full flex-col ">
-                <div className="ms-3 flex flex-row justify-start">HISTORY</div>
+              <div className="flex flex-col w-full ">
+                <div className="flex flex-row justify-start ms-3">HISTORY</div>
                 <ScrollableArea className="mt-6 flex h-[450px] w-full flex-row">
-                  <div className="flex w-full flex-col">
+                  <div className="flex flex-col w-full">
                     {qaHistory.length > 0 ? (
                       qaHistory.map((qa, index) => {
                         return (
                           <div
                             key={index}
-                            className="bg-emphasis mb-2 ms-3 flex flex-row justify-between rounded-md  px-3 py-2">
-                            <div className="my-auto flex flex-col">
+                            className="flex flex-row justify-between px-3 py-2 mb-2 rounded-md bg-emphasis ms-3">
+                            <div className="flex flex-col my-auto">
                               <div className="flex flex-row">
-                                <div className="my-auto flex-col">
+                                <div className="flex-col my-auto">
                                   <MessageCircle />
                                 </div>
-                                <div className="w-fit flex-col">
-                                  <span className="ms-2 h-fit truncate text-sm">
+                                <div className="flex-col w-fit">
+                                  <span className="text-sm truncate ms-2 h-fit">
                                     {qa.chat_name.substring(0, windowWidth >= 800 ? 30 : 20)}{" "}
                                     {qa.chat_name.length > (windowWidth >= 800 ? 30 : 20) ? "..." : ""}
                                   </span>
@@ -541,7 +542,7 @@ export default function ExpertClone() {
                               </div>
                             </div>
                             <div className="flex flex-col">
-                              <div className="my-auto flex flex-row justify-center gap-2">
+                              <div className="flex flex-row justify-center gap-2 my-auto">
                                 <Button
                                   color="minimal"
                                   variant="icon"
@@ -589,7 +590,7 @@ export default function ExpertClone() {
                         );
                       })
                     ) : (
-                      <div className="text-muted my-4 ms-3 flex flex-row justify-between rounded-md  px-3 py-2">
+                      <div className="flex flex-row justify-between px-3 py-2 my-4 rounded-md text-muted ms-3">
                         No History
                       </div>
                     )}
@@ -598,20 +599,20 @@ export default function ExpertClone() {
               </div>
             </div>
 
-            <div className="absolute bottom-0 flex w-full flex-row justify-center py-4">
-              <div className="m-4 flex w-full flex-col md:mx-8">
+            <div className="absolute bottom-0 flex flex-row justify-center w-full py-4">
+              <div className="flex flex-col w-full m-4 md:mx-8">
                 <div
                   className={classNames(
                     "text-secondary mb-6 flex flex-row justify-center",
                     status === "authenticated" && "hidden"
                   )}>
                   <div
-                    className="text-secondary flex cursor-pointer flex-row gap-1 "
+                    className="flex flex-row gap-1 cursor-pointer text-secondary "
                     onClick={() => toggleAuthMadal(true, "sign_in")}>
-                    <LogOut className="h-12 w-8 flex-col" />
+                    <LogOut className="flex-col w-8 h-12" />
                     <div className="flex flex-col">
-                      <div className="text-md flex-row">{t("sign_in")}</div>
-                      <div className="text-md flex-row">{t("sign_up")}</div>
+                      <div className="flex-row text-md">{t("sign_in")}</div>
+                      <div className="flex-row text-md">{t("sign_up")}</div>
                     </div>
                   </div>
                 </div>
@@ -620,7 +621,7 @@ export default function ExpertClone() {
                     return (
                       <div className="" key={index}>
                         <Link
-                          className="fill-pink flex flex-col justify-items-center"
+                          className="flex flex-col fill-pink justify-items-center"
                           href={item.url}
                           target="_blank">
                           <Image
@@ -641,10 +642,10 @@ export default function ExpertClone() {
                     status !== "authenticated" && "hidden"
                   )}>
                   <div
-                    className="text-secondary flex cursor-pointer flex-row gap-1 "
+                    className="flex flex-row gap-1 cursor-pointer text-secondary "
                     onClick={() => signOut({ callbackUrl: "/auth/logout" })}>
-                    <LogOut className="h-12 w-8 flex-col" />
-                    <div className="text-md flex flex-col justify-center">{t("sign_out")}</div>
+                    <LogOut className="flex-col w-8 h-12" />
+                    <div className="flex flex-col justify-center text-md">{t("sign_out")}</div>
                   </div>
                 </div>
               </div>
@@ -663,9 +664,9 @@ export default function ExpertClone() {
           </div>
           <div className={classNames("flex flex-col", status === "authenticated" && "hidden")}>
             <div
-              className="flex cursor-pointer flex-row gap-1"
+              className="flex flex-row gap-1 cursor-pointer"
               onClick={() => toggleAuthMadal(true, "sign_in")}>
-              <LogOut className="h-8 w-6 flex-col" />
+              <LogOut className="flex-col w-6 h-8" />
               <div className="flex flex-col">
                 <div className="flex-row text-xs">{t("sign_in")}</div>
                 <div className="flex-row text-xs">{t("sign_up")}</div>
@@ -678,7 +679,7 @@ export default function ExpertClone() {
                 <Button type="button" variant="icon" color="primary" StartIcon={UserIcon} rounded />
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuLabel className="p-2 text-center font-medium">
+                <DropdownMenuLabel className="p-2 font-medium text-center">
                   {session && session?.data?.user?.username}
                 </DropdownMenuLabel>
                 <DropdownMenuItem>
@@ -699,15 +700,15 @@ export default function ExpertClone() {
             " grid flex-row flex-wrap justify-items-center"
           )}>
           <div className="col-span-1 mx-6 flex flex-col justify-center gap-6 pb-6 md:mx-auto md:w-[90%] lg:col-span-3">
-            <div className="flex w-full flex-row">
-              <div className="flex h-full w-full flex-col">
+            <div className="flex flex-row w-full">
+              <div className="flex flex-col w-full h-full">
                 {qaList.length > 0 && (
                   <>
                     <ScrollableArea className="bg-pink/5 scrollbar-track-emphasis !scrollbar-thin scrollbar-thumb-pink h-[450px] w-full scroll-auto rounded-sm py-4">
                       {qaList.map((qa, index) => {
                         return (
                           <div
-                            className="mb-6 py-2"
+                            className="py-2 mb-6"
                             key={qa.message_id}
                             ref={index === qaList.length - 1 ? answersRef : null}>
                             <div className="text-secondary mx-3 my-auto flex w-[90%] flex-row font-bold md:mx-6">
@@ -716,10 +717,10 @@ export default function ExpertClone() {
                                   color="white"
                                   width={45}
                                   height={45}
-                                  className="border-subtle bg-brand-default rounded-md border p-2"
+                                  className="p-2 border rounded-md border-subtle bg-brand-default"
                                 />
                               </div>
-                              <div className="my-auto ms-6 w-full">
+                              <div className="w-full my-auto ms-6">
                                 {qa.type === "voice" ? (
                                   <div className="w-full">
                                     <AudioPlayer blobUrl={qa.user_message} />
@@ -729,18 +730,18 @@ export default function ExpertClone() {
                                 )}
                               </div>
                             </div>
-                            <div className="text-secondary mx-3 my-auto mt-4 flex flex-row font-medium md:mx-6">
+                            <div className="flex flex-row mx-3 my-auto mt-4 font-medium text-secondary md:mx-6">
                               <Image
                                 src="/app-members/1.svg"
                                 alt="expert"
                                 color="white"
                                 width={70}
                                 height={70}
-                                className="h-12 w-12 rounded-full border-2 border-white"
+                                className="w-12 h-12 border-2 border-white rounded-full"
                               />
 
                               <div
-                                className="my-auto ms-6 text-sm md:text-base"
+                                className="my-auto text-sm ms-6 md:text-base"
                                 ref={index === qaList.length - 1 ? setTarget : undefined}>
                                 {qa.loading ? (
                                   <MessageLoader />
@@ -791,11 +792,11 @@ export default function ExpertClone() {
               </div>
             </div>
             {qaList.length > 0 ? null : (
-              <div className="my-6 flex-row">
+              <div className="flex-row my-6">
                 <Image src="/expert-clone-side.svg" width={415} height={71} alt="expert-clone-side" />
               </div>
             )}
-            <form onSubmit={(e) => handleSearch(e)} className="relative flex w-full flex-row">
+            <form onSubmit={(e) => handleSearch(e)} className="relative flex flex-row w-full">
               <TextField
                 onClick={() => checkIfAuthenticated()}
                 onChange={(e) => changeSearchValue(e)}
@@ -813,7 +814,7 @@ export default function ExpertClone() {
                       loading={isLoading && searchResultFlag}
                       type="sumbit"
                       color="minimal"
-                      className="text-secondary flex cursor-pointer justify-items-center gap-4 border-l-0 bg-transparent hover:bg-transparent">
+                      className="flex gap-4 bg-transparent border-l-0 cursor-pointer text-secondary justify-items-center hover:bg-transparent">
                       {isLoading && searchResultFlag ? null : (
                         <SendIcon fill="#6D278E" className="rotate-45" />
                       )}
@@ -861,20 +862,20 @@ export default function ExpertClone() {
               "col-span-1 mb-4 h-full w-full overflow-hidden md:mb-0 md:h-[95%] lg:col-span-2"
             )}>
             {/* <Image src="/expert-clone-banner.svg" width={362} height={672} alt="expert-clone-banner" /> */}
-            <div className="mx-auto h-full flex-row">
-              <div className="h-full w-full">
+            <div className="flex-row h-full mx-auto">
+              <div className="w-full h-full">
                 <MicroCards userId={user?.id} />
               </div>
             </div>
           </div>
         </div>
         {windowWidth >= 1024 ? (
-          <div className="mt-auto flex flex-row">
+          <div className="flex flex-row mt-auto">
             <Footer items={footerLinks} className={classNames("md:absolute md:bottom-0")} />
           </div>
         ) : (
           !toggleSideMenuFlag && (
-            <div className="mt-auto flex flex-row">
+            <div className="flex flex-row mt-auto">
               <Footer items={footerLinks} />
             </div>
           )

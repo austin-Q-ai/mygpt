@@ -238,7 +238,7 @@ export const buildUser = <T extends Partial<UserPayload>>(user?: T): UserPayload
     timeTokenAdvantage: [],
     apiKey: "",
     videoCloneToken: null,
-    expertId: "",
+    expertId: [],
     ...user,
   };
 };

@@ -75,7 +75,7 @@ export const ZUpdateProfileInputSchema = z.object({
   timeTokenAdvantage: z.array(z.string()).optional(),
   defaultValue: z.boolean().optional(),
   apiKey: z.string().optional(),
-  expertId: z.string().optional(),
+  expertId: z.array(z.string()).optional(),
   hasBot: z.boolean().optional(),
   botName: z.string().optional(),
   botId: z.string().optional(),
