@@ -9,10 +9,10 @@ import {
   Paperclip,
   Mic,
 } from "lucide-react";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 import useOnclickOutside from "@calcom/lib/hooks/useOnclickOutside";
-import { Button, InputField } from "@calcom/ui";
+import { Button, InputField, ScrollableArea } from "@calcom/ui";
 
 interface ISupport {
   isOpen: boolean;
@@ -21,9 +21,47 @@ interface ISupport {
   className?: string;
 }
 
+interface IMessage {
+  isMine: boolean;
+  content: string;
+}
+
+const GPT_ICON = (
+  <div className="flex h-8 w-8 flex-col items-center justify-center rounded-full bg-gradient-to-r from-[#FEDF17] to-[#F83719] text-center text-[8px] font-bold leading-[10px] text-white">
+    My GPT
+  </div>
+);
+
 const Support = ({ isOpen, setIsOpen, username, className }: ISupport) => {
   const [isHome, setIsHome] = useState(true);
   const ref = useRef<HTMLDivElement | null>(null);
+  const messageEndRef = useRef<HTMLDivElement | null>(null);
+  const [typing, setTyping] = useState("");
+
+  const [messages, setMessages] = useState<IMessage[]>([]);
+  const [gptResponse, setGPTResponse] = useState("");
+
+  const getResponseFromGPT = (msg: string) => {
+    // reply from gpt, this is a just static example
+    setTimeout(() => {
+      setGPTResponse(`Hi, ${username} 👋.This is reply to "${msg}" from MyGPT.`);
+    }, 2000);
+  };
+
+  const handleEnter = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key !== "Enter") return;
+    setMessages([...messages, { isMine: true, content: typing }]);
+    getResponseFromGPT(typing);
+    setTyping("");
+  };
+
+  useEffect(() => {
+    if (gptResponse) setMessages([...messages, { isMine: false, content: gptResponse }]);
+  }, [gptResponse]);
+
+  useEffect(() => {
+    if (messageEndRef.current) messageEndRef.current.scrollIntoView({ behavior: "auto" });
+  }, [messages]);
 
   useOnclickOutside(ref, () => {
     setIsOpen(false);
@@ -116,9 +154,7 @@ const Support = ({ isOpen, setIsOpen, username, className }: ISupport) => {
               <ChevronLeft />
             </Button>
             <div className="flex flex-shrink-0 flex-grow items-center gap-3 px-[6px] py-[6.5px]">
-              <div className="flex h-8 w-8 flex-col items-center justify-center rounded-full bg-gradient-to-r from-[#FEDF17] to-[#F83719] text-center text-[8px] font-bold leading-[10px] text-white">
-                My GPT
-              </div>
+              {GPT_ICON}
               <div className="flex flex-shrink-0 flex-grow flex-col items-start justify-center gap-[3px] pr-0 text-white">
                 <p className="text-[16px] font-bold leading-4">My GPT</p>
                 <p className="flex gap-1 text-[14px] leading-[14px] text-white/70">
@@ -128,11 +164,34 @@ const Support = ({ isOpen, setIsOpen, username, className }: ISupport) => {
               </div>
             </div>
           </div>
-          <div />
+          <ScrollableArea className="mt-2 inline-flex h-[420px] w-full flex-col gap-4 overflow-x-hidden  px-2 pt-6 text-[14px] leading-5">
+            {messages.map((message, key) =>
+              message.isMine ? (
+                <div className="flex justify-end" key={key}>
+                  <p className="max-w-[80%] rounded-[10px] bg-[rgba(109,39,142,0.05)] px-5 py-4 text-[#6D278E]">
+                    {message.content}
+                  </p>
+                </div>
+              ) : (
+                <div className="flex justify-start" key={key}>
+                  <div className="flex max-w-[80%] gap-[10px]">
+                    <div className="flex flex-col justify-end">{GPT_ICON}</div>
+                    <p className="flex-1 rounded-[10px] bg-[rgba(109,39,142,0.05)] px-5 py-4 text-black">
+                      {message.content}
+                    </p>
+                  </div>
+                </div>
+              )
+            )}
+            <div ref={messageEndRef} />
+          </ScrollableArea>
           <div className="border-[rgba(0, 0, 0, 0.05)] absolute bottom-0 flex h-[56.8px] w-full shrink-0 items-center border-t-[0.8px] border-solid">
             <InputField
               placeholder="Write a reply..."
               className="border-transparent hover:border-transparent focus:border-transparent focus:ring-0"
+              value={typing}
+              onChange={(ev) => setTyping(ev.target.value)}
+              onKeyUp={handleEnter}
             />
             <div className="inline-flex items-start shrink-0">
               <Button variant="icon" className="bg-transparent hover:bg-slate-300">
