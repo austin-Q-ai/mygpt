@@ -17,11 +17,11 @@ const HomePage = () => {
 
   return (
     <Shell>
-      <div className="flex h-full w-full flex-col items-center">
+      <div className="flex flex-col items-center w-full h-full">
         <CubeMenu />
-        <div className="flex w-full flex-col items-center justify-center">
-          <div className="text-secondary text-lg font-bold">{t("navigate_between_menu_using_cube")}</div>
-          <div className="text-muted text-sm">{t("rotate_cube")}</div>
+        <div className="flex flex-col items-center justify-center w-full">
+          <div className="text-lg font-bold text-secondary">{t("navigate_between_menu_using_cube")}</div>
+          <div className="text-sm text-muted">{t("rotate_cube")}</div>
         </div>
       </div>
     </Shell>

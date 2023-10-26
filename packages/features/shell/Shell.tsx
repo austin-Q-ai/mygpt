@@ -73,7 +73,10 @@ import {
   Wallet,
   Grid,
   User as UserIcon,
+  MessageSquare,
 } from "@calcom/ui/components/icon";
+
+import Support from "@components/auth/Support";
 
 import FreshChatProvider from "../ee/support/lib/freshchat/FreshChatProvider";
 import { TeamInviteBadge } from "./TeamInviteBadge";
@@ -195,7 +198,7 @@ const Layout = (props: LayoutProps) => {
 
       {/* todo: only run this if timezone is different */}
       <TimezoneChangeDialog />
-      <div className="flex min-h-screen flex-col">
+      <div className="flex flex-col min-h-screen">
         <div ref={bannerRef} className="sticky top-0 z-10 w-full divide-y divide-black">
           <TeamsUpgradeBanner />
           <OrgUpgradeBanner />
@@ -205,7 +208,7 @@ const Layout = (props: LayoutProps) => {
         </div>
         <div className="flex flex-1" data-testid="dashboard-shell">
           {props.SidebarContainer || <SideBarContainer bannersHeight={bannersHeight} />}
-          <div className="flex w-0 flex-1 flex-col">
+          <div className="flex flex-col flex-1 w-0">
             <MainContainer {...props} />
           </div>
         </div>
@@ -280,10 +283,27 @@ export default function Shell(props: LayoutProps) {
   // System Theme is automatically supported using ThemeProvider. If we intend to use user theme throughout the app we need to uncomment this.
   // useTheme(profile.theme);
   useBrandColors();
+  const [isSupportOpen, setIsSupportOpen] = useState(false);
+  const { data: user, isLoading } = trpc.viewer.me.useQuery();
 
   return !props.isPublic ? (
     <KBarWrapper withKBar>
       <Layout {...props} />
+      <Button
+        rounded
+        onClick={() => setIsSupportOpen(true)}
+        className={`fixed bottom-[42px] right-[75px] z-10 flex h-[52px] w-[52px] shrink-0 flex-col items-center justify-center bg-[#AF8AC2] text-white shadow-[0_2.97143px_2.97143px_0_rgba(109,39,142,0.50)] ${
+          isSupportOpen ? "hidden" : ""
+        }`}>
+        <MessageSquare width="24px" height="24px" />
+        <p className="text-center text-[8px] leading-[10.4px]">Support</p>
+      </Button>
+      <Support
+        isOpen={isSupportOpen}
+        setIsOpen={setIsSupportOpen}
+        username={user?.name || ""}
+        className="fixed bottom-[38.8px] right-[36px] z-10"
+      />
     </KBarWrapper>
   ) : (
     <PublicShell {...props} />
@@ -358,12 +378,12 @@ function UserDropdown({ small }: UserDropdownProps) {
             />
           </span>
           {!small && (
-            <span className="flex flex-grow items-center gap-2">
-              <span className="line-clamp-1 flex-grow text-sm leading-none">
-                <span className="text-emphasis block font-medium">{user.name || "Nameless User"}</span>
+            <span className="flex items-center flex-grow gap-2">
+              <span className="flex-grow text-sm leading-none line-clamp-1">
+                <span className="block font-medium text-emphasis">{user.name || "Nameless User"}</span>
               </span>
               <ChevronDown
-                className="group-hover:text-subtle text-muted h-4 w-4 flex-shrink-0 rtl:mr-4"
+                className="flex-shrink-0 w-4 h-4 group-hover:text-subtle text-muted rtl:mr-4"
                 aria-hidden="true"
               />
             </span>
@@ -379,7 +399,7 @@ function UserDropdown({ small }: UserDropdownProps) {
               setMenuOpen(false);
               setHelpOpen(false);
             }}
-            className="group overflow-hidden rounded-md">
+            className="overflow-hidden rounded-md group">
             {helpOpen ? (
               <HelpMenuItem onHelpItemSelect={() => onHelpItemSelect()} />
             ) : (
@@ -440,7 +460,7 @@ function UserDropdown({ small }: UserDropdownProps) {
                     {t("help")}
                   </DropdownItem>
                 </DropdownMenuItem>
-                {/* <DropdownMenuItem className="desktop-hidden hidden lg:flex">
+                {/* <DropdownMenuItem className="hidden desktop-hidden lg:flex">
                   <DropdownItem StartIcon={Download} target="_blank" rel="noreferrer" href={DESKTOP_APP_LINK}>
                     {t("download_desktop_app")}
                   </DropdownItem>
@@ -605,7 +625,7 @@ const { desktopNavigationItems, mobileNavigationBottomItems, mobileNavigationMor
 
 const Navigation = () => {
   return (
-    <nav className="mt-2 flex-1 md:px-2 lg:mt-4 lg:px-0">
+    <nav className="flex-1 mt-2 md:px-2 lg:mt-4 lg:px-0">
       {desktopNavigationItems.map((item) => (
         <NavigationItem key={item.name} item={item} />
       ))}
@@ -675,7 +695,7 @@ const NavigationItem: React.FC<{
             />
           )}
           {isLocaleReady ? (
-            <span className="hidden w-full justify-between lg:flex">
+            <span className="justify-between hidden w-full lg:flex">
               <div className="flex">{t(item.name)}</div>
               {item.badge && item.badge}
             </span>
@@ -759,13 +779,13 @@ const MobileNavigationMoreItem: React.FC<{
   if (!shouldDisplayNavigationItem) return null;
 
   return (
-    <li className="border-subtle border-b last:border-b-0" key={item.name}>
-      <Link href={item.href} className="hover:bg-subtle flex items-center justify-between p-5">
-        <span className="text-default flex items-center font-semibold ">
-          {item.icon && <item.icon className="h-5 w-5 flex-shrink-0 ltr:mr-3 rtl:ml-3" aria-hidden="true" />}
+    <li className="border-b border-subtle last:border-b-0" key={item.name}>
+      <Link href={item.href} className="flex items-center justify-between p-5 hover:bg-subtle">
+        <span className="flex items-center font-semibold text-default ">
+          {item.icon && <item.icon className="flex-shrink-0 w-5 h-5 ltr:mr-3 rtl:ml-3" aria-hidden="true" />}
           {isLocaleReady ? t(item.name) : <SkeletonText />}
         </span>
-        <ArrowRight className="text-subtle h-5 w-5" />
+        <ArrowRight className="w-5 h-5 text-subtle" />
       </Link>
     </li>
   );
@@ -857,7 +877,7 @@ function SideBar({ bannersHeight, user }: SideBarProps) {
       <aside
         style={{ maxHeight: `calc(100vh - ${bannersHeight}px)`, top: `${bannersHeight}px` }}
         className="desktop-transparent bg-muted border-muted fixed left-0 hidden h-full max-h-screen w-14 flex-col overflow-y-auto overflow-x-hidden border-r dark:bg-gradient-to-tr dark:from-[#2a2a2a] dark:to-[#1c1c1c] md:sticky md:flex lg:w-56 lg:px-3">
-        <div className="flex h-full flex-col justify-between py-3 lg:pt-4">
+        <div className="flex flex-col justify-between h-full py-3 lg:pt-4">
           <header className="items-center justify-between md:hidden lg:flex">
             {orgBranding ? (
               <Link href="/event-types" className="px-1.5">
@@ -867,7 +887,7 @@ function SideBar({ bannersHeight, user }: SideBarProps) {
                     imageSrc={getPlaceholderAvatar(orgBranding.logo, orgBranding.name)}
                     size="xsm"
                   />
-                  <p className="text line-clamp-1 text-sm">
+                  <p className="text-sm text line-clamp-1">
                     <span>{orgBranding.name}</span>
                   </p>
                 </div>
@@ -886,14 +906,14 @@ function SideBar({ bannersHeight, user }: SideBarProps) {
               <button
                 color="minimal"
                 onClick={() => window.history.back()}
-                className="desktop-only hover:text-emphasis text-subtle group flex text-sm font-medium">
-                <ArrowLeft className="group-hover:text-emphasis text-subtle h-4 w-4 flex-shrink-0" />
+                className="flex text-sm font-medium desktop-only hover:text-emphasis text-subtle group">
+                <ArrowLeft className="flex-shrink-0 w-4 h-4 group-hover:text-emphasis text-subtle" />
               </button>
               <button
                 color="minimal"
                 onClick={() => window.history.forward()}
-                className="desktop-only hover:text-emphasis text-subtle group flex text-sm font-medium">
-                <ArrowRight className="group-hover:text-emphasis text-subtle h-4 w-4 flex-shrink-0" />
+                className="flex text-sm font-medium desktop-only hover:text-emphasis text-subtle group">
+                <ArrowRight className="flex-shrink-0 w-4 h-4 group-hover:text-emphasis text-subtle" />
               </button>
               {!!orgBranding && (
                 <div data-testid="user-dropdown-trigger" className="flex items-center">
@@ -904,7 +924,7 @@ function SideBar({ bannersHeight, user }: SideBarProps) {
             </div>
           </header>
 
-          <hr className="desktop-only border-subtle absolute -left-3 -right-3 mt-4 block w-full" />
+          <hr className="absolute block w-full mt-4 desktop-only border-subtle -left-3 -right-3" />
 
           {/* logo icon for tablet */}
           <Link href="/event-types" className="text-center md:inline lg:hidden">
@@ -950,7 +970,7 @@ function SideBar({ bannersHeight, user }: SideBarProps) {
                   />
                 )}
                 {isLocaleReady ? (
-                  <span className="hidden w-full justify-between lg:flex">
+                  <span className="justify-between hidden w-full lg:flex">
                     <div className="flex">{t(item.name)}</div>
                   </span>
                 ) : (
@@ -1009,7 +1029,7 @@ export function ShellMain(props: LayoutProps) {
                   </h3>
                 )}
                 {props.subtitle && (
-                  <p className="text-default hidden text-sm md:block">
+                  <p className="hidden text-sm text-default md:block">
                     {!isLocaleReady ? <SkeletonText invisible /> : props.subtitle}
                   </p>
                 )}
@@ -1045,7 +1065,7 @@ function MainContainer({
   ...props
 }: LayoutProps) {
   return (
-    <main className="bg-default bg-global relative z-0 flex-1 focus:outline-none">
+    <main className="relative z-0 flex-1 bg-default bg-global focus:outline-none">
       {/* show top navigation for md and smaller (tablet and phones) */}
       {TopNavContainerProp}
       <div className="max-w-full px-4 py-4 md:py-8 lg:px-12">
@@ -1055,6 +1075,12 @@ function MainContainer({
         {/* show bottom navigation for md and smaller (tablet and phones) on pages where back button doesn't exist */}
         {!props.backPath ? MobileNavigationContainerProp : null}
       </div>
+      {/* <Button
+        rounded
+        className="shadow-[0_2.97143px_2.97143px_0_rgba(109,39,142,0.50)] fixed bottom-[42px] right-[75px] z-10 flex h-[52px] w-[52px] shrink-0 flex-col items-center justify-center bg-[#AF8AC2] text-white">
+        <MessageSquare width="24px" height="24px" />
+        <p className="text-center text-[8px] leading-[10.4px]">Support</p>
+      </Button> */}
     </main>
   );
 }
@@ -1076,14 +1102,14 @@ function TopNav() {
         <Link href="/event-types">
           <Logo />
         </Link>
-        <div className="flex items-center gap-2 self-center">
-          <span className="hover:bg-muted hover:text-emphasis text-default group flex items-center rounded-full text-sm font-medium lg:hidden">
+        <div className="flex items-center self-center gap-2">
+          <span className="flex items-center text-sm font-medium rounded-full hover:bg-muted hover:text-emphasis text-default group lg:hidden">
             <KBarTrigger />
           </span>
-          <button className="hover:bg-muted hover:text-subtle text-muted rounded-full p-1 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2">
+          <button className="p-1 rounded-full hover:bg-muted hover:text-subtle text-muted focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2">
             <span className="sr-only">{t("settings")}</span>
             <Link href="/settings/my-account/profile">
-              <Settings className="text-default h-4 w-4" aria-hidden="true" />
+              <Settings className="w-4 h-4 text-default" aria-hidden="true" />
             </Link>
           </button>
           <UserDropdown small />
@@ -1094,7 +1120,7 @@ function TopNav() {
 }
 
 export const MobileNavigationMoreItems = () => (
-  <ul className="border-subtle mt-2 rounded-md border">
+  <ul className="mt-2 border rounded-md border-subtle">
     {mobileNavigationMoreItems.map((item) => (
       <MobileNavigationMoreItem key={item.name} item={item} />
     ))}
