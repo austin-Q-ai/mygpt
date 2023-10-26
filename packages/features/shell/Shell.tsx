@@ -73,7 +73,10 @@ import {
   Wallet,
   Grid,
   User as UserIcon,
+  MessageSquare,
 } from "@calcom/ui/components/icon";
+
+import Support from "@components/auth/Support";
 
 import FreshChatProvider from "../ee/support/lib/freshchat/FreshChatProvider";
 import { TeamInviteBadge } from "./TeamInviteBadge";
@@ -280,10 +283,27 @@ export default function Shell(props: LayoutProps) {
   // System Theme is automatically supported using ThemeProvider. If we intend to use user theme throughout the app we need to uncomment this.
   // useTheme(profile.theme);
   useBrandColors();
+  const [isSupportOpen, setIsSupportOpen] = useState(false);
+  const { data: user, isLoading } = trpc.viewer.me.useQuery();
 
   return !props.isPublic ? (
     <KBarWrapper withKBar>
       <Layout {...props} />
+      <Button
+        rounded
+        onClick={() => setIsSupportOpen(true)}
+        className={`fixed bottom-[42px] right-[75px] z-10 flex h-[52px] w-[52px] shrink-0 flex-col items-center justify-center bg-[#AF8AC2] text-white shadow-[0_2.97143px_2.97143px_0_rgba(109,39,142,0.50)] ${
+          isSupportOpen ? "hidden" : ""
+        }`}>
+        <MessageSquare width="24px" height="24px" />
+        <p className="text-center text-[8px] leading-[10.4px]">Support</p>
+      </Button>
+      <Support
+        isOpen={isSupportOpen}
+        setIsOpen={setIsSupportOpen}
+        username={user?.name || ""}
+        className="fixed bottom-[38.8px] right-[36px] z-10"
+      />
     </KBarWrapper>
   ) : (
     <PublicShell {...props} />

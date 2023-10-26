@@ -38,7 +38,12 @@ const Support = ({ isOpen, setIsOpen, username, className }: ISupport) => {
   const messageEndRef = useRef<HTMLDivElement | null>(null);
   const [typing, setTyping] = useState("");
 
-  const [messages, setMessages] = useState<IMessage[]>([]);
+  const [messages, setMessages] = useState<IMessage[]>([
+    {
+      isMine: false,
+      content: "Hello! How can I assist you today?",
+    },
+  ]);
   const [gptResponse, setGPTResponse] = useState("");
 
   const getResponseFromGPT = (msg: string) => {
