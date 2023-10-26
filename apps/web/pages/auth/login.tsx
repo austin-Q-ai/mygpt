@@ -98,7 +98,7 @@ export default function Login({
   callbackUrl = safeCallbackUrl || "";
 
   const LoginFooter = (
-    <a href={`${WEBSITE_URL}/signup`} className="font-medium text-brand-500">
+    <a href={`${WEBSITE_URL}/signup`} className="text-brand-500 font-medium">
       {t("dont_have_an_account")}
     </a>
   );
@@ -136,7 +136,7 @@ export default function Login({
     if (!res) setErrorMessage(errorMessages[ErrorCode.InternalServerError]);
     // we're logged in! let's do a hard refresh to the desired url
     else if (!res.error) {
-      console.log("login: ", res)
+      console.log("login: ", res);
       router.push(callbackUrl);
     }
     // reveal two factor input if required
@@ -147,15 +147,15 @@ export default function Login({
 
   return (
     <div
-      className="w-full h-fit lg:w-fit"
-    // style={
-    //   {
-    //     "--cal-brand": "#111827",
-    //     "--cal-brand-emphasis": "#101010",
-    //     "--cal-brand-text": "white",
-    //     "--cal-brand-subtle": "#9CA3AF",
-    //   } as CSSProperties
-    // }
+      className="h-fit w-full lg:w-fit"
+      // style={
+      //   {
+      //     "--cal-brand": "#111827",
+      //     "--cal-brand-emphasis": "#101010",
+      //     "--cal-brand-text": "white",
+      //     "--cal-brand-subtle": "#9CA3AF",
+      //   } as CSSProperties
+      // }
     >
       <AuthContainer
         title={t("login")}
@@ -168,8 +168,8 @@ export default function Login({
               ? TwoFactorFooter
               : ExternalTotpFooter
             : process.env.NEXT_PUBLIC_DISABLE_SIGNUP !== "true"
-              ? LoginFooter
-              : null
+            ? LoginFooter
+            : null
         }>
         <FormProvider {...methods}>
           <form
@@ -182,7 +182,7 @@ export default function Login({
             </div>
             <div className="space-y-6">
               <div className={classNames("space-x-4", { hidden: twoFactorRequired }, "flex flex-row")}>
-                <div className="flex-col w-full">
+                <div className="w-full flex-col">
                   <EmailField
                     floatingLabel
                     id="email"
@@ -194,7 +194,7 @@ export default function Login({
                     inputwidth="lg"
                   />
                 </div>
-                <div className="flex-col w-full ">
+                <div className="w-full flex-col ">
                   <PasswordField
                     floatingLabel
                     id="password"
@@ -219,22 +219,24 @@ export default function Login({
 
               {errorMessage && <Alert severity="error" title={errorMessage} />}
               <div className="flex flex-row space-x-4">
-                <div className="flex-col w-full">
+                <div className="w-full flex-col">
                   <Button
                     type="submit"
                     color="primary"
                     disabled={formState.isSubmitting}
-                    className="justify-center w-full p-2 text-lg">
+                    className="w-full justify-center p-2 text-lg">
                     {twoFactorRequired ? t("submit") : t("sign_in")}
                   </Button>
                 </div>
-                <div className="flex-col w-full">
+                <div className="w-full flex-col">
                   <Link
                     href="/signup"
                     type="submit"
                     color="secondary"
-                    onClick={() => { window.localStorage.setItem("price-type", "-1") }}
-                    className="justify-center w-full p-1 text-lg font-medium text-center border rounded-md hover:bg-subtle bg-muted border-subtle">
+                    onClick={() => {
+                      window.localStorage.setItem("price-type", "-1");
+                    }}
+                    className="hover:bg-subtle bg-muted border-subtle w-full justify-center rounded-md border p-1 text-center text-lg font-medium">
                     {t("sign_up")}
                   </Link>
                 </div>
@@ -242,7 +244,7 @@ export default function Login({
             </div>
             <div className="flex flex-row">
               <div className="flex flex-col">
-                <Link href="/auth/forgot-password" className="flex flex-row px-1 py-2 underline text-muted">
+                <Link href="/auth/forgot-password" className="text-muted flex flex-row px-1 py-2 underline">
                   {t("forgot_your_password")}
                 </Link>
               </div>
@@ -253,12 +255,12 @@ export default function Login({
           </form>
           {!twoFactorRequired && (
             <>
-              {(isGoogleLoginEnabled || isSAMLLoginEnabled) && <hr className="my-8 border-subtle" />}
+              {/* {(isGoogleLoginEnabled || isSAMLLoginEnabled) && <hr className="my-8 border-subtle" />} */}
               <div className="space-y-3">
                 {isGoogleLoginEnabled && (
                   <Button
                     color="secondary"
-                    className="justify-center w-full"
+                    className="w-full justify-center"
                     data-testid="google"
                     StartIcon={FaGoogle}
                     onClick={async (e: React.MouseEvent<HTMLElement, MouseEvent>) => {

@@ -1,19 +1,19 @@
+import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import type { FormEvent } from "react";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { createUpgradePaymentLink } from "@calcom/app-store/stripepayment/lib/client";
+import { upgradePlan } from "@calcom/features/upgrade-plan";
+import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { md } from "@calcom/lib/markdownIt";
 import { telemetryEventTypes, useTelemetry } from "@calcom/lib/telemetry";
 import turndown from "@calcom/lib/turndownService";
+import { UserLevel } from "@calcom/prisma/enums";
 import { trpc } from "@calcom/trpc/react";
-import { upgradePlan } from "@calcom/features/upgrade-plan";
 import { Avatar, Button, Editor, ImageUploader, Label, showToast } from "@calcom/ui";
 import { ArrowRight } from "@calcom/ui/components/icon";
-import { UserLevel } from "@calcom/prisma/enums";
-import { useMutation } from "@tanstack/react-query";
 
 type FormData = {
   bio: string;
@@ -35,7 +35,13 @@ const UserProfile = () => {
   const telemetry = useTelemetry();
   const [firstRender, setFirstRender] = useState(true);
 
-  const paymetLevel = [UserLevel.FREEMIUM, UserLevel.LEVEL1, UserLevel.LEVEL2, UserLevel.LEVEL3, UserLevel.CUSTOM]
+  const paymetLevel = [
+    UserLevel.FREEMIUM,
+    UserLevel.LEVEL1,
+    UserLevel.LEVEL2,
+    UserLevel.LEVEL3,
+    UserLevel.CUSTOM,
+  ];
 
   const upgradeMutation = useMutation(upgradePlan, {
     onSuccess: async (responseData) => {
@@ -70,9 +76,9 @@ const UserProfile = () => {
 
         await utils.viewer.me.refetch();
 
-        const paymet_level = parseInt(window.localStorage.getItem("price-type") || '');
+        const paymet_level = user?.priceLevel || 0;
         if (paymet_level > 0 && paymet_level < 4) {
-          upgradeMutation.mutate({ level: paymetLevel[paymet_level] })
+          upgradeMutation.mutate({ level: paymetLevel[paymet_level] });
         } else {
           router.push("/");
         }
@@ -137,7 +143,7 @@ const UserProfile = () => {
           name="avatar"
           id="avatar"
           placeholder="URL"
-          className="block w-full px-3 py-2 mt-1 text-sm border rounded-sm border-default focus:ring-empthasis focus:border-gray-800 focus:outline-none"
+          className="border-default focus:ring-empthasis mt-1 block w-full rounded-sm border px-3 py-2 text-sm focus:border-gray-800 focus:outline-none"
           defaultValue={imageSrc}
         />
         <div className="flex items-center px-4">
@@ -164,7 +170,7 @@ const UserProfile = () => {
         </div>
       </div>
       <fieldset className="mt-8">
-        <Label className="block mb-2 text-sm font-medium text-default">{t("about")}</Label>
+        <Label className="text-default mb-2 block text-sm font-medium">{t("about")}</Label>
         <Editor
           getText={() => md.render(getValues("bio") || user?.bio || "")}
           setText={(value: string) => setValue("bio", turndown(value))}
@@ -172,15 +178,15 @@ const UserProfile = () => {
           firstRender={firstRender}
           setFirstRender={setFirstRender}
         />
-        <p className="mt-2 font-sans text-sm font-normal dark:text-inverted text-default">
+        <p className="dark:text-inverted text-default mt-2 font-sans text-sm font-normal">
           {t("few_sentences_about_yourself")}
         </p>
       </fieldset>
       <Button
         type="submit"
-        className="flex flex-row justify-center w-full p-2 mt-8 text-sm text-center border rounded-md text-inverted border-default bg-brand-default">
+        className="text-inverted border-default bg-brand-default mt-8 flex w-full flex-row justify-center rounded-md border p-2 text-center text-sm">
         {t("finish")}
-        <ArrowRight className="self-center w-4 h-4 ml-2" aria-hidden="true" />
+        <ArrowRight className="ml-2 h-4 w-4 self-center" aria-hidden="true" />
       </Button>
     </form>
   );

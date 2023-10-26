@@ -18,8 +18,12 @@ import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import MessageLoader from "pages/expert-clone/components/MessageLoader";
+import SecondsCounter from "pages/expert-clone/components/SecondsCounter";
+import VoiceUploader from "pages/expert-clone/components/VoiceUploader";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import ReactPlayer from "react-player";
 import Typist from "react-typist";
+import { v4 } from "uuid";
 import { z } from "zod";
 
 import useGetBrandingColours from "@calcom/lib/getBrandColours";
@@ -45,6 +49,7 @@ import Footer from "@components/auth/Footer";
 import MicroCards from "@components/microcard";
 import { footerLinks } from "@components/ui/AuthContainer";
 
+import AudioPlayer from "./components/AudioPlayer";
 import AuthModal from "./components/AuthModal";
 
 export function DialogContentDiv(props: JSX.IntrinsicElements["div"]) {
@@ -66,6 +71,18 @@ const useSize = (target: any) => {
 const querySchema = z.object({
   expert: z.string().optional(),
 });
+
+const DurationShow = ({ counter }: { counter: number }) => {
+  const timer = counter * 100;
+  const seconds = Math.floor(timer / 100);
+  const milliseconds = Math.floor(timer % 100);
+  return (
+    <div className="text-md text-secondary mt-3 w-8 items-center font-bold">
+      {seconds < 10 ? "0" + seconds : seconds}:{milliseconds < 10 ? "0" + milliseconds : milliseconds}
+    </div>
+  );
+};
+
 export default function ExpertClone() {
   const {
     data: { expert },
@@ -111,6 +128,7 @@ export default function ExpertClone() {
     loading?: boolean;
     message_id?: string;
     message_time?: string;
+    type?: string;
   };
 
   type historyType = {
@@ -139,7 +157,26 @@ export default function ExpertClone() {
   const endOfScrollArea = useRef<HTMLDivElement>(null);
   const [target, setTarget] = useState<HTMLDivElement | null>(null);
   const [noLoadingEdit, setNoLoadingEdit] = useState("");
+  const [voice, setVoice] = useState<string>("");
+  const [voiceDuration, setVoiceDuration] = useState<number>(0);
+  const [isRecording, setIsRecording] = useState<boolean>(false);
   const size = useSize(target);
+
+  useEffect(() => {
+    console.log("voice has been recorded", voice);
+    const audio = new Audio();
+    audio.src = voice;
+    audio.addEventListener("loadedmetadata", function () {
+      setVoiceDuration(audio.duration);
+    });
+    audio.load();
+    return () => {
+      audio.removeEventListener("loadedmetadata", function () {
+        console.log("Duration:", audio.duration); // seconds
+      });
+    };
+  }, [voice]);
+
   useEffect(() => {
     endOfScrollArea?.current?.scrollIntoView({ behavior: "smooth" });
   }, [size]);
@@ -213,17 +250,17 @@ export default function ExpertClone() {
 
         data.data.chat_id
           ? setQaList([
-            ...qaList,
-            {
-              user_message: data.data.user_message,
-              chat_id: data.data.chat_id,
-              assistant: data.data.assistant,
-              loading: false,
-              brain_id: data.data.brain_id,
-              message_id: data.data.message_id,
-              message_time: data.data.message_time,
-            },
-          ])
+              ...qaList,
+              {
+                user_message: data.data.user_message,
+                chat_id: data.data.chat_id,
+                assistant: data.data.assistant,
+                loading: false,
+                brain_id: data.data.brain_id,
+                message_id: data.data.message_id,
+                message_time: data.data.message_time,
+              },
+            ])
           : null;
         setHistoryEdit("");
       });
@@ -260,41 +297,91 @@ export default function ExpertClone() {
       });
   };
 
+  const handleSearchWithVoice = () => {
+    console.log("handleSearchWithVoice", voice);
+    setNoLoadingEdit("");
+    setQaList([
+      ...qaList,
+      {
+        user_message: voice,
+        chat_id: currentChatId,
+        assistant: "",
+        loading: true,
+        brain_id: "",
+        message_id: "",
+        message_time: "",
+        type: "voice",
+      },
+    ]);
+    const response = {
+      user_message: voice,
+      chat_id: "1",
+      assistant: "https://www.youtube.com/watch?v=LXb3EKWsInQ",
+      brain_id: "20",
+      message_id: v4(),
+      message_time: "",
+    };
+    setVoice("");
+    setIsLoading(true);
+    setSearchResultFlag(true);
+    setTimeout(() => {
+      setQaList([
+        ...qaList,
+        {
+          user_message: response.user_message,
+          chat_id: response.chat_id,
+          assistant: response.assistant,
+          loading: false,
+          brain_id: response.brain_id,
+          message_id: response.message_id,
+          message_time: response.message_time,
+          type: "voice",
+        },
+      ]);
+      setIsLoading(false);
+      setSearchResultFlag(false);
+    }, 2000);
+  };
+
   const handleSearch = (e: any) => {
     e.preventDefault();
-    if (searchText && searchText.length > 0) {
-      setSearchResultFlag(true);
-      setIsLoading(true);
+    if (voice) {
+      handleSearchWithVoice();
     } else {
-      return;
-    }
-    if (currentChatId === "") {
-      // if not started new chat, create new chat
-      axios
-        .post(
-          `${process.env.NEXT_PUBLIC_BRAIN_SERVICE}/chat`,
-          {
-            name: searchText.split(" ").slice(0, 3).join(" "),
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${user?.apiKey}`,
+      if (searchText && searchText.length > 0) {
+        setSearchResultFlag(true);
+        setIsLoading(true);
+      } else {
+        return;
+      }
+      if (currentChatId === "") {
+        // if not started new chat, create new chat
+        axios
+          .post(
+            `${process.env.NEXT_PUBLIC_BRAIN_SERVICE}/chat`,
+            {
+              name: searchText.split(" ").slice(0, 3).join(" "),
             },
-          }
-        )
-        .then((data) => {
-          setCurrentChatId(data.data.chat_id);
-          if (searchInput.current) {
-            if (searchInput.current.value) {
-              handleChat(data.data.chat_id);
+            {
+              headers: {
+                Authorization: `Bearer ${user?.apiKey}`,
+              },
             }
+          )
+          .then((data) => {
+            setCurrentChatId(data.data.chat_id);
+            if (searchInput.current) {
+              if (searchInput.current.value) {
+                handleChat(data.data.chat_id);
+              }
+            }
+          });
+      } else {
+        // if chat id exist, it chats with experts
+        if (searchInput.current) {
+          if (searchInput.current.value) {
+            handleChat(currentChatId);
           }
-        });
-    } else {
-      // if chat id exist, it chats with experts
-      if (searchInput.current) {
-        if (searchInput.current.value) {
-          handleChat(currentChatId);
         }
       }
     }
@@ -491,8 +578,8 @@ export default function ExpertClone() {
                                       historyItemDelete.includes(qa.chat_id)
                                         ? "hidden"
                                         : historyEdit === qa.chat_id
-                                          ? "disabled text-muted cursor-not-allowed"
-                                          : "text-secondary cursor-pointer"
+                                        ? "disabled text-muted cursor-not-allowed"
+                                        : "text-secondary cursor-pointer"
                                     )}
                                   />
                                 </Button>
@@ -623,7 +710,7 @@ export default function ExpertClone() {
                             className="mb-6 py-2"
                             key={qa.message_id}
                             ref={index === qaList.length - 1 ? answersRef : null}>
-                            <div className="text-secondary mx-3 my-auto flex flex-row font-bold md:mx-6">
+                            <div className="text-secondary mx-3 my-auto flex w-[90%] flex-row font-bold md:mx-6">
                               <div>
                                 <UserIcon
                                   color="white"
@@ -632,7 +719,15 @@ export default function ExpertClone() {
                                   className="border-subtle bg-brand-default rounded-md border p-2"
                                 />
                               </div>
-                              <div className="my-auto ms-6">{qa.user_message}</div>
+                              <div className="my-auto ms-6 w-full">
+                                {qa.type === "voice" ? (
+                                  <div className="w-full">
+                                    <AudioPlayer blobUrl={qa.user_message} />
+                                  </div>
+                                ) : (
+                                  qa.user_message
+                                )}
+                              </div>
                             </div>
                             <div className="text-secondary mx-3 my-auto mt-4 flex flex-row font-medium md:mx-6">
                               <Image
@@ -656,7 +751,11 @@ export default function ExpertClone() {
                                       display: "inline-block",
                                       whiteSpace: "pre-wrap",
                                     }}>
-                                    {formatText(qa.assistant)}
+                                    {qa.type === "voice" ? (
+                                      <ReactPlayer url={qa.assistant} />
+                                    ) : (
+                                      formatText(qa.assistant)
+                                    )}
                                   </span>
                                 ) : (
                                   <Typist
@@ -703,7 +802,9 @@ export default function ExpertClone() {
                 ref={searchInput}
                 disabled={isLoading && searchResultFlag}
                 autoComplete="off"
-                // addOnLeading={<Search color="#6D278E" />}
+                addOnLeading={
+                  isRecording ? <SecondsCounter /> : voice ? <DurationShow counter={voiceDuration} /> : ""
+                }
                 addOnSuffix={
                   <>
                     <Button
@@ -719,13 +820,20 @@ export default function ExpertClone() {
                     </Button>
                   </>
                 }
-                placeholder="Ask me anything ..."
+                placeholder={isRecording || voice ? "" : "Ask me anything ..."}
                 inputwidth="lg"
                 addOnClassname=" !border-darkemphasis !text-secondary !h-[50px] !bg-transparent"
                 inputMode="search"
                 containerClassName="w-full"
                 className="!border-darkemphasis text-secondary selection:border-secondary placeholder:text-darkemphasis !w-full !bg-transparent py-2 text-2xl"
               />
+              {voice ? (
+                <div className="absolute left-20 top-0 my-auto flex h-[93%] w-[80%] items-center">
+                  <div className="w-full">
+                    <AudioPlayer blobUrl={voice} />
+                  </div>
+                </div>
+              ) : null}
 
               {authModalFlag && (
                 <AuthModal
@@ -745,6 +853,7 @@ export default function ExpertClone() {
                   style={{ top: "-18", right: "-18" }}
                 />
               )}
+              <VoiceUploader setVoice={setVoice} setIsRecordingFlag={setIsRecording} />
             </form>
           </div>
           <div

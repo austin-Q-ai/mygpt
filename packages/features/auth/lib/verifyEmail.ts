@@ -46,7 +46,6 @@ export const sendEmailVerification = async ({ email, language, username }: Verif
   // print email verification link
   console.log(`${WEBAPP_URL}/api/auth/verify-email?${params.toString()}`);
 
-
   await sendEmailVerificationLink({
     language: translation,
     verificationEmailLink: `${WEBAPP_URL}/api/auth/verify-email?${params.toString()}`,

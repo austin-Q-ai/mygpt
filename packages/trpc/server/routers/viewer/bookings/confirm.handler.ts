@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 
-import appStore from "@calcom/app-store";
+import dayjs from "@calcom/dayjs";
 import { sendDeclinedEmails } from "@calcom/emails";
 import { getCalEventResponses } from "@calcom/features/bookings/lib/getCalEventResponses";
 import { handleConfirmation } from "@calcom/features/bookings/lib/handleConfirmation";
@@ -11,7 +11,6 @@ import { getTranslation } from "@calcom/lib/server";
 import { prisma } from "@calcom/prisma";
 import { BookingStatus, MembershipRole, SchedulingType, WebhookTriggerEvents } from "@calcom/prisma/enums";
 import type { CalendarEvent } from "@calcom/types/Calendar";
-import type { IAbstractPaymentService, PaymentApp } from "@calcom/types/PaymentService";
 
 import { TRPCError } from "@trpc/server";
 
@@ -226,75 +225,120 @@ export const confirmHandler = async ({ ctx, input }: ConfirmOptions) => {
       });
     } else {
       // handle refunds
-      if (!!booking.payment.length) {
-        const successPayment = booking.payment.find((payment) => payment.success);
-        if (!successPayment) {
-          // Disable paymentLink for this booking
-        } else {
-          let eventTypeOwnerId;
-          if (booking.eventType?.owner) {
-            eventTypeOwnerId = booking.eventType.owner.id;
-          } else if (booking.eventType?.teamId) {
-            const teamOwner = await prisma.membership.findFirst({
-              where: {
-                teamId: booking.eventType.teamId,
-                role: MembershipRole.OWNER,
-              },
-              select: {
-                userId: true,
-              },
-            });
-            eventTypeOwnerId = teamOwner?.userId;
-          }
-
-          if (!eventTypeOwnerId) {
-            throw new Error("Event Type owner not found for obtaining payment app credentials");
-          }
-
-          const paymentAppCredentials = await prisma.credential.findMany({
-            where: {
-              userId: eventTypeOwnerId,
-              appId: successPayment.appId,
-            },
-            select: {
-              key: true,
-              appId: true,
-              app: {
-                select: {
-                  categories: true,
-                  dirName: true,
-                },
-              },
-            },
-          });
-
-          const paymentAppCredential = paymentAppCredentials.find((credential) => {
-            return credential.appId === successPayment.appId;
-          });
-
-          if (!paymentAppCredential) {
-            throw new Error("Payment app credentials not found");
-          }
-
-          // Posible to refactor TODO:
-          const paymentApp = (await appStore[
-            paymentAppCredential?.app?.dirName as keyof typeof appStore
-          ]()) as PaymentApp;
-          if (!paymentApp?.lib?.PaymentService) {
-            console.warn(`payment App service of type ${paymentApp} is not implemented`);
-            return null;
-          }
-
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const PaymentService = paymentApp.lib.PaymentService as any;
-          const paymentInstance = new PaymentService(paymentAppCredential) as IAbstractPaymentService;
-          // const paymentData = await paymentInstance.refund(successPayment.id);
-          // if (!paymentData.refunded) {
-          //   throw new Error("Payment could not be refunded");
-          // }
-        }
+      // if (!!booking.payment.length) {
+      //   const successPayment = booking.payment.find((payment) => payment.success);
+      //   if (!successPayment) {
+      //     // Disable paymentLink for this booking
+      //   } else {
+      let eventTypeOwnerId;
+      if (booking.eventType?.owner) {
+        eventTypeOwnerId = booking.eventType.owner.id;
+      } else if (booking.eventType?.teamId) {
+        const teamOwner = await prisma.membership.findFirst({
+          where: {
+            teamId: booking.eventType.teamId,
+            role: MembershipRole.OWNER,
+          },
+          select: {
+            userId: true,
+          },
+        });
+        eventTypeOwnerId = teamOwner?.userId;
       }
+
+      if (!eventTypeOwnerId) {
+        throw new Error("Event Type owner not found for obtaining payment app credentials");
+      }
+
+      //     const paymentAppCredentials = await prisma.credential.findMany({
+      //       where: {
+      //         userId: eventTypeOwnerId,
+      //         appId: successPayment.appId,
+      //       },
+      //       select: {
+      //         key: true,
+      //         appId: true,
+      //         app: {
+      //           select: {
+      //             categories: true,
+      //             dirName: true,
+      //           },
+      //         },
+      //       },
+      //     });
+
+      //     const paymentAppCredential = paymentAppCredentials.find((credential) => {
+      //       return credential.appId === successPayment.appId;
+      //     });
+
+      //     if (!paymentAppCredential) {
+      //       throw new Error("Payment app credentials not found");
+      //     }
+
+      //     // Posible to refactor TODO:
+      //     const paymentApp = (await appStore[
+      //       paymentAppCredential?.app?.dirName as keyof typeof appStore
+      //     ]()) as PaymentApp;
+      //     if (!paymentApp?.lib?.PaymentService) {
+      //       console.warn(`payment App service of type ${paymentApp} is not implemented`);
+      //       return null;
+      //     }
+
+      //     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      //     const PaymentService = paymentApp.lib.PaymentService as any;
+      //     const paymentInstance = new PaymentService(paymentAppCredential) as IAbstractPaymentService;
+      //     // const paymentData = await paymentInstance.refund(successPayment.id);
+      //     // if (!paymentData.refunded) {
+      //     //   throw new Error("Payment could not be refunded");
+      //     // }
+      //   }
+      // }
       // end handle refunds.
+      const [attendee] = booking.attendees;
+      const user = await prisma.user.findFirst({
+        where: {
+          email: attendee.email,
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      if (!user) {
+        throw new Error("Event Type user not found");
+      }
+
+      const refundTimeTokens = Math.ceil(
+        (dayjs.utc(evt.endTime).unix() * 1000 - dayjs.utc(evt.startTime).unix() * 1000) / 60000 / 5
+      );
+
+      console.log(refundTimeTokens, "refundTimetokens", user.id, eventTypeOwnerId);
+
+      const wallet = await prisma.timeTokensWallet.findFirst({
+        where: {
+          ownerId: user.id,
+          emitterId: eventTypeOwnerId,
+        },
+        select: {
+          id: true,
+          amount: true,
+        },
+      });
+
+      if (!wallet) {
+        throw new Error("Wallet not found");
+      }
+
+      await prisma.timeTokensWallet.update({
+        where: {
+          id: wallet.id,
+        },
+        data: {
+          amount: {
+            increment: refundTimeTokens,
+          },
+        },
+      });
 
       await prisma.booking.update({
         where: {

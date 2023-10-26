@@ -297,7 +297,7 @@ export default function Success(props: SuccessProps) {
 
   return (
     <div
-      className={classNames(isEmbed ? "" : "h-fit", "bg-[url('/background.png')]")}
+      className={classNames(isEmbed ? "" : "h-screen", "bg-[url('/background.png')]")}
       data-testid="success-page">
       {!isEmbed && (
         <EventReservationSchema
@@ -373,12 +373,12 @@ export default function Success(props: SuccessProps) {
                         ? t("booking_submitted_recurring")
                         : t("booking_submitted")
                       : isCancelled
-                        ? seatReferenceUid
-                          ? t("no_longer_attending")
-                          : t("event_cancelled")
-                        : props.recurringBookings
-                          ? t("meeting_is_scheduled_recurring")
-                          : t("meeting_is_scheduled")}
+                      ? seatReferenceUid
+                        ? t("no_longer_attending")
+                        : t("event_cancelled")
+                      : props.recurringBookings
+                      ? t("meeting_is_scheduled_recurring")
+                      : t("meeting_is_scheduled")}
                   </h3>
                   <div className="mt-3">
                     <p className="text-default">{getTitle()}</p>
@@ -582,16 +582,17 @@ export default function Success(props: SuccessProps) {
                               `https://calendar.google.com/calendar/r/eventedit?dates=${date
                                 .utc()
                                 .format("YYYYMMDDTHHmmss[Z]")}/${date
-                                  .add(calculatedDuration, "minute")
-                                  .utc()
-                                  .format("YYYYMMDDTHHmmss[Z]")}&text=${eventName}&details=${props.eventType.description
+                                .add(calculatedDuration, "minute")
+                                .utc()
+                                .format("YYYYMMDDTHHmmss[Z]")}&text=${eventName}&details=${
+                                props.eventType.description
                               }` +
                               (typeof locationVideoCallUrl === "string"
                                 ? "&location=" + encodeURIComponent(locationVideoCallUrl)
                                 : "") +
                               (props.eventType.recurringEvent
                                 ? "&recur=" +
-                                encodeURIComponent(new RRule(props.eventType.recurringEvent).toString())
+                                  encodeURIComponent(new RRule(props.eventType.recurringEvent).toString())
                                 : "")
                             }
                             className="text-default border-subtle h-10 w-10 rounded-sm border px-3 py-2 ltr:mr-2 rtl:ml-2">
@@ -608,13 +609,13 @@ export default function Success(props: SuccessProps) {
                             href={
                               encodeURI(
                                 "https://outlook.live.com/calendar/0/deeplink/compose?body=" +
-                                props.eventType.description +
-                                "&enddt=" +
-                                date.add(calculatedDuration, "minute").utc().format() +
-                                "&path=%2Fcalendar%2Faction%2Fcompose&rru=addevent&startdt=" +
-                                date.utc().format() +
-                                "&subject=" +
-                                eventName
+                                  props.eventType.description +
+                                  "&enddt=" +
+                                  date.add(calculatedDuration, "minute").utc().format() +
+                                  "&path=%2Fcalendar%2Faction%2Fcompose&rru=addevent&startdt=" +
+                                  date.utc().format() +
+                                  "&subject=" +
+                                  eventName
                               ) +
                               (locationVideoCallUrl
                                 ? "&location=" + encodeURIComponent(locationVideoCallUrl)
@@ -635,13 +636,13 @@ export default function Success(props: SuccessProps) {
                             href={
                               encodeURI(
                                 "https://outlook.office.com/calendar/0/deeplink/compose?body=" +
-                                props.eventType.description +
-                                "&enddt=" +
-                                date.add(calculatedDuration, "minute").utc().format() +
-                                "&path=%2Fcalendar%2Faction%2Fcompose&rru=addevent&startdt=" +
-                                date.utc().format() +
-                                "&subject=" +
-                                eventName
+                                  props.eventType.description +
+                                  "&enddt=" +
+                                  date.add(calculatedDuration, "minute").utc().format() +
+                                  "&path=%2Fcalendar%2Faction%2Fcompose&rru=addevent&startdt=" +
+                                  date.utc().format() +
+                                  "&subject=" +
+                                  eventName
                               ) +
                               (locationVideoCallUrl
                                 ? "&location=" + encodeURIComponent(locationVideoCallUrl)

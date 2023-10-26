@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { MeiliSearch } from "meilisearch";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { components } from "react-select";
 import { z } from "zod";
@@ -15,6 +15,7 @@ import Shell from "@calcom/features/shell/Shell";
 import { buyTokens } from "@calcom/features/timetokenswallet";
 import { IS_PRODUCTION } from "@calcom/lib/constants";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
+import { localStorage } from "@calcom/lib/webstorage";
 import { trpc } from "@calcom/trpc/react";
 import {
   Select,
@@ -26,7 +27,7 @@ import {
   Form,
   InputField,
   showToast,
-  DialogTrigger
+  DialogTrigger,
 } from "@calcom/ui";
 import { Plus } from "@calcom/ui/components/icon";
 
@@ -68,6 +69,17 @@ function TimeTokensWallet() {
   const [expertOptions, setExpertOptions] = useState<ExpertOptionType[]>([]);
   const [addExpertId, setAddExpertId] = useState<number>(-1);
   // const [user, setUser] = useState<any>(null);
+
+  const { redirect_status } = router.query;
+  const toastShown = JSON.parse(localStorage.getItem("buyToastShown") ?? "false");
+
+  if (redirect_status === "succeeded" && !toastShown) {
+    showToast(t("buy_timetokens_success"), "success");
+    localStorage.setItem("buyToastShown", JSON.stringify(true));
+    router.push("/timetokens-wallet");
+  } else if (!redirect_status && toastShown) {
+    localStorage.setItem("buyToastShown", JSON.stringify(false));
+  }
 
   const meiliClient = new MeiliSearch({
     host: IS_PRODUCTION
@@ -192,7 +204,7 @@ function TimeTokensWallet() {
     onError: () => {
       showToast(t("error_revoking_token"), "error");
     },
-  })
+  });
 
   const addExpert = () => {
     console.log(addExpertId, "=====");
@@ -202,7 +214,7 @@ function TimeTokensWallet() {
   const revokeToken = () => {
     //revoke token action here
     revokeTokenMutation.mutate();
-  }
+  };
 
   const customFilter = (option: any, searchText: string) => {
     return true;
@@ -297,6 +309,10 @@ function TimeTokensWallet() {
     });
   };
 
+  useEffect(() => {
+    console.log("refreshed");
+  }, [addedExpertsData]);
+
   return (
     <Shell heading={t("timetokens_wallet")} hideHeadingOnMobile subtitle={t("buy_sell_timetokens")}>
       <WithQuery
@@ -341,34 +357,30 @@ function TimeTokensWallet() {
                     StartIcon={Plus}>
                     {t("add")}
                   </Button>
-                  
+
                   <Dialog>
-                  <DialogTrigger asChild>
-                  <Button
-                    className="text-[.5rem] sm:text-sm"
-                  >
-                    {t("revoke")}
-                  </Button>
-                  </DialogTrigger>
-                  <ConfirmationDialogContent
-                    variety="danger"
-                    title={t("revoke_token")}
-                    confirmBtnText={t("confirm_revoke_event")}
-                    onConfirm={revokeToken}>
-                    {t("confirm_revoke_question")}
-                  </ConfirmationDialogContent>
-                </Dialog>
+                    <DialogTrigger asChild>
+                      <Button className="text-[.5rem] sm:text-sm">{t("revoke")}</Button>
+                    </DialogTrigger>
+                    <ConfirmationDialogContent
+                      variety="danger"
+                      title={t("revoke_token")}
+                      confirmBtnText={t("confirm_revoke_event")}
+                      onConfirm={revokeToken}>
+                      {t("confirm_revoke_question")}
+                    </ConfirmationDialogContent>
+                  </Dialog>
                 </div>
                 {/* Time Token Price update Graph  */}
                 <Form form={formMethods} handleSubmit={onSubmit}>
                   <div className="bg-pink/10 mx-4 mb-2 flex min-w-[250px] flex-col gap-1 rounded-md p-4 lg:absolute lg:right-14 lg:top-10 lg:w-1/5">
                     {/* need to be fixed */}
-                    <p className="font-bold text-center">TimeToken Price</p>
+                    <p className="text-center font-bold">TimeToken Price</p>
                     {!isLoading && user && (
                       <>
                         {user.TokenPrice.length > 0 && (
                           <LineChart
-                            className="h-24 p-1 bg-white"
+                            className="h-24 bg-white p-1"
                             data={user.TokenPrice.map((v) => ({
                               price: v.price,
                               createdDate: v.createdDate.toLocaleDateString("en-US", {

@@ -106,7 +106,9 @@ export const timetokenswalletRouter = router({
 
   revokeToken: authedProcedure.mutation(async ({ ctx }) => {
     if (!UNSTABLE_HANDLER_CACHE.revokeToken) {
-      UNSTABLE_HANDLER_CACHE.revokeToken = await import("./revokeToken.handler").then((mod) => mod.revokeTokenHandler);
+      UNSTABLE_HANDLER_CACHE.revokeToken = await import("./revokeToken.handler").then(
+        (mod) => mod.revokeTokenHandler
+      );
     }
 
     // Unreachable code but required for type safety
@@ -115,7 +117,7 @@ export const timetokenswalletRouter = router({
     }
 
     return UNSTABLE_HANDLER_CACHE.revokeToken({
-      ctx
+      ctx,
     });
   }),
 });
