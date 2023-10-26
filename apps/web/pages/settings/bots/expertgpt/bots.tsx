@@ -1,8 +1,12 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import type { ReactElement } from "react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 import SettingsLayout from "@calcom/features/settings/layouts/SettingsLayout";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
-import { Badge, Button, Checkbox, Dialog, DialogTrigger, ConfirmationDialogContent, Meta } from "@calcom/ui";
+import { Badge, Button, Checkbox, Dialog, DialogClose, DialogContent, DialogFooter, DialogTrigger, ConfirmationDialogContent, Form, ImageUploader, Label, TextField, TextAreaField, Meta } from "@calcom/ui";
 import { Share2, Trash, Plus } from "@calcom/ui/components/icon";
 
 import PageWrapper from "@components/PageWrapper";
@@ -14,6 +18,15 @@ interface ExpertCardProps {
     handleShare: (edit_id: string) => void;
     handleDelete: (delete_id: string) => void;
 }
+
+const createBotTypeProps = z.object({
+    name: z.string().min(1),
+    description: z.string().optional(),
+    linkedin: z.string().optional(),
+    promptTitle: z.string().optional(),
+    promptContent: z.string().optional(),
+    logo: z.string().optional(),
+})
 
 const ExpertCard = ({ id, botName, isDefault, handleShare, handleDelete }: ExpertCardProps) => {
     const { t } = useLocale();
@@ -59,9 +72,96 @@ const ExpertCard = ({ id, botName, isDefault, handleShare, handleDelete }: Exper
 };
 
 const CreateExpertButton = () => {
+    const { t } = useLocale();
+    const form = useForm<z.infer<typeof createBotTypeProps>>({
+        resolver: zodResolver(createBotTypeProps),
+    });
+    const { register } = form;
+    const [nextAvailable, setNextAvailable] = useState(false);
+    const [showNext, setShowNext] = useState(false);
+
     return (
         <>
-            <Button rounded StartIcon={Plus} variant="icon" />
+            <Dialog
+                name="new">
+                <DialogTrigger asChild>
+                    <Button rounded StartIcon={Plus} variant="icon" />
+                </DialogTrigger>
+                <DialogContent
+                    type="creation"
+                    enableOverflow
+                    title={t("add_new_event_type")}
+                    description={t("new_event_type_to_book_description")}>
+                    <Form
+                        form={form}
+                        handleSubmit={(values) => {
+                            // createMutation.mutate(values);
+                            if (nextAvailable) {
+                                setShowNext(true);
+                            }
+                        }}>
+                        {!showNext ? <div className="mt-3 space-y-6 pb-11">
+                            <TextField
+                                label={t("enter_bot_name")}
+                                placeholder={t("E.g. History notes")}
+                                {...register("name")}
+                            />
+                            <TextAreaField
+                                label={t("enter_bot_description")}
+                                id="enter_bot_description"
+                                placeholder={t("my new brain is about...")}
+                                rows={3}
+                                className="rounded-[3.083px] border-[0.617px] border-[#C4C4C4]"
+                                {...register("description")}
+                            />
+                            <TextField
+                                label={t("enter_your_linkedin")}
+                                placeholder={t("https://www.linkedin.com/in/")}
+                                {...register("linkedin")}
+                            />
+                            <TextField
+                                label={t("prompt_title")}
+                                placeholder={t("My awesome prompt name")}
+                                {...register("promptTitle")}
+                            />
+                            <TextAreaField
+                                label={t("prompt_content")}
+                                id="prompt_content"
+                                placeholder={t("As an AI, your...")}
+                                rows={3}
+                                className="rounded-[3.083px] border-[0.617px] border-[#C4C4C4]"
+                                {...register("promptContent")}
+                            />
+                            <div className="flex flex-col">
+                                <Label className="text-sm">{t("image")}</Label>
+                                <ImageUploader
+                                    target="Image"
+                                    id="image-upload"
+                                    isFilled
+                                    buttonMsg=""
+                                    large
+                                    handleAvatarChange={(logo) => {
+                                        form.setValue("logo", logo, { shouldDirty: true });
+                                    }}
+                                    imageSrc={undefined}
+                                />
+                            </div>
+                            <div className="flex items-center justify-center gap-4">
+                                <hr className="w-[15%]" />
+                                <Checkbox label="Personality" description="" value={nextAvailable} onChange={() => setNextAvailable(!nextAvailable)} />
+                                <hr className="w-[15%]" />
+                            </div>
+                        </div> : <></>}
+                        <DialogFooter showDivider>
+                            <DialogClose />
+                            {/* <Button type="submit" loading={createMutation.isLoading}> */}
+                            <Button type="submit">
+                                {nextAvailable ? t("next") : t("create")}
+                            </Button>
+                        </DialogFooter>
+                    </Form>
+                </DialogContent>
+            </Dialog>
         </>
     )
 }
