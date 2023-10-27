@@ -39,7 +39,7 @@ const VerticalTabItem = ({
 }: VerticalTabItemProps) => {
   const { t } = useLocale();
   const { asPath } = useRouter();
-  const isCurrent = asPath.startsWith(href);
+  const isCurrent = asPath === href; //asPath.startsWith(href);
   return (
     <Fragment key={name}>
       {!props.hidden && (
