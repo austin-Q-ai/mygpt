@@ -39,7 +39,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
 
 export function InputLeading(props: JSX.IntrinsicElements["div"]) {
   return (
-    <span className="bg-muted border-default text-subtle inline-flex flex-shrink-0 items-center rounded-l-sm border px-3 ltr:border-r-0 rtl:border-l-0 sm:text-sm sm:leading-4">
+    <span className="inline-flex items-center flex-shrink-0 px-3 border rounded-l-sm bg-muted border-default text-subtle ltr:border-r-0 rtl:border-l-0 sm:text-sm sm:leading-4">
       {props.children}
     </span>
   );
@@ -143,7 +143,7 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(function
       {addOnLeading || addOnSuffix ? (
         <div
           dir="ltr"
-          className="focus-within:ring-brand-default group relative mb-1 flex items-center rounded-md focus-within:outline-none focus-within:ring-2">
+          className="relative flex items-center mb-1 rounded-md focus-within:ring-brand-default group focus-within:outline-none focus-within:ring-2">
           {addOnLeading && (
             <Addon isFilled={addOnFilled} className={classNames("rounded-l-md border-r-0", addOnClassname)}>
               {addOnLeading}
@@ -232,7 +232,7 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(function
         </div>
       )}
       <HintsOrErrors hintErrors={hintErrors} fieldName={name} t={t} />
-      {hint && <div className="text-default mt-2 flex items-center text-sm">{hint}</div>}
+      {hint && <div className="flex items-center mt-2 text-sm text-default">{hint}</div>}
     </div>
   );
 });
@@ -455,12 +455,12 @@ export const FilterSearchField = forwardRef<HTMLInputElement, InputFieldProps>(f
     <div
       dir="ltr"
       className="focus-within:ring-brand-default group relative mx-3 mb-1 mt-2.5 flex items-center rounded-md focus-within:outline-none focus-within:ring-2">
-      <div className="addon-wrapper border-default [input:hover_+_&]:border-emphasis [input:hover_+_&]:border-l-default [&:has(+_input:hover)]:border-emphasis [&:has(+_input:hover)]:border-r-default flex h-7 items-center justify-center rounded-l-md border border-r-0">
-        <Search className="ms-3 h-4 w-4" />
+      <div className="addon-wrapper border-default [input:hover_+_&]:border-emphasis [input:hover_+_&]:border-l-default [&:has(+_input:hover)]:border-emphasis [&:has(+_input:hover)]:border-r-default flex h-9 items-center justify-center rounded-l-md border border-r-0 bg-white">
+        <Search className="w-4 h-4 ms-3" />
       </div>
       <Input
         ref={ref}
-        className="disabled:bg-subtle disabled:hover:border-subtle !my-0 h-7 rounded-l-none border-l-0 !ring-0 disabled:cursor-not-allowed"
+        className="disabled:bg-subtle disabled:hover:border-subtle !my-0 h-9 rounded-l-none border-l-0 !ring-0 disabled:cursor-not-allowed"
         {...props}
       />
     </div>

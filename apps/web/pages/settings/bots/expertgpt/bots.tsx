@@ -18,6 +18,7 @@ import {
   DialogFooter,
   DialogTrigger,
   ConfirmationDialogContent,
+  FilterSearchField,
   Form,
   ImageUploader,
   Label,
@@ -208,6 +209,9 @@ const BotsView = () => {
     <div className="flex flex-row">
       <div className="flex-1">
         <Meta title={t("bots")} description={t("expertgpt_bots_description")} CTA={<CreateExpertButton />} />
+        <div className="mb-5 lg:w-[60%]">
+          <FilterSearchField placeholder={t("search")} />
+        </div>
         <div className="flex flex-col gap-2">
           <ExpertCard id="1" name="MyBot1" isDefault />
           <ExpertCard id="2" name="MyBot2" />
