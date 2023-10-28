@@ -3,7 +3,7 @@ import axios from "axios";
 import type { ReactElement } from "react";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import type { z } from "zod";
 
 import SettingsLayout from "@calcom/features/settings/layouts/SettingsLayout";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
@@ -25,11 +25,19 @@ import {
   TextField,
   TextAreaField,
   Meta,
+  Group,
+  RadioField,
 } from "@calcom/ui";
 import { Share2, Trash, Plus } from "@calcom/ui/components/icon";
 
 import PageWrapper from "@components/PageWrapper";
-import { MinimalBrainEntity, BrainEntityInput } from "@components/create-bot/BrainType";
+import type {
+  IPersonalityForm,
+  IBotInfoForm,
+  IPersonalityBasicForm,
+  MinimalBrainEntity,
+} from "@components/create-bot/BrainType";
+import { BrainEntityInput, PersonalityEntityInput } from "@components/create-bot/BrainType";
 
 const handleShare = (id: string) => {
   console.log("share");
@@ -83,14 +91,173 @@ const ExpertCard = ({ id, name, isDefault }: z.infer<typeof MinimalBrainEntity>)
   );
 };
 
+const BotInfoForm = ({ form, nextAvailable, setNextAvailable }: IBotInfoForm) => {
+  const { t } = useLocale();
+  const { register } = form;
+
+  return (
+    <div className="mt-3 space-y-6 pb-11">
+      <TextField label={t("enter_bot_name")} placeholder={t("E.g. History notes")} {...register("name")} />
+      <TextAreaField
+        label={t("enter_bot_description")}
+        id="enter_bot_description"
+        placeholder={t("my new brain is about...")}
+        rows={3}
+        className="rounded-[3.083px] border-[0.617px] border-[#C4C4C4]"
+        {...register("description")}
+      />
+      <TextField
+        label={t("enter_your_linkedin")}
+        placeholder={t("https://www.linkedin.com/in/")}
+        {...register("linkedin")}
+      />
+      <TextField
+        label={t("prompt_title")}
+        placeholder={t("My awesome prompt name")}
+        {...register("promptTitle")}
+      />
+      <TextAreaField
+        label={t("prompt_content")}
+        id="prompt_content"
+        placeholder={t("As an AI, your...")}
+        rows={3}
+        className="rounded-[3.083px] border-[0.617px] border-[#C4C4C4]"
+        {...register("promptContent")}
+      />
+      <div className="flex flex-col">
+        <Label className="text-sm">{t("image")}</Label>
+        <ImageUploader
+          target="Image"
+          id="image-upload"
+          isFilled
+          buttonMsg=""
+          large
+          handleAvatarChange={(logo) => {
+            form.setValue("logo", logo, { shouldDirty: true });
+          }}
+          imageSrc={undefined}
+        />
+      </div>
+      <div className="flex items-center justify-center gap-4">
+        <hr className="w-[15%]" />
+        <Checkbox
+          label="Personality"
+          description=""
+          defaultChecked={nextAvailable}
+          checked={nextAvailable}
+          onChange={() => setNextAvailable(!nextAvailable)}
+        />
+        <hr className="w-[15%]" />
+      </div>
+    </div>
+  );
+};
+
+const PersonalityBasicForm: React.FC<IPersonalityBasicForm> = ({ children }) => {
+  return <>{children}</>;
+};
+
+const PersonalityForm = ({ form, formItems, isLast }: IPersonalityForm) => {
+  const { t } = useLocale();
+  const { register } = form;
+
+  return (
+    <div className="mt-3 flex flex-col gap-2.5 space-y-6 pb-11">
+      {formItems.map((item, key) => (
+        <div key={key} className="flex flex-col gap-2.5 p-2.5 !font-normal text-black/50">
+          <Label className="text-[12px] leading-[17px] tracking-[0.12px] ">{item.label}</Label>
+          <Group className="flex flex-col gap-1.5 p-1.5 text-[11px] leading-4" {...register(item.value)}>
+            <RadioField id="0" value="0" label="Totally disagree" />
+            <RadioField id="1" value="1" label="disagree" />
+            <RadioField id="2" value="2" label="neutral" />
+            <RadioField id="3" value="3" label="agree" />
+            <RadioField id="3" value="3" label="Totally agree" />
+          </Group>
+        </div>
+      ))}
+      {isLast && (
+        <div className="flex gap-2">
+          <Label className="!mb-0 text-[12px] font-normal leading-4 text-black/50">Set as default bot</Label>
+          <Checkbox description="" label="" color="pink" {...register("setDefault")} />
+        </div>
+      )}
+    </div>
+  );
+};
+
 const CreateExpertButton = () => {
   const { t } = useLocale();
   const form = useForm<z.infer<typeof BrainEntityInput>>({
     resolver: zodResolver(BrainEntityInput),
   });
-  const { register } = form;
+  const personalityForm = useForm<z.infer<typeof PersonalityEntityInput>>({
+    resolver: zodResolver(PersonalityEntityInput),
+  });
   const [nextAvailable, setNextAvailable] = useState(false);
-  const [showNext, setShowNext] = useState(false);
+  const [currentFormId, setCurrentFormId] = useState(0);
+
+  const formPanels = [
+    <BotInfoForm key={0} form={form} nextAvailable={nextAvailable} setNextAvailable={setNextAvailable} />,
+    <PersonalityBasicForm key={1}>
+      <PersonalityForm
+        form={personalityForm}
+        formItems={[
+          {
+            value: "feelingAnxious",
+            label: "Do you find yourself feeling anxious in situations that others do not?",
+          },
+          {
+            value: "taskAccuracy",
+            label: "Do you take pride in doing tasks thoroughly and accurately?",
+          },
+          {
+            value: "criticism",
+            label: "Are you able to easily shrug off criticism without taking it to heart?",
+          },
+        ]}
+      />
+    </PersonalityBasicForm>,
+    <PersonalityBasicForm key={2}>
+      <PersonalityForm
+        form={personalityForm}
+        formItems={[
+          {
+            value: "forgetful",
+            label: "Are you often forgetful when it comes to your responsibilities?",
+          },
+          {
+            value: "procrastinate",
+            label: "Do you procrastinate when it comes to important tasks?",
+          },
+          {
+            value: "socialSettings",
+            label: "Are you usually uncomfortable or anxious in social settings?",
+          },
+        ]}
+      />
+    </PersonalityBasicForm>,
+    <PersonalityBasicForm key={3}>
+      <PersonalityForm
+        form={personalityForm}
+        formItems={[
+          {
+            value: "carryingoutTask",
+            label: "Are you reliable and dependable in carrying out tasks?",
+          },
+          {
+            value: "interactingPeople",
+            label: "Do you enjoy being in social settings and interacting with other people?",
+          },
+          {
+            value: "remainingCalm",
+            label: "Do you find yourself remaining calm in difficult situations?",
+          },
+        ]}
+        isLast
+      />
+    </PersonalityBasicForm>,
+  ];
+
   return (
     <Dialog name="new">
       <DialogTrigger asChild>
@@ -100,80 +267,38 @@ const CreateExpertButton = () => {
         type="creation"
         enableOverflow
         title={t("add_new_event_type")}
-        description={t("new_event_type_to_book_description")}>
+        description={
+          !currentFormId
+            ? t("new_event_type_to_book_description")
+            : `Personality ${currentFormId} / ${formPanels.length - 1}`
+        }>
         <Form
           form={form}
           handleSubmit={(values) => {
             // createMutation.mutate(values);
             if (nextAvailable) {
-              setShowNext(true);
+              if (currentFormId === formPanels.length - 1) {
+                console.log("last form");
+              } else {
+                setCurrentFormId(currentFormId + 1);
+              }
+            } else {
+              console.log("create without personalities");
             }
           }}>
-          {!showNext ? (
-            <div className="mt-3 space-y-6 pb-11">
-              <TextField
-                label={t("enter_bot_name")}
-                placeholder={t("E.g. History notes")}
-                {...register("name")}
-              />
-              <TextAreaField
-                label={t("enter_bot_description")}
-                id="enter_bot_description"
-                placeholder={t("my new brain is about...")}
-                rows={3}
-                className="rounded-[3.083px] border-[0.617px] border-[#C4C4C4]"
-                {...register("description")}
-              />
-              <TextField
-                label={t("enter_your_linkedin")}
-                placeholder={t("https://www.linkedin.com/in/")}
-                {...register("linkedin")}
-              />
-              <TextField
-                label={t("prompt_title")}
-                placeholder={t("My awesome prompt name")}
-                {...register("promptTitle")}
-              />
-              <TextAreaField
-                label={t("prompt_content")}
-                id="prompt_content"
-                placeholder={t("As an AI, your...")}
-                rows={3}
-                className="rounded-[3.083px] border-[0.617px] border-[#C4C4C4]"
-                {...register("promptContent")}
-              />
-              <div className="flex flex-col">
-                <Label className="text-sm">{t("image")}</Label>
-                <ImageUploader
-                  target="Image"
-                  id="image-upload"
-                  isFilled
-                  buttonMsg=""
-                  large
-                  handleAvatarChange={(logo) => {
-                    form.setValue("logo", logo, { shouldDirty: true });
-                  }}
-                  imageSrc={undefined}
-                />
-              </div>
-              <div className="flex items-center justify-center gap-4">
-                <hr className="w-[15%]" />
-                <Checkbox
-                  label="Personality"
-                  description=""
-                  value={nextAvailable}
-                  onChange={() => setNextAvailable(!nextAvailable)}
-                />
-                <hr className="w-[15%]" />
-              </div>
-            </div>
-          ) : (
-            <></>
-          )}
+          {formPanels[currentFormId]}
           <DialogFooter showDivider>
-            <DialogClose />
+            {currentFormId ? (
+              <Button color="secondary" onClick={() => setCurrentFormId(currentFormId - 1)}>
+                Previous
+              </Button>
+            ) : (
+              <DialogClose />
+            )}
             {/* <Button type="submit" loading={createMutation.isLoading}> */}
-            <Button type="submit">{nextAvailable ? t("next") : t("create")}</Button>
+            <Button type="submit">
+              {!nextAvailable || currentFormId === formPanels.length - 1 ? t("create") : t("next")}
+            </Button>
           </DialogFooter>
         </Form>
       </DialogContent>
